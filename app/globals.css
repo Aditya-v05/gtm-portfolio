@@ -194,7 +194,9 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 
 /* data table — paper exhibit */
 .data{ border-radius:10px; overflow:hidden; background:var(--paper); box-shadow:var(--shadow-exhibit); }
-.data__bar{ display:flex; align-items:center; justify-content:space-between; padding:10px 15px; background:var(--paper-2); border-bottom:1px solid var(--paper-line); }
+/* sticky left: when .data scrolls horizontally on mobile, the title bar
+   stays pinned while only the table rows scroll */
+.data__bar{ display:flex; align-items:center; justify-content:space-between; padding:10px 15px; background:var(--paper-2); border-bottom:1px solid var(--paper-line); position:sticky; left:0; }
 .data__bar .fn{ font-family:var(--font-m); font-size:10px; color:var(--paper-dim); }
 .data__bar .rc{ font-family:var(--font-m); font-size:9.5px; color:#8A6A2A; }
 table.dt{ width:100%; border-collapse:collapse; font-family:var(--font-m); font-size:10px; }
