@@ -6,6 +6,7 @@ import ScrollVelocity from "@/components/ScrollVelocity";
 import CountUp from "@/components/CountUp";
 import SpotlightCard from "@/components/SpotlightCard";
 import AnimatedContent from "@/components/AnimatedContent";
+import SideRail from "@/components/SideRail";
 
 // Pre-formatted terminal blocks: whitespace and newlines are significant
 // (rendered with white-space:pre-wrap), so they are injected as raw HTML to
@@ -73,6 +74,7 @@ export default function Home() {
       {/* fixed effect layers */}
       <ClickSpark sparkColor="#E8A33D" sparkSize={9} sparkRadius={22} sparkCount={8} duration={450} />
       <Noise patternSize={250} patternAlpha={10} patternRefreshInterval={3} />
+      <SideRail />
 
       <a className="pbtn" href="/Aditya-GTM-Engineering-Portfolio.pdf" download>
         portfolio.pdf ↓
@@ -108,6 +110,23 @@ export default function Home() {
             waveAmplitude={2.5}
           />
         </div>
+        {/* technical dial ornament — slow spin, blueprint strokes */}
+        <svg className="hero__dial" viewBox="0 0 600 600" aria-hidden="true">
+          <circle cx="300" cy="300" r="288" fill="none" stroke="currentColor" strokeWidth="1" opacity=".5" />
+          <circle cx="300" cy="300" r="236" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3 9" opacity=".6" />
+          <circle cx="300" cy="300" r="120" fill="none" stroke="currentColor" strokeWidth="1" opacity=".4" />
+          <line x1="300" y1="168" x2="300" y2="432" stroke="currentColor" strokeWidth="1" opacity=".25" />
+          <line x1="168" y1="300" x2="432" y2="300" stroke="currentColor" strokeWidth="1" opacity=".25" />
+          {Array.from({ length: 36 }, (_, i) => (
+            <line
+              key={i}
+              x1="300" y1="12" x2="300" y2={i % 9 === 0 ? "34" : "22"}
+              stroke="currentColor" strokeWidth={i % 9 === 0 ? 1.5 : 1}
+              opacity={i % 9 === 0 ? ".7" : ".4"}
+              transform={`rotate(${i * 10} 300 300)`}
+            />
+          ))}
+        </svg>
         <div className="hero__in">
           <div className="eyebrow">GTM Engineer · Data &amp; Automation</div>
           <h1>
@@ -153,7 +172,8 @@ export default function Home() {
 
       <div className="wrap">
         {/* CLIENT SIGNALS */}
-        <div className="shead">
+        <div className="shead" id="signals">
+          <span className="ghost">Signals</span>
           <span className="n">№ 01</span>
           <h2>Client Signals</h2>
           <span className="c">delivered work · recreated &amp; sanitized</span>
@@ -259,6 +279,7 @@ export default function Home() {
 
         {/* WORK */}
         <div className="shead" id="work">
+          <span className="ghost">Systems</span>
           <span className="n">№ 02</span>
           <h2>Selected Systems</h2>
           <span className="c">eight, with evidence</span>
@@ -556,6 +577,7 @@ export default function Home() {
 
         {/* ALSO BUILT */}
         <div className="shead" id="stack">
+          <span className="ghost">Stack</span>
           <span className="n">№ 03</span>
           <h2>Also Built &amp; Shipped</h2>
           <span className="c">selected</span>
