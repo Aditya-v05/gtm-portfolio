@@ -21,6 +21,7 @@ export default function BootIntro() {
     if (lifted.current) return;
     lifted.current = true;
     sessionStorage.setItem("booted", "1");
+    window.dispatchEvent(new Event("boot:done"));
     setShown(LINES.length);
     setPhase("lift");
     setTimeout(() => setPhase("done"), 780);

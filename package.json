@@ -21,6 +21,7 @@
     "@types/node": "^22.10.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "fontkit": "^2.0.4",
     "puppeteer-core": "^25.1.0",
     "shadcn": "^4.11.0",
     "typescript": "^5.7.0"

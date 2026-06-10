@@ -1,5 +1,5 @@
 import Noise from "@/components/Noise";
-import SplitText from "@/components/SplitText";
+import HeroHeadline from "@/components/HeroHeadline";
 import ScrollVelocity from "@/components/ScrollVelocity";
 import CountUp from "@/components/CountUp";
 import SpotlightCard from "@/components/SpotlightCard";
@@ -123,8 +123,7 @@ export default function Home() {
         <div className="hero__in">
           <div className="eyebrow">GTM Engineer · Data &amp; Automation</div>
           <h1>
-            <SplitText tag="span" className="line" text="I build GTM systems" splitType="chars" textAlign="left" delay={24} duration={0.9} from={{ opacity: 0, y: 34 }} to={{ opacity: 1, y: 0 }} />
-            <SplitText tag="span" className="line ital" text="that run themselves." splitType="chars" textAlign="left" delay={24} duration={0.9} from={{ opacity: 0, y: 34 }} to={{ opacity: 1, y: 0 }} />
+            <HeroHeadline />
           </h1>
           <p className="sub">
             Collection, enrichment, customer-overlap detection, LLM classification, and live outbound —
