@@ -303,14 +303,14 @@ export default function Home() {
             </p>
             <div className="metrics"><b>~100</b> campaigns live <span className="sep">/</span> doc → live in <b>~6 min</b> <span className="sep">/</span> 2-phase + approval gate</div>
             <div className="ev">
-              <div className="term">
+              <div className="term cursor-target">
                 <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">partha · run klaviyo-outreach.docx</span></div>
                 <div className="term__body" dangerouslySetInnerHTML={{ __html: term01 }} />
               </div>
               <div className="ev__cap"><b>▸ evidence</b> — representative end-to-end run: doc in, 3 campaigns live</div>
             </div>
             <div className="ev">
-              <div className="dash">
+              <div className="dash cursor-target">
                 <img src="/aimfox.png" alt="Aimfox campaigns dashboard" />
                 <span className="redact" style={{ left: "31.5%", top: "39.5%", width: "11.5%", height: "7.3%" }}></span>
                 <span className="redact" style={{ left: "31.5%", top: "53.7%", width: "11.5%", height: "7.3%" }}></span>
@@ -345,7 +345,7 @@ export default function Home() {
             </p>
             <div className="metrics"><b>9</b> production checkers <span className="sep">/</span> parallel worker pool <span className="sep">/</span> CAPTCHA-solving + retry</div>
             <div className="ev">
-              <div className="term">
+              <div className="term cursor-target">
                 <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">overlap-engine/batch.log — target: Klaviyo · 4 workers</span></div>
                 <div className="term__body" dangerouslySetInnerHTML={{ __html: term02 }} />
               </div>
@@ -375,7 +375,7 @@ export default function Home() {
             </p>
             <div className="metrics"><b>13,700</b> companies / run <span className="sep">/</span> 274 batches · resumable <span className="sep">/</span> 280K+ rows processed</div>
             <div className="ev">
-              <div className="term">
+              <div className="term cursor-target">
                 <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">run-classifier.log</span></div>
                 <div className="term__body" dangerouslySetInnerHTML={{ __html: term03 }} />
               </div>
@@ -405,7 +405,7 @@ export default function Home() {
             </p>
             <div className="metrics"><b>dual-provider</b> fallback <span className="sep">/</span> 2,501 contacts / export <span className="sep">/</span> ~5.7K LOC</div>
             <div className="ev">
-              <div className="data">
+              <div className="data cursor-target">
                 <div className="data__bar"><span className="fn">enriched_search_2026-04-23.csv</span><span className="rc">2,501 rows · 14 cols</span></div>
                 <table className="dt">
                   <thead><tr><th>name</th><th>email</th><th>status</th><th>email_source</th><th>title</th><th>company</th></tr></thead>
@@ -444,7 +444,7 @@ export default function Home() {
             <div className="metrics"><b>real-time</b> capture <span className="sep">/</span> dedup by profileId <span className="sep">/</span> CSV · JSON · webhook</div>
             <div className="ev">
               <div className="shot">
-                <div className="shot__f">
+                <div className="shot__f cursor-target">
                   <div className="ch"><span className="d"></span><span className="t">Sales Nav Scraper · popup</span></div>
                   <img src="/fig-salesnav.png" alt="Sales Nav Scraper popup" />
                 </div>
@@ -481,7 +481,7 @@ export default function Home() {
             </p>
             <div className="metrics"><b>10+</b> companies mined <span className="sep">/</span> sitemap → AI → LinkedIn <span className="sep">/</span> CSV exports</div>
             <div className="ev">
-              <div className="data">
+              <div className="data cursor-target">
                 <div className="data__bar"><span className="fn">out/gong-io-customer-linkedin-profiles.csv</span><span className="rc">→ LinkedIn profiles</span></div>
                 <table className="dt">
                   <thead><tr><th>name</th><th>company</th><th>job title</th><th>linkedin</th><th>source</th></tr></thead>
@@ -519,7 +519,7 @@ export default function Home() {
             </p>
             <div className="metrics"><b>1,255</b> leads → 116 cos <span className="sep">/</span> 109 granular niches <span className="sep">/</span> 2-phase</div>
             <div className="ev">
-              <div className="report">
+              <div className="report cursor-target">
                 <div className="report__top">
                   <div className="s"><div className="v">116</div><div className="l">companies classified</div></div>
                   <div className="s"><div className="v">8</div><div className="l">broad niches</div></div>
@@ -561,7 +561,7 @@ export default function Home() {
             </p>
             <div className="metrics"><b>10</b> MCP tools <span className="sep">/</span> HAR-diff analysis <span className="sep">/</span> findings on 9 targets</div>
             <div className="ev">
-              <div className="term">
+              <div className="term cursor-target">
                 <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">agent.log → report.md</span></div>
                 <div className="term__body" dangerouslySetInnerHTML={{ __html: term08 }} />
               </div>
