@@ -166,6 +166,13 @@ export default function Home() {
         />
       </section>
 
+      {/* print-only client roster: the animated marquee can't be trusted in
+          print, so the six client names get a guaranteed static line here */}
+      <section className="print-clients" aria-hidden="true">
+        <span className="k">Systems shipped for</span>
+        <span className="names">Brex · Rho · Peec AI · Warp · Hyperbound · Qashio</span>
+      </section>
+
       <div className="wrap">
         {/* CLIENT SIGNALS */}
         <div className="shead" id="signals">
