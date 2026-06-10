@@ -4,7 +4,6 @@ import ScrollVelocity from "@/components/ScrollVelocity";
 import CountUp from "@/components/CountUp";
 import SpotlightCard from "@/components/SpotlightCard";
 import AnimatedContent from "@/components/AnimatedContent";
-import SideRail from "@/components/SideRail";
 import BootIntro from "@/components/BootIntro";
 import ThemeToggle from "@/components/ThemeToggle";
 import { ThemedClickSpark, ThemedDotField } from "@/components/ThemedFX";
@@ -78,7 +77,6 @@ export default function Home() {
       <CursorFX />
       <ThemedClickSpark />
       <Noise patternSize={250} patternAlpha={10} patternRefreshInterval={3} />
-      <SideRail />
 
       <a className="pbtn cursor-target" href="/Aditya-GTM-Engineering-Portfolio.pdf" download>
         portfolio.pdf ↓

@@ -280,17 +280,6 @@ footer .sysline{ font-family:var(--font-m); font-size:10px; color:var(--mute); t
 .boot__brand{ margin-top:22px; font-family:var(--font-d); font-style:italic; font-size:23px; color:#E8A33D; opacity:0; transform:translateY(4px); transition:opacity .35s .12s, transform .35s .12s; }
 .boot__brand.is-on{ opacity:1; transform:none; }
 
-/* ============ SIDE RAIL (scrollspy index) ============ */
-.siderail{ position:fixed; left:26px; top:50%; transform:translateY(-50%); z-index:60; display:flex; flex-direction:column; gap:20px; }
-.siderail a{ display:flex; align-items:center; gap:9px; font-family:var(--font-m); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute); transition:color .3s; }
-.siderail .tick{ width:14px; height:1px; background:var(--mute); transition:width .3s, background .3s; }
-.siderail .lab{ opacity:0; transform:translateX(-4px); transition:opacity .3s, transform .3s; }
-.siderail a.on{ color:var(--accent); }
-.siderail a.on .tick{ width:26px; background:var(--accent); }
-.siderail a.on .lab, .siderail a:hover .lab{ opacity:1; transform:none; }
-.siderail a:hover{ color:var(--accent-2); }
-@media (max-width: 1240px){ .siderail{ display:none; } }
-
 /* theme switch: the new theme bleeds out as a circle from the toggle
    (clip-path animated in JS on ::view-transition-new); kill the default
    cross-fade so the wipe is the only motion */
@@ -398,7 +387,7 @@ footer .sysline{ font-family:var(--font-m); font-size:10px; color:var(--mute); t
   *{ opacity:1 !important; transform:none !important; animation:none !important; transition:none !important; }
 
   /* effects and chrome that make no sense on paper */
-  canvas, .noise-overlay, .target-cursor-wrapper, .pbtn, .siderail, .boot,
+  canvas, .noise-overlay, .target-cursor-wrapper, .pbtn, .boot,
   .hero__field, .hero .cue, .hero__dial, .marquee, .modebtn, .shead .ghost{ display:none !important; }
 
   nav{ position:static; background:var(--bg); backdrop-filter:none; }
