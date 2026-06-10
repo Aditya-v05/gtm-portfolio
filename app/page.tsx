@@ -338,12 +338,12 @@ export default function Home() {
             <p>
               Outbound burns budget on companies that already use a tool. I built a <b>reusable headless-automation
               engine</b> that drives a target&apos;s own signup flow and reads the &ldquo;email already registered / SSO
-              redirect&rdquo; signal — then <b>productized it across 9 SaaS targets</b> (Klaviyo, TaxJar, Harness,
-              SimilarWeb, BuiltWith, GitLab, Dynatrace, Bluefish, Second Nature). Stealth browsers, residential proxies,
+              redirect&rdquo; signal — then <b>productized it across 10+ SaaS targets</b> (Klaviyo, TaxJar, Harness,
+              SimilarWeb, BuiltWith, GitLab, Dynatrace, Bluefish, Second Nature, etc.). Stealth browsers, residential proxies,
               AI &amp; 2captcha CAPTCHA solving, MongoDB job queues, and a <b>parallel worker pool</b> behind Express
               batch APIs with polling and 3× retries.
             </p>
-            <div className="metrics"><b>9</b> production checkers <span className="sep">/</span> parallel worker pool <span className="sep">/</span> CAPTCHA-solving + retry</div>
+            <div className="metrics"><b>10+</b> production checkers <span className="sep">/</span> parallel worker pool <span className="sep">/</span> CAPTCHA-solving + retry</div>
             <div className="ev">
               <div className="term cursor-target">
                 <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">overlap-engine/batch.log — target: Klaviyo · 4 workers</span></div>
@@ -373,7 +373,7 @@ export default function Home() {
               cache, automatic failure re-queue, resumable batch progress, and verified audit CSVs so every verdict is
               traceable.
             </p>
-            <div className="metrics"><b>13,700</b> companies / run <span className="sep">/</span> 274 batches · resumable <span className="sep">/</span> 280K+ rows processed</div>
+            <div className="metrics"><b>13,700</b> companies / run <span className="sep">/</span> resumable · auto-retry <span className="sep">/</span> 280K+ rows processed</div>
             <div className="ev">
               <div className="term cursor-target">
                 <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">run-classifier.log</span></div>
@@ -403,7 +403,7 @@ export default function Home() {
               paginated calls, and <b>MongoDB de-duplication against prior sources</b> so a known contact is never
               messaged twice. Every row carries its provenance — see the <code>email_source</code> column.
             </p>
-            <div className="metrics"><b>dual-provider</b> fallback <span className="sep">/</span> 2,501 contacts / export <span className="sep">/</span> ~5.7K LOC</div>
+            <div className="metrics"><b>dual-provider</b> fallback <span className="sep">/</span> <b>70K+</b> contacts exported <span className="sep">/</span> ~5.7K LOC</div>
             <div className="ev">
               <div className="data cursor-target">
                 <div className="data__bar"><span className="fn">enriched_search_2026-04-23.csv</span><span className="rc">2,501 rows · 14 cols</span></div>
@@ -441,7 +441,7 @@ export default function Home() {
               leads by <code>profileId</code>, auto-paginates, and exports to CSV / JSON or pushes to a webhook. Runs
               entirely on the user&apos;s session — no build step.
             </p>
-            <div className="metrics"><b>real-time</b> capture <span className="sep">/</span> dedup by profileId <span className="sep">/</span> CSV · JSON · webhook</div>
+            <div className="metrics"><b>17K+</b> contacts captured <span className="sep">/</span> dedup by profileId <span className="sep">/</span> CSV · JSON · webhook</div>
             <div className="ev">
               <div className="shot">
                 <div className="shot__f cursor-target">
@@ -477,9 +477,9 @@ export default function Home() {
               A terminal-run <b>Mastra workflow</b> that turns one company URL into a list of <i>their</i> customers&apos;
               buyers: <b>crawl the sitemap → AI-filter case-study URLs → scrape via Zyte → extract named people → resolve
               LinkedIn profiles via Serper → export CSV.</b> Run it on a competitor and you get a poaching list — real
-              exports exist for 10+ companies (gong.io, seismic, dynatrace, connectwise…).
+              exports exist for 130+ companies (gong.io, seismic, dynatrace, connectwise…).
             </p>
-            <div className="metrics"><b>10+</b> companies mined <span className="sep">/</span> sitemap → AI → LinkedIn <span className="sep">/</span> CSV exports</div>
+            <div className="metrics"><b>130+</b> companies mined <span className="sep">/</span> sitemap → AI → LinkedIn <span className="sep">/</span> CSV exports</div>
             <div className="ev">
               <div className="data cursor-target">
                 <div className="data__bar"><span className="fn">out/gong-io-customer-linkedin-profiles.csv</span><span className="rc">→ LinkedIn profiles</span></div>
@@ -517,7 +517,7 @@ export default function Home() {
               companies across 8 broad and 109 granular niches</b>, emitting a written report and bucketed CSVs so generic
               blasts become segment-specific campaigns.
             </p>
-            <div className="metrics"><b>1,255</b> leads → 116 cos <span className="sep">/</span> 109 granular niches <span className="sep">/</span> 2-phase</div>
+            <div className="metrics"><b>1,255</b> leads → 116 cos <span className="sep">/</span> 109 granular niches <span className="sep">/</span> <b>3K+</b> companies segmented</div>
             <div className="ev">
               <div className="report cursor-target">
                 <div className="report__top">
@@ -557,9 +557,9 @@ export default function Home() {
               auth pages and mines customer identities from case-study pages; <b>Phase 2</b> (Python /
               <code>claude_agent_sdk</code>) drives a browser through login, signup, SSO and API flows, <b>diffs responses
               and HAR traffic</b> to spot enumeration, solves CAPTCHAs, and persists novel patterns across a long agent
-              loop with 10 MCP tools. Confirmed findings across 9 real targets.
+              loop with 10 MCP tools. Confirmed findings across 30+ real companies.
             </p>
-            <div className="metrics"><b>10</b> MCP tools <span className="sep">/</span> HAR-diff analysis <span className="sep">/</span> findings on 9 targets</div>
+            <div className="metrics"><b>10</b> MCP tools <span className="sep">/</span> HAR-diff analysis <span className="sep">/</span> findings on 30+ companies</div>
             <div className="ev">
               <div className="term cursor-target">
                 <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">agent.log → report.md</span></div>
