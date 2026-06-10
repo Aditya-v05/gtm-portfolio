@@ -1,5 +1,25 @@
 import type { Metadata } from "next";
+import { Fraunces, Archivo, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  axes: ["opsz"],
+});
+
+const archivo = Archivo({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-body",
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-mono",
+});
 
 export const metadata: Metadata = {
   title: "Aditya — GTM Engineer",
@@ -10,6 +30,7 @@ export const metadata: Metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#0E0C08",
 };
 
 export default function RootLayout({
@@ -18,19 +39,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin=""
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="en" className={`${fraunces.variable} ${archivo.variable} ${jetbrains.variable}`}>
       {/* suppressHydrationWarning: some browser extensions inject attributes
           (e.g. bis_register, __processed_*) onto <body> before React hydrates,
           which otherwise triggers a hydration mismatch warning. */}

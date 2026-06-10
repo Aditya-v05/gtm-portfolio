@@ -1,4 +1,11 @@
-import PrintButton from "./PrintButton";
+import ClickSpark from "@/components/ClickSpark";
+import Noise from "@/components/Noise";
+import DotField from "@/components/DotField";
+import SplitText from "@/components/SplitText";
+import ScrollVelocity from "@/components/ScrollVelocity";
+import CountUp from "@/components/CountUp";
+import SpotlightCard from "@/components/SpotlightCard";
+import AnimatedContent from "@/components/AnimatedContent";
 
 // Pre-formatted terminal blocks: whitespace and newlines are significant
 // (rendered with white-space:pre-wrap), so they are injected as raw HTML to
@@ -52,16 +59,31 @@ const term08 = `<span class="tl">[AUTH]</span> phase 1b: scraping login page <sp
 verdict:  <span class="er">ENUMERABLE</span>      method: <span class="tl">api_response_diff</span>
 pages tested: 3 · non-SSO findings: 3 · confidence: high`;
 
+const reveal = {
+  distance: 40,
+  duration: 0.8,
+  ease: "power3.out",
+  threshold: 0.12,
+  initialOpacity: 0,
+};
+
 export default function Home() {
   return (
     <>
-      <PrintButton />
+      {/* fixed effect layers */}
+      <ClickSpark sparkColor="#E8A33D" sparkSize={9} sparkRadius={22} sparkCount={8} duration={450} />
+      <Noise patternSize={250} patternAlpha={10} patternRefreshInterval={3} />
+
+      <a className="pbtn" href="/Aditya-GTM-Engineering-Portfolio.pdf" download>
+        portfolio.pdf ↓
+      </a>
 
       {/* NAV */}
       <nav>
         <div className="in">
           <div className="brand">
-            <b>ADITYA</b> <span>// gtm engineer</span>
+            Aditya <em>Venkatesan</em>
+            <span className="tail">gtm engineer</span>
           </div>
           <div className="links">
             <a href="#work">Work</a>
@@ -72,123 +94,181 @@ export default function Home() {
         </div>
       </nav>
 
-      <div className="wrap">
-        <div className="cover">
-          {/* HERO */}
-          <section className="hero">
-            <div className="eyebrow fade d1">GTM Engineer · Data &amp; Automation</div>
-            <h1 className="fade d2">
-              I build GTM systems that <em>run themselves.</em>
-            </h1>
-            <p className="sub fade d3">
-              Collection, enrichment, customer-overlap detection, LLM classification, and live outbound —
-              built as <b>autonomous systems</b>, not one-off scripts. <b>40+ shipped</b>, each one backed by a
-              real artifact: a log, a verdict, an export.
-            </p>
-            <div className="meta fade d4">
-              <span><span className="d"></span> rev. 2026.06</span>
-              <span><b>40+</b> systems shipped</span>
-              <span><b>100+</b> campaigns automated</span>
-              <span>available for GTM engineering</span>
-            </div>
-          </section>
-
-          {/* CLIENTS */}
-          <section className="clients">
-            <div className="k">Systems shipped for</div>
-            <div className="names">
-              <span className="client">Brex</span>
-              <span className="client">Rho</span>
-              <span className="client">Peec&nbsp;AI</span>
-              <span className="client">Warp</span>
-              <span className="client">Hyperbound</span>
-              <span className="client">Qashio</span>
-            </div>
-          </section>
+      {/* HERO */}
+      <section className="hero">
+        <div className="hero__field">
+          <DotField
+            dotRadius={1.6}
+            dotSpacing={18}
+            gradientFrom="#96763E"
+            gradientTo="#4A3A20"
+            glowColor="#F2C078"
+            sparkle
+            cursorRadius={140}
+            waveAmplitude={2.5}
+          />
         </div>
-
-        {/* CLIENT SIGNALS — recreated, sanitized Slack (own page) */}
-        <div className="shead signals-head">
-          <span className="n">§ 01</span>
-          <h2>Client Signals</h2>
-          <span className="c">delivered work · real reactions</span>
-        </div>
-        <hr className="rule" />
-        <section className="signals">
-          <div className="slack">
-            <div className="slack__bar">
-              <span className="chan"><span className="lk">#</span> huntd-warp</span>
-              <span className="ext">2 people from Warp</span>
+        <div className="hero__in">
+          <div className="eyebrow">GTM Engineer · Data &amp; Automation</div>
+          <h1>
+            <SplitText tag="span" className="line" text="I build GTM systems" splitType="chars" textAlign="left" delay={24} duration={0.9} from={{ opacity: 0, y: 34 }} to={{ opacity: 1, y: 0 }} />
+            <SplitText tag="span" className="line ital" text="that run themselves." splitType="chars" textAlign="left" delay={24} duration={0.9} from={{ opacity: 0, y: 34 }} to={{ opacity: 1, y: 0 }} />
+          </h1>
+          <p className="sub">
+            Collection, enrichment, customer-overlap detection, LLM classification, and live outbound —
+            built as <b>autonomous systems</b>, not one-off scripts. Each one backed by a
+            real artifact: a log, a verdict, an export.
+          </p>
+          <div className="meta">
+            <div className="m">
+              <div className="v"><CountUp to={40} duration={1.4} /><span className="plus">+</span></div>
+              <div className="k">systems shipped</div>
             </div>
-            <div className="slmsg">
-              <div className="slav" style={{ background: "#2EB67D" }}>H</div>
-              <div>
-                <div className="slhead"><span className="slname">Huntd</span><span className="sltime">5:24 PM</span></div>
-                <div className="sltext">The agent recognises companies using <b>Rippling</b> really well — a big chunk in the 1–100 range. So we can do <b>Rippling, Gusto, Deel</b> &amp; all other PEOs in one place now. Gonna be great!</div>
-              </div>
+            <div className="m">
+              <div className="v"><CountUp to={100} duration={1.8} /><span className="plus">+</span></div>
+              <div className="k">campaigns automated</div>
             </div>
-            <div className="slmsg">
-              <div className="slav" style={{ background: "#E01E5A" }}>H</div>
-              <div>
-                <div className="slhead"><span className="slname">Hayk G.</span><span className="sltime">1:36 AM</span></div>
-                <div className="sltext">Amazing</div>
-                <span className="slreact">🙌 1</span>
-              </div>
+            <div className="m">
+              <div className="v"><CountUp to={25} duration={2} /><span className="plus">K+</span></div>
+              <div className="k">companies exported</div>
             </div>
           </div>
+        </div>
+        <div className="cue">scroll</div>
+      </section>
 
-          <div className="slack">
-            <div className="slack__bar">
-              <span className="chan"><span className="lk">#</span> huntd-hyperbound</span>
-              <span className="ext">3 people from Hyperbound</span>
-            </div>
-            <div className="slmsg">
-              <div className="slav" style={{ background: "#2EB67D" }}>H</div>
-              <div>
-                <div className="slhead"><span className="slname">Huntd</span><span className="sltime">1:57 PM</span></div>
-                <div className="sltext">This contains everything you asked for, <span className="slred" style={{ width: "58px" }}>&nbsp;</span> — the <b>B2B-SaaS</b> and <b>med-device</b> target lists. We can pull a lot more if we loosen the employee-count filter.</div>
-                <div className="slfiles">
-                  <div className="slfile"><span className="ic">CSV</span><div><div className="fn">b2b-saas-list.csv</div><div className="ft">CSV</div></div></div>
-                  <div className="slfile"><span className="ic">CSV</span><div><div className="fn">med-device-list.csv</div><div className="ft">CSV</div></div></div>
+      {/* CLIENT MARQUEE */}
+      <section className="marquee">
+        <div className="marquee__k">Systems shipped for</div>
+        <ScrollVelocity
+          texts={[
+            <span key="clients">
+              Brex<span className="sep">✺</span>Rho<span className="sep">✺</span>Peec&nbsp;AI<span className="sep">✺</span>Warp<span className="sep">✺</span>Hyperbound<span className="sep">✺</span>Qashio<span className="sep">✺</span>
+            </span>,
+          ]}
+          velocity={45}
+          numCopies={8}
+        />
+      </section>
+
+      <div className="wrap">
+        {/* CLIENT SIGNALS */}
+        <div className="shead">
+          <span className="n">№ 01</span>
+          <h2>Client Signals</h2>
+          <span className="c">delivered work · recreated &amp; sanitized</span>
+        </div>
+        <hr className="rule" />
+        <div className="evwall">
+          <div className="stamp">real reactions · PII masked</div>
+          <section className="signals">
+          <AnimatedContent {...reveal}>
+            <div className="exh exh--a">
+            <div className="slack">
+              <div className="slack__bar">
+                <span className="chan"><span className="lk">#</span> huntd-warp</span>
+                <span className="ext">2 people from Warp</span>
+              </div>
+              <div className="slmsg">
+                <div className="slav" style={{ background: "#2EB67D" }}>H</div>
+                <div>
+                  <div className="slhead"><span className="slname">Huntd</span><span className="sltime">5:24 PM</span></div>
+                  <div className="sltext">The agent recognises companies using <b>Rippling</b> really well — a big chunk in the 1–100 range. So we can do <b>Rippling, Gusto, Deel</b> &amp; all other PEOs in one place now. Gonna be great!</div>
+                </div>
+              </div>
+              <div className="slmsg">
+                <div className="slav" style={{ background: "#E01E5A" }}>H</div>
+                <div>
+                  <div className="slhead"><span className="slname">Hayk G.</span><span className="sltime">1:36 AM</span></div>
+                  <div className="sltext">Amazing</div>
+                  <span className="slreact">🙌 1</span>
                 </div>
               </div>
             </div>
-            <div className="slmsg">
-              <div className="slav" style={{ background: "#ECB22E" }}>I</div>
-              <div>
-                <div className="slhead"><span className="slname">Isaac H.</span><span className="sltime">5:45 PM</span></div>
-                <div className="sltext">Yes let&apos;s do that thank you</div>
-                <span className="slreact">❤️ 1</span>
-              </div>
+            <div className="exh__note">
+              <svg viewBox="0 0 44 30" aria-hidden="true"><path d="M40 27 C28 25 12 20 7 4 M7 4 l-3.5 8 M7 4 l8 2.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
+              spotted the PEO pattern unprompted
             </div>
-          </div>
+            </div>
+          </AnimatedContent>
 
-          <div className="slack">
-            <div className="slack__bar">
-              <span className="chan"><span className="lk">#</span> huntd-peecai</span>
-              <span className="ext">3 people from Peec AI</span>
-            </div>
-            <div className="slmsg">
-              <div className="slav" style={{ background: "#2EB67D" }}>H</div>
-              <div>
-                <div className="slhead"><span className="slname">Huntd</span><span className="sltime">12:59 PM</span></div>
-                <div className="sltext">Scoped your <b>ICP</b> and built the prioritised target-account list. Want me to prioritise any segment first?</div>
+          <AnimatedContent {...reveal} delay={0.1}>
+            <div className="exh exh--b">
+            <div className="slack">
+              <div className="slack__bar">
+                <span className="chan"><span className="lk">#</span> huntd-hyperbound</span>
+                <span className="ext">3 people from Hyperbound</span>
+              </div>
+              <div className="slmsg">
+                <div className="slav" style={{ background: "#2EB67D" }}>H</div>
+                <div>
+                  <div className="slhead"><span className="slname">Huntd</span><span className="sltime">1:57 PM</span></div>
+                  <div className="sltext">This contains everything you asked for, <span className="slred" style={{ width: "58px" }}>&nbsp;</span> — the <b>B2B-SaaS</b> and <b>med-device</b> target lists. We can pull a lot more if we loosen the employee-count filter.</div>
+                  <div className="slfiles">
+                    <div className="slfile"><span className="ic">CSV</span><div><div className="fn">b2b-saas-list.csv</div><div className="ft">CSV</div></div></div>
+                    <div className="slfile"><span className="ic">CSV</span><div><div className="fn">med-device-list.csv</div><div className="ft">CSV</div></div></div>
+                  </div>
+                </div>
+              </div>
+              <div className="slmsg">
+                <div className="slav" style={{ background: "#ECB22E" }}>I</div>
+                <div>
+                  <div className="slhead"><span className="slname">Isaac H.</span><span className="sltime">5:45 PM</span></div>
+                  <div className="sltext">Yes let&apos;s do that thank you</div>
+                  <span className="slreact">❤️ 1</span>
+                </div>
               </div>
             </div>
-            <div className="slmsg">
-              <div className="slav" style={{ background: "#36C5F0" }}>D</div>
-              <div>
-                <div className="slhead"><span className="slname">Daniel D.</span><span className="sltime">3:53 PM</span></div>
-                <div className="sltext">Nice! I&apos;d prioritise B2B over consumer. SaaS is always easiest to close!</div>
+            <div className="exh__note">
+              <svg viewBox="0 0 44 30" aria-hidden="true"><path d="M40 27 C28 25 12 20 7 4 M7 4 l-3.5 8 M7 4 l8 2.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
+              two target lists, one thread
+            </div>
+            </div>
+          </AnimatedContent>
+
+          <AnimatedContent {...reveal} delay={0.2}>
+            <div className="exh exh--c">
+            <div className="slack">
+              <div className="slack__bar">
+                <span className="chan"><span className="lk">#</span> huntd-peecai</span>
+                <span className="ext">3 people from Peec AI</span>
+              </div>
+              <div className="slmsg">
+                <div className="slav" style={{ background: "#2EB67D" }}>H</div>
+                <div>
+                  <div className="slhead"><span className="slname">Huntd</span><span className="sltime">12:59 PM</span></div>
+                  <div className="sltext">Scoped your <b>ICP</b> and built the prioritised target-account list. Want me to prioritise any segment first?</div>
+                </div>
+              </div>
+              <div className="slmsg">
+                <div className="slav" style={{ background: "#36C5F0" }}>D</div>
+                <div>
+                  <div className="slhead"><span className="slname">Daniel D.</span><span className="sltime">3:53 PM</span></div>
+                  <div className="sltext">Nice! I&apos;d prioritise B2B over consumer. SaaS is always easiest to close!</div>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+            <div className="exh__note">
+              <svg viewBox="0 0 44 30" aria-hidden="true"><path d="M40 27 C28 25 12 20 7 4 M7 4 l-3.5 8 M7 4 l8 2.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
+              ICP scoped, list prioritised
+            </div>
+            </div>
+          </AnimatedContent>
+          </section>
+        </div>
 
         {/* WORK */}
-        <article className="case" id="work">
+        <div className="shead" id="work">
+          <span className="n">№ 02</span>
+          <h2>Selected Systems</h2>
+          <span className="c">eight, with evidence</span>
+        </div>
+        <hr className="rule" />
+
+        <AnimatedContent {...reveal}>
+        <article className="case">
           <div className="rail">
-            <div className="id">01 / 08 · selected work</div>
+            <div className="idwrap"><span className="id">01</span><span className="of">/ 08 · selected work</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Autonomous agent<br />Outbound delivery</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Claude Agent SDK</div><div>OpenCLAW</div><div>Aimfox API</div><div>MongoDB · Node</div></div></div>
             <div className="st"><span className="d"></span> live</div>
@@ -224,11 +304,12 @@ export default function Home() {
             </div>
           </div>
         </article>
+        </AnimatedContent>
 
-        {/* 02 OVERLAP */}
+        <AnimatedContent {...reveal}>
         <article className="case">
           <div className="rail">
-            <div className="id">02 / 08</div>
+            <div className="idwrap"><span className="id">02</span><span className="of">/ 08</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Signal<br />Headless automation</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Puppeteer (stealth)</div><div>Evomi · 2captcha</div><div>Azure OpenAI</div><div>MongoDB · Express</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -255,11 +336,12 @@ export default function Home() {
             </div>
           </div>
         </article>
+        </AnimatedContent>
 
-        {/* 03 CLASSIFIER */}
+        <AnimatedContent {...reveal}>
         <article className="case">
           <div className="rail">
-            <div className="id">03 / 08</div>
+            <div className="idwrap"><span className="id">03</span><span className="of">/ 08</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">LLM pipeline<br />Classification</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>TypeScript</div><div>Azure OpenAI</div><div>Cheerio · Evomi</div><div>CSV streams</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -284,11 +366,12 @@ export default function Home() {
             </div>
           </div>
         </article>
+        </AnimatedContent>
 
-        {/* 04 ENRICHMENT */}
+        <AnimatedContent {...reveal}>
         <article className="case">
           <div className="rail">
-            <div className="id">04 / 08</div>
+            <div className="idwrap"><span className="id">04</span><span className="of">/ 08</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Enrichment<br />Email waterfall</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Node</div><div>Apollo API</div><div>LeadMagic API</div><div>MongoDB</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -321,11 +404,12 @@ export default function Home() {
             </div>
           </div>
         </article>
+        </AnimatedContent>
 
-        {/* 05 SALESNAV */}
+        <AnimatedContent {...reveal}>
         <article className="case">
           <div className="rail">
-            <div className="id">05 / 08</div>
+            <div className="idwrap"><span className="id">05</span><span className="of">/ 08</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Browser extension<br />Manifest V3</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>JS (ES2020+)</div><div>Chrome MV3</div><div>service worker</div><div>page-world inject</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -358,11 +442,12 @@ export default function Home() {
             </div>
           </div>
         </article>
+        </AnimatedContent>
 
-        {/* 06 LD-HUNTING */}
+        <AnimatedContent {...reveal}>
         <article className="case">
           <div className="rail">
-            <div className="id">06 / 08</div>
+            <div className="idwrap"><span className="id">06</span><span className="of">/ 08</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Workflow agent<br />CLI</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>TypeScript · Mastra</div><div>Azure AI (Claude)</div><div>Zyte · Serper</div><div>MongoDB</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -395,11 +480,12 @@ export default function Home() {
             </div>
           </div>
         </article>
+        </AnimatedContent>
 
-        {/* 07 KLUE */}
+        <AnimatedContent {...reveal}>
         <article className="case">
           <div className="rail">
-            <div className="id">07 / 08</div>
+            <div className="idwrap"><span className="id">07</span><span className="of">/ 08</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Agent<br />Segmentation</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Claude Agent SDK</div><div>Apify Search</div><div>Zod · Node</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -435,11 +521,12 @@ export default function Home() {
             </div>
           </div>
         </article>
+        </AnimatedContent>
 
-        {/* 08 RECON */}
+        <AnimatedContent {...reveal}>
         <article className="case">
           <div className="rail">
-            <div className="id">08 / 08</div>
+            <div className="idwrap"><span className="id">08</span><span className="of">/ 08</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Autonomous agent<br />Security recon</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Python (agent sdk)</div><div>TS · Mastra</div><div>Playwright · MCP</div><div>2captcha</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -465,23 +552,25 @@ export default function Home() {
             </div>
           </div>
         </article>
+        </AnimatedContent>
 
         {/* ALSO BUILT */}
         <div className="shead" id="stack">
-          <span className="n">§ 02</span>
+          <span className="n">№ 03</span>
           <h2>Also Built &amp; Shipped</h2>
           <span className="c">selected</span>
         </div>
+        <hr className="rule" />
 
         <div className="grid">
-          <div className="gcell"><h4><span className="d"></span>Competitor Recon Agent</h4><p>Maps a niche&apos;s competitive landscape — named competitors, funded startups, comparison pages — from one target.</p><p className="num">→ <b>100+</b> companies mapped · 15+ competitors each</p><p className="tools">Claude Agent SDK · Google SERP · proxy</p></div>
-          <div className="gcell"><h4><span className="d"></span>Employee Intelligence DB</h4><p>MongoDB tracking employees at target accounts with first/last-seen + status — for hiring / churn triggers.</p><p className="num">→ <b>3</b> target accounts · daily deltas</p><p className="tools">MongoDB · schema-driven snapshots</p></div>
-          <div className="gcell"><h4><span className="d"></span>Shopify Merchant Classifier</h4><p>Agent that discovers &amp; classifies Shopify stores and agencies from search results for outreach.</p><p className="num">→ <b>2,029</b> stores classified</p><p className="tools">Claude Agent SDK · Apify · Cheerio</p></div>
-          <div className="gcell"><h4><span className="d"></span>Crunchbase Exporter</h4><p>Resumable batch scraper for funded-company data with progress checkpointing and recovery.</p><p className="num">→ <b>25,200</b> funded companies exported</p><p className="tools">Playwright · resumable state</p></div>
-          <div className="gcell"><h4><span className="d"></span>Smartlead Campaign Agent</h4><p>CLI agent that creates and manages outbound campaigns through the Smartlead API.</p><p className="num">→ full campaign lifecycle via API</p><p className="tools">Claude Agent SDK · Smartlead API</p></div>
-          <div className="gcell"><h4><span className="d"></span>Email Finder TUI</h4><p>Interactive terminal tool for name-+-company email lookup via LeadMagic, with a live blessed UI.</p><p className="num">→ name + company → verified email</p><p className="tools">Node · blessed · LeadMagic</p></div>
-          <div className="gcell"><h4><span className="d"></span>Apollo Headcount Lookup</h4><p>Rate-limited CLI resolving company headcount from Apollo for domains or names, streamed to CSV.</p><p className="num">→ domain / name → headcount</p><p className="tools">TypeScript · Apollo · streaming CSV</p></div>
-          <div className="gcell"><h4><span className="d"></span>Post-Engagement Scraper</h4><p>Exports everyone who commented on a target LinkedIn post — warm signals for outreach.</p><p className="num">→ <b>1,210</b> commenters / post</p><p className="tools">Node · Apify</p></div>
+          <SpotlightCard className="gcell" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Competitor Recon Agent</h4><p>Maps a niche&apos;s competitive landscape — named competitors, funded startups, comparison pages — from one target.</p><p className="num">→ <b>100+</b> companies mapped · 15+ competitors each</p><p className="tools">Claude Agent SDK · Google SERP · proxy</p></SpotlightCard>
+          <SpotlightCard className="gcell" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Employee Intelligence DB</h4><p>MongoDB tracking employees at target accounts with first/last-seen + status — for hiring / churn triggers.</p><p className="num">→ <b>3</b> target accounts · daily deltas</p><p className="tools">MongoDB · schema-driven snapshots</p></SpotlightCard>
+          <SpotlightCard className="gcell" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Shopify Merchant Classifier</h4><p>Agent that discovers &amp; classifies Shopify stores and agencies from search results for outreach.</p><p className="num">→ <b>2,029</b> stores classified</p><p className="tools">Claude Agent SDK · Apify · Cheerio</p></SpotlightCard>
+          <SpotlightCard className="gcell" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Crunchbase Exporter</h4><p>Resumable batch scraper for funded-company data with progress checkpointing and recovery.</p><p className="num">→ <b>25,200</b> funded companies exported</p><p className="tools">Playwright · resumable state</p></SpotlightCard>
+          <SpotlightCard className="gcell" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Smartlead Campaign Agent</h4><p>CLI agent that creates and manages outbound campaigns through the Smartlead API.</p><p className="num">→ full campaign lifecycle via API</p><p className="tools">Claude Agent SDK · Smartlead API</p></SpotlightCard>
+          <SpotlightCard className="gcell" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Email Finder TUI</h4><p>Interactive terminal tool for name-+-company email lookup via LeadMagic, with a live blessed UI.</p><p className="num">→ name + company → verified email</p><p className="tools">Node · blessed · LeadMagic</p></SpotlightCard>
+          <SpotlightCard className="gcell" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Apollo Headcount Lookup</h4><p>Rate-limited CLI resolving company headcount from Apollo for domains or names, streamed to CSV.</p><p className="num">→ domain / name → headcount</p><p className="tools">TypeScript · Apollo · streaming CSV</p></SpotlightCard>
+          <SpotlightCard className="gcell" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Post-Engagement Scraper</h4><p>Exports everyone who commented on a target LinkedIn post — warm signals for outreach.</p><p className="num">→ <b>1,210</b> commenters / post</p><p className="tools">Node · Apify</p></SpotlightCard>
         </div>
 
         <div className="stackwall">
@@ -495,7 +584,10 @@ export default function Home() {
         {/* FOOTER */}
         <footer id="contact">
           <hr className="rule" />
-          <div className="big">Let&apos;s build the GTM stack. <a href="mailto:adityaspark05@gmail.com">adityaspark05@gmail.com →</a></div>
+          <div className="big">
+            Let&apos;s build the <span className="ital">GTM stack</span>.{" "}
+            <a href="mailto:adityaspark05@gmail.com">adityaspark05@gmail.com →</a>
+          </div>
           <div className="row">
             <div className="links">
               <div><span style={{ color: "var(--mute)" }}>// reach me</span></div>
