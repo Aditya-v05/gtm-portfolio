@@ -33,7 +33,7 @@
   --shadow-exhibit:0 22px 55px -18px rgba(0,0,0,.7);
 }
 *{ box-sizing:border-box; margin:0; padding:0; }
-html{ scroll-behavior:smooth; }
+html{ scroll-behavior:smooth; overflow-x:clip; }
 body{
   background:var(--bg); color:var(--ink);
   font-family:var(--font-b); font-size:15px; line-height:1.65;
@@ -69,7 +69,7 @@ nav .links a::after{ content:""; position:absolute; left:0; bottom:-3px; width:0
 nav .links a:hover{ color:var(--ink); } nav .links a:hover::after{ width:100%; }
 
 /* ============ HERO ============ */
-.hero{ position:relative; min-height:88vh; display:flex; align-items:center; border-bottom:1px solid var(--line); }
+.hero{ position:relative; min-height:88vh; display:flex; align-items:center; border-bottom:1px solid var(--line); overflow:hidden; }
 .hero__field{ position:absolute; inset:0; z-index:0; opacity:.8;
   -webkit-mask-image:radial-gradient(120% 100% at 50% 40%, #000 30%, transparent 78%);
   mask-image:radial-gradient(120% 100% at 50% 40%, #000 30%, transparent 78%); }
