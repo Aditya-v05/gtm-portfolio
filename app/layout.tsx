@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Archivo, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -58,7 +59,10 @@ export default function RootLayout({
       {/* suppressHydrationWarning: some browser extensions inject attributes
           (e.g. bis_register, __processed_*) onto <body> before React hydrates,
           which otherwise triggers a hydration mismatch warning. */}
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
