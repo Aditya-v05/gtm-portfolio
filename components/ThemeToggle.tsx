@@ -7,7 +7,12 @@ export default function ThemeToggle() {
   return (
     <button
       className="modebtn cursor-target"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={(e) =>
+        setTheme(theme === "dark" ? "light" : "dark", {
+          x: e.clientX,
+          y: e.clientY,
+        })
+      }
       aria-label="Toggle color theme"
     >
       {theme === "dark" ? "☼" : "☾"}

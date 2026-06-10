@@ -289,6 +289,13 @@ footer .sysline{ font-family:var(--font-m); font-size:10px; color:var(--mute); t
 .siderail a:hover{ color:var(--accent-2); }
 @media (max-width: 1240px){ .siderail{ display:none; } }
 
+/* theme switch: the new theme bleeds out as a circle from the toggle
+   (clip-path animated in JS on ::view-transition-new); kill the default
+   cross-fade so the wipe is the only motion */
+::view-transition-old(root), ::view-transition-new(root){ animation:none; mix-blend-mode:normal; }
+::view-transition-old(root){ z-index:1; }
+::view-transition-new(root){ z-index:2; }
+
 /* theme toggle */
 .modebtn{ font-family:var(--font-m); font-size:10px; letter-spacing:.08em; color:var(--dim); background:transparent; border:1px solid var(--line-2); border-radius:20px; padding:4px 11px; cursor:pointer; transition:color .25s, border-color .25s; }
 .modebtn:hover{ color:var(--accent); border-color:var(--accent); }

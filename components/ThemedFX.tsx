@@ -10,12 +10,15 @@ const PALETTES = {
     dotFrom: "#55855F",
     dotTo: "#B9C7AE",
     glow: "#2F6A47",
+    // a dark radial glow reads as a stain on parchment — dots only
+    glowRadius: 0,
   },
   dark: {
     spark: "#E8A33D",
     dotFrom: "#96763E",
     dotTo: "#4A3A20",
     glow: "#F2C078",
+    glowRadius: 160,
   },
 };
 
@@ -44,6 +47,7 @@ export function ThemedDotField() {
       gradientFrom={p.dotFrom}
       gradientTo={p.dotTo}
       glowColor={p.glow}
+      glowRadius={p.glowRadius}
       sparkle
       cursorRadius={140}
       waveAmplitude={2.5}
