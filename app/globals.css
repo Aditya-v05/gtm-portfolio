@@ -192,6 +192,58 @@ footer .sysline .on{ color:var(--accent); }
 .fade.d1{ animation-delay:.04s;} .fade.d2{ animation-delay:.12s;} .fade.d3{ animation-delay:.2s;} .fade.d4{ animation-delay:.28s;}
 @keyframes rise{ from{ opacity:0; transform:translateY(12px);} to{ opacity:1; transform:none;} }
 
+/* RESPONSIVE */
+@media (max-width: 860px){
+  .wrap{ padding:0 32px; }
+  nav .in{ padding:14px 32px; }
+}
+@media (max-width: 720px){
+  .wrap{ padding:0 22px; }
+  nav .in{ padding:12px 22px; }
+  nav .links{ gap:16px; }
+  .hero{ padding:64px 0 48px; }
+  .hero .sub{ font-size:16.5px; }
+  .clients{ gap:14px 24px; }
+  .clients .names{ gap:18px; }
+  .client{ font-size:18px; }
+  .shead{ flex-wrap:wrap; row-gap:2px; margin:64px 0 8px; }
+  .shead .c{ margin-left:0; width:100%; }
+
+  /* case studies: rail folds into a horizontal strip above the body */
+  .case{ display:block; padding:38px 0; }
+  .rail{ display:flex; flex-wrap:wrap; align-items:flex-start; column-gap:28px; row-gap:10px; padding-bottom:16px; margin-bottom:18px; border-bottom:1px dashed var(--line); }
+  .rail .id{ width:100%; }
+  .rail .seg{ margin-top:0; }
+  .rail .st{ margin-top:0; align-self:center; }
+
+  /* evidence */
+  .term__body{ font-size:10px; }
+  .data{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .shot{ flex-direction:column; }
+  .shot__f{ width:100%; max-width:300px; }
+  .report__top{ flex-wrap:wrap; }
+  .report__top .s{ flex:1 1 33%; min-width:90px; }
+  .nrow{ grid-template-columns:104px 1fr 38px; }
+
+  /* also built: single column */
+  .grid{ grid-template-columns:1fr; }
+  .gcell{ padding:20px 0; }
+  .gcell:nth-child(odd){ padding-right:0; border-right:0; }
+  .gcell:nth-child(even){ padding-left:0; }
+
+  footer{ margin:70px 0 90px; }
+  footer .sysline{ text-align:left; }
+  .pbtn{ bottom:16px; right:16px; padding:9px 13px; }
+}
+@media (max-width: 460px){
+  .wrap{ padding:0 18px; }
+  nav .in{ padding:11px 18px; }
+  nav .brand span{ display:none; }
+  nav .links{ gap:12px; font-size:10px; }
+  h1{ font-size:clamp(34px,9.5vw,44px); }
+  .hero .meta{ gap:8px 18px; }
+}
+
 @page{ size:Letter; margin:14mm 15mm; }
 @media print{
   body{ font-size:11px; background:var(--bg); }
