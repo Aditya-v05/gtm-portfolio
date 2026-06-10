@@ -78,10 +78,6 @@ export default function Home() {
       <ThemedClickSpark />
       <Noise patternSize={250} patternAlpha={10} patternRefreshInterval={3} />
 
-      <a className="pbtn cursor-target" href="/Aditya-GTM-Engineering-Portfolio.pdf" download>
-        portfolio.pdf ↓
-      </a>
-
       {/* NAV */}
       <nav>
         <div className="in">
@@ -95,6 +91,9 @@ export default function Home() {
             <a className="cursor-target" href="https://github.com/Aditya-v05">GitHub</a>
             <a className="cursor-target" href="#contact">Contact</a>
             <ThemeToggle />
+            <a className="modebtn navpdf cursor-target" href="/Aditya-GTM-Engineering-Portfolio.pdf" download>
+              <span className="navpdf__t">portfolio.</span>pdf ↓
+            </a>
           </div>
         </div>
       </nav>
@@ -617,6 +616,14 @@ export default function Home() {
               <div><a className="cursor-target" href="mailto:adityaspark05@gmail.com">adityaspark05@gmail.com</a></div>
               <div><a className="cursor-target" href="https://github.com/Aditya-v05">github.com/Aditya-v05</a></div>
               <div><a className="cursor-target" href="https://gethuntd.com">gethuntd.com</a> <span className="edit">— building GTM systems @ Huntd</span></div>
+              <a className="pdfcard cursor-target" href="/Aditya-GTM-Engineering-Portfolio.pdf" download>
+                <span className="ic">PDF</span>
+                <span className="meta">
+                  <span className="fn">Aditya-GTM-Engineering-Portfolio.pdf</span>
+                  <span className="ft">print edition of this site · 12 pages</span>
+                </span>
+                <span className="dl">↓</span>
+              </a>
             </div>
             <div className="sysline">
               <div>rev. 2026.06</div>

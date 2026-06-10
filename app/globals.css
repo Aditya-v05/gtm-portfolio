@@ -291,11 +291,18 @@ footer .sysline{ font-family:var(--font-m); font-size:10px; color:var(--mute); t
 
 /* theme toggle */
 .modebtn{ font-family:var(--font-m); font-size:10px; letter-spacing:.08em; color:var(--dim); background:transparent; border:1px solid var(--line-2); border-radius:20px; padding:4px 11px; cursor:pointer; transition:color .25s, border-color .25s; }
+a.navpdf{ display:inline-flex; align-items:center; color:var(--accent); border-color:rgba(var(--accent-rgb),.45); }
+a.navpdf:hover{ border-color:var(--accent); color:var(--accent-2); }
 .modebtn:hover{ color:var(--accent); border-color:var(--accent); }
 
-/* PDF button */
-.pbtn{ position:fixed; bottom:22px; right:22px; z-index:97; background:var(--accent); color:var(--on-accent); font-family:var(--font-m); font-size:11px; font-weight:700; padding:11px 16px; border-radius:8px; letter-spacing:.04em; box-shadow:0 10px 32px -8px rgba(var(--accent-rgb),.5); transition:transform .2s, background .2s; }
-.pbtn:hover{ background:var(--accent-2); transform:translateY(-2px); }
+/* footer pdf artifact chip (styled like the slack file attachments) */
+.pdfcard{ display:flex; align-items:center; gap:12px; margin-top:18px; padding:11px 14px; border:1px solid var(--line-2); border-radius:10px; background:var(--bg-2); max-width:420px; transition:border-color .25s, transform .25s; }
+.pdfcard:hover{ border-color:var(--accent); transform:translateY(-2px); }
+.pdfcard .ic{ width:34px; height:34px; border-radius:7px; background:var(--accent); color:var(--on-accent); font-family:var(--font-m); font-weight:700; font-size:9.5px; display:flex; align-items:center; justify-content:center; flex:none; }
+.pdfcard .meta{ display:flex; flex-direction:column; line-height:1.5; min-width:0; }
+.pdfcard .fn{ font-family:var(--font-m); font-size:11px; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pdfcard .ft{ font-family:var(--font-m); font-size:9px; color:var(--mute); letter-spacing:.04em; }
+.pdfcard .dl{ margin-left:auto; color:var(--accent); font-family:var(--font-m); font-size:14px; }
 
 /* ============ RESPONSIVE ============ */
 @media (max-width: 880px){
@@ -344,7 +351,6 @@ footer .sysline{ font-family:var(--font-m); font-size:10px; color:var(--mute); t
   footer .big{ font-size:clamp(28px,6.6vw,48px); overflow-wrap:anywhere; }
   footer .big a{ font-size:.88em; }
   footer .sysline{ text-align:left; }
-  .pbtn{ bottom:16px; right:16px; }
 }
 @media (max-width: 460px){
   .wrap, nav .in, .hero__in, .marquee__k{ padding-left:18px; padding-right:18px; }
@@ -352,7 +358,7 @@ footer .sysline{ font-family:var(--font-m); font-size:10px; color:var(--mute); t
   nav .brand{ font-size:14px; line-height:1.15; max-width:84px; }
   nav .links{ gap:11px; font-size:11px; flex-wrap:wrap; justify-content:flex-end; row-gap:6px; }
   .modebtn{ padding:3px 8px; }
-  .modebtn__t{ display:none; }
+  .modebtn__t, .navpdf__t{ display:none; }
   h1{ font-size:clamp(38px,10.5vw,48px); }
   .hero .cue{ display:none; }
 }
@@ -389,7 +395,7 @@ footer .sysline{ font-family:var(--font-m); font-size:10px; color:var(--mute); t
   *{ opacity:1 !important; transform:none !important; animation:none !important; transition:none !important; }
 
   /* effects and chrome that make no sense on paper */
-  canvas, .noise-overlay, .target-cursor-wrapper, .pbtn, .boot,
+  canvas, .noise-overlay, .target-cursor-wrapper, .navpdf, .pdfcard, .boot,
   .hero__field, .hero .cue, .hero__dial, .marquee, .modebtn, .shead .ghost{ display:none !important; }
 
   nav{ position:static; background:var(--bg); backdrop-filter:none; }
