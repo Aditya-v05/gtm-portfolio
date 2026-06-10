@@ -1,12 +1,14 @@
-import ClickSpark from "@/components/ClickSpark";
 import Noise from "@/components/Noise";
-import DotField from "@/components/DotField";
 import SplitText from "@/components/SplitText";
 import ScrollVelocity from "@/components/ScrollVelocity";
 import CountUp from "@/components/CountUp";
 import SpotlightCard from "@/components/SpotlightCard";
 import AnimatedContent from "@/components/AnimatedContent";
 import SideRail from "@/components/SideRail";
+import BootIntro from "@/components/BootIntro";
+import ThemeToggle from "@/components/ThemeToggle";
+import { ThemedClickSpark, ThemedDotField } from "@/components/ThemedFX";
+import CursorFX from "@/components/CursorFX";
 
 // Pre-formatted terminal blocks: whitespace and newlines are significant
 // (rendered with white-space:pre-wrap), so they are injected as raw HTML to
@@ -72,11 +74,13 @@ export default function Home() {
   return (
     <>
       {/* fixed effect layers */}
-      <ClickSpark sparkColor="#E8A33D" sparkSize={9} sparkRadius={22} sparkCount={8} duration={450} />
+      <BootIntro />
+      <CursorFX />
+      <ThemedClickSpark />
       <Noise patternSize={250} patternAlpha={10} patternRefreshInterval={3} />
       <SideRail />
 
-      <a className="pbtn" href="/Aditya-GTM-Engineering-Portfolio.pdf" download>
+      <a className="pbtn cursor-target" href="/Aditya-GTM-Engineering-Portfolio.pdf" download>
         portfolio.pdf ↓
       </a>
 
@@ -88,10 +92,11 @@ export default function Home() {
             <span className="tail">gtm engineer</span>
           </div>
           <div className="links">
-            <a href="#work">Work</a>
-            <a href="#stack">Stack</a>
-            <a href="https://github.com/Aditya-v05">GitHub</a>
-            <a href="#contact">Contact</a>
+            <a className="cursor-target" href="#work">Work</a>
+            <a className="cursor-target" href="#stack">Stack</a>
+            <a className="cursor-target" href="https://github.com/Aditya-v05">GitHub</a>
+            <a className="cursor-target" href="#contact">Contact</a>
+            <ThemeToggle />
           </div>
         </div>
       </nav>
@@ -99,16 +104,7 @@ export default function Home() {
       {/* HERO */}
       <section className="hero">
         <div className="hero__field">
-          <DotField
-            dotRadius={1.6}
-            dotSpacing={18}
-            gradientFrom="#96763E"
-            gradientTo="#4A3A20"
-            glowColor="#F2C078"
-            sparkle
-            cursorRadius={140}
-            waveAmplitude={2.5}
-          />
+          <ThemedDotField />
         </div>
         {/* technical dial ornament — slow spin, blueprint strokes */}
         <svg className="hero__dial" viewBox="0 0 600 600" aria-hidden="true">
@@ -184,7 +180,7 @@ export default function Home() {
           <section className="signals">
           <AnimatedContent {...reveal}>
             <div className="exh exh--a">
-            <div className="slack">
+            <div className="slack cursor-target">
               <div className="slack__bar">
                 <span className="chan"><span className="lk">#</span> huntd-warp</span>
                 <span className="ext">2 people from Warp</span>
@@ -214,7 +210,7 @@ export default function Home() {
 
           <AnimatedContent {...reveal} delay={0.1}>
             <div className="exh exh--b">
-            <div className="slack">
+            <div className="slack cursor-target">
               <div className="slack__bar">
                 <span className="chan"><span className="lk">#</span> huntd-hyperbound</span>
                 <span className="ext">3 people from Hyperbound</span>
@@ -248,7 +244,7 @@ export default function Home() {
 
           <AnimatedContent {...reveal} delay={0.2}>
             <div className="exh exh--c">
-            <div className="slack">
+            <div className="slack cursor-target">
               <div className="slack__bar">
                 <span className="chan"><span className="lk">#</span> huntd-peecai</span>
                 <span className="ext">3 people from Peec AI</span>
@@ -585,14 +581,14 @@ export default function Home() {
         <hr className="rule" />
 
         <div className="grid">
-          <SpotlightCard className="gcell" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Competitor Recon Agent</h4><p>Maps a niche&apos;s competitive landscape — named competitors, funded startups, comparison pages — from one target.</p><p className="num">→ <b>100+</b> companies mapped · 15+ competitors each</p><p className="tools">Claude Agent SDK · Google SERP · proxy</p></SpotlightCard>
-          <SpotlightCard className="gcell" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Employee Intelligence DB</h4><p>MongoDB tracking employees at target accounts with first/last-seen + status — for hiring / churn triggers.</p><p className="num">→ <b>3</b> target accounts · daily deltas</p><p className="tools">MongoDB · schema-driven snapshots</p></SpotlightCard>
-          <SpotlightCard className="gcell" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Shopify Merchant Classifier</h4><p>Agent that discovers &amp; classifies Shopify stores and agencies from search results for outreach.</p><p className="num">→ <b>2,029</b> stores classified</p><p className="tools">Claude Agent SDK · Apify · Cheerio</p></SpotlightCard>
-          <SpotlightCard className="gcell" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Crunchbase Exporter</h4><p>Resumable batch scraper for funded-company data with progress checkpointing and recovery.</p><p className="num">→ <b>25,200</b> funded companies exported</p><p className="tools">Playwright · resumable state</p></SpotlightCard>
-          <SpotlightCard className="gcell" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Smartlead Campaign Agent</h4><p>CLI agent that creates and manages outbound campaigns through the Smartlead API.</p><p className="num">→ full campaign lifecycle via API</p><p className="tools">Claude Agent SDK · Smartlead API</p></SpotlightCard>
-          <SpotlightCard className="gcell" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Email Finder TUI</h4><p>Interactive terminal tool for name-+-company email lookup via LeadMagic, with a live blessed UI.</p><p className="num">→ name + company → verified email</p><p className="tools">Node · blessed · LeadMagic</p></SpotlightCard>
-          <SpotlightCard className="gcell" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Apollo Headcount Lookup</h4><p>Rate-limited CLI resolving company headcount from Apollo for domains or names, streamed to CSV.</p><p className="num">→ domain / name → headcount</p><p className="tools">TypeScript · Apollo · streaming CSV</p></SpotlightCard>
-          <SpotlightCard className="gcell" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Post-Engagement Scraper</h4><p>Exports everyone who commented on a target LinkedIn post — warm signals for outreach.</p><p className="num">→ <b>1,210</b> commenters / post</p><p className="tools">Node · Apify</p></SpotlightCard>
+          <SpotlightCard className="gcell cursor-target" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Competitor Recon Agent</h4><p>Maps a niche&apos;s competitive landscape — named competitors, funded startups, comparison pages — from one target.</p><p className="num">→ <b>100+</b> companies mapped · 15+ competitors each</p><p className="tools">Claude Agent SDK · Google SERP · proxy</p></SpotlightCard>
+          <SpotlightCard className="gcell cursor-target" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Employee Intelligence DB</h4><p>MongoDB tracking employees at target accounts with first/last-seen + status — for hiring / churn triggers.</p><p className="num">→ <b>3</b> target accounts · daily deltas</p><p className="tools">MongoDB · schema-driven snapshots</p></SpotlightCard>
+          <SpotlightCard className="gcell cursor-target" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Shopify Merchant Classifier</h4><p>Agent that discovers &amp; classifies Shopify stores and agencies from search results for outreach.</p><p className="num">→ <b>2,029</b> stores classified</p><p className="tools">Claude Agent SDK · Apify · Cheerio</p></SpotlightCard>
+          <SpotlightCard className="gcell cursor-target" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Crunchbase Exporter</h4><p>Resumable batch scraper for funded-company data with progress checkpointing and recovery.</p><p className="num">→ <b>25,200</b> funded companies exported</p><p className="tools">Playwright · resumable state</p></SpotlightCard>
+          <SpotlightCard className="gcell cursor-target" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Smartlead Campaign Agent</h4><p>CLI agent that creates and manages outbound campaigns through the Smartlead API.</p><p className="num">→ full campaign lifecycle via API</p><p className="tools">Claude Agent SDK · Smartlead API</p></SpotlightCard>
+          <SpotlightCard className="gcell cursor-target" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Email Finder TUI</h4><p>Interactive terminal tool for name-+-company email lookup via LeadMagic, with a live blessed UI.</p><p className="num">→ name + company → verified email</p><p className="tools">Node · blessed · LeadMagic</p></SpotlightCard>
+          <SpotlightCard className="gcell cursor-target" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Apollo Headcount Lookup</h4><p>Rate-limited CLI resolving company headcount from Apollo for domains or names, streamed to CSV.</p><p className="num">→ domain / name → headcount</p><p className="tools">TypeScript · Apollo · streaming CSV</p></SpotlightCard>
+          <SpotlightCard className="gcell cursor-target" spotlightColor="rgba(232, 163, 61, 0.10)"><h4><span className="d"></span>Post-Engagement Scraper</h4><p>Exports everyone who commented on a target LinkedIn post — warm signals for outreach.</p><p className="num">→ <b>1,210</b> commenters / post</p><p className="tools">Node · Apify</p></SpotlightCard>
         </div>
 
         <div className="stackwall">
@@ -613,9 +609,9 @@ export default function Home() {
           <div className="row">
             <div className="links">
               <div><span style={{ color: "var(--mute)" }}>// reach me</span></div>
-              <div><a href="mailto:adityaspark05@gmail.com">adityaspark05@gmail.com</a></div>
-              <div><a href="https://github.com/Aditya-v05">github.com/Aditya-v05</a></div>
-              <div><a href="https://gethuntd.com">gethuntd.com</a> <span className="edit">— building GTM systems @ Huntd</span></div>
+              <div><a className="cursor-target" href="mailto:adityaspark05@gmail.com">adityaspark05@gmail.com</a></div>
+              <div><a className="cursor-target" href="https://github.com/Aditya-v05">github.com/Aditya-v05</a></div>
+              <div><a className="cursor-target" href="https://gethuntd.com">gethuntd.com</a> <span className="edit">— building GTM systems @ Huntd</span></div>
             </div>
             <div className="sysline">
               <div>rev. 2026.06</div>
