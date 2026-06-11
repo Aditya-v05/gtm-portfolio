@@ -38,7 +38,9 @@ body{
   background:var(--bg); color:var(--ink);
   font-family:var(--font-b); font-size:15px; line-height:1.65;
   -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
+  /* clip, not hidden: overflow-x:hidden turns body into a scroll container,
+     which breaks position:sticky on the nav */
+  overflow-x:clip;
 }
 /* warm vignette breathing at the top of the console */
 body::before{
