@@ -1,6 +1,6 @@
 import Noise from "@/components/Noise";
 import HeroHeadline from "@/components/HeroHeadline";
-import ScrollVelocity from "@/components/ScrollVelocity";
+import ClientMarquee from "@/components/ClientMarquee";
 import CountUp from "@/components/CountUp";
 import SpotlightCard from "@/components/SpotlightCard";
 import AnimatedContent from "@/components/AnimatedContent";
@@ -151,15 +151,7 @@ export default function Home() {
       {/* CLIENT MARQUEE */}
       <section className="marquee">
         <div className="marquee__k">Systems shipped for</div>
-        <ScrollVelocity
-          texts={[
-            <span key="clients">
-              Brex<span className="sep">✺</span>Rho<span className="sep">✺</span>Peec&nbsp;AI<span className="sep">✺</span>Warp<span className="sep">✺</span>Hyperbound<span className="sep">✺</span>Qashio<span className="sep">✺</span>
-            </span>,
-          ]}
-          velocity={45}
-          numCopies={8}
-        />
+        <ClientMarquee />
       </section>
 
       {/* print-only client roster: the animated marquee can't be trusted in

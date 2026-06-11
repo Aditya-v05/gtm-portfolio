@@ -111,6 +111,12 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
   color:transparent; -webkit-text-stroke:1px rgba(var(--accent-rgb),.38); filter:none; }
 .marquee .scroller .sep{ -webkit-text-stroke:0; color:var(--accent); font-style:normal; font-family:var(--font-m); font-size:22px; vertical-align:middle; padding:0 26px; }
 .marquee__k{ max-width:1060px; margin:0 auto 14px; padding:0 56px; font-family:var(--font-m); font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--mute); }
+/* CSS marquee (touch devices): compositor-driven so it never stutters.
+   Track = two identical halves; -50% loops seamlessly. */
+.cssm{ width:max-content; will-change:transform; animation:cssmScroll 80s linear infinite; }
+.cssm__half{ display:flex; flex-shrink:0; }
+@keyframes cssmScroll{ to{ transform:translateX(-50%); } }
+@media (prefers-reduced-motion: reduce){ .cssm{ animation:none; } }
 
 /* ============ SECTION HEADS ============ */
 .shead{ display:flex; align-items:baseline; gap:18px; margin:110px 0 12px; position:relative; }
@@ -301,8 +307,9 @@ footer .sysline{ font-family:var(--font-m); font-size:10px; color:var(--mute); t
 ::view-transition-new(root){ z-index:2; }
 
 /* theme toggle */
-.modebtn{ font-family:var(--font-m); font-size:10px; letter-spacing:.08em; color:var(--dim); background:transparent; border:1px solid var(--line-2); border-radius:20px; padding:4px 11px; cursor:pointer; transition:color .25s, border-color .25s; }
-a.navpdf{ display:inline-flex; align-items:center; color:var(--accent); border-color:rgba(var(--accent-rgb),.45); }
+.modebtn{ display:inline-flex; align-items:center; gap:5px; font-family:var(--font-m); font-size:10px; letter-spacing:.08em; color:var(--dim); background:transparent; border:1px solid var(--line-2); border-radius:20px; padding:4px 11px; cursor:pointer; transition:color .25s, border-color .25s; }
+.modebtn svg{ width:12px; height:12px; flex-shrink:0; }
+a.navpdf{ display:inline-flex; align-items:center; gap:0; color:var(--accent); border-color:rgba(var(--accent-rgb),.45); }
 a.navpdf:hover{ border-color:var(--accent); color:var(--accent-2); }
 .modebtn:hover{ color:var(--accent); border-color:var(--accent); }
 
