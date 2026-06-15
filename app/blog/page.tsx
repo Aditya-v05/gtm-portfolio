@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import SiteNav from "@/components/SiteNav";
+import SpotlightCard from "@/components/SpotlightCard";
 import { getAllPosts, formatDate } from "@/lib/posts";
 
 export const metadata: Metadata = {
@@ -25,19 +26,24 @@ export default function BlogIndex() {
           <ul className="postcards">
             {posts.map((post) => (
               <li key={post.slug} className="postcard">
-                <a className="postcard__link cursor-target" href={`/blog/${post.slug}`}>
-                  <span className="postcard__thumb">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={post.cover} alt="" />
-                  </span>
-                  <span className="postcard__body">
-                    <time className="postcard__date" dateTime={post.date}>
-                      {formatDate(post.date)}
-                    </time>
-                    <span className="postcard__title">{post.title}</span>
-                    <span className="postcard__summary">{post.summary}</span>
-                  </span>
-                </a>
+                <SpotlightCard
+                  className="cursor-target"
+                  spotlightColor="rgba(232, 163, 61, 0.10)"
+                >
+                  <a className="postcard__link" href={`/blog/${post.slug}`}>
+                    <span className="postcard__thumb">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={post.cover} alt="" />
+                    </span>
+                    <span className="postcard__body">
+                      <time className="postcard__date" dateTime={post.date}>
+                        {formatDate(post.date)}
+                      </time>
+                      <span className="postcard__title">{post.title}</span>
+                      <span className="postcard__summary">{post.summary}</span>
+                    </span>
+                  </a>
+                </SpotlightCard>
               </li>
             ))}
           </ul>

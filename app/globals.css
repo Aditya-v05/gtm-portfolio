@@ -517,24 +517,34 @@ a.navpdf:hover{ border-color:var(--accent); color:var(--accent-2); }
   flex-direction: column;
   gap: 1.5rem;
 }
+/* the card shell is a SpotlightCard (mouse-follow glow), themed like the
+   "Also Built" .gcell cells. Override the component's dark defaults. */
+.postcards .card-spotlight {
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--bg-2);
+  padding: 14px;
+  --spotlight-color: rgba(var(--accent-rgb), 0.1) !important;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.postcards .card-spotlight:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
 .postcard__link {
+  position: relative; /* sit above the glow ::before */
+  z-index: 1;
   display: grid;
   grid-template-columns: 140px 1fr;
   gap: 1.25rem;
   align-items: stretch;
   text-decoration: none;
   color: inherit;
-  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
-  border-radius: 14px;
-  padding: 14px;
-  transition: border-color 0.2s ease, transform 0.2s ease;
-}
-.postcard__link:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
 }
 .postcard__thumb {
   display: block;
+  align-self: start; /* don't stretch to row height, or aspect-ratio derives a too-wide width */
+  width: 100%; /* fill the 140px track; height then follows from aspect-ratio */
   border-radius: 8px;
   overflow: hidden;
   aspect-ratio: 16 / 10;
@@ -673,10 +683,10 @@ a.navpdf:hover{ border-color:var(--accent); color:var(--accent-2); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .postcard__link {
+  .postcards .card-spotlight {
     transition: none;
   }
-  .postcard__link:hover {
+  .postcards .card-spotlight:hover {
     transform: none;
   }
 }
