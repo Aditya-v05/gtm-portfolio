@@ -22,7 +22,12 @@ const jetbrains = JetBrains_Mono({
   variable: "--font-mono",
 });
 
+const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Aditya — GTM Engineer",
   description:
     "GTM Engineer · Data & Automation. I build GTM systems that run themselves — collection, enrichment, customer-overlap detection, LLM classification, and live outbound.",
