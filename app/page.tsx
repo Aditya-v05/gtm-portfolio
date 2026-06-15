@@ -5,7 +5,7 @@ import CountUp from "@/components/CountUp";
 import SpotlightCard from "@/components/SpotlightCard";
 import AnimatedContent from "@/components/AnimatedContent";
 import BootIntro from "@/components/BootIntro";
-import ThemeToggle from "@/components/ThemeToggle";
+import SiteNav from "@/components/SiteNav";
 import { ThemedClickSpark, ThemedDotField } from "@/components/ThemedFX";
 import CursorFX from "@/components/CursorFX";
 
@@ -79,24 +79,7 @@ export default function Home() {
       <Noise patternSize={250} patternAlpha={10} patternRefreshInterval={3} />
 
       {/* NAV */}
-      <nav>
-        <div className="in">
-          <div className="brand">
-            Aditya <em>Venkatesan</em>
-            <span className="tail">gtm engineer</span>
-          </div>
-          <div className="links">
-            <a className="cursor-target" href="#work">Work</a>
-            <a className="cursor-target" href="#stack">Stack</a>
-            <a className="cursor-target" href="https://github.com/Aditya-v05">GitHub</a>
-            <a className="cursor-target" href="#contact">Contact</a>
-            <ThemeToggle />
-            <a className="modebtn navpdf cursor-target" href="/Aditya-GTM-Engineering-Portfolio.pdf" download>
-              <span className="navpdf__t">portfolio.</span>pdf ↓
-            </a>
-          </div>
-        </div>
-      </nav>
+      <SiteNav variant="home" />
 
       {/* HERO */}
       <section className="hero">
