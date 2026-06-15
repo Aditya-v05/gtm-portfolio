@@ -3,7 +3,7 @@ import SiteNav from "@/components/SiteNav";
 import { getAllPosts, formatDate } from "@/lib/posts";
 
 export const metadata: Metadata = {
-  title: "Blog — Aditya",
+  title: "Blog - Aditya",
   description: "Notes on building GTM systems that run themselves.",
 };
 
@@ -20,7 +20,7 @@ export default function BlogIndex() {
         </header>
 
         {posts.length === 0 ? (
-          <p className="blog-index__empty">No posts yet — check back soon.</p>
+          <p className="blog-index__empty">No posts yet - check back soon.</p>
         ) : (
           <ul className="postcards">
             {posts.map((post) => (

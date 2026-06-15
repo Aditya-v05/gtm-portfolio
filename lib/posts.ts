@@ -24,7 +24,7 @@ function normalizeDate(slug: string, value: unknown): string {
   const iso = value instanceof Date ? value.toISOString().slice(0, 10) : value;
   if (typeof iso === "string" && /^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
   throw new Error(
-    `Post "${slug}.mdx" has missing or invalid "date" — expected YYYY-MM-DD`,
+    `Post "${slug}.mdx" has missing or invalid "date" - expected YYYY-MM-DD`,
   );
 }
 
