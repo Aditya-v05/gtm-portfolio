@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import SiteNav from "@/components/SiteNav";
 import SpotlightCard from "@/components/SpotlightCard";
 import { getAllPosts, formatDate } from "@/lib/posts";
@@ -30,7 +31,7 @@ export default function BlogIndex() {
                   className="cursor-target"
                   spotlightColor="rgba(232, 163, 61, 0.10)"
                 >
-                  <a className="postcard__link" href={`/blog/${post.slug}`}>
+                  <Link className="postcard__link" href={`/blog/${post.slug}`}>
                     <span className="postcard__thumb">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={post.cover} alt="" />
@@ -42,7 +43,7 @@ export default function BlogIndex() {
                       <span className="postcard__title">{post.title}</span>
                       <span className="postcard__summary">{post.summary}</span>
                     </span>
-                  </a>
+                  </Link>
                 </SpotlightCard>
               </li>
             ))}

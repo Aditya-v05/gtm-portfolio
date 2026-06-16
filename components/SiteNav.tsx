@@ -1,7 +1,10 @@
+import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
 
 // variant "home": in-page section anchors (#work). variant "page": route back
 // to the homepage first (/#work) so the links work from /blog pages.
+// Internal routes use next/link for client-side navigation (no full reload,
+// which otherwise replays the boot intro and flashes a black screen).
 export default function SiteNav({
   variant = "home",
 }: {
@@ -18,28 +21,28 @@ export default function SiteNav({
               <span className="tail">gtm engineer</span>
             </>
           ) : (
-            <a className="cursor-target" href="/">
+            <Link className="cursor-target" href="/">
               Aditya <em>Venkatesan</em>
               <span className="tail">gtm engineer</span>
-            </a>
+            </Link>
           )}
         </div>
         <div className="links">
-          <a className="cursor-target" href={`${base}#work`}>
+          <Link className="cursor-target" href={`${base}#work`}>
             Work
-          </a>
-          <a className="cursor-target" href={`${base}#stack`}>
+          </Link>
+          <Link className="cursor-target" href={`${base}#stack`}>
             Stack
-          </a>
-          <a className="cursor-target" href="/blog">
+          </Link>
+          <Link className="cursor-target" href="/blog">
             Blog
-          </a>
+          </Link>
           <a className="cursor-target" href="https://github.com/Aditya-v05">
             GitHub
           </a>
-          <a className="cursor-target" href={`${base}#contact`}>
+          <Link className="cursor-target" href={`${base}#contact`}>
             Contact
-          </a>
+          </Link>
           <ThemeToggle />
           <a
             className="modebtn navpdf cursor-target"

@@ -23,11 +23,15 @@ export default function HeroHeadline() {
   useEffect(() => {
     if (ran.current) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // play once per session: returning to home via client-side nav should show
+    // the finished headline instantly, not re-type it
+    if (sessionStorage.getItem("heroDone") === "1") return;
 
     let tl: gsap.core.Timeline | null = null;
     const begin = () => {
       if (ran.current) return;
       ran.current = true;
+      sessionStorage.setItem("heroDone", "1");
       const svg = svgRef.current;
       if (!svg) return;
       const paths = Array.from(svg.querySelectorAll("path"));

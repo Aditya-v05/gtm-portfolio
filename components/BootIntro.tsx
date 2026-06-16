@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+
+// useLayoutEffect runs before the browser paints; on the server it warns, so
+// fall back to useEffect there. We need the "already booted" skip to happen
+// pre-paint so returning to home via client-side nav never flashes the overlay.
+const useIsoLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 const LINES: Array<[string, string]> = [
   ["collection", "ok"],
@@ -27,7 +33,7 @@ export default function BootIntro() {
     setTimeout(() => setPhase("done"), 780);
   }
 
-  useEffect(() => {
+  useIsoLayoutEffect(() => {
     if (
       sessionStorage.getItem("booted") === "1" ||
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
