@@ -33,7 +33,9 @@
   --shadow-exhibit:0 22px 55px -18px rgba(0,0,0,.7);
 }
 *{ box-sizing:border-box; margin:0; padding:0; }
-html{ scroll-behavior:smooth; overflow-x:clip; }
+/* overflow-anchor:none - Chrome's scroll anchoring otherwise drags the
+   viewport along when an accordion fold expands above the footer */
+html{ scroll-behavior:smooth; overflow-x:clip; overflow-anchor:none; }
 body{
   background:var(--bg); color:var(--ink);
   font-family:var(--font-b); font-size:15px; line-height:1.65;
@@ -78,7 +80,15 @@ nav .links a:hover{ color:var(--ink); } nav .links a:hover::after{ width:100%; }
 .hero__in{ position:relative; z-index:2; margin:0 auto; padding:120px 56px 90px; width:100%; }
 .hero__dial{ position:absolute; z-index:1; right:-160px; top:50%; transform:translateY(-50%); width:min(640px,52vw); height:auto; color:var(--accent); opacity:.16; pointer-events:none; animation:dialSpin 140s linear infinite; }
 @keyframes dialSpin{ to{ transform:translateY(-50%) rotate(360deg); } }
-.hero .eyebrow{ font-family:var(--font-m); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:14px; margin-bottom:40px; }
+.hero .eyebrow{ font-family:var(--font-m); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+
+/* current-role marker: reads as a status readout, not a badge */
+.nowpill{ display:inline-flex; align-items:center; gap:9px; margin-bottom:34px; font-family:var(--font-m); font-size:10.5px; letter-spacing:.05em; color:var(--accent); text-decoration:none; border:1px solid rgba(var(--accent-rgb),.4); border-radius:20px; padding:6px 14px; transition:border-color .25s, transform .25s, box-shadow .25s; }
+.nowpill:hover{ border-color:var(--accent); transform:translateY(-1px); box-shadow:0 4px 18px -8px rgba(var(--accent-rgb),.5); }
+.nowpill__dot{ width:6px; height:6px; border-radius:50%; background:var(--accent); animation:foldpulse 2.2s ease-in-out infinite; flex:none; }
+.nowpill b{ font-weight:600; }
+.nowpill__yc{ font-size:9px; letter-spacing:.08em; padding:1.5px 6px; border:1px solid rgba(var(--accent-rgb),.55); border-radius:4px; }
+@media (prefers-reduced-motion: reduce){ .nowpill__dot{ animation:none; } }
 .hero .eyebrow::before{ content:""; width:34px; height:1px; background:var(--accent); }
 h1{ font-family:var(--font-d); font-weight:480; font-size:clamp(50px,8.9vw,124px); line-height:1.0; letter-spacing:-.02em; }
 /* SplitText wrappers: stack as lines; pad to keep descenders out of the
@@ -113,6 +123,8 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
   color:transparent; -webkit-text-stroke:1px rgba(var(--accent-rgb),.38); filter:none; }
 .marquee .scroller .sep{ -webkit-text-stroke:0; color:var(--accent); font-style:normal; font-family:var(--font-m); font-size:22px; vertical-align:middle; padding:0 26px; }
 .marquee__k{ max-width:1060px; margin:0 auto 14px; padding:0 56px; font-family:var(--font-m); font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--mute); }
+.marquee__now{ max-width:1060px; margin:16px auto 0; padding:0 56px; font-family:var(--font-m); font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--mute); }
+.marquee__now b{ color:var(--accent); font-weight:500; }
 /* CSS marquee (touch devices): compositor-driven so it never stutters.
    Track = two identical halves; -50% loops seamlessly. */
 .cssm{ width:max-content; will-change:transform; animation:cssmScroll 80s linear infinite; }
@@ -196,6 +208,47 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 .metrics b{ color:var(--accent-2); font-weight:500; }
 .metrics .sep{ color:var(--line-2); }
 
+/* ============ SYSTEMS INDEX (accordion) ============ */
+/* SSR renders every fold expanded (crawlers / no-JS / print see everything);
+   the client collapses pre-paint and gsap animates height from there. */
+.folds{ border-top:1px solid var(--line); }
+.fold{ border-bottom:1px solid var(--line); position:relative; }
+.fold__head{ position:relative; display:grid; grid-template-columns:64px minmax(0,1fr) auto auto 34px; align-items:center; gap:22px; width:100%; padding:25px 6px; background:transparent; border:0; cursor:pointer; text-align:left; color:var(--ink); font:inherit; transition:background .3s; }
+.fold__head:hover{ background:rgba(var(--accent-rgb),.045); }
+.fold__no{ font-family:var(--font-d); font-style:italic; font-size:24px; line-height:1; color:transparent; -webkit-text-stroke:1px rgba(var(--accent-rgb),.4); transition:color .6s ease, -webkit-text-stroke-color .6s ease; }
+.fold.is-open .fold__no{ color:var(--accent); -webkit-text-stroke-color:transparent; } /* ink soaks in */
+.fold__hint{ position:absolute; left:0; top:0; pointer-events:none; opacity:0; transition:opacity .25s; font-family:var(--font-m); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); white-space:nowrap; z-index:2; }
+@media (hover:none){ .fold__hint{ display:none; } }
+
+/* ============ EVIDENCE ZOOM (lightbox) ============ */
+.zoomlayer__backdrop{ position:fixed; inset:0; z-index:200; background:rgba(14,12,8,.72); backdrop-filter:blur(6px); cursor:pointer; }
+.zoomlayer__clone{ cursor:pointer; box-shadow:0 40px 120px -20px rgba(0,0,0,.7); }
+[data-zoom]{ cursor:pointer; }
+.fold__title{ display:block; font-family:var(--font-d); font-weight:490; font-size:clamp(19px,2.6vw,27px); line-height:1.12; letter-spacing:-.01em; transition:color .3s; }
+.fold__head:hover .fold__title{ color:var(--accent); }
+.fold__lede{ display:block; margin-top:4px; font-size:12.5px; color:var(--dim); }
+.fold__type{ font-family:var(--font-m); font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--mute); white-space:nowrap; }
+.fold__st{ display:inline-flex; align-items:center; gap:7px; font-family:var(--font-m); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--dim); white-space:nowrap; }
+.fold__st .d{ width:6px; height:6px; border-radius:50%; background:var(--mute); }
+.fold__st.is-live{ color:var(--accent); }
+.fold__st.is-live .d{ background:var(--accent); animation:foldpulse 2.2s ease-in-out infinite; }
+@keyframes foldpulse{ 0%,100%{ opacity:1; } 50%{ opacity:.3; } }
+.fold__x{ justify-self:end; font-family:var(--font-m); font-weight:300; font-size:24px; color:var(--mute); line-height:1; transition:transform .5s cubic-bezier(.76,0,.24,1), color .3s; }
+.fold.is-open .fold__x{ transform:rotate(45deg); color:var(--accent); }
+.fold__body{ overflow:hidden; }
+.fold__inner{ padding:8px 0 58px; }
+.fold__inner .case{ padding:0; border-bottom:0; } /* the fold owns spacing + rules now */
+
+@media (max-width:760px){
+  .fold__head{ grid-template-columns:40px minmax(0,1fr) 26px; gap:14px; padding:19px 2px; }
+  .fold__type, .fold__st{ display:none; }
+  .fold__no{ font-size:19px; }
+}
+@media (prefers-reduced-motion: reduce){
+  .fold__st.is-live .d{ animation:none; }
+  .fold__x{ transition:none; }
+}
+
 /* ============ EVIDENCE ============ */
 .ev{ margin-top:26px; }
 .ev__cap{ font-family:var(--font-m); font-size:9.5px; color:var(--mute); letter-spacing:.04em; margin-top:10px; }
@@ -256,6 +309,10 @@ table.dt tr:last-child td{ border-bottom:none; }
 /* dashboard shot (cropped + redacted) */
 .dash{ position:relative; width:100%; aspect-ratio:1700/620; overflow:hidden; border-radius:10px; box-shadow:var(--shadow-exhibit); background:#fff; }
 .dash img{ position:absolute; top:0; left:-17.6%; width:117.6%; max-width:none; display:block; }
+/* variant for artifacts shown whole (Raven app, Diode Slack thread): the
+   image sets its own height, dark chrome behind the rounded corners */
+.dash--full{ aspect-ratio:auto; background:#1a1d21; }
+.dash--full img{ position:static; left:auto; width:100%; max-width:100%; }
 .dash .redact{ position:absolute; background:#EDEBE6; border-radius:5px; box-shadow:inset 0 0 0 1px rgba(0,0,0,.04); }
 .dash .redact::after{ content:""; position:absolute; inset:0; background-image:repeating-linear-gradient(135deg, rgba(0,0,0,.05) 0 3px, transparent 3px 6px); border-radius:5px; }
 
@@ -416,6 +473,10 @@ a.navpdf:hover{ border-color:var(--accent); color:var(--accent-2); }
   /* headline always prints finished: typed text complete, ink filled */
   .htype__sizer{ visibility:visible; }
   .htype__live{ display:none; }
+  /* systems accordion prints fully unfolded: the PDF keeps the evidence wall */
+  .fold__body{ height:auto !important; overflow:visible !important; }
+  .fold__x, .fold__hint{ display:none; }
+  .fold__head{ grid-template-columns:64px minmax(0,1fr) auto auto; }
   .hink__svg path{ fill-opacity:1 !important; stroke-dashoffset:0 !important; }
 
   /* effects and chrome that make no sense on paper */

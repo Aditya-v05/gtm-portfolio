@@ -9,11 +9,11 @@ const useIsoLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 const LINES: Array<[string, string]> = [
-  ["collection", "ok"],
+  ["raven", "ok"],
   ["enrichment", "ok"],
   ["overlap detection", "ok"],
-  ["classification", "ok"],
-  ["outbound", "live"],
+  ["outbound", "ok"],
+  ["diode", "live"],
 ];
 
 const STEP = 160;

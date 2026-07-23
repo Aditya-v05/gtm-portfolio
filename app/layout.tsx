@@ -28,9 +28,22 @@ const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Aditya — GTM Engineer",
+  title: "Aditya - GTM Engineer @ Relling",
   description:
-    "GTM Engineer · Data & Automation. I build GTM systems that run themselves — collection, enrichment, customer-overlap detection, LLM classification, and live outbound.",
+    "Founding GTM Engineer @ Relling (YC S25). I build GTM systems that run themselves - signal intelligence, enrichment, LLM classification, and live outbound.",
+  openGraph: {
+    title: "Aditya - GTM Engineer @ Relling",
+    description:
+      "Founding GTM Engineer @ Relling (YC S25). I build GTM systems that run themselves.",
+    images: [{ url: "/og.png", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Aditya - GTM Engineer @ Relling",
+    description:
+      "Founding GTM Engineer @ Relling (YC S25). I build GTM systems that run themselves.",
+    images: ["/og.png"],
+  },
 };
 
 export const viewport = {

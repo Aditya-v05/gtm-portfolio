@@ -8,6 +8,8 @@ import BootIntro from "@/components/BootIntro";
 import SiteNav from "@/components/SiteNav";
 import { ThemedClickSpark, ThemedDotField } from "@/components/ThemedFX";
 import CursorFX from "@/components/CursorFX";
+import EvidenceZoom from "@/components/EvidenceZoom";
+import { SystemsAccordion, SystemFold } from "@/components/SystemsIndex";
 
 // Pre-formatted terminal blocks: whitespace and newlines are significant
 // (rendered with white-space:pre-wrap), so they are injected as raw HTML to
@@ -75,6 +77,7 @@ export default function Home() {
       {/* fixed effect layers */}
       <BootIntro />
       <CursorFX />
+      <EvidenceZoom />
       <ThemedClickSpark />
       <Noise patternSize={250} patternAlpha={10} patternRefreshInterval={3} />
 
@@ -105,13 +108,23 @@ export default function Home() {
         </svg>
         <div className="hero__in">
           <div className="eyebrow">GTM Engineer · Data &amp; Automation</div>
+          <a
+            className="nowpill cursor-target"
+            href="https://rellingsystems.com"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span className="nowpill__dot"></span>
+            now: Founding GTM Engineer @ <b>Relling</b>
+            <span className="nowpill__yc">YC S25</span>
+          </a>
           <h1>
             <HeroHeadline />
           </h1>
           <p className="sub">
-            Collection, enrichment, customer-overlap detection, LLM classification, and live outbound —
-            built as <b>autonomous systems</b>, not one-off scripts. Each one backed by a
-            real artifact: a log, a verdict, an export.
+            Signal intelligence, enrichment, overlap detection, LLM classification, and live
+            outbound - built as <b>autonomous systems</b>, not one-off scripts. Each one backed
+            by a real artifact: a log, a verdict, an export.
           </p>
           <div className="meta">
             <div className="m">
@@ -123,8 +136,8 @@ export default function Home() {
               <div className="k">campaigns automated</div>
             </div>
             <div className="m">
-              <div className="v"><CountUp to={25} duration={2} /><span className="plus">K+</span></div>
-              <div className="k">companies exported</div>
+              <div className="v"><CountUp to={10} duration={2} /></div>
+              <div className="k">live signals converged</div>
             </div>
           </div>
         </div>
@@ -135,13 +148,14 @@ export default function Home() {
       <section className="marquee">
         <div className="marquee__k">Systems shipped for</div>
         <ClientMarquee />
+        <div className="marquee__now">now: founding gtm engineer @ <b>Relling</b> · YC S25</div>
       </section>
 
       {/* print-only client roster: the animated marquee can't be trusted in
           print, so the six client names get a guaranteed static line here */}
       <section className="print-clients" aria-hidden="true">
         <span className="k">Systems shipped for</span>
-        <span className="names">Brex · Rho · Peec AI · Warp · Hyperbound · Qashio</span>
+        <span className="names">Brex · Rho · Peec AI · Warp · Hyperbound · Qashio · now @ Relling (YC S25)</span>
       </section>
 
       <div className="wrap">
@@ -256,14 +270,86 @@ export default function Home() {
           <span className="ghost">Systems</span>
           <span className="n">№ 02</span>
           <h2>Selected Systems</h2>
-          <span className="c">eight, with evidence</span>
+          <span className="c">ten, indexed · click to unfold</span>
         </div>
         <hr className="rule" />
 
-        <AnimatedContent {...reveal}>
+        <SystemsAccordion defaultOpen="01">
+
+        <SystemFold id="01" title="Diode" lede="The layer above the systems." type="Orchestration" status="live">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">01</span><span className="of">/ 08 · selected work</span></div>
+            <div className="idwrap"><span className="id">01</span><span className="of">/ 10 · selected</span></div>
+            <div className="seg"><div className="h">Type</div><div className="v">Orchestration agent<br />Control layer</div></div>
+            <div className="seg"><div className="h">Stack</div><div className="v"><div>Hermes harness</div><div>Claude · MCP</div><div>Slack · Linear</div><div>Notion · Attio</div></div></div>
+            <div className="st"><span className="d"></span> live</div>
+          </div>
+          <div className="body">
+            <div className="tag">Relling · Diode</div>
+            <h3>Diode, the Orchestration Agent</h3>
+            <div className="lede">The layer above the systems.</div>
+            <p>
+              Every system below this one used to be something a person had to run. <b>Diode is the
+              top-layer agent</b>, built on the Hermes harness, that unifies Relling&apos;s outbound
+              automations and data sources into <b>one converged control surface</b> - discovery,
+              enrichment, classification, and delivery run as a single system, not eight scripts. It
+              lives in Slack, operates the tools directly (Raven sweeps, Attio, Linear, Notion, email,
+              calendars, code), and remembers how the team works - so the whole GTM motion is one
+              message away.
+            </p>
+            <div className="metrics"><b>1</b> control surface <span className="sep">/</span> every system below it <span className="sep">/</span> ask once → the right system runs</div>
+            <div className="ev">
+              <div className="dash dash--full cursor-target" data-zoom>
+                <img src="/diode-slack.png" alt="Diode explaining itself in a Slack thread" />
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - Diode, asked to explain itself in Slack (recreated thread, real avatars)</div>
+            </div>
+          </div>
+        </article>
+        </SystemFold>
+
+        <SystemFold id="02" title="Raven" lede="Ten signals in, scored leads in the CRM out." type="Signal intelligence" status="live">
+        <article className="case">
+          <div className="rail">
+            <div className="idwrap"><span className="id">02</span><span className="of">/ 10</span></div>
+            <div className="seg"><div className="h">Type</div><div className="v">Signal intelligence<br />Lead generation</div></div>
+            <div className="seg"><div className="h">Stack</div><div className="v"><div>Claude · OpenAI</div><div>Apify</div><div>Apollo × Clay</div><div>Attio</div></div></div>
+            <div className="st"><span className="d"></span> live</div>
+          </div>
+          <div className="body">
+            <div className="tag">Relling · Raven</div>
+            <h3>Raven, the Signal Desk</h3>
+            <div className="lede">Ten signals in, scored leads in the CRM out.</div>
+            <p>
+              The internal intelligence engine at Relling. Raven converges <b>10 live signals</b> -
+              LinkedIn activity, job postings, hiring velocity, funding, tech-stack shifts - into
+              scored, outreach-ready leads. A <b>two-pass engine</b> qualifies posts against a
+              playbook, scores their engagers 0-100 for ICP fit, and writes the reasoning down:
+              <b> every score ships with a fit reason</b>. Leads auto-enrich through an Apollo × Clay
+              waterfall and sync straight into Attio, so every record in the CRM is traceable back to
+              the signals that surfaced it.
+            </p>
+            <div className="metrics"><b>10</b> signals converged <span className="sep">/</span> <b>1,094</b> movements · 30d <span className="sep">/</span> signal → scored → CRM</div>
+            <div className="ev">
+              <div className="dash dash--full cursor-target" data-zoom>
+                <img src="/raven-command.jpg" alt="Raven command center dashboard" />
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - Raven&apos;s command center: 124 signals watched, 9 active leads, last sweep 7 hours ago</div>
+            </div>
+            <div className="ev">
+              <div className="dash dash--full cursor-target" data-zoom>
+                <img src="/raven-leads.jpg" alt="Raven leads view with scored lead and fit reason" />
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - a 100-score lead with its written fit reason, synced to Attio (identities masked)</div>
+            </div>
+          </div>
+        </article>
+        </SystemFold>
+
+        <SystemFold id="03" title="LinkedIn Campaign Autopilot" lede="Drop a doc, say go, and LinkedIn campaigns go live." type="Outbound agent" status="live">
+        <article className="case">
+          <div className="rail">
+            <div className="idwrap"><span className="id">03</span><span className="of">/ 10</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Autonomous agent<br />Outbound delivery</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Claude Agent SDK</div><div>OpenCLAW</div><div>Aimfox API</div><div>MongoDB · Node</div></div></div>
             <div className="st"><span className="d"></span> live</div>
@@ -281,14 +367,14 @@ export default function Home() {
             </p>
             <div className="metrics"><b>~100</b> campaigns live <span className="sep">/</span> doc → live in <b>~6 min</b> <span className="sep">/</span> 2-phase + approval gate</div>
             <div className="ev">
-              <div className="term cursor-target">
+              <div className="term cursor-target" data-zoom>
                 <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">partha · run klaviyo-outreach.docx</span></div>
                 <div className="term__body" dangerouslySetInnerHTML={{ __html: term01 }} />
               </div>
               <div className="ev__cap"><b>▸ evidence</b> — representative end-to-end run: doc in, 3 campaigns live</div>
             </div>
             <div className="ev">
-              <div className="dash cursor-target">
+              <div className="dash cursor-target" data-zoom>
                 <img src="/aimfox.png" alt="Aimfox campaigns dashboard" />
                 <span className="redact" style={{ left: "31.5%", top: "39.5%", width: "11.5%", height: "7.3%" }}></span>
                 <span className="redact" style={{ left: "31.5%", top: "53.7%", width: "11.5%", height: "7.3%" }}></span>
@@ -299,12 +385,12 @@ export default function Home() {
             </div>
           </div>
         </article>
-        </AnimatedContent>
+        </SystemFold>
 
-        <AnimatedContent {...reveal}>
+        <SystemFold id="04" title="Customer-Overlap Detection Engine" lede="Does this prospect already use the product?" type="Headless automation">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">02</span><span className="of">/ 08</span></div>
+            <div className="idwrap"><span className="id">04</span><span className="of">/ 10</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Signal<br />Headless automation</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Puppeteer (stealth)</div><div>Evomi · 2captcha</div><div>Azure OpenAI</div><div>MongoDB · Express</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -323,7 +409,7 @@ export default function Home() {
             </p>
             <div className="metrics"><b>10+</b> production checkers <span className="sep">/</span> parallel worker pool <span className="sep">/</span> CAPTCHA-solving + retry</div>
             <div className="ev">
-              <div className="term cursor-target">
+              <div className="term cursor-target" data-zoom>
                 <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">overlap-engine/batch.log — target: Klaviyo · 4 workers</span></div>
                 <div className="term__body" dangerouslySetInnerHTML={{ __html: term02 }} />
               </div>
@@ -331,12 +417,12 @@ export default function Home() {
             </div>
           </div>
         </article>
-        </AnimatedContent>
+        </SystemFold>
 
-        <AnimatedContent {...reveal}>
+        <SystemFold id="05" title="B2B / SaaS Classifier" lede="Noisy Apollo exports into a clean, targetable universe." type="LLM pipeline">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">03</span><span className="of">/ 08</span></div>
+            <div className="idwrap"><span className="id">05</span><span className="of">/ 10</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">LLM pipeline<br />Classification</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>TypeScript</div><div>Azure OpenAI</div><div>Cheerio · Evomi</div><div>CSV streams</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -353,7 +439,7 @@ export default function Home() {
             </p>
             <div className="metrics"><b>13,700</b> companies / run <span className="sep">/</span> resumable · auto-retry <span className="sep">/</span> 280K+ rows processed</div>
             <div className="ev">
-              <div className="term cursor-target">
+              <div className="term cursor-target" data-zoom>
                 <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">run-classifier.log</span></div>
                 <div className="term__body" dangerouslySetInnerHTML={{ __html: term03 }} />
               </div>
@@ -361,12 +447,12 @@ export default function Home() {
             </div>
           </div>
         </article>
-        </AnimatedContent>
+        </SystemFold>
 
-        <AnimatedContent {...reveal}>
+        <SystemFold id="06" title="Apollo × LeadMagic Enrichment" lede="Verified emails in, duplicate outreach out." type="Enrichment">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">04</span><span className="of">/ 08</span></div>
+            <div className="idwrap"><span className="id">06</span><span className="of">/ 10</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Enrichment<br />Email waterfall</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Node</div><div>Apollo API</div><div>LeadMagic API</div><div>MongoDB</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -383,7 +469,7 @@ export default function Home() {
             </p>
             <div className="metrics"><b>dual-provider</b> fallback <span className="sep">/</span> <b>70K+</b> contacts exported <span className="sep">/</span> ~5.7K LOC</div>
             <div className="ev">
-              <div className="data cursor-target">
+              <div className="data cursor-target" data-zoom>
                 <div className="data__bar"><span className="fn">enriched_search_2026-04-23.csv</span><span className="rc">2,501 rows · 14 cols</span></div>
                 <table className="dt">
                   <thead><tr><th>name</th><th>email</th><th>status</th><th>email_source</th><th>title</th><th>company</th></tr></thead>
@@ -399,12 +485,12 @@ export default function Home() {
             </div>
           </div>
         </article>
-        </AnimatedContent>
+        </SystemFold>
 
-        <AnimatedContent {...reveal}>
+        <SystemFold id="07" title="Sales Navigator Capture Extension" lede="Export Sales Nav leads natively, no copy-paste." type="Extension">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">05</span><span className="of">/ 08</span></div>
+            <div className="idwrap"><span className="id">07</span><span className="of">/ 10</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Browser extension<br />Manifest V3</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>JS (ES2020+)</div><div>Chrome MV3</div><div>service worker</div><div>page-world inject</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -422,7 +508,7 @@ export default function Home() {
             <div className="metrics"><b>17K+</b> contacts captured <span className="sep">/</span> dedup by profileId <span className="sep">/</span> CSV · JSON · webhook</div>
             <div className="ev">
               <div className="shot">
-                <div className="shot__f cursor-target">
+                <div className="shot__f cursor-target" data-zoom>
                   <div className="ch"><span className="d"></span><span className="t">Sales Nav Scraper · popup</span></div>
                   <img src="/fig-salesnav.png" alt="Sales Nav Scraper popup" />
                 </div>
@@ -437,12 +523,12 @@ export default function Home() {
             </div>
           </div>
         </article>
-        </AnimatedContent>
+        </SystemFold>
 
-        <AnimatedContent {...reveal}>
+        <SystemFold id="08" title="Customer Poacher" lede="One company URL in; its customers' buyers out." type="Discovery workflow">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">06</span><span className="of">/ 08</span></div>
+            <div className="idwrap"><span className="id">08</span><span className="of">/ 10</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Workflow agent<br />CLI</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>TypeScript · Mastra</div><div>Azure AI (Claude)</div><div>Zyte · Serper</div><div>MongoDB</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -459,7 +545,7 @@ export default function Home() {
             </p>
             <div className="metrics"><b>130+</b> companies mined <span className="sep">/</span> sitemap → AI → LinkedIn <span className="sep">/</span> CSV exports</div>
             <div className="ev">
-              <div className="data cursor-target">
+              <div className="data cursor-target" data-zoom>
                 <div className="data__bar"><span className="fn">out/gong-io-customer-linkedin-profiles.csv</span><span className="rc">→ LinkedIn profiles</span></div>
                 <table className="dt">
                   <thead><tr><th>name</th><th>company</th><th>job title</th><th>linkedin</th><th>source</th></tr></thead>
@@ -475,12 +561,12 @@ export default function Home() {
             </div>
           </div>
         </article>
-        </AnimatedContent>
+        </SystemFold>
 
-        <AnimatedContent {...reveal}>
+        <SystemFold id="09" title="Lead Bucketing Agent" lede="A flat lead list, segmented into outreach-ready niches." type="Segmentation">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">07</span><span className="of">/ 08</span></div>
+            <div className="idwrap"><span className="id">09</span><span className="of">/ 10</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Agent<br />Segmentation</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Claude Agent SDK</div><div>Apify Search</div><div>Zod · Node</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -497,7 +583,7 @@ export default function Home() {
             </p>
             <div className="metrics"><b>1,255</b> leads → 116 cos <span className="sep">/</span> 109 granular niches <span className="sep">/</span> <b>3K+</b> companies segmented</div>
             <div className="ev">
-              <div className="report cursor-target">
+              <div className="report cursor-target" data-zoom>
                 <div className="report__top">
                   <div className="s"><div className="v">116</div><div className="l">companies classified</div></div>
                   <div className="s"><div className="v">8</div><div className="l">broad niches</div></div>
@@ -516,12 +602,12 @@ export default function Home() {
             </div>
           </div>
         </article>
-        </AnimatedContent>
+        </SystemFold>
 
-        <AnimatedContent {...reveal}>
+        <SystemFold id="10" title="Auth-Enumeration Recon Agent" lede="Probes auth flows the way a researcher would." type="Security recon">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">08</span><span className="of">/ 08</span></div>
+            <div className="idwrap"><span className="id">10</span><span className="of">/ 10</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Autonomous agent<br />Security recon</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Python (agent sdk)</div><div>TS · Mastra</div><div>Playwright · MCP</div><div>2captcha</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -539,7 +625,7 @@ export default function Home() {
             </p>
             <div className="metrics"><b>10</b> MCP tools <span className="sep">/</span> HAR-diff analysis <span className="sep">/</span> findings on 30+ companies</div>
             <div className="ev">
-              <div className="term cursor-target">
+              <div className="term cursor-target" data-zoom>
                 <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">agent.log → report.md</span></div>
                 <div className="term__body" dangerouslySetInnerHTML={{ __html: term08 }} />
               </div>
@@ -547,7 +633,9 @@ export default function Home() {
             </div>
           </div>
         </article>
-        </AnimatedContent>
+        </SystemFold>
+
+        </SystemsAccordion>
 
         {/* ALSO BUILT */}
         <div className="shead" id="stack">
@@ -589,7 +677,8 @@ export default function Home() {
               <div><span style={{ color: "var(--mute)" }}>// reach me</span></div>
               <div><a className="cursor-target" href="mailto:adityaspark05@gmail.com">adityaspark05@gmail.com</a></div>
               <div><a className="cursor-target" href="https://github.com/Aditya-v05">github.com/Aditya-v05</a></div>
-              <div><a className="cursor-target" href="https://gethuntd.com">gethuntd.com</a> <span className="edit">— building GTM systems @ Huntd</span></div>
+              <div><a className="cursor-target" href="https://rellingsystems.com">rellingsystems.com</a> <span className="edit">- Founding GTM Engineer @ Relling (YC S25)</span></div>
+              <div><a className="cursor-target" href="https://gethuntd.com">gethuntd.com</a> <span className="edit">- previously: GTM systems @ Huntd</span></div>
               <a className="pdfcard cursor-target" href="/Aditya-GTM-Engineering-Portfolio.pdf" download>
                 <span className="ic">PDF</span>
                 <span className="meta">
@@ -600,7 +689,7 @@ export default function Home() {
               </a>
             </div>
             <div className="sysline">
-              <div>rev. 2026.06</div>
+              <div>rev. 2026.07</div>
               <div>all figures are real run artifacts</div>
               <div>PII masked · recon target anonymized</div>
             </div>
