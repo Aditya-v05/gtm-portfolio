@@ -87,15 +87,6 @@ nav .links a:hover{ color:var(--ink); } nav .links a:hover::after{ width:100%; }
 .hero__in{ position:relative; z-index:2; margin:auto auto 0; padding:76px 56px 12px; width:100%; }
 .hero .eyebrow{ font-family:var(--font-m); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:14px; margin-bottom:18px; }
 
-/* short viewports: compress the hero so the whole machine lands above the fold */
-@media (max-height: 960px){
-  .hero__in{ padding-top:56px; }
-  .hero h1{ font-size:clamp(48px, 7.8vw, 104px); }
-  .hero .sub{ margin-top:18px; }
-  .hero .meta{ margin-top:24px; }
-  .belt__stage{ height:clamp(200px, 24vh, 300px); }
-}
-
 /* current-role marker: reads as a status readout, not a badge */
 .nowpill{ display:inline-flex; align-items:center; gap:9px; margin-bottom:34px; font-family:var(--font-m); font-size:10.5px; letter-spacing:.05em; color:var(--accent); text-decoration:none; border:1px solid rgba(var(--accent-rgb),.4); border-radius:20px; padding:6px 14px; transition:border-color .25s, transform .25s, box-shadow .25s; }
 .nowpill:hover{ border-color:var(--accent); transform:translateY(-1px); box-shadow:0 4px 18px -8px rgba(var(--accent-rgb),.5); }
@@ -123,6 +114,7 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 .hero .sub{ font-size:17px; line-height:1.65; color:var(--dim); max-width:58ch; margin-top:26px; }
 .hero .sub b{ color:var(--ink); font-weight:600; }
 .hero .meta{ display:flex; flex-wrap:wrap; gap:18px 56px; margin-top:36px; }
+.hero:has(.belt--3d) .meta{ display:none; } /* stats live on the machine as callouts */
 .hero .meta .m .v{ font-family:var(--font-d); font-size:34px; line-height:1; color:var(--ink); }
 .hero .meta .m .v .plus{ color:var(--accent); }
 .hero .meta .m .k{ font-family:var(--font-m); font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute); margin-top:8px; }
@@ -133,8 +125,17 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 /* Machine drawing: static frame (double rails + roller trucks) with a
    chain-link belt scrolling inside the channel. Geometry mirrors the real
    thing - rail pair, belt channel, rail pair, rollers beneath. */
-.belt{ position:relative; z-index:1; width:100%; padding:0 0 30px; }
-.belt__stage{ position:relative; height:clamp(220px, 27vh, 340px); width:100%; }
+.belt{ position:relative; z-index:1; width:100%; padding:0 0 18px; }
+.belt__stage{ position:relative; height:clamp(300px, 44vh, 560px); width:100%; }
+/* blueprint callouts: hero stats pinned to machine parts (3D mode only) */
+.belt3d__leads{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:2; opacity:0; transition:opacity .9s ease .25s; }
+.belt3d__lead{ stroke:color-mix(in srgb, var(--ink) 45%, transparent); stroke-width:1; }
+.belt3d__co{ position:absolute; left:0; top:0; z-index:3; pointer-events:none; opacity:0; transition:opacity .9s ease .25s;
+  font-family:var(--font-m); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim);
+  background:color-mix(in srgb, var(--bg) 86%, transparent); padding:6px 10px 7px; border:1px solid var(--line-2); border-radius:6px; white-space:nowrap; }
+.belt3d__co b{ display:block; font-family:var(--font-d); font-weight:490; font-size:30px; line-height:1.05; letter-spacing:-.01em; color:var(--ink); text-transform:none; }
+.belt--3d .belt3d__co, .belt--3d .belt3d__leads{ opacity:1; }
+
 /* flat (CSS) machine: base experience + loading state; hidden once 3D runs */
 .belt__flat{ position:absolute; left:0; right:0; top:50%; height:150px; transform:translateY(-50%); }
 .belt--3d .belt__flat{ display:none; }
@@ -179,11 +180,15 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 .belt__scanner{ position:absolute; top:0; height:118px; left:calc(55vw - 52px); width:104px; border:1px solid color-mix(in srgb, var(--ink) 55%, transparent); border-bottom:0; border-radius:4px 4px 0 0; }
 .belt__scanbeam{ position:absolute; left:50%; top:18px; bottom:0; width:0; border-left:1px dashed rgba(var(--accent-rgb),.8); }
 .belt__bin{ position:absolute; top:22px; right:16px; height:90px; width:74px; border:1px dashed rgba(var(--accent-rgb),.6); border-radius:5px; background:color-mix(in srgb, var(--bg) 80%, transparent); }
-.belt__caption{ position:absolute; z-index:2; left:0; right:0; bottom:8px; max-width:1060px; margin:0 auto; padding:0 56px; font-family:var(--font-m); font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--mute); }
+.belt__caption{ position:absolute; z-index:2; left:56px; bottom:10px; font-family:var(--font-m); font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--mute);
+  border:1px solid var(--line-2); border-radius:4px; padding:6px 12px; background:color-mix(in srgb, var(--bg) 82%, transparent); }
 .belt__caption b{ color:var(--accent); font-weight:500; }
 
 @media (max-width:760px){
   .belt__stage{ height:230px; }
+  /* phones: annotations would clip at the edges - stats return to the copy */
+  .hero:has(.belt--3d) .meta{ display:flex; }
+  .belt3d__co, .belt3d__leads{ display:none; }
   .belt__flat{ height:120px; }
   .belt__rail--t{ top:14px; } .belt__rail--b{ top:84px; }
   .belt__channel{ top:21px; height:63px; }
@@ -197,6 +202,16 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 @media (prefers-reduced-motion: reduce){
   .belt__plate, .belt__puck, .belt__tread, .belt__roller::after{ animation-play-state:paused !important; }
 }
+
+/* short viewports: compress the hero so the whole machine lands above the fold */
+@media (max-height: 960px){
+  .hero__in{ padding-top:56px; }
+  .hero h1{ font-size:clamp(48px, 7.8vw, 104px); }
+  .hero .sub{ margin-top:18px; }
+  .hero .meta{ margin-top:24px; }
+  .belt__stage{ height:clamp(250px, 32vh, 400px); }
+}
+
 
 /* ============ SECTION HEADS ============ */
 .shead{ display:flex; align-items:baseline; gap:18px; margin:110px 0 12px; position:relative; }
@@ -561,6 +576,7 @@ a.navpdf:hover{ border-color:var(--accent); color:var(--accent-2); }
   /* effects and chrome that make no sense on paper */
   canvas, .noise-overlay, .target-cursor-wrapper, .navpdf, .pdfcard, .boot,
   .hero__field, .hero .cue, .belt, .modebtn, .shead .ghost{ display:none !important; }
+  .hero .meta{ display:flex !important; } /* callouts print with .belt: restore the stats row */
 
   nav{ position:static; background:var(--bg); backdrop-filter:none; }
   .wrap, nav .in, .hero__in{ max-width:none; padding-left:0; padding-right:0; }

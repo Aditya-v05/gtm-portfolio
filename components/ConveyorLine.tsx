@@ -53,6 +53,19 @@ export default function ConveyorLine() {
         </div>
 
         <ConveyorCell />
+
+        {/* blueprint callouts: the hero stats, tethered to machine parts by
+            leader lines the scene draws each frame */}
+        <svg className="belt3d__leads" aria-hidden="true"></svg>
+        <div className="belt3d__co" data-co="scan">
+          <b>10</b> live signals converged
+        </div>
+        <div className="belt3d__co" data-co="arm">
+          <b>100+</b> campaigns automated
+        </div>
+        <div className="belt3d__co" data-co="box">
+          <b>40+</b> systems shipped
+        </div>
       </div>
 
       <div className="belt__caption">
