@@ -86,9 +86,6 @@ nav .links a:hover{ color:var(--ink); } nav .links a:hover::after{ width:100%; }
   mask-image:radial-gradient(120% 100% at 50% 40%, #000 30%, transparent 78%); }
 .hero__in{ position:relative; z-index:2; margin:0 auto; padding:120px 56px 90px; width:100%; }
 .hero__dial{ position:absolute; z-index:1; right:-160px; top:50%; transform:translateY(-50%); width:min(640px,52vw); height:auto; color:var(--accent); opacity:.16; pointer-events:none; animation:dialSpin 140s linear infinite; }
-/* scaleX(-1): the arm faces inward, toward the headline, instead of away */
-.hero__arm{ position:absolute; z-index:1; right:-70px; top:50%; transform:translateY(-42%) scaleX(-1); width:min(780px,60vw); height:auto; color:var(--accent); opacity:.24; pointer-events:none; }
-@media (max-width:900px){ .hero__arm{ opacity:.12; right:-190px; width:620px; } }
 @keyframes dialSpin{ to{ transform:translateY(-50%) rotate(360deg); } }
 .hero .eyebrow{ font-family:var(--font-m); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:14px; margin-bottom:18px; }
 
@@ -130,7 +127,14 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
    chain-link belt scrolling inside the channel. Geometry mirrors the real
    thing - rail pair, belt channel, rail pair, rollers beneath. */
 .belt{ position:relative; z-index:1; padding:44px 0 32px; border-bottom:1px solid var(--line); overflow:hidden; }
-.belt__stage{ position:relative; height:150px; width:100%; }
+.belt__stage{ position:relative; height:300px; width:100%; }
+/* flat (CSS) machine: base experience + loading state; hidden once 3D runs */
+.belt__flat{ position:absolute; left:0; right:0; top:50%; height:150px; transform:translateY(-50%); }
+.belt--3d .belt__flat{ display:none; }
+/* 3D cell canvas */
+.belt3d{ position:absolute; inset:0; }
+.belt3d canvas{ display:block; width:100%; height:100%; opacity:0; transition:opacity .8s ease; }
+.belt--3d .belt3d canvas{ opacity:1; }
 
 /* rail pairs: two hairlines each, above and below the channel */
 .belt__rail{ position:absolute; left:0; right:0; height:7px; }
@@ -174,13 +178,18 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 /* scanner gantry: legs straddling the line, beam down the middle */
 .belt__scanner{ position:absolute; top:0; height:118px; left:calc(55vw - 52px); width:104px; border:1px solid color-mix(in srgb, var(--ink) 55%, transparent); border-bottom:0; border-radius:4px 4px 0 0; }
 .belt__scanbeam{ position:absolute; left:50%; top:18px; bottom:0; width:0; border-left:1px dashed rgba(var(--accent-rgb),.8); }
-.belt__scanlabel{ position:absolute; top:-3px; left:50%; transform:translate(-50%,-100%); font-family:var(--font-m); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); background:var(--bg); padding:0 8px; white-space:nowrap; }
+/* standalone labels: caption both machines */
+.belt__scanlabel{ position:absolute; top:2px; left:55vw; transform:translateX(-50%); font-family:var(--font-m); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); background:var(--bg); padding:0 8px; white-space:nowrap; z-index:2; }
+.belt__binlabel{ position:absolute; top:12px; right:16px; font-family:var(--font-m); font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); background:var(--bg); padding:0 6px; white-space:nowrap; z-index:2; display:none; }
+.belt--3d .belt__binlabel{ display:block; }
+.belt__binlabel b{ font-weight:500; }
 .belt__bin{ position:absolute; top:22px; right:16px; height:90px; display:flex; align-items:center; font-family:var(--font-m); font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); border:1px dashed rgba(var(--accent-rgb),.65); border-radius:5px; padding:0 12px; background:color-mix(in srgb, var(--bg) 80%, transparent); }
 .belt__caption{ max-width:1060px; margin:26px auto 0; padding:0 56px; font-family:var(--font-m); font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--mute); }
 .belt__caption b{ color:var(--accent); font-weight:500; }
 
 @media (max-width:760px){
-  .belt__stage{ height:120px; }
+  .belt__stage{ height:220px; }
+  .belt__flat{ height:120px; }
   .belt__rail--t{ top:14px; } .belt__rail--b{ top:84px; }
   .belt__channel{ top:21px; height:63px; }
   .belt__rollers{ top:91px; }
@@ -557,7 +566,7 @@ a.navpdf:hover{ border-color:var(--accent); color:var(--accent-2); }
 
   /* effects and chrome that make no sense on paper */
   canvas, .noise-overlay, .target-cursor-wrapper, .navpdf, .pdfcard, .boot,
-  .hero__field, .hero .cue, .hero__dial, .hero__arm, .belt, .modebtn, .shead .ghost{ display:none !important; }
+  .hero__field, .hero .cue, .hero__dial, .belt, .modebtn, .shead .ghost{ display:none !important; }
 
   nav{ position:static; background:var(--bg); backdrop-filter:none; }
   .wrap, nav .in, .hero__in{ max-width:none; padding-left:0; padding-right:0; }

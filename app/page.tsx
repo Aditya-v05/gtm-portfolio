@@ -1,7 +1,6 @@
 import Noise from "@/components/Noise";
 import HeroHeadline from "@/components/HeroHeadline";
 import ConveyorLine from "@/components/ConveyorLine";
-import HeroArm from "@/components/HeroArm";
 import CountUp from "@/components/CountUp";
 import SpotlightCard from "@/components/SpotlightCard";
 import AnimatedContent from "@/components/AnimatedContent";
@@ -92,8 +91,23 @@ export default function Home() {
         <div className="hero__field">
           <ThemedDotField />
         </div>
-        {/* blueprint robot arm: picks lead plates from intake, drops in outbound */}
-        <HeroArm />
+        {/* technical dial ornament — slow spin, blueprint strokes */}
+        <svg className="hero__dial" viewBox="0 0 600 600" aria-hidden="true">
+          <circle cx="300" cy="300" r="288" fill="none" stroke="currentColor" strokeWidth="1" opacity=".5" />
+          <circle cx="300" cy="300" r="236" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3 9" opacity=".6" />
+          <circle cx="300" cy="300" r="120" fill="none" stroke="currentColor" strokeWidth="1" opacity=".4" />
+          <line x1="300" y1="168" x2="300" y2="432" stroke="currentColor" strokeWidth="1" opacity=".25" />
+          <line x1="168" y1="300" x2="432" y2="300" stroke="currentColor" strokeWidth="1" opacity=".25" />
+          {Array.from({ length: 36 }, (_, i) => (
+            <line
+              key={i}
+              x1="300" y1="12" x2="300" y2={i % 9 === 0 ? "34" : "22"}
+              stroke="currentColor" strokeWidth={i % 9 === 0 ? 1.5 : 1}
+              opacity={i % 9 === 0 ? ".7" : ".4"}
+              transform={`rotate(${i * 10} 300 300)`}
+            />
+          ))}
+        </svg>
         <div className="hero__in">
           <div className="eyebrow">GTM Engineer · Data &amp; Automation</div>
           <a
