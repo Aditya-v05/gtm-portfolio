@@ -80,14 +80,21 @@ nav .links a::after{ content:""; position:absolute; left:0; bottom:-3px; width:0
 nav .links a:hover{ color:var(--ink); } nav .links a:hover::after{ width:100%; }
 
 /* ============ HERO ============ */
-.hero{ position:relative; min-height:88vh; display:flex; align-items:center; border-bottom:1px solid var(--line); overflow:hidden; }
+.hero{ position:relative; min-height:calc(100vh - 71px); /* viewport minus sticky nav */ display:flex; flex-direction:column; justify-content:flex-end; border-bottom:1px solid var(--line); overflow:hidden; }
 .hero__field{ position:absolute; inset:0; z-index:0; opacity:.8;
   -webkit-mask-image:radial-gradient(120% 100% at 50% 40%, #000 30%, transparent 78%);
   mask-image:radial-gradient(120% 100% at 50% 40%, #000 30%, transparent 78%); }
-.hero__in{ position:relative; z-index:2; margin:0 auto; padding:120px 56px 90px; width:100%; }
-.hero__dial{ position:absolute; z-index:1; right:-160px; top:50%; transform:translateY(-50%); width:min(640px,52vw); height:auto; color:var(--accent); opacity:.16; pointer-events:none; animation:dialSpin 140s linear infinite; }
-@keyframes dialSpin{ to{ transform:translateY(-50%) rotate(360deg); } }
+.hero__in{ position:relative; z-index:2; margin:auto auto 0; padding:76px 56px 12px; width:100%; }
 .hero .eyebrow{ font-family:var(--font-m); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+
+/* short viewports: compress the hero so the whole machine lands above the fold */
+@media (max-height: 960px){
+  .hero__in{ padding-top:56px; }
+  .hero h1{ font-size:clamp(48px, 7.8vw, 104px); }
+  .hero .sub{ margin-top:18px; }
+  .hero .meta{ margin-top:24px; }
+  .belt__stage{ height:clamp(200px, 24vh, 300px); }
+}
 
 /* current-role marker: reads as a status readout, not a badge */
 .nowpill{ display:inline-flex; align-items:center; gap:9px; margin-bottom:34px; font-family:var(--font-m); font-size:10.5px; letter-spacing:.05em; color:var(--accent); text-decoration:none; border:1px solid rgba(var(--accent-rgb),.4); border-radius:20px; padding:6px 14px; transition:border-color .25s, transform .25s, box-shadow .25s; }
@@ -113,9 +120,9 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 .hink{ color:var(--accent); }
 .hink__svg{ display:block; width:auto; max-width:100%; overflow:visible; }
 .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
-.hero .sub{ font-size:18px; line-height:1.7; color:var(--dim); max-width:58ch; margin-top:36px; }
+.hero .sub{ font-size:17px; line-height:1.65; color:var(--dim); max-width:58ch; margin-top:26px; }
 .hero .sub b{ color:var(--ink); font-weight:600; }
-.hero .meta{ display:flex; flex-wrap:wrap; gap:18px 56px; margin-top:54px; }
+.hero .meta{ display:flex; flex-wrap:wrap; gap:18px 56px; margin-top:36px; }
 .hero .meta .m .v{ font-family:var(--font-d); font-size:34px; line-height:1; color:var(--ink); }
 .hero .meta .m .v .plus{ color:var(--accent); }
 .hero .meta .m .k{ font-family:var(--font-m); font-size:9.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute); margin-top:8px; }
@@ -126,8 +133,8 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 /* Machine drawing: static frame (double rails + roller trucks) with a
    chain-link belt scrolling inside the channel. Geometry mirrors the real
    thing - rail pair, belt channel, rail pair, rollers beneath. */
-.belt{ position:relative; z-index:1; padding:44px 0 32px; border-bottom:1px solid var(--line); overflow:hidden; }
-.belt__stage{ position:relative; height:300px; width:100%; }
+.belt{ position:relative; z-index:1; width:100%; padding:0 0 30px; }
+.belt__stage{ position:relative; height:clamp(220px, 27vh, 340px); width:100%; }
 /* flat (CSS) machine: base experience + loading state; hidden once 3D runs */
 .belt__flat{ position:absolute; left:0; right:0; top:50%; height:150px; transform:translateY(-50%); }
 .belt--3d .belt__flat{ display:none; }
@@ -167,28 +174,16 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 .belt__puck{ position:relative; width:112px; height:52px; border:1px solid color-mix(in srgb, var(--ink) 62%, transparent); border-radius:5px; background:var(--bg-2); padding:11px 12px; display:flex; flex-direction:column; gap:6px; box-shadow:0 2px 0 color-mix(in srgb, var(--ink) 20%, transparent); }
 .belt__bar{ display:block; height:7px; width:76px; border-radius:3px; background:color-mix(in srgb, var(--ink) 18%, transparent); }
 .belt__bar--sm{ width:48px; height:6px; }
-.belt__chip{ position:absolute; top:-11px; right:-14px; font-family:var(--font-m); font-size:9px; letter-spacing:.05em; color:var(--accent); background:var(--bg); border:1px solid var(--accent); border-radius:10px; padding:2px 7px; white-space:nowrap;
-  opacity:0; animation:chipStamp var(--dur) linear infinite; animation-delay:var(--d); }
-@keyframes chipStamp{ 0%,53%{ opacity:0; transform:scale(.6); } 55.5%{ opacity:1; transform:scale(1.18); } 57.5%{ transform:scale(1); } 100%{ opacity:1; transform:scale(1); } }
-/* rejects: stamped, then tipped off the line past the scanner */
-.is-reject .belt__chip{ color:var(--mute); border-color:var(--line-2); }
-.is-reject .belt__puck{ animation:rejectDrop var(--dur) linear infinite; animation-delay:var(--d); }
-@keyframes rejectDrop{ 0%,70%{ transform:none; opacity:1; } 78%,100%{ transform:translateY(64px) rotate(8deg); opacity:.18; } }
 
 /* scanner gantry: legs straddling the line, beam down the middle */
 .belt__scanner{ position:absolute; top:0; height:118px; left:calc(55vw - 52px); width:104px; border:1px solid color-mix(in srgb, var(--ink) 55%, transparent); border-bottom:0; border-radius:4px 4px 0 0; }
 .belt__scanbeam{ position:absolute; left:50%; top:18px; bottom:0; width:0; border-left:1px dashed rgba(var(--accent-rgb),.8); }
-/* standalone labels: caption both machines */
-.belt__scanlabel{ position:absolute; top:2px; left:55vw; transform:translateX(-50%); font-family:var(--font-m); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); background:var(--bg); padding:0 8px; white-space:nowrap; z-index:2; }
-.belt__binlabel{ position:absolute; top:12px; right:16px; font-family:var(--font-m); font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); background:var(--bg); padding:0 6px; white-space:nowrap; z-index:2; display:none; }
-.belt--3d .belt__binlabel{ display:block; }
-.belt__binlabel b{ font-weight:500; }
-.belt__bin{ position:absolute; top:22px; right:16px; height:90px; display:flex; align-items:center; font-family:var(--font-m); font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); border:1px dashed rgba(var(--accent-rgb),.65); border-radius:5px; padding:0 12px; background:color-mix(in srgb, var(--bg) 80%, transparent); }
-.belt__caption{ max-width:1060px; margin:26px auto 0; padding:0 56px; font-family:var(--font-m); font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--mute); }
+.belt__bin{ position:absolute; top:22px; right:16px; height:90px; width:74px; border:1px dashed rgba(var(--accent-rgb),.6); border-radius:5px; background:color-mix(in srgb, var(--bg) 80%, transparent); }
+.belt__caption{ position:absolute; z-index:2; left:0; right:0; bottom:8px; max-width:1060px; margin:0 auto; padding:0 56px; font-family:var(--font-m); font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--mute); }
 .belt__caption b{ color:var(--accent); font-weight:500; }
 
 @media (max-width:760px){
-  .belt__stage{ height:220px; }
+  .belt__stage{ height:230px; }
   .belt__flat{ height:120px; }
   .belt__rail--t{ top:14px; } .belt__rail--b{ top:84px; }
   .belt__channel{ top:21px; height:63px; }
@@ -197,11 +192,10 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
   .belt__puck{ width:88px; height:44px; padding:9px 10px; }
   .belt__bar{ width:58px; } .belt__bar--sm{ width:36px; }
   .belt__scanner{ height:96px; }
-  .belt__scanlabel{ display:none; }
   .belt__caption{ font-size:8px; letter-spacing:.12em; }
 }
 @media (prefers-reduced-motion: reduce){
-  .belt__plate, .belt__chip, .belt__puck, .belt__tread, .belt__roller::after{ animation-play-state:paused !important; }
+  .belt__plate, .belt__puck, .belt__tread, .belt__roller::after{ animation-play-state:paused !important; }
 }
 
 /* ============ SECTION HEADS ============ */
@@ -566,7 +560,7 @@ a.navpdf:hover{ border-color:var(--accent); color:var(--accent-2); }
 
   /* effects and chrome that make no sense on paper */
   canvas, .noise-overlay, .target-cursor-wrapper, .navpdf, .pdfcard, .boot,
-  .hero__field, .hero .cue, .hero__dial, .belt, .modebtn, .shead .ghost{ display:none !important; }
+  .hero__field, .hero .cue, .belt, .modebtn, .shead .ghost{ display:none !important; }
 
   nav{ position:static; background:var(--bg); backdrop-filter:none; }
   .wrap, nav .in, .hero__in{ max-width:none; padding-left:0; padding-right:0; }

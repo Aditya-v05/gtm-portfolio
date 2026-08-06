@@ -1,32 +1,19 @@
-// The GTM assembly line band. Two layers:
-//  - .belt__flat: the pure-CSS machine drawing (compositor animations). This
-//    is the base experience - no-JS, reduced-motion (paused tableau), and the
-//    loading state while three.js fetches.
-//  - ConveyorCell: the 3D cell (belt + scanner + sorting arm) that lazy-loads
-//    when the band nears the viewport and replaces the flat layer by adding
-//    .belt--3d to the section.
-// The scanner/bin labels live outside both layers so they caption either one.
+// The hero machine cell. Two layers:
+//  - .belt__flat: pure-CSS fallback (no-JS, reduced-motion, loading state)
+//  - ConveyorCell: the 3D transfer line (belt > scanner > arm > belt >
+//    scanner > arm > box) that replaces the flat layer once running by
+//    adding .belt--3d to the wrapper.
+// Lives at the bottom of the hero section, full width, no clipping.
 
 import ConveyorCell from "@/components/ConveyorCell";
 
-const DUR = 30; // seconds for one full flat-mode crossing
-
-type Plate = { score?: number; ok: boolean };
-
-const PLATES: Plate[] = [
-  { score: 94, ok: true },
-  { ok: false },
-  { score: 88, ok: true },
-  { score: 96, ok: true },
-  { ok: false },
-  { score: 71, ok: true },
-];
-
+const DUR = 30;
+const PLATES = 6;
 const ROLLERS = 14;
 
 export default function ConveyorLine() {
   return (
-    <section
+    <div
       className="belt"
       aria-label="Systems shipped for Brex, Rho, Peec AI, Warp, Hyperbound, Qashio. Now founding at Relling (YC S25)."
     >
@@ -42,35 +29,28 @@ export default function ConveyorLine() {
               <span key={i} className="belt__roller"></span>
             ))}
           </div>
-          {PLATES.map((pl, i) => (
+          {Array.from({ length: PLATES }, (_, i) => (
             <div
               key={i}
-              className={`belt__plate${pl.ok ? "" : " is-reject"}`}
+              className="belt__plate"
               style={
                 {
                   "--dur": `${DUR}s`,
-                  "--d": `${-(DUR / PLATES.length) * i}s`,
+                  "--d": `${-(DUR / PLATES) * i}s`,
                 } as React.CSSProperties
               }
             >
               <div className="belt__puck">
                 <span className="belt__bar"></span>
                 <span className="belt__bar belt__bar--sm"></span>
-                <span className="belt__chip">{pl.ok ? `✓ ${pl.score}` : "✗ excl"}</span>
               </div>
             </div>
           ))}
           <div className="belt__scanner">
             <span className="belt__scanbeam"></span>
           </div>
-          <div className="belt__bin">→ attio</div>
+          <div className="belt__bin"></div>
         </div>
-
-        {/* labels caption both the flat and 3D machines */}
-        <span className="belt__scanlabel">raven · scan</span>
-        <span className="belt__binlabel">
-          → attio · <b>00</b>
-        </span>
 
         <ConveyorCell />
       </div>
@@ -79,6 +59,6 @@ export default function ConveyorLine() {
         systems shipped for Brex · Rho · Peec AI · Warp · Hyperbound · Qashio
         <b> · now founding @ Relling · YC S25</b>
       </div>
-    </section>
+    </div>
   );
 }
