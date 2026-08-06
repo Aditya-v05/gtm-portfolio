@@ -1,6 +1,7 @@
 import Noise from "@/components/Noise";
 import HeroHeadline from "@/components/HeroHeadline";
-import ClientMarquee from "@/components/ClientMarquee";
+import ConveyorLine from "@/components/ConveyorLine";
+import HeroArm from "@/components/HeroArm";
 import CountUp from "@/components/CountUp";
 import SpotlightCard from "@/components/SpotlightCard";
 import AnimatedContent from "@/components/AnimatedContent";
@@ -8,6 +9,7 @@ import BootIntro from "@/components/BootIntro";
 import SiteNav from "@/components/SiteNav";
 import { ThemedClickSpark, ThemedDotField } from "@/components/ThemedFX";
 import CursorFX from "@/components/CursorFX";
+import CursorDRO from "@/components/CursorDRO";
 import EvidenceZoom from "@/components/EvidenceZoom";
 import { SystemsAccordion, SystemFold } from "@/components/SystemsIndex";
 
@@ -77,6 +79,7 @@ export default function Home() {
       {/* fixed effect layers */}
       <BootIntro />
       <CursorFX />
+      <CursorDRO />
       <EvidenceZoom />
       <ThemedClickSpark />
       <Noise patternSize={250} patternAlpha={10} patternRefreshInterval={3} />
@@ -89,23 +92,8 @@ export default function Home() {
         <div className="hero__field">
           <ThemedDotField />
         </div>
-        {/* technical dial ornament — slow spin, blueprint strokes */}
-        <svg className="hero__dial" viewBox="0 0 600 600" aria-hidden="true">
-          <circle cx="300" cy="300" r="288" fill="none" stroke="currentColor" strokeWidth="1" opacity=".5" />
-          <circle cx="300" cy="300" r="236" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3 9" opacity=".6" />
-          <circle cx="300" cy="300" r="120" fill="none" stroke="currentColor" strokeWidth="1" opacity=".4" />
-          <line x1="300" y1="168" x2="300" y2="432" stroke="currentColor" strokeWidth="1" opacity=".25" />
-          <line x1="168" y1="300" x2="432" y2="300" stroke="currentColor" strokeWidth="1" opacity=".25" />
-          {Array.from({ length: 36 }, (_, i) => (
-            <line
-              key={i}
-              x1="300" y1="12" x2="300" y2={i % 9 === 0 ? "34" : "22"}
-              stroke="currentColor" strokeWidth={i % 9 === 0 ? 1.5 : 1}
-              opacity={i % 9 === 0 ? ".7" : ".4"}
-              transform={`rotate(${i * 10} 300 300)`}
-            />
-          ))}
-        </svg>
+        {/* blueprint robot arm: picks lead plates from intake, drops in outbound */}
+        <HeroArm />
         <div className="hero__in">
           <div className="eyebrow">GTM Engineer · Data &amp; Automation</div>
           <a
@@ -144,12 +132,8 @@ export default function Home() {
         <div className="cue">scroll</div>
       </section>
 
-      {/* CLIENT MARQUEE */}
-      <section className="marquee">
-        <div className="marquee__k">Systems shipped for</div>
-        <ClientMarquee />
-        <div className="marquee__now">now: founding gtm engineer @ <b>Relling</b> · YC S25</div>
-      </section>
+      {/* THE LINE: leads ride the belt, Raven scans, verdicts stamp, Attio collects */}
+      <ConveyorLine />
 
       {/* print-only client roster: the animated marquee can't be trusted in
           print, so the six client names get a guaranteed static line here */}
@@ -276,7 +260,7 @@ export default function Home() {
 
         <SystemsAccordion defaultOpen="01">
 
-        <SystemFold id="01" title="Diode" lede="The layer above the systems." type="Orchestration" status="live">
+        <SystemFold id="01" station="gripper" title="Diode" lede="The layer above the systems." type="Orchestration" status="live">
         <article className="case">
           <div className="rail">
             <div className="idwrap"><span className="id">01</span><span className="of">/ 10 · selected</span></div>
@@ -308,7 +292,7 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="02" title="Raven" lede="Ten signals in, scored leads in the CRM out." type="Signal intelligence" status="live">
+        <SystemFold id="02" station="scanner" title="Raven" lede="Ten signals in, scored leads in the CRM out." type="Signal intelligence" status="live">
         <article className="case">
           <div className="rail">
             <div className="idwrap"><span className="id">02</span><span className="of">/ 10</span></div>
@@ -346,7 +330,7 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="03" title="LinkedIn Campaign Autopilot" lede="Drop a doc, say go, and LinkedIn campaigns go live." type="Outbound agent" status="live">
+        <SystemFold id="03" station="outfeed" title="LinkedIn Campaign Autopilot" lede="Drop a doc, say go, and LinkedIn campaigns go live." type="Outbound agent" status="live">
         <article className="case">
           <div className="rail">
             <div className="idwrap"><span className="id">03</span><span className="of">/ 10</span></div>
@@ -387,7 +371,7 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="04" title="Customer-Overlap Detection Engine" lede="Does this prospect already use the product?" type="Headless automation">
+        <SystemFold id="04" station="probe" title="Customer-Overlap Detection Engine" lede="Does this prospect already use the product?" type="Headless automation">
         <article className="case">
           <div className="rail">
             <div className="idwrap"><span className="id">04</span><span className="of">/ 10</span></div>
@@ -419,7 +403,7 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="05" title="B2B / SaaS Classifier" lede="Noisy Apollo exports into a clean, targetable universe." type="LLM pipeline">
+        <SystemFold id="05" station="stamper" title="B2B / SaaS Classifier" lede="Noisy Apollo exports into a clean, targetable universe." type="LLM pipeline">
         <article className="case">
           <div className="rail">
             <div className="idwrap"><span className="id">05</span><span className="of">/ 10</span></div>
@@ -449,7 +433,7 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="06" title="Apollo × LeadMagic Enrichment" lede="Verified emails in, duplicate outreach out." type="Enrichment">
+        <SystemFold id="06" station="funnel" title="Apollo × LeadMagic Enrichment" lede="Verified emails in, duplicate outreach out." type="Enrichment">
         <article className="case">
           <div className="rail">
             <div className="idwrap"><span className="id">06</span><span className="of">/ 10</span></div>
@@ -487,7 +471,7 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="07" title="Sales Navigator Capture Extension" lede="Export Sales Nav leads natively, no copy-paste." type="Extension">
+        <SystemFold id="07" station="capture" title="Sales Navigator Capture Extension" lede="Export Sales Nav leads natively, no copy-paste." type="Extension">
         <article className="case">
           <div className="rail">
             <div className="idwrap"><span className="id">07</span><span className="of">/ 10</span></div>
@@ -525,7 +509,7 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="08" title="Customer Poacher" lede="One company URL in; its customers' buyers out." type="Discovery workflow">
+        <SystemFold id="08" station="extractor" title="Customer Poacher" lede="One company URL in; its customers' buyers out." type="Discovery workflow">
         <article className="case">
           <div className="rail">
             <div className="idwrap"><span className="id">08</span><span className="of">/ 10</span></div>
@@ -563,7 +547,7 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="09" title="Lead Bucketing Agent" lede="A flat lead list, segmented into outreach-ready niches." type="Segmentation">
+        <SystemFold id="09" station="sorter" title="Lead Bucketing Agent" lede="A flat lead list, segmented into outreach-ready niches." type="Segmentation">
         <article className="case">
           <div className="rail">
             <div className="idwrap"><span className="id">09</span><span className="of">/ 10</span></div>
@@ -604,7 +588,7 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="10" title="Auth-Enumeration Recon Agent" lede="Probes auth flows the way a researcher would." type="Security recon">
+        <SystemFold id="10" station="radar" title="Auth-Enumeration Recon Agent" lede="Probes auth flows the way a researcher would." type="Security recon">
         <article className="case">
           <div className="rail">
             <div className="idwrap"><span className="id">10</span><span className="of">/ 10</span></div>

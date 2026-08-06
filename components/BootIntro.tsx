@@ -9,6 +9,7 @@ const useIsoLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 const LINES: Array<[string, string]> = [
+  ["conveyor", "ok"],
   ["raven", "ok"],
   ["enrichment", "ok"],
   ["overlap detection", "ok"],
