@@ -12,6 +12,9 @@
 
 import * as THREE from "three";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // ---- layout ----
 const TOP_A = 1.0; // belt A surface height
@@ -72,6 +75,33 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   };
   if (par.on) window.addEventListener("mousemove", onPointer, { passive: true });
 
+  // ---- scroll-driven dolly (direction C) ----
+  // While the hero is pinned, the camera rides these keyframes: full sheet ->
+  // zoom to belt A / scanner 1 -> track the transfer and second scan ->
+  // arrive on the packing station -> pull back out. p is scrub progress.
+  const DOLLY: { p: number; x: number; y: number; z: number }[] = [
+    { p: 0.0, x: 0.65, y: 2.35, z: 1.0 },
+    { p: 0.22, x: -6.0, y: 1.75, z: 2.1 },
+    { p: 0.55, x: 1.4, y: 2.55, z: 2.1 },
+    { p: 0.8, x: 8.9, y: 2.35, z: 1.9 },
+    { p: 1.0, x: 0.65, y: 2.35, z: 1.0 },
+  ];
+  const scroll = { p: 0 };
+  const lookNow = new THREE.Vector3().copy(LOOK_AT);
+  function dollyAt(p: number): { x: number; y: number; z: number } {
+    if (p <= DOLLY[0].p) return DOLLY[0];
+    for (let i = 1; i < DOLLY.length; i++) {
+      if (p <= DOLLY[i].p) {
+        const a = DOLLY[i - 1];
+        const b = DOLLY[i];
+        let t = (p - a.p) / (b.p - a.p);
+        t = t * t * (3 - 2 * t); // smoothstep per segment
+        return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t, z: a.z + (b.z - a.z) * t };
+      }
+    }
+    return DOLLY[DOLLY.length - 1];
+  }
+
   function resize() {
     const w = host.clientWidth || 1;
     const h = host.clientHeight || 1;
@@ -79,8 +109,8 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     renderer.setSize(w, h);
     // adaptive fit: wide enough for the machine, AND tall enough for the
     // elevated end - whichever constraint binds. Never clips.
-    const needHalfW = (FIT.maxX - FIT.minX) / 2 + 0.4;
-    const needHalfH = (FIT.maxY - FIT.minY) / 2 + 0.35;
+    const needHalfW = (FIT.maxX - FIT.minX) / 2 + 0.2;
+    const needHalfH = (FIT.maxY - FIT.minY) / 2 + 0.2;
     const halfW = Math.max(needHalfW, (needHalfH * w) / h);
     const halfH = (halfW * h) / w;
     camera.left = -halfW;
@@ -450,8 +480,15 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   function layCallouts() {
     const w = host.clientWidth;
     const h = host.clientHeight;
+    // during the scroll dolly the annotations bow out; they return at rest
+    const riding = scroll.p > 0.04 && scroll.p < 0.96;
     for (const [key, a] of Object.entries(ANCHORS)) {
       proj.copy(a.world).project(camera);
+      const off = riding || Math.abs(proj.x) > 1.02 || Math.abs(proj.y) > 1.02;
+      const coEl = coEls.get(key);
+      const lnEl = leadLines.get(key);
+      if (coEl) coEl.style.opacity = off ? "0" : "";
+      if (lnEl) lnEl.style.opacity = off ? "0" : "";
       const sx = (proj.x * 0.5 + 0.5) * w;
       const sy = (-proj.y * 0.5 + 0.5) * h;
       const el = coEls.get(key);
@@ -494,12 +531,25 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     raf = requestAnimationFrame(tick);
     const dt = Math.min(clock.getDelta(), 0.05);
 
-    // parallax drift
-    if (par.on) {
-      par.x += (par.tx - par.x) * 0.05;
-      par.y += (par.ty - par.y) * 0.05;
-      camera.position.set(CAM_BASE.x + par.x * 0.55, CAM_BASE.y - par.y * 0.35, CAM_BASE.z);
-      camera.lookAt(LOOK_AT);
+    // camera: dolly keyframes (scroll) + parallax drift (pointer)
+    {
+      const d = dollyAt(scroll.p);
+      if (par.on) {
+        par.x += (par.tx - par.x) * 0.05;
+        par.y += (par.ty - par.y) * 0.05;
+      }
+      const damp = 1 / d.z; // parallax quiets down when zoomed in
+      lookNow.set(d.x, d.y, 0);
+      camera.position.set(
+        CAM_BASE.x + (d.x - LOOK_AT.x) + par.x * 0.55 * damp,
+        CAM_BASE.y + (d.y - LOOK_AT.y) - par.y * 0.35 * damp,
+        CAM_BASE.z
+      );
+      camera.lookAt(lookNow);
+      if (camera.zoom !== d.z) {
+        camera.zoom = d.z;
+        camera.updateProjectionMatrix();
+      }
     }
 
     shiftA = (shiftA + BELT_SPEED * dt) % (A_X1 - A_X0);
@@ -608,8 +658,27 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   resize();
   start();
 
+  // pin the hero and scrub the dolly - desktop fine-pointer only. Mobile and
+  // reduced-motion never reach here with a pin (scene absent on reduced).
+  const heroEl = host.closest(".hero") as HTMLElement | null;
+  let st: ScrollTrigger | null = null;
+  if (heroEl && innerWidth >= 900 && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    st = ScrollTrigger.create({
+      trigger: heroEl,
+      start: "top top",
+      end: "+=160%",
+      pin: true,
+      pinSpacing: true,
+      scrub: 0.6,
+      onUpdate: (self) => {
+        scroll.p = self.progress;
+      },
+    });
+  }
+
   return () => {
     stop();
+    st?.kill();
     vis.disconnect();
     ro.disconnect();
     themeObserver.disconnect();
