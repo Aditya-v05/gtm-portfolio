@@ -1,40 +1,44 @@
-// The hero machine, v3: an annotated engineering sheet. The line now runs on
-// two levels - belt A low across the left, the transfer arm lifts parcels onto
-// the ELEVATED belt B that climbs the hero's right side, through a second
-// scanner portal, to the packing arm and box on a raised platform. The hero
-// stats are drawn as blueprint callouts: HTML labels tethered by leader lines
-// to live 3D anchor points (box, packing arm, scanner). A few degrees of
-// mouse parallax fuse the text and the machine into one space.
+// The hero machine, v4: a working plant. A forklift shuttles boxes in from
+// off-frame and sets them on belt A; scanner 1 washes them in teal; the mid
+// arm loads each box onto the LIFT TOWER, whose chain-driven carriage hauls
+// it up to the elevated belt B; scanner 2 checks it again; the end arm packs
+// it into the crate, where a mechanical counter ticks up. Gears mesh, the
+// drive motor spins, stack lights pulse with activity, and a ghost of a
+// second line runs in the background.
 //
-// Vector style throughout: bg-colored fills occlude ink edge lines, ortho
-// camera with adaptive fit (never clips the machine at any aspect).
+// Vector style throughout: bg-colored fills occlude ink edge lines (hidden-
+// line technical drawing), orthographic camera with adaptive fit, and the
+// hero stats live as blueprint callouts tethered to real parts by elbow
+// leader lines with lug dots.
 // NEVER touch gsap.globalTimeline here (it once froze the whole site).
 
 import * as THREE from "three";
 import { gsap } from "gsap";
 
-// ---- layout ----
-const TOP_A = 1.0; // belt A surface height
-const TOP_B = 2.7; // belt B surface height (elevated)
+// ---- layout (x runs along the line) ----
+const TOP_A = 1.0; // belt A surface
+const TOP_B = 2.7; // belt B surface (elevated)
 const A_X0 = -7.8, A_X1 = -2.3;
-const B_X0 = 0.6, B_X1 = 6.2;
-const SCAN_A = -5.5, SCAN_B = 3.2;
+const B_X0 = 1.6, B_X1 = 6.2;
+const SCAN_A = -5.5, SCAN_B = 3.6;
 const PICK_A = -2.75, PICK_B = 5.75;
-const MID_BASE = new THREE.Vector3(-1.0, 0, -1.7);
+const MID_BASE = new THREE.Vector3(-1.55, 0, -1.7);
 const MID_RISER = 0.55;
 const END_BASE = new THREE.Vector3(7.4, 0, -1.6);
 const END_RISER = 1.6;
 const BOX_POS = new THREE.Vector3(9.55, 0, 0.15);
 const BOX_STAND = 1.0;
+const LIFT_X = 0.35;
+const LIFT_TOP_Y = 2.62; // carriage platform top at its highest
+const LIFT_LOW_Y = 0.62; // carriage platform top at rest
 const L1 = 2.05, L2 = 1.85;
 const SHOULDER_Y = 1.18; // above each arm's riser top
 const GRIP_DROP = 0.66;
 const BELT_SPEED = 1.15;
-const SPAWN_EVERY = 4.6;
 const ITEM_H = 0.56;
 
 // world bounds the camera must always contain
-const FIT = { minX: -8.1, maxX: 10.65, minY: -0.15, maxY: 5.1 };
+const FIT = { minX: -8.15, maxX: 10.65, minY: -0.15, maxY: 5.15 };
 
 type Palette = { ink: string; accent: string; bg: string; teal: string };
 
@@ -42,9 +46,9 @@ function readPalette(): Palette {
   const cs = getComputedStyle(document.documentElement);
   const dark = document.documentElement.dataset.theme === "dark";
   return {
-    ink: cs.getPropertyValue("--ink").trim() || "#181612",
-    accent: cs.getPropertyValue("--accent").trim() || "#2F6A47",
-    bg: cs.getPropertyValue("--bg").trim() || "#F4F2EC",
+    ink: cs.getPropertyValue("--ink").trim() || "#14283C",
+    accent: cs.getPropertyValue("--accent").trim() || "#2464A4",
+    bg: cs.getPropertyValue("--bg").trim() || "#EDF2F8",
     teal: dark ? "#3fe0cf" : "#1fb5a3",
   };
 }
@@ -63,8 +67,6 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   camera.position.copy(CAM_BASE);
   camera.lookAt(LOOK_AT);
 
-  // mouse parallax: a few degrees of drift, lerped smooth. Hover-capable
-  // pointers only.
   const par = { tx: 0, ty: 0, x: 0, y: 0, on: matchMedia("(hover: hover) and (pointer: fine)").matches };
   const onPointer = (e: MouseEvent) => {
     par.tx = (e.clientX / innerWidth) * 2 - 1;
@@ -77,8 +79,6 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     const h = host.clientHeight || 1;
     renderer.setPixelRatio(Math.min(devicePixelRatio, w < 800 ? 1.5 : 2));
     renderer.setSize(w, h);
-    // adaptive fit: wide enough for the machine, AND tall enough for the
-    // elevated end - whichever constraint binds. Never clips.
     const needHalfW = (FIT.maxX - FIT.minX) / 2 + 0.2;
     const needHalfH = (FIT.maxY - FIT.minY) / 2 + 0.2;
     const halfW = Math.max(needHalfW, (needHalfH * w) / h);
@@ -100,6 +100,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   });
   const inkMat = new THREE.LineBasicMaterial({ color: new THREE.Color(pal.ink), transparent: true, opacity: 0.8 });
   const faintMat = new THREE.LineBasicMaterial({ color: new THREE.Color(pal.ink), transparent: true, opacity: 0.32 });
+  const ghostMat = new THREE.LineBasicMaterial({ color: new THREE.Color(pal.ink), transparent: true, opacity: 0.13 });
   const tealLine = new THREE.LineBasicMaterial({ color: new THREE.Color(pal.teal), transparent: true, opacity: 0.95 });
   const tealCurtain = new THREE.MeshBasicMaterial({
     color: new THREE.Color(pal.teal),
@@ -109,18 +110,26 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     depthWrite: false,
   });
   const tapeMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(pal.ink), transparent: true, opacity: 0.16 });
+  const lampIdle = 0.22;
+  const lampMats: THREE.MeshBasicMaterial[] = [];
+  function makeLampMat() {
+    const m = new THREE.MeshBasicMaterial({ color: new THREE.Color(pal.accent), transparent: true, opacity: lampIdle });
+    lampMats.push(m);
+    return m;
+  }
 
   const themeObserver = new MutationObserver(() => {
     const p = readPalette();
     fillMat.color.set(p.bg);
     inkMat.color.set(p.ink);
     faintMat.color.set(p.ink);
+    ghostMat.color.set(p.ink);
     tealLine.color.set(p.teal);
     tealCurtain.color.set(p.teal);
     tapeMat.color.set(p.ink);
-    for (const sc of scanners) {
-      (sc.curtain.material as THREE.MeshBasicMaterial).color.set(p.teal);
-    }
+    for (const m of lampMats) m.color.set(p.accent);
+    for (const sc of scanners) (sc.curtain.material as THREE.MeshBasicMaterial).color.set(p.teal);
+    counter.redraw();
   });
   themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
@@ -131,7 +140,48 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     return g;
   }
 
-  // ---- belts (top = surface height; elevated belts get support columns) ----
+  // rotating parts registry
+  const spinners: { obj: THREE.Object3D; speed: number; active: () => boolean }[] = [];
+
+  // ---- ground line + survey ticks ----
+  {
+    scene.add(
+      new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(FIT.minX + 0.1, 0, 0.9),
+          new THREE.Vector3(FIT.maxX - 0.1, 0, 0.9),
+        ]),
+        faintMat
+      )
+    );
+    const ticks: THREE.Vector3[] = [];
+    for (let tx = Math.ceil(FIT.minX); tx < FIT.maxX; tx += 1.5) {
+      ticks.push(new THREE.Vector3(tx, 0, 0.9), new THREE.Vector3(tx - 0.18, -0.14, 0.9));
+    }
+    scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(ticks), ghostMat));
+  }
+
+  // ---- background ghost line (a second production line, implied) ----
+  {
+    const g = new THREE.Group();
+    const body = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(9, 0.16, 1.2)), ghostMat);
+    body.position.set(-2.2, 1.5, 0);
+    g.add(body);
+    for (const lx of [-5.8, -2.2, 1.4]) {
+      const leg = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(0.12, 1.4, 0.12)), ghostMat);
+      leg.position.set(lx, 0.72, 0);
+      g.add(leg);
+    }
+    for (const bx of [-4.5, -0.6]) {
+      const bo = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(0.8, 0.5, 0.6)), ghostMat);
+      bo.position.set(bx, 1.85, 0);
+      g.add(bo);
+    }
+    g.position.z = -5.2;
+    scene.add(g);
+  }
+
+  // ---- belts ----
   const lays: ((s: number) => void)[] = [];
   function buildBelt(x0: number, x1: number, top: number) {
     const len = x1 - x0;
@@ -156,7 +206,6 @@ export function mountConveyorScene(host: HTMLElement): () => void {
         scene.add(col);
       }
       if (top > 2) {
-        // elevated runs get a cross-brace so the structure reads load-bearing
         const brace = new THREE.BufferGeometry().setFromPoints([
           new THREE.Vector3(lx - 0.55, 0.15, 0.78),
           new THREE.Vector3(lx + 0.55, top - 0.5, 0.78),
@@ -164,7 +213,6 @@ export function mountConveyorScene(host: HTMLElement): () => void {
         scene.add(new THREE.Line(brace, faintMat));
       }
     }
-    // wrapping cleats
     const N = Math.round(len / 0.55);
     const posArr = new Float32Array(N * 6);
     const geo = new THREE.BufferGeometry();
@@ -187,8 +235,29 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   buildBelt(A_X0, A_X1, TOP_A);
   buildBelt(B_X0, B_X1, TOP_B);
 
-  // ---- scanners: ground-mounted portals straddling their belt ----
-  type Scanner = { curtain: THREE.Mesh; sweep: THREE.Group; pulse: () => void; beamTopY: number };
+  // ---- stack lights ----
+  function buildStackLight(x: number, y: number, z: number): THREE.MeshBasicMaterial {
+    const g = new THREE.Group();
+    const pole = part(new THREE.CylinderGeometry(0.03, 0.03, 0.42, 8), faintMat);
+    pole.position.set(x, y + 0.21, z);
+    g.add(pole);
+    const lampMat = makeLampMat();
+    const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 8), lampMat);
+    lamp.position.set(x, y + 0.5, z);
+    g.add(lamp);
+    const cap = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.CylinderGeometry(0.1, 0.1, 0.26, 10)), faintMat);
+    cap.position.set(x, y + 0.5, z);
+    g.add(cap);
+    scene.add(g);
+    return lampMat;
+  }
+  function pulseLamp(m: THREE.MeshBasicMaterial) {
+    gsap.killTweensOf(m);
+    gsap.fromTo(m, { opacity: 1 }, { opacity: lampIdle, duration: 1.1, ease: "power2.out" });
+  }
+
+  // ---- scanners ----
+  type Scanner = { curtain: THREE.Mesh; sweep: THREE.Group; pulse: () => void; beamY: number };
   function buildScanner(x: number, top: number): Scanner {
     const g = new THREE.Group();
     const beamY = top + 1.62;
@@ -203,10 +272,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     const beam = part(new THREE.BoxGeometry(0.5, 0.34, 2.9));
     beam.position.set(x, beamY, 0);
     g.add(beam);
-    const curtain = new THREE.Mesh(
-      new THREE.PlaneGeometry(2.2, 1.32).rotateY(Math.PI / 2),
-      tealCurtain.clone()
-    );
+    const curtain = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 1.32).rotateY(Math.PI / 2), tealCurtain.clone());
     curtain.position.set(x, top + 0.66, 0);
     g.add(curtain);
     const frame = new THREE.LineSegments(
@@ -221,15 +287,130 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     g.add(sweep);
     scene.add(g);
     const mat = curtain.material as THREE.MeshBasicMaterial;
+    const lamp = buildStackLight(x, beamY + 0.17, -1.2);
     const pulse = () => {
       gsap.killTweensOf(mat);
       gsap.fromTo(mat, { opacity: 0.5 }, { opacity: 0.2, duration: 0.8, ease: "power2.out" });
+      pulseLamp(lamp);
     };
-    return { curtain, sweep, pulse, beamTopY: beamY + 0.17 };
+    return { curtain, sweep, pulse, beamY };
   }
   const scanners = [buildScanner(SCAN_A, TOP_A), buildScanner(SCAN_B, TOP_B)];
 
-  // ---- box on a stand (the packing target) ----
+  // ---- the lift tower ----
+  let liftMoving = false;
+  let liftBusy = false;
+  const lift = (() => {
+    const g = new THREE.Group();
+    const railTop = 4.05;
+    for (const dx of [-0.34, 0.34]) {
+      const rail = part(new THREE.BoxGeometry(0.14, railTop, 0.3));
+      rail.position.set(LIFT_X + dx, railTop / 2, -0.2);
+      g.add(rail);
+    }
+    for (let y = 0.7; y < railTop - 0.4; y += 0.85) {
+      const cross = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(LIFT_X - 0.34, y, -0.2),
+        new THREE.Vector3(LIFT_X + 0.34, y + 0.4, -0.2),
+      ]);
+      g.add(new THREE.Line(cross, faintMat));
+    }
+    const sprockets: THREE.Group[] = [];
+    for (const sy of [railTop - 0.25, 0.45]) {
+      const sp = part(new THREE.CylinderGeometry(0.22, 0.22, 0.1, 10).rotateX(Math.PI / 2), faintMat);
+      sp.position.set(LIFT_X, sy, -0.2);
+      const spoke = new THREE.LineSegments(
+        new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(-0.2, 0, 0), new THREE.Vector3(0.2, 0, 0),
+          new THREE.Vector3(0, -0.2, 0), new THREE.Vector3(0, 0.2, 0),
+        ]),
+        faintMat
+      );
+      spoke.position.z = 0.06;
+      sp.add(spoke);
+      g.add(sp);
+      sprockets.push(sp);
+      spinners.push({ obj: sp, speed: 2.4, active: () => liftMoving });
+    }
+    for (const dx of [-0.22, 0.22]) {
+      const chain = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(LIFT_X + dx, 0.45, -0.2),
+        new THREE.Vector3(LIFT_X + dx, railTop - 0.25, -0.2),
+      ]);
+      g.add(new THREE.Line(chain, ghostMat));
+    }
+    const carriage = new THREE.Group();
+    const plat = part(new THREE.BoxGeometry(0.95, 0.1, 1.05));
+    plat.position.y = -0.05;
+    carriage.add(plat);
+    const back = part(new THREE.BoxGeometry(0.7, 0.5, 0.1));
+    back.position.set(0, 0.2, -0.52);
+    carriage.add(back);
+    carriage.position.set(LIFT_X, LIFT_LOW_Y, 0);
+    g.add(carriage);
+    const bridge = part(new THREE.BoxGeometry(1.15, 0.08, 1.0), faintMat);
+    bridge.position.set((LIFT_X + B_X0) / 2 + 0.08, TOP_B - 0.06, 0);
+    g.add(bridge);
+    scene.add(g);
+    const lamp = buildStackLight(LIFT_X, railTop, -1.0);
+    return { carriage, lamp };
+  })();
+
+  // ---- drive motor + belt drive + meshing gears ----
+  {
+    const motor = part(new THREE.BoxGeometry(0.55, 0.42, 0.5));
+    motor.position.set(1.25, 0.31, -0.2);
+    scene.add(motor);
+    const pulleyM = part(new THREE.CylinderGeometry(0.13, 0.13, 0.08, 10).rotateX(Math.PI / 2), faintMat);
+    pulleyM.position.set(1.25, 0.31, 0.08);
+    scene.add(pulleyM);
+    spinners.push({ obj: pulleyM, speed: 5, active: () => true });
+    for (const off of [0.12, -0.12]) {
+      const band = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(1.25, 0.31 + off, 0.08),
+        new THREE.Vector3(LIFT_X, 0.45 + off, 0.02),
+      ]);
+      scene.add(new THREE.Line(band, ghostMat));
+    }
+    function gear(r: number, teeth: number): THREE.Group {
+      const g2 = new THREE.Group();
+      const pts: THREE.Vector3[] = [];
+      for (let i = 0; i <= 40; i++) {
+        const a = (i / 40) * Math.PI * 2;
+        pts.push(new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, 0));
+      }
+      g2.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), inkMat));
+      const tpts: THREE.Vector3[] = [];
+      for (let i = 0; i < teeth; i++) {
+        const a = (i / teeth) * Math.PI * 2;
+        tpts.push(
+          new THREE.Vector3(Math.cos(a) * r, Math.sin(a) * r, 0),
+          new THREE.Vector3(Math.cos(a) * (r + 0.07), Math.sin(a) * (r + 0.07), 0)
+        );
+      }
+      g2.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(tpts), inkMat));
+      g2.add(
+        new THREE.LineSegments(
+          new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(-r * 0.5, 0, 0), new THREE.Vector3(r * 0.5, 0, 0),
+            new THREE.Vector3(0, -r * 0.5, 0), new THREE.Vector3(0, r * 0.5, 0),
+          ]),
+          faintMat
+        )
+      );
+      return g2;
+    }
+    const g1 = gear(0.3, 12);
+    g1.position.set(-0.55, 0.36, 0.4);
+    scene.add(g1);
+    const g2 = gear(0.2, 8);
+    g2.position.set(-0.02, 0.36, 0.4);
+    scene.add(g2);
+    spinners.push({ obj: g1, speed: 1.6, active: () => true });
+    spinners.push({ obj: g2, speed: -2.4, active: () => true });
+  }
+
+  // ---- crate on stand + mechanical counter ----
   const stand = part(new THREE.BoxGeometry(1.7, BOX_STAND, 1.7), faintMat);
   stand.position.set(BOX_POS.x, BOX_STAND / 2, BOX_POS.z);
   scene.add(stand);
@@ -248,8 +429,48 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   const boxBase = part(new THREE.BoxGeometry(1.9, 0.08, 1.9), faintMat);
   boxBase.position.set(BOX_POS.x, BOX_STAND + 0.04, BOX_POS.z);
   scene.add(boxBase);
+  const endLamp = buildStackLight(BOX_POS.x - 1.1, BOX_STAND + 0.72, 0.6);
 
-  // ---- arms (each on a riser so the lift reads natural) ----
+  const counter = (() => {
+    let n = 0;
+    const cv = document.createElement("canvas");
+    cv.width = 192;
+    cv.height = 96;
+    const tex = new THREE.CanvasTexture(cv);
+    const plane = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.72, 0.36),
+      new THREE.MeshBasicMaterial({ map: tex, transparent: true })
+    );
+    plane.position.set(BOX_POS.x - 0.1, BOX_STAND - 0.35, BOX_POS.z + 0.87);
+    scene.add(plane);
+    const frame = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(0.78, 0.42)), inkMat);
+    frame.position.copy(plane.position);
+    scene.add(frame);
+    function redraw() {
+      const p = readPalette();
+      const ctx = cv.getContext("2d")!;
+      const font = getComputedStyle(document.documentElement).getPropertyValue("--font-m") || "monospace";
+      ctx.clearRect(0, 0, 192, 96);
+      ctx.fillStyle = p.bg;
+      ctx.fillRect(0, 0, 192, 96);
+      ctx.fillStyle = p.accent;
+      ctx.font = `500 58px ${font}`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(String(n).padStart(4, "0"), 96, 52);
+      tex.needsUpdate = true;
+    }
+    redraw();
+    return {
+      redraw,
+      tick() {
+        n++;
+        redraw();
+      },
+    };
+  })();
+
+  // ---- arms ----
   type Arm = {
     turret: THREE.Group;
     shoulder: THREE.Group;
@@ -315,7 +536,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
       fingerR,
       joints: { yaw: 0, S: 0.72, E: -1.62, grip: 1 },
       base: base.clone(),
-      shoulderWorldY: riser + 0.18 + SHOULDER_Y - 0.18,
+      shoulderWorldY: riser + SHOULDER_Y,
       busy: false,
       timeline: null,
     };
@@ -350,8 +571,8 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   midArm.joints.yaw = solveFor(midArm, new THREE.Vector3(PICK_A, TOP_A, 0)).yaw;
   endArm.joints.yaw = solveFor(endArm, new THREE.Vector3(PICK_B, TOP_B, 0)).yaw;
 
-  // ---- items: plain parcels ----
-  type ItemState = "beltA" | "beltB" | "held" | "boxed" | "idle";
+  // ---- items ----
+  type ItemState = "beltA" | "beltB" | "held" | "liftWait" | "lifting" | "boxed" | "forklift" | "idle";
   type Item = { group: THREE.Group; state: ItemState };
   const items: Item[] = [];
   function makeItem(i: number): Item {
@@ -367,27 +588,147 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     items.push(item);
     return item;
   }
-  for (let i = 0; i < 12; i++) makeItem(i);
+  for (let i = 0; i < 14; i++) makeItem(i);
 
-  function spawn(atX = A_X0 + 0.7) {
-    const it = items.find((p) => p.state === "idle");
-    if (!it) return;
-    it.group.position.set(atX, TOP_A + ITEM_H / 2, 0);
-    it.group.rotation.set(0, (Math.random() - 0.5) * 0.15, 0);
-    it.group.scale.setScalar(1);
+  function takeIdle(): Item | null {
+    return items.find((p) => p.state === "idle") ?? null;
+  }
+  function placeOnBeltA(item: Item, atX: number) {
+    scene.attach(item.group);
+    item.group.position.set(atX, TOP_A + ITEM_H / 2, 0);
+    item.group.rotation.set(0, (Math.random() - 0.5) * 0.15, 0);
+    item.group.scale.setScalar(1);
+    item.state = "beltA";
+  }
+  // pre-warm the line so it starts mid-production
+  for (const px of [-3.4, -5.6]) {
+    const it = takeIdle()!;
+    it.group.position.set(px, TOP_A + ITEM_H / 2, 0);
     it.group.visible = true;
     it.state = "beltA";
   }
-  spawn(-3.4);
-  spawn(-5.5);
-  spawn(-7.2);
-  const early = items.find((p) => p.state === "idle")!;
-  early.group.position.set(3.6, TOP_B + ITEM_H / 2, 0);
-  early.group.visible = true;
-  early.state = "beltB";
+  {
+    const it = takeIdle()!;
+    it.group.position.set(4.4, TOP_B + ITEM_H / 2, 0);
+    it.group.visible = true;
+    it.state = "beltB";
+  }
 
-  // ---- pick-and-place (hover, straight descent, grip, straight lift) ----
-  const boxStack: Item[] = [];
+  // ---- forklift ----
+  const forklift = (() => {
+    const root = new THREE.Group();
+    const chassis = part(new THREE.BoxGeometry(1.35, 0.5, 0.95));
+    chassis.position.set(0, 0.52, 0);
+    root.add(chassis);
+    const cw = part(new THREE.BoxGeometry(0.5, 0.38, 0.85), faintMat);
+    cw.position.set(-0.8, 0.62, 0);
+    root.add(cw);
+    for (const [px, pz] of [
+      [-0.45, -0.38],
+      [-0.45, 0.38],
+      [0.45, -0.38],
+      [0.45, 0.38],
+    ] as const) {
+      const post = part(new THREE.BoxGeometry(0.07, 0.95, 0.07), faintMat);
+      post.position.set(px as number, 1.25, pz as number);
+      root.add(post);
+    }
+    const roof = part(new THREE.BoxGeometry(1.1, 0.07, 0.9), faintMat);
+    roof.position.set(0, 1.76, 0);
+    root.add(roof);
+    for (const mz of [-0.3, 0.3]) {
+      const rail = part(new THREE.BoxGeometry(0.09, 1.9, 0.09));
+      rail.position.set(0.78, 0.98, mz);
+      root.add(rail);
+    }
+    const forks = new THREE.Group();
+    const backPlate = part(new THREE.BoxGeometry(0.08, 0.42, 0.75));
+    forks.add(backPlate);
+    for (const fz of [-0.22, 0.22]) {
+      const fork = part(new THREE.BoxGeometry(0.85, 0.06, 0.12));
+      fork.position.set(0.48, -0.18, fz);
+      forks.add(fork);
+    }
+    forks.position.set(0.82, 0.55, 0);
+    root.add(forks);
+    const wheels: THREE.Group[] = [];
+    for (const [wx, r] of [
+      [0.55, 0.3],
+      [-0.62, 0.24],
+    ] as const) {
+      const w = part(new THREE.CylinderGeometry(r as number, r as number, 0.16, 12).rotateX(Math.PI / 2), inkMat);
+      const spoke = new THREE.LineSegments(
+        new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(-(r as number) * 0.7, 0, 0),
+          new THREE.Vector3((r as number) * 0.7, 0, 0),
+        ]),
+        faintMat
+      );
+      spoke.position.z = 0.09;
+      w.add(spoke);
+      w.position.set(wx as number, r as number, 0);
+      root.add(w);
+      wheels.push(w);
+    }
+    root.position.set(-11.8, 0, 0.15);
+    scene.add(root);
+    return { root, forks, wheels, driving: false };
+  })();
+  let forkliftTl: gsap.core.Timeline | null = null;
+
+  function forkliftCycle() {
+    if (disposed) return;
+    const item = takeIdle();
+    if (!item) {
+      gsap.delayedCall(2, forkliftCycle);
+      return;
+    }
+    item.group.position.set(0.95, 0.13, 0);
+    item.group.rotation.set(0, 0, 0);
+    item.group.scale.setScalar(1);
+    item.group.visible = true;
+    item.state = "forklift";
+    forklift.forks.attach(item.group);
+    item.group.position.set(0.95, 0.13, 0);
+
+    const dropX = A_X0 + 0.45;
+    const tl = gsap.timeline();
+    forkliftTl = tl;
+    forklift.driving = true;
+    tl.to(forklift.root.position, { x: dropX - 1.55, duration: 2.0, ease: "power1.inOut" });
+    tl.add(() => {
+      forklift.driving = false;
+    });
+    tl.to(forklift.forks.position, { y: TOP_A + 0.12, duration: 0.7, ease: "power1.inOut" });
+    tl.add(() => {
+      tl.pause();
+      const tryDrop = () => {
+        if (disposed) return;
+        const blocked = items.some(
+          (o) => o.state === "beltA" && Math.abs(o.group.position.x - dropX) < 1.5
+        );
+        if (blocked) {
+          gsap.delayedCall(0.4, tryDrop);
+          return;
+        }
+        placeOnBeltA(item, dropX);
+        tl.resume();
+      };
+      tryDrop();
+    });
+    tl.to(forklift.forks.position, { y: 0.55, duration: 0.6, ease: "power1.inOut" }, "+=0.15");
+    tl.add(() => {
+      forklift.driving = true;
+    });
+    tl.to(forklift.root.position, { x: -11.8, duration: 2.2, ease: "power1.inOut" });
+    tl.add(() => {
+      forklift.driving = false;
+      forkliftTl = null;
+      gsap.delayedCall(0.8, forkliftCycle);
+    });
+  }
+
+  // ---- pick-and-place ----
   function runTransfer(arm: Arm, item: Item, place: THREE.Vector3, after: (item: Item) => void) {
     arm.busy = true;
     const pickAt = item.group.position.clone();
@@ -427,23 +768,63 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     tl.to(j, { S: HOME.S, E: HOME.E, duration: 0.7, ease: "power2.inOut" }, "-=0.1");
   }
 
-  // ---- blueprint callouts: HTML labels tethered to 3D anchors ----
+  // ---- lift cycle ----
+  let liftTl: gsap.core.Timeline | null = null;
+  function runLift(item: Item) {
+    liftBusy = true;
+    item.state = "lifting";
+    const tl = gsap.timeline({
+      onComplete: () => {
+        liftBusy = false;
+        liftTl = null;
+      },
+    });
+    liftTl = tl;
+    tl.add(() => {
+      liftMoving = true;
+      pulseLamp(lift.lamp);
+      lift.carriage.attach(item.group);
+    });
+    tl.to(lift.carriage.position, { y: LIFT_TOP_Y, duration: 1.6, ease: "power1.inOut" });
+    tl.add(() => {
+      liftMoving = false;
+      scene.attach(item.group);
+    });
+    tl.to(item.group.position, { x: B_X0 + 0.6, duration: 0.55, ease: "power1.inOut" });
+    tl.add(() => {
+      item.state = "beltB";
+      liftMoving = true;
+    });
+    tl.to(lift.carriage.position, { y: LIFT_LOW_Y, duration: 1.2, ease: "power1.inOut" });
+    tl.add(() => {
+      liftMoving = false;
+    });
+  }
+
+  // ---- blueprint callouts ----
   const ANCHORS: Record<string, { world: THREE.Vector3; dx: number; dy: number }> = {
-    scan: { world: new THREE.Vector3(SCAN_B, scanners[1].beamTopY + 0.1, 0), dx: -150, dy: -56 },
-    arm: { world: new THREE.Vector3(END_BASE.x - 0.2, END_RISER + 2.9, END_BASE.z), dx: 44, dy: -66 },
-    box: { world: new THREE.Vector3(BOX_POS.x + 0.4, BOX_STAND + 1.15, BOX_POS.z), dx: 26, dy: -110 },
+    scan: { world: new THREE.Vector3(SCAN_B, scanners[1].beamY, 0), dx: -180, dy: -70 },
+    arm: { world: new THREE.Vector3(END_BASE.x, END_RISER + SHOULDER_Y, END_BASE.z), dx: 40, dy: -120 },
+    box: { world: new THREE.Vector3(BOX_POS.x - 0.1, BOX_STAND - 0.35, BOX_POS.z + 0.87), dx: 30, dy: -150 },
   };
   const coEls = new Map<string, HTMLElement>();
-  const leadLines = new Map<string, SVGLineElement>();
+  const leadPaths = new Map<string, SVGPathElement>();
+  const leadDots = new Map<string, SVGCircleElement>();
   const svg = section?.querySelector(".belt3d__leads") as SVGSVGElement | null;
   for (const key of Object.keys(ANCHORS)) {
     const el = section?.querySelector(`[data-co="${key}"]`) as HTMLElement | null;
     if (el) coEls.set(key, el);
     if (svg) {
-      const ln = document.createElementNS("http://www.w3.org/2000/svg", "line");
-      ln.setAttribute("class", "belt3d__lead");
-      svg.appendChild(ln);
-      leadLines.set(key, ln);
+      const ph = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      ph.setAttribute("class", "belt3d__lead");
+      ph.setAttribute("fill", "none");
+      svg.appendChild(ph);
+      leadPaths.set(key, ph);
+      const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      dot.setAttribute("class", "belt3d__lug");
+      dot.setAttribute("r", "3");
+      svg.appendChild(dot);
+      leadDots.set(key, dot);
     }
   }
   const proj = new THREE.Vector3();
@@ -453,37 +834,43 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     for (const [key, a] of Object.entries(ANCHORS)) {
       proj.copy(a.world).project(camera);
       const off = Math.abs(proj.x) > 1.02 || Math.abs(proj.y) > 1.02;
-      const coEl = coEls.get(key);
-      const lnEl = leadLines.get(key);
-      if (coEl) coEl.style.opacity = off ? "0" : "";
-      if (lnEl) lnEl.style.opacity = off ? "0" : "";
       const sx = (proj.x * 0.5 + 0.5) * w;
       const sy = (-proj.y * 0.5 + 0.5) * h;
       const el = coEls.get(key);
-      const ln = leadLines.get(key);
+      const ph = leadPaths.get(key);
+      const dot = leadDots.get(key);
       if (el) {
+        el.style.opacity = off ? "0" : "";
         el.style.transform = `translate(${Math.round(sx + a.dx)}px, ${Math.round(sy + a.dy)}px)`;
       }
-      if (ln && el) {
-        // leader runs from the anchor to the label's nearest lower corner
-        const toRight = a.dx >= 0;
+      if (ph && el) {
+        ph.style.opacity = off ? "0" : "";
         const rect = { x: sx + a.dx, y: sy + a.dy, w: el.offsetWidth, h: el.offsetHeight };
-        ln.setAttribute("x1", String(sx));
-        ln.setAttribute("y1", String(sy));
-        ln.setAttribute("x2", String(toRight ? rect.x : rect.x + rect.w));
-        ln.setAttribute("y2", String(rect.y + rect.h - 4));
+        // engineering leader: from the part, diagonal to the label's near
+        // bottom corner, then a short horizontal run under the text
+        const toRight = a.dx >= 0;
+        const cornerX = toRight ? rect.x : rect.x + rect.w;
+        const runX = toRight ? rect.x + Math.min(26, rect.w) : rect.x + rect.w - Math.min(26, rect.w);
+        const yB = rect.y + rect.h;
+        ph.setAttribute("d", `M ${sx} ${sy} L ${cornerX} ${yB} L ${runX} ${yB}`);
+      }
+      if (dot) {
+        dot.style.opacity = off ? "0" : "";
+        dot.setAttribute("cx", String(sx));
+        dot.setAttribute("cy", String(sy));
       }
     }
   }
 
   // ---- loop ----
   const clock = new THREE.Clock();
+  const boxStack: Item[] = [];
   let shiftA = 0;
   let shiftB = 0;
-  let spawnTimer = 1.6;
   let raf = 0;
   let running = false;
   let markedReady = false;
+  let disposed = false;
 
   function nearestAhead(item: Item, state: ItemState, stopX: number): number {
     let x = stopX;
@@ -499,7 +886,6 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     raf = requestAnimationFrame(tick);
     const dt = Math.min(clock.getDelta(), 0.05);
 
-    // parallax drift
     if (par.on) {
       par.x += (par.tx - par.x) * 0.05;
       par.y += (par.ty - par.y) * 0.05;
@@ -512,15 +898,16 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     lays[0](shiftA);
     lays[1](shiftB);
 
+    for (const s of spinners) {
+      if (s.active()) s.obj.rotation.z -= s.speed * dt;
+    }
+    if (forklift.driving) {
+      for (const w of forklift.wheels) w.rotation.z -= 3.4 * dt;
+    }
+
     const sw = (clock.elapsedTime % 2.4) / 2.4;
     scanners[0].sweep.position.y = TOP_A + 0.15 + Math.abs(Math.sin(sw * Math.PI * 2)) * 1.05;
     scanners[1].sweep.position.y = TOP_B + 0.15 + Math.abs(Math.cos(sw * Math.PI * 2)) * 1.05;
-
-    spawnTimer -= dt;
-    if (spawnTimer <= 0) {
-      spawnTimer = SPAWN_EVERY;
-      spawn();
-    }
 
     let waitA: Item | null = null;
     let waitB: Item | null = null;
@@ -538,11 +925,14 @@ export function mountConveyorScene(host: HTMLElement): () => void {
       }
     }
 
-    if (waitA && !midArm.busy) {
-      runTransfer(midArm, waitA, new THREE.Vector3(B_X0 + 0.55, TOP_B + ITEM_H / 2, 0), (item) => {
-        item.state = "beltB";
+    // mid arm feeds the lift (only when the carriage is down and empty)
+    if (waitA && !midArm.busy && !liftBusy) {
+      runTransfer(midArm, waitA, new THREE.Vector3(LIFT_X, LIFT_LOW_Y + ITEM_H / 2, 0), (item) => {
+        item.state = "liftWait";
+        runLift(item);
       });
     }
+    // end arm packs the crate
     if (waitB && !endArm.busy) {
       const level = Math.min(boxStack.length, 3);
       runTransfer(
@@ -556,6 +946,8 @@ export function mountConveyorScene(host: HTMLElement): () => void {
         (item) => {
           item.state = "boxed";
           boxStack.push(item);
+          counter.tick();
+          pulseLamp(endLamp);
           if (boxStack.length > 3) {
             const oldest = boxStack.shift()!;
             gsap.to(oldest.group.scale, {
@@ -590,6 +982,8 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     clock.getDelta();
     midArm.timeline?.play();
     endArm.timeline?.play();
+    liftTl?.play();
+    forkliftTl?.play();
     raf = requestAnimationFrame(tick);
   }
   function stop() {
@@ -597,6 +991,8 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     cancelAnimationFrame(raf);
     midArm.timeline?.pause();
     endArm.timeline?.pause();
+    liftTl?.pause();
+    forkliftTl?.pause();
   }
 
   const vis = new IntersectionObserver(
@@ -612,9 +1008,13 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   ro.observe(host);
   resize();
   start();
+  forkliftCycle();
 
   return () => {
+    disposed = true;
     stop();
+    forkliftTl?.kill();
+    liftTl?.kill();
     vis.disconnect();
     ro.disconnect();
     themeObserver.disconnect();

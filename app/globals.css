@@ -130,6 +130,7 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 /* blueprint callouts: hero stats pinned to machine parts (3D mode only) */
 .belt3d__leads{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:2; opacity:0; transition:opacity .9s ease .25s; }
 .belt3d__lead{ stroke:color-mix(in srgb, var(--ink) 45%, transparent); stroke-width:1; }
+.belt3d__lug{ fill:var(--accent); }
 .belt3d__co{ position:absolute; left:0; top:0; z-index:3; pointer-events:none; opacity:0; transition:opacity .9s ease .25s;
   font-family:var(--font-m); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim);
   background:color-mix(in srgb, var(--bg) 86%, transparent); padding:6px 10px 7px; border:1px solid var(--line-2); border-radius:6px; white-space:nowrap; }
