@@ -29,7 +29,7 @@ export default function BlogIndex() {
               <li key={post.slug} className="postcard">
                 <SpotlightCard
                   className="cursor-target"
-                  spotlightColor="rgba(232, 163, 61, 0.10)"
+                  spotlightColor="rgba(99, 174, 242, 0.12)"
                 >
                   <Link className="postcard__link" href={`/blog/${post.slug}`}>
                     <span className="postcard__thumb">

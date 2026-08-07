@@ -6,18 +6,20 @@ import { useTheme } from "./theme";
 
 const PALETTES = {
   light: {
-    spark: "#2F6A47",
-    dotFrom: "#55855F",
-    dotTo: "#B9C7AE",
-    glow: "#2F6A47",
-    // a dark radial glow reads as a stain on parchment — dots only
+    // drafting paper: blue survey dots on pale blueprint stock
+    spark: "#2464A4",
+    dotFrom: "#5583B5",
+    dotTo: "#AFC4D8",
+    glow: "#2464A4",
+    // a dark radial glow reads as a stain on light paper — dots only
     glowRadius: 0,
   },
   dark: {
-    spark: "#E8A33D",
-    dotFrom: "#96763E",
-    dotTo: "#4A3A20",
-    glow: "#F2C078",
+    // cyanotype: pale blue dots on deep blueprint
+    spark: "#63AEF2",
+    dotFrom: "#3E6D9E",
+    dotTo: "#1C3350",
+    glow: "#8CC5F8",
     glowRadius: 160,
   },
 };

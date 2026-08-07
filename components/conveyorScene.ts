@@ -12,22 +12,19 @@
 
 import * as THREE from "three";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 // ---- layout ----
 const TOP_A = 1.0; // belt A surface height
 const TOP_B = 2.7; // belt B surface height (elevated)
-const A_X0 = -9.8, A_X1 = -2.3;
-const B_X0 = 0.6, B_X1 = 7.0;
-const SCAN_A = -6.3, SCAN_B = 3.5;
-const PICK_A = -2.75, PICK_B = 6.55;
+const A_X0 = -7.8, A_X1 = -2.3;
+const B_X0 = 0.6, B_X1 = 6.2;
+const SCAN_A = -5.5, SCAN_B = 3.2;
+const PICK_A = -2.75, PICK_B = 5.75;
 const MID_BASE = new THREE.Vector3(-1.0, 0, -1.7);
 const MID_RISER = 0.55;
-const END_BASE = new THREE.Vector3(8.25, 0, -1.6);
+const END_BASE = new THREE.Vector3(7.4, 0, -1.6);
 const END_RISER = 1.6;
-const BOX_POS = new THREE.Vector3(10.45, 0, 0.15);
+const BOX_POS = new THREE.Vector3(9.55, 0, 0.15);
 const BOX_STAND = 1.0;
 const L1 = 2.05, L2 = 1.85;
 const SHOULDER_Y = 1.18; // above each arm's riser top
@@ -37,7 +34,7 @@ const SPAWN_EVERY = 4.6;
 const ITEM_H = 0.56;
 
 // world bounds the camera must always contain
-const FIT = { minX: -10.3, maxX: 11.6, minY: -0.15, maxY: 5.1 };
+const FIT = { minX: -8.1, maxX: 10.65, minY: -0.15, maxY: 5.1 };
 
 type Palette = { ink: string; accent: string; bg: string; teal: string };
 
@@ -61,8 +58,8 @@ export function mountConveyorScene(host: HTMLElement): () => void {
 
   const scene = new THREE.Scene();
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 100);
-  const CAM_BASE = new THREE.Vector3(-0.5, 6.2, 15);
-  const LOOK_AT = new THREE.Vector3(0.65, 2.35, 0);
+  const CAM_BASE = new THREE.Vector3(0.1, 6.15, 15);
+  const LOOK_AT = new THREE.Vector3(1.25, 2.3, 0);
   camera.position.copy(CAM_BASE);
   camera.lookAt(LOOK_AT);
 
@@ -74,33 +71,6 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     par.ty = (e.clientY / innerHeight) * 2 - 1;
   };
   if (par.on) window.addEventListener("mousemove", onPointer, { passive: true });
-
-  // ---- scroll-driven dolly (direction C) ----
-  // While the hero is pinned, the camera rides these keyframes: full sheet ->
-  // zoom to belt A / scanner 1 -> track the transfer and second scan ->
-  // arrive on the packing station -> pull back out. p is scrub progress.
-  const DOLLY: { p: number; x: number; y: number; z: number }[] = [
-    { p: 0.0, x: 0.65, y: 2.35, z: 1.0 },
-    { p: 0.22, x: -6.0, y: 1.75, z: 2.1 },
-    { p: 0.55, x: 1.4, y: 2.55, z: 2.1 },
-    { p: 0.8, x: 8.9, y: 2.35, z: 1.9 },
-    { p: 1.0, x: 0.65, y: 2.35, z: 1.0 },
-  ];
-  const scroll = { p: 0 };
-  const lookNow = new THREE.Vector3().copy(LOOK_AT);
-  function dollyAt(p: number): { x: number; y: number; z: number } {
-    if (p <= DOLLY[0].p) return DOLLY[0];
-    for (let i = 1; i < DOLLY.length; i++) {
-      if (p <= DOLLY[i].p) {
-        const a = DOLLY[i - 1];
-        const b = DOLLY[i];
-        let t = (p - a.p) / (b.p - a.p);
-        t = t * t * (3 - 2 * t); // smoothstep per segment
-        return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t, z: a.z + (b.z - a.z) * t };
-      }
-    }
-    return DOLLY[DOLLY.length - 1];
-  }
 
   function resize() {
     const w = host.clientWidth || 1;
@@ -409,10 +379,10 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     it.state = "beltA";
   }
   spawn(-3.4);
-  spawn(-6.6);
-  spawn(-9.2);
+  spawn(-5.5);
+  spawn(-7.2);
   const early = items.find((p) => p.state === "idle")!;
-  early.group.position.set(4.4, TOP_B + ITEM_H / 2, 0);
+  early.group.position.set(3.6, TOP_B + ITEM_H / 2, 0);
   early.group.visible = true;
   early.state = "beltB";
 
@@ -480,11 +450,9 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   function layCallouts() {
     const w = host.clientWidth;
     const h = host.clientHeight;
-    // during the scroll dolly the annotations bow out; they return at rest
-    const riding = scroll.p > 0.04 && scroll.p < 0.96;
     for (const [key, a] of Object.entries(ANCHORS)) {
       proj.copy(a.world).project(camera);
-      const off = riding || Math.abs(proj.x) > 1.02 || Math.abs(proj.y) > 1.02;
+      const off = Math.abs(proj.x) > 1.02 || Math.abs(proj.y) > 1.02;
       const coEl = coEls.get(key);
       const lnEl = leadLines.get(key);
       if (coEl) coEl.style.opacity = off ? "0" : "";
@@ -531,25 +499,12 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     raf = requestAnimationFrame(tick);
     const dt = Math.min(clock.getDelta(), 0.05);
 
-    // camera: dolly keyframes (scroll) + parallax drift (pointer)
-    {
-      const d = dollyAt(scroll.p);
-      if (par.on) {
-        par.x += (par.tx - par.x) * 0.05;
-        par.y += (par.ty - par.y) * 0.05;
-      }
-      const damp = 1 / d.z; // parallax quiets down when zoomed in
-      lookNow.set(d.x, d.y, 0);
-      camera.position.set(
-        CAM_BASE.x + (d.x - LOOK_AT.x) + par.x * 0.55 * damp,
-        CAM_BASE.y + (d.y - LOOK_AT.y) - par.y * 0.35 * damp,
-        CAM_BASE.z
-      );
-      camera.lookAt(lookNow);
-      if (camera.zoom !== d.z) {
-        camera.zoom = d.z;
-        camera.updateProjectionMatrix();
-      }
+    // parallax drift
+    if (par.on) {
+      par.x += (par.tx - par.x) * 0.05;
+      par.y += (par.ty - par.y) * 0.05;
+      camera.position.set(CAM_BASE.x + par.x * 0.55, CAM_BASE.y - par.y * 0.35, CAM_BASE.z);
+      camera.lookAt(LOOK_AT);
     }
 
     shiftA = (shiftA + BELT_SPEED * dt) % (A_X1 - A_X0);
@@ -658,27 +613,8 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   resize();
   start();
 
-  // pin the hero and scrub the dolly - desktop fine-pointer only. Mobile and
-  // reduced-motion never reach here with a pin (scene absent on reduced).
-  const heroEl = host.closest(".hero") as HTMLElement | null;
-  let st: ScrollTrigger | null = null;
-  if (heroEl && innerWidth >= 900 && matchMedia("(hover: hover) and (pointer: fine)").matches) {
-    st = ScrollTrigger.create({
-      trigger: heroEl,
-      start: "top top",
-      end: "+=160%",
-      pin: true,
-      pinSpacing: true,
-      scrub: 0.6,
-      onUpdate: (self) => {
-        scroll.p = self.progress;
-      },
-    });
-  }
-
   return () => {
     stop();
-    st?.kill();
     vis.disconnect();
     ro.disconnect();
     themeObserver.disconnect();
