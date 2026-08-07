@@ -26,8 +26,9 @@ const MID_BASE = new THREE.Vector3(-1.55, 0, -1.7);
 const MID_RISER = 0.55;
 const END_BASE = new THREE.Vector3(7.4, 0, -1.6);
 const END_RISER = 1.6;
-const BOX_POS = new THREE.Vector3(9.55, 0, 0.15);
-const BOX_STAND = 1.0;
+const TRUCK_X = 9.75; // parked at the loading dock
+const BED_TOP = 1.02; // flatbed deck height
+const PILLAR_X = 8.35; // dock pillar carrying the counter
 const LIFT_X = 0.35;
 const LIFT_TOP_Y = 2.62; // carriage platform top at its highest
 const LIFT_LOW_Y = 0.62; // carriage platform top at rest
@@ -38,7 +39,7 @@ const BELT_SPEED = 1.15;
 const ITEM_H = 0.56;
 
 // world bounds the camera must always contain
-const FIT = { minX: -8.15, maxX: 10.65, minY: -0.15, maxY: 5.15 };
+const FIT = { minX: -8.15, maxX: 11.75, minY: -0.15, maxY: 5.15 };
 
 type Palette = { ink: string; accent: string; bg: string; teal: string };
 
@@ -410,26 +411,11 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     spinners.push({ obj: g2, speed: -2.4, active: () => true });
   }
 
-  // ---- crate on stand + mechanical counter ----
-  const stand = part(new THREE.BoxGeometry(1.7, BOX_STAND, 1.7), faintMat);
-  stand.position.set(BOX_POS.x, BOX_STAND / 2, BOX_POS.z);
-  scene.add(stand);
-  const wallX = new THREE.BoxGeometry(1.9, 0.72, 0.09);
-  const wallZ = new THREE.BoxGeometry(0.09, 0.72, 1.9);
-  for (const [g, x, z] of [
-    [wallX, 0, -0.9],
-    [wallX, 0, 0.9],
-    [wallZ, -0.9, 0],
-    [wallZ, 0.9, 0],
-  ] as const) {
-    const w = part(g as THREE.BoxGeometry);
-    w.position.set(BOX_POS.x + (x as number), BOX_STAND + 0.36, BOX_POS.z + (z as number));
-    scene.add(w);
-  }
-  const boxBase = part(new THREE.BoxGeometry(1.9, 0.08, 1.9), faintMat);
-  boxBase.position.set(BOX_POS.x, BOX_STAND + 0.04, BOX_POS.z);
-  scene.add(boxBase);
-  const endLamp = buildStackLight(BOX_POS.x - 1.1, BOX_STAND + 0.72, 0.6);
+  // ---- loading dock: pillar with the counter, and the flatbed truck ----
+  const pillar = part(new THREE.BoxGeometry(0.5, 1.15, 0.5));
+  pillar.position.set(PILLAR_X, 0.575, 0.55);
+  scene.add(pillar);
+  const endLamp = buildStackLight(PILLAR_X, 1.15, 0.55);
 
   const counter = (() => {
     let n = 0;
@@ -441,7 +427,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
       new THREE.PlaneGeometry(0.72, 0.36),
       new THREE.MeshBasicMaterial({ map: tex, transparent: true })
     );
-    plane.position.set(BOX_POS.x - 0.1, BOX_STAND - 0.35, BOX_POS.z + 0.87);
+    plane.position.set(PILLAR_X, 0.78, 0.81);
     scene.add(plane);
     const frame = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(0.78, 0.42)), inkMat);
     frame.position.copy(plane.position);
@@ -469,6 +455,109 @@ export function mountConveyorScene(host: HTMLElement): () => void {
       },
     };
   })();
+
+  // flatbed truck, cab facing right (its exit). Boxes attach to the bed so
+  // they ride along when it departs.
+  const truck = (() => {
+    const root = new THREE.Group();
+    const bed = new THREE.Group();
+    root.add(bed);
+    const deck = part(new THREE.BoxGeometry(2.15, 0.14, 1.15));
+    deck.position.set(-0.05, 0.95, 0);
+    bed.add(deck);
+    // low rails around the bed (back + both sides)
+    const railB = part(new THREE.BoxGeometry(0.08, 0.5, 1.15), faintMat);
+    railB.position.set(-1.09, 1.27, 0);
+    bed.add(railB);
+    for (const zs of [-0.56, 0.56]) {
+      const railS = part(new THREE.BoxGeometry(2.15, 0.4, 0.07), faintMat);
+      railS.position.set(-0.05, 1.22, zs);
+      bed.add(railS);
+    }
+    // chassis frame + cab
+    const frame = part(new THREE.BoxGeometry(3.0, 0.16, 0.8), faintMat);
+    frame.position.set(0.35, 0.62, 0);
+    root.add(frame);
+    const cab = part(new THREE.BoxGeometry(0.85, 0.95, 1.05));
+    cab.position.set(1.5, 1.18, 0);
+    root.add(cab);
+    const hood = part(new THREE.BoxGeometry(0.42, 0.42, 0.95));
+    hood.position.set(2.12, 0.92, 0);
+    root.add(hood);
+    // windshield line
+    const ws = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(1.93, 1.66, -0.5),
+      new THREE.Vector3(1.93, 1.66, 0.5),
+    ]);
+    root.add(new THREE.Line(ws, faintMat));
+    // wheels
+    const wheels: THREE.Group[] = [];
+    for (const [wx, r] of [
+      [-0.7, 0.32],
+      [0.45, 0.32],
+      [1.85, 0.3],
+    ] as const) {
+      const w = part(new THREE.CylinderGeometry(r as number, r as number, 0.18, 12).rotateX(Math.PI / 2), inkMat);
+      const spoke = new THREE.LineSegments(
+        new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(-(r as number) * 0.7, 0, 0),
+          new THREE.Vector3((r as number) * 0.7, 0, 0),
+        ]),
+        faintMat
+      );
+      spoke.position.z = 0.1;
+      w.add(spoke);
+      w.position.set(wx as number, r as number, 0);
+      root.add(w);
+      wheels.push(w);
+    }
+    root.position.set(TRUCK_X, 0, 0.15);
+    scene.add(root);
+    return { root, bed, wheels };
+  })();
+  let truckReady = true;
+  let truckMoving = false;
+  let truckTl: gsap.core.Timeline | null = null;
+
+  function departTruck() {
+    truckReady = false;
+    const tl = gsap.timeline({
+      onComplete: () => {
+        truckTl = null;
+      },
+    });
+    truckTl = tl;
+    tl.add(() => {
+      truckMoving = true;
+      pulseLamp(endLamp);
+    });
+    tl.to(truck.root.position, { x: TRUCK_X + 9.5, duration: 2.8, ease: "power1.in" });
+    tl.add(() => {
+      truckMoving = false;
+      // the load left with the truck
+      for (const it of boxStack) {
+        settleItem(it);
+        scene.attach(it.group);
+        it.group.visible = false;
+        it.state = "idle";
+      }
+      boxStack.length = 0;
+    });
+    // a fresh truck backs in after a beat
+    tl.to(truck.root.position, {
+      x: TRUCK_X,
+      duration: 2.5,
+      ease: "power1.out",
+      delay: 1.6,
+      onStart: () => {
+        truckMoving = true;
+      },
+    });
+    tl.add(() => {
+      truckMoving = false;
+      truckReady = true;
+    });
+  }
 
   // ---- arms ----
   type Arm = {
@@ -590,6 +679,14 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   }
   for (let i = 0; i < 14; i++) makeItem(i);
 
+  // kill any in-flight position/rotation tweens before reparenting an item -
+  // stale tweens writing into a NEW parent's local space made boxes float
+  function settleItem(item: Item) {
+    gsap.killTweensOf(item.group.position);
+    gsap.killTweensOf(item.group.rotation);
+    gsap.killTweensOf(item.group.scale);
+  }
+
   function takeIdle(): Item | null {
     return items.find((p) => p.state === "idle") ?? null;
   }
@@ -683,13 +780,14 @@ export function mountConveyorScene(host: HTMLElement): () => void {
       gsap.delayedCall(2, forkliftCycle);
       return;
     }
-    item.group.position.set(0.95, 0.13, 0);
+    settleItem(item);
     item.group.rotation.set(0, 0, 0);
     item.group.scale.setScalar(1);
     item.group.visible = true;
     item.state = "forklift";
-    forklift.forks.attach(item.group);
-    item.group.position.set(0.95, 0.13, 0);
+    forklift.forks.add(item.group);
+    // centered on the fork blades: blades top is local y -0.15
+    item.group.position.set(0.48, -0.15 + ITEM_H / 2, 0);
 
     const dropX = A_X0 + 0.45;
     const tl = gsap.timeline();
@@ -711,7 +809,20 @@ export function mountConveyorScene(host: HTMLElement): () => void {
           gsap.delayedCall(0.4, tryDrop);
           return;
         }
-        placeOnBeltA(item, dropX);
+        // smooth handoff: slide off the blades onto the belt, then it's live
+        settleItem(item);
+        scene.attach(item.group);
+        gsap.to(item.group.position, {
+          x: dropX,
+          y: TOP_A + ITEM_H / 2,
+          z: 0,
+          duration: 0.3,
+          ease: "power1.out",
+          onComplete: () => {
+            item.group.rotation.set(0, (Math.random() - 0.5) * 0.15, 0);
+            item.state = "beltA";
+          },
+        });
         tl.resume();
       };
       tryDrop();
@@ -749,6 +860,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     tl.to(j, { S: atPick.S, E: atPick.E, duration: 0.38, ease: "power2.in" });
     tl.to(j, { grip: 0.16, duration: 0.18 });
     tl.add(() => {
+      settleItem(item);
       arm.wrist.attach(item.group);
       item.state = "held";
       gsap.to(item.group.position, { x: 0, y: -GRIP_DROP + ITEM_H / 2 - 0.03, z: 0, duration: 0.12 });
@@ -759,6 +871,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     tl.to(j, { S: atPlace.S, E: atPlace.E, duration: 0.38, ease: "power2.in" });
     tl.to(j, { grip: 1, duration: 0.18 });
     tl.add(() => {
+      settleItem(item);
       scene.attach(item.group);
       gsap.to(item.group.position, { x: place.x, y: place.y, z: place.z, duration: 0.14 });
       gsap.to(item.group.rotation, { x: 0, z: 0, duration: 0.14 });
@@ -783,12 +896,20 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     tl.add(() => {
       liftMoving = true;
       pulseLamp(lift.lamp);
-      lift.carriage.attach(item.group);
+      settleItem(item);
+      lift.carriage.add(item.group);
+      // seated square on the platform (platform top is local y 0)
+      item.group.position.set(0, ITEM_H / 2, 0);
+      item.group.rotation.set(0, 0, 0);
     });
     tl.to(lift.carriage.position, { y: LIFT_TOP_Y, duration: 1.6, ease: "power1.inOut" });
     tl.add(() => {
       liftMoving = false;
+      settleItem(item);
       scene.attach(item.group);
+      // exact belt-B rest height before the push across the bridge
+      item.group.position.y = TOP_B + ITEM_H / 2;
+      item.group.position.z = 0;
     });
     tl.to(item.group.position, { x: B_X0 + 0.6, duration: 0.55, ease: "power1.inOut" });
     tl.add(() => {
@@ -805,7 +926,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   const ANCHORS: Record<string, { world: THREE.Vector3; dx: number; dy: number }> = {
     scan: { world: new THREE.Vector3(SCAN_B, scanners[1].beamY, 0), dx: -180, dy: -70 },
     arm: { world: new THREE.Vector3(END_BASE.x, END_RISER + SHOULDER_Y, END_BASE.z), dx: 40, dy: -120 },
-    box: { world: new THREE.Vector3(BOX_POS.x - 0.1, BOX_STAND - 0.35, BOX_POS.z + 0.87), dx: 30, dy: -150 },
+    box: { world: new THREE.Vector3(PILLAR_X, 0.78, 0.81), dx: 30, dy: -170 },
   };
   const coEls = new Map<string, HTMLElement>();
   const leadPaths = new Map<string, SVGPathElement>();
@@ -904,6 +1025,9 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     if (forklift.driving) {
       for (const w of forklift.wheels) w.rotation.z -= 3.4 * dt;
     }
+    if (truckMoving) {
+      for (const w of truck.wheels) w.rotation.z -= 4.2 * dt;
+    }
 
     const sw = (clock.elapsedTime % 2.4) / 2.4;
     scanners[0].sweep.position.y = TOP_A + 0.15 + Math.abs(Math.sin(sw * Math.PI * 2)) * 1.05;
@@ -932,35 +1056,28 @@ export function mountConveyorScene(host: HTMLElement): () => void {
         runLift(item);
       });
     }
-    // end arm packs the crate
-    if (waitB && !endArm.busy) {
-      const level = Math.min(boxStack.length, 3);
+    // full load + arm home -> the truck leaves (decided here, never mid-pack)
+    if (truckReady && !endArm.busy && boxStack.length >= 3) {
+      departTruck();
+    }
+    // end arm loads the truck (only while one is docked and stationary)
+    if (waitB && !endArm.busy && truckReady && !truckMoving && boxStack.length < 3) {
+      const level = boxStack.length;
       runTransfer(
         endArm,
         waitB,
         new THREE.Vector3(
-          BOX_POS.x + (Math.random() - 0.5) * 0.16,
-          BOX_STAND + 0.12 + ITEM_H / 2 + level * 0.32,
-          BOX_POS.z + (Math.random() - 0.5) * 0.16
+          TRUCK_X - 0.45 + (Math.random() - 0.5) * 0.18,
+          BED_TOP + ITEM_H / 2 + level * 0.34,
+          0.15 + (Math.random() - 0.5) * 0.18
         ),
         (item) => {
           item.state = "boxed";
+          settleItem(item);
+          truck.bed.attach(item.group);
           boxStack.push(item);
           counter.tick();
           pulseLamp(endLamp);
-          if (boxStack.length > 3) {
-            const oldest = boxStack.shift()!;
-            gsap.to(oldest.group.scale, {
-              x: 0.01, y: 0.01, z: 0.01, duration: 0.4,
-              onComplete: () => {
-                oldest.group.visible = false;
-                oldest.state = "idle";
-              },
-            });
-            boxStack.forEach((pl, i) =>
-              gsap.to(pl.group.position, { y: BOX_STAND + 0.12 + ITEM_H / 2 + i * 0.32, duration: 0.4 })
-            );
-          }
         }
       );
     }
@@ -969,6 +1086,17 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     syncArm(endArm);
     renderer.render(scene, camera);
     layCallouts();
+
+    // state probe for tests/debugging (read-only snapshot)
+    (window as unknown as Record<string, unknown>).__plant = {
+      truckX: Math.round(truck.root.position.x * 100) / 100,
+      truckReady,
+      truckMoving,
+      endBusy: endArm.busy,
+      midBusy: midArm.busy,
+      liftBusy,
+      stack: boxStack.length,
+    };
 
     if (!markedReady) {
       markedReady = true;
@@ -984,6 +1112,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     endArm.timeline?.play();
     liftTl?.play();
     forkliftTl?.play();
+    truckTl?.play();
     raf = requestAnimationFrame(tick);
   }
   function stop() {
@@ -993,6 +1122,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     endArm.timeline?.pause();
     liftTl?.pause();
     forkliftTl?.pause();
+    truckTl?.pause();
   }
 
   const vis = new IntersectionObserver(
@@ -1015,6 +1145,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     stop();
     forkliftTl?.kill();
     liftTl?.kill();
+    truckTl?.kill();
     vis.disconnect();
     ro.disconnect();
     themeObserver.disconnect();
