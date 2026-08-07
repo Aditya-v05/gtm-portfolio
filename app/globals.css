@@ -18,6 +18,7 @@
   --font-d:var(--font-display), Arial, sans-serif;
   --font-b:var(--font-body), system-ui, sans-serif;
   --font-m:var(--font-mono), monospace;
+  --nav-h:70px; /* measured at runtime by NavHeightVar */
 }
 [data-theme="dark"]{
   /* DARK: cyanotype — light lines on deep blueprint blue */
@@ -80,11 +81,11 @@ nav .links a::after{ content:""; position:absolute; left:0; bottom:-3px; width:0
 nav .links a:hover{ color:var(--ink); } nav .links a:hover::after{ width:100%; }
 
 /* ============ HERO ============ */
-.hero{ position:relative; min-height:calc(100vh - 71px); /* viewport minus sticky nav */ display:flex; flex-direction:column; justify-content:flex-end; border-bottom:1px solid var(--line); overflow:hidden; }
+.hero{ position:relative; height:calc(100dvh - var(--nav-h)); min-height:600px; display:flex; flex-direction:column; justify-content:flex-end; border-bottom:1px solid var(--line); overflow:hidden; }
 .hero__field{ position:absolute; inset:0; z-index:0; opacity:.8;
   -webkit-mask-image:radial-gradient(120% 100% at 50% 40%, #000 30%, transparent 78%);
   mask-image:radial-gradient(120% 100% at 50% 40%, #000 30%, transparent 78%); }
-.hero__in{ position:relative; z-index:2; margin:auto auto 0; padding:76px 56px 12px; width:100%; }
+.hero__in{ position:relative; z-index:2; flex:0 0 auto; margin:auto auto 0; padding:76px 56px 12px; width:100%; }
 .hero .eyebrow{ font-family:var(--font-m); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:14px; margin-bottom:18px; }
 
 /* current-role marker: reads as a status readout, not a badge */
@@ -125,8 +126,8 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 /* Machine drawing: static frame (double rails + roller trucks) with a
    chain-link belt scrolling inside the channel. Geometry mirrors the real
    thing - rail pair, belt channel, rail pair, rollers beneath. */
-.belt{ position:relative; z-index:1; width:100%; padding:0 0 18px; }
-.belt__stage{ position:relative; height:clamp(330px, 52vh, 660px); width:100%; }
+.belt{ position:relative; z-index:1; width:100%; flex:1 1 auto; min-height:0; display:flex; flex-direction:column; padding:0 0 26px; }
+.belt__stage{ position:relative; flex:1 1 auto; min-height:200px; width:100%; }
 /* dimension annotation over the line: drafting decoration with a wink */
 .belt__dim{ position:absolute; top:10px; left:5%; width:36%; display:flex; align-items:center; gap:10px; font-family:var(--font-m); font-size:8px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute); z-index:2; }
 .belt__dim::before, .belt__dim::after{ content:""; flex:1; height:1px; background:color-mix(in srgb, var(--ink) 35%, transparent); }
@@ -219,7 +220,6 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
   .hero h1{ font-size:clamp(48px, 7.8vw, 104px); }
   .hero .sub{ margin-top:18px; }
   .hero .meta{ margin-top:24px; }
-  .belt__stage{ height:clamp(260px, 34vh, 420px); }
 }
 
 

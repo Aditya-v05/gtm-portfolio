@@ -9,6 +9,7 @@ import SiteNav from "@/components/SiteNav";
 import { ThemedClickSpark, ThemedDotField } from "@/components/ThemedFX";
 import CursorFX from "@/components/CursorFX";
 import CursorDRO from "@/components/CursorDRO";
+import NavHeightVar from "@/components/NavHeightVar";
 import EvidenceZoom from "@/components/EvidenceZoom";
 import { SystemsAccordion, SystemFold } from "@/components/SystemsIndex";
 
@@ -79,6 +80,7 @@ export default function Home() {
       <BootIntro />
       <CursorFX />
       <CursorDRO />
+      <NavHeightVar />
       <EvidenceZoom />
       <ThemedClickSpark />
       <Noise patternSize={250} patternAlpha={10} patternRefreshInterval={3} />

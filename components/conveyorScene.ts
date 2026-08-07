@@ -18,7 +18,7 @@ import { gsap } from "gsap";
 // ---- layout (x runs along the line) ----
 const TOP_A = 1.0; // belt A surface
 const TOP_B = 2.7; // belt B surface (elevated)
-const A_X0 = -7.8, A_X1 = -2.3;
+const A_X0 = -7.2, A_X1 = -2.3;
 const B_X0 = 1.6, B_X1 = 6.2;
 const SCAN_A = -5.5, SCAN_B = 3.6;
 const PICK_A = -2.75, PICK_B = 5.75;
@@ -26,9 +26,9 @@ const MID_BASE = new THREE.Vector3(-1.55, 0, -1.7);
 const MID_RISER = 0.55;
 const END_BASE = new THREE.Vector3(7.4, 0, -1.6);
 const END_RISER = 1.6;
-const TRUCK_X = 9.75; // parked at the loading dock
-const BED_TOP = 1.02; // flatbed deck height
-const PILLAR_X = 8.35; // dock pillar carrying the counter
+const TRUCK_X = 10.7; // parked at the loading dock
+const BED_TOP = 1.15; // cargo floor height
+const PILLAR_X = 8.3; // dock pillar carrying the counter
 const LIFT_X = 0.35;
 const LIFT_TOP_Y = 2.62; // carriage platform top at its highest
 const LIFT_LOW_Y = 0.62; // carriage platform top at rest
@@ -39,7 +39,7 @@ const BELT_SPEED = 1.15;
 const ITEM_H = 0.56;
 
 // world bounds the camera must always contain
-const FIT = { minX: -8.15, maxX: 11.75, minY: -0.15, maxY: 5.15 };
+const FIT = { minX: -9.7, maxX: 13.9, minY: -0.15, maxY: 5.15 };
 
 type Palette = { ink: string; accent: string; bg: string; teal: string };
 
@@ -80,8 +80,11 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     const h = host.clientHeight || 1;
     renderer.setPixelRatio(Math.min(devicePixelRatio, w < 800 ? 1.5 : 2));
     renderer.setSize(w, h);
-    const needHalfW = (FIT.maxX - FIT.minX) / 2 + 0.2;
-    const needHalfH = (FIT.maxY - FIT.minY) / 2 + 0.2;
+    // the camera looks at LOOK_AT, which is NOT the centre of the machine's
+    // bounds - so the half-extents must reach the FURTHER edge on each axis,
+    // otherwise the long end (the truck) clips off frame
+    const needHalfW = Math.max(FIT.maxX - LOOK_AT.x, LOOK_AT.x - FIT.minX) + 0.2;
+    const needHalfH = Math.max(FIT.maxY - LOOK_AT.y, LOOK_AT.y - FIT.minY) + 0.2;
     const halfW = Math.max(needHalfW, (needHalfH * w) / h);
     const halfH = (halfW * h) / w;
     camera.left = -halfW;
@@ -456,58 +459,83 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     };
   })();
 
-  // flatbed truck, cab facing right (its exit). Boxes attach to the bed so
-  // they ride along when it departs.
+  // box truck, cab facing right (its exit). Tall cargo body drawn open on
+  // the camera side so the load shows; the arm drops boxes through the open
+  // top of the rear section. Boxes attach to the bed and ride along.
   const truck = (() => {
     const root = new THREE.Group();
     const bed = new THREE.Group();
     root.add(bed);
-    const deck = part(new THREE.BoxGeometry(2.15, 0.14, 1.15));
-    deck.position.set(-0.05, 0.95, 0);
+    // cargo floor
+    const deck = part(new THREE.BoxGeometry(2.75, 0.16, 1.5));
+    deck.position.set(-0.32, BED_TOP - 0.08, 0);
     bed.add(deck);
-    // low rails around the bed (back + both sides)
-    const railB = part(new THREE.BoxGeometry(0.08, 0.5, 1.15), faintMat);
-    railB.position.set(-1.09, 1.27, 0);
-    bed.add(railB);
-    for (const zs of [-0.56, 0.56]) {
-      const railS = part(new THREE.BoxGeometry(2.15, 0.4, 0.07), faintMat);
-      railS.position.set(-0.05, 1.22, zs);
-      bed.add(railS);
-    }
-    // chassis frame + cab
-    const frame = part(new THREE.BoxGeometry(3.0, 0.16, 0.8), faintMat);
-    frame.position.set(0.35, 0.62, 0);
+    // cargo body: far wall, back wall, front wall, roof over the front half
+    const farWall = part(new THREE.BoxGeometry(2.75, 2.3, 0.08));
+    farWall.position.set(-0.32, BED_TOP + 1.15, -0.71);
+    bed.add(farWall);
+    const backWall = part(new THREE.BoxGeometry(0.08, 2.3, 1.5));
+    backWall.position.set(-1.66, BED_TOP + 1.15, 0);
+    bed.add(backWall);
+    const frontWall = part(new THREE.BoxGeometry(0.08, 2.3, 1.5));
+    frontWall.position.set(0.99, BED_TOP + 1.15, 0);
+    bed.add(frontWall);
+    const roof = part(new THREE.BoxGeometry(1.05, 0.09, 1.5));
+    roof.position.set(0.5, BED_TOP + 2.3, 0);
+    bed.add(roof);
+    // low lip on the open (camera) side so boxes read contained
+    const lip = part(new THREE.BoxGeometry(2.75, 0.3, 0.07), faintMat);
+    lip.position.set(-0.32, BED_TOP + 0.15, 0.72);
+    bed.add(lip);
+    // chassis, cab, hood
+    const frame = part(new THREE.BoxGeometry(4.4, 0.2, 0.9), faintMat);
+    frame.position.set(0.35, 0.72, 0);
     root.add(frame);
-    const cab = part(new THREE.BoxGeometry(0.85, 0.95, 1.05));
-    cab.position.set(1.5, 1.18, 0);
+    const cab = part(new THREE.BoxGeometry(1.15, 1.6, 1.4));
+    cab.position.set(1.68, 1.62, 0);
     root.add(cab);
-    const hood = part(new THREE.BoxGeometry(0.42, 0.42, 0.95));
-    hood.position.set(2.12, 0.92, 0);
+    const hood = part(new THREE.BoxGeometry(0.55, 0.72, 1.3));
+    hood.position.set(2.5, 1.18, 0);
     root.add(hood);
-    // windshield line
-    const ws = new THREE.BufferGeometry().setFromPoints([
-      new THREE.Vector3(1.93, 1.66, -0.5),
-      new THREE.Vector3(1.93, 1.66, 0.5),
+    // windshield slant + grille + mirror
+    root.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(2.26, 2.42, -0.65),
+      new THREE.Vector3(2.26, 2.42, 0.65),
+    ]), faintMat));
+    root.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(2.26, 2.42, 0.65),
+      new THREE.Vector3(2.55, 1.54, 0.65),
+    ]), inkMat));
+    root.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(2.26, 2.42, -0.65),
+      new THREE.Vector3(2.55, 1.54, -0.65),
+    ]), inkMat));
+    for (const gy of [0.95, 1.1, 1.25]) {
+      root.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(2.78, gy, -0.45),
+        new THREE.Vector3(2.78, gy, 0.45),
+      ]), faintMat));
+    }
+    const mirror = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(2.28, 2.1, 0.7),
+      new THREE.Vector3(2.42, 2.1, 0.86),
     ]);
-    root.add(new THREE.Line(ws, faintMat));
-    // wheels
+    root.add(new THREE.Line(mirror, faintMat));
+    // wheels: rear duals + front
     const wheels: THREE.Group[] = [];
-    for (const [wx, r] of [
-      [-0.7, 0.32],
-      [0.45, 0.32],
-      [1.85, 0.3],
-    ] as const) {
-      const w = part(new THREE.CylinderGeometry(r as number, r as number, 0.18, 12).rotateX(Math.PI / 2), inkMat);
+    for (const wx of [-1.15, -0.28, 2.15]) {
+      const r = 0.42;
+      const w = part(new THREE.CylinderGeometry(r, r, 0.2, 14).rotateX(Math.PI / 2), inkMat);
       const spoke = new THREE.LineSegments(
         new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(-(r as number) * 0.7, 0, 0),
-          new THREE.Vector3((r as number) * 0.7, 0, 0),
+          new THREE.Vector3(-r * 0.7, 0, 0),
+          new THREE.Vector3(r * 0.7, 0, 0),
         ]),
         faintMat
       );
-      spoke.position.z = 0.1;
+      spoke.position.z = 0.11;
       w.add(spoke);
-      w.position.set(wx as number, r as number, 0);
+      w.position.set(wx, r, 0);
       root.add(w);
       wheels.push(w);
     }
@@ -531,7 +559,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
       truckMoving = true;
       pulseLamp(endLamp);
     });
-    tl.to(truck.root.position, { x: TRUCK_X + 9.5, duration: 2.8, ease: "power1.in" });
+    tl.to(truck.root.position, { x: TRUCK_X + 12.5, duration: 3.0, ease: "power1.in" });
     tl.add(() => {
       truckMoving = false;
       // the load left with the truck
@@ -793,11 +821,14 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     const tl = gsap.timeline();
     forkliftTl = tl;
     forklift.driving = true;
-    tl.to(forklift.root.position, { x: dropX - 1.55, duration: 2.0, ease: "power1.inOut" });
+    // raise to a high carry on the way in - the box rides ABOVE deck height,
+    // never under the conveyor
+    tl.to(forklift.root.position, { x: dropX - 1.65, duration: 2.0, ease: "power1.inOut" });
+    tl.to(forklift.forks.position, { y: TOP_A + 0.32, duration: 0.9, ease: "power1.inOut" }, "<0.3");
     tl.add(() => {
       forklift.driving = false;
     });
-    tl.to(forklift.forks.position, { y: TOP_A + 0.12, duration: 0.7, ease: "power1.inOut" });
+    tl.to(forklift.forks.position, { y: TOP_A + 0.12, duration: 0.3, ease: "power1.inOut" });
     tl.add(() => {
       tl.pause();
       const tryDrop = () => {
@@ -1049,27 +1080,34 @@ export function mountConveyorScene(host: HTMLElement): () => void {
       }
     }
 
-    // mid arm feeds the lift (only when the carriage is down and empty)
-    if (waitA && !midArm.busy && !liftBusy) {
+    // a box seated on the carriage only rides once the arm is fully clear -
+    // starting the lift from the release callback drove the carriage up
+    // through the still-lowered gripper
+    const seated = items.find((it) => it.state === "liftWait") ?? null;
+    if (seated && !liftBusy && !midArm.busy) runLift(seated);
+
+    // mid arm feeds the lift (carriage down, empty, and nothing already seated)
+    if (waitA && !midArm.busy && !liftBusy && !seated) {
       runTransfer(midArm, waitA, new THREE.Vector3(LIFT_X, LIFT_LOW_Y + ITEM_H / 2, 0), (item) => {
         item.state = "liftWait";
-        runLift(item);
       });
     }
     // full load + arm home -> the truck leaves (decided here, never mid-pack)
-    if (truckReady && !endArm.busy && boxStack.length >= 3) {
+    if (truckReady && !endArm.busy && boxStack.length >= 4) {
       departTruck();
     }
     // end arm loads the truck (only while one is docked and stationary)
-    if (waitB && !endArm.busy && truckReady && !truckMoving && boxStack.length < 3) {
-      const level = boxStack.length;
+    if (waitB && !endArm.busy && truckReady && !truckMoving && boxStack.length < 4) {
+      const n = boxStack.length;
+      const col = n % 2; // rear column first, then toward the front wall
+      const row = Math.floor(n / 2);
       runTransfer(
         endArm,
         waitB,
         new THREE.Vector3(
-          TRUCK_X - 0.45 + (Math.random() - 0.5) * 0.18,
-          BED_TOP + ITEM_H / 2 + level * 0.34,
-          0.15 + (Math.random() - 0.5) * 0.18
+          TRUCK_X - 1.15 + col * 0.75 + (Math.random() - 0.5) * 0.08,
+          BED_TOP + ITEM_H / 2 + row * 0.58,
+          0.15 + (Math.random() - 0.5) * 0.12
         ),
         (item) => {
           item.state = "boxed";
@@ -1095,6 +1133,8 @@ export function mountConveyorScene(host: HTMLElement): () => void {
       endBusy: endArm.busy,
       midBusy: midArm.busy,
       liftBusy,
+      liftY: Math.round(lift.carriage.position.y * 100) / 100,
+      seated: items.some((it) => it.state === "liftWait"),
       stack: boxStack.length,
     };
 
