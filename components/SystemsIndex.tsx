@@ -220,7 +220,10 @@ export function SystemFold({
         onMouseLeave={hideHint}
         aria-expanded={open}
       >
-        <span className="fold__no">{id}</span>
+        <span className="fold__no">
+          {id}
+          <i className="fold__pn">RS-{id}</i>
+        </span>
         <span className="fold__t">
           <span className="fold__title">{title}</span>
           <span className="fold__lede">{lede}</span>

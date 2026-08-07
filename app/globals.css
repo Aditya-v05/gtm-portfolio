@@ -127,6 +127,15 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
    thing - rail pair, belt channel, rail pair, rollers beneath. */
 .belt{ position:relative; z-index:1; width:100%; padding:0 0 18px; }
 .belt__stage{ position:relative; height:clamp(330px, 52vh, 660px); width:100%; }
+/* dimension annotation over the line: drafting decoration with a wink */
+.belt__dim{ position:absolute; top:10px; left:5%; width:36%; display:flex; align-items:center; gap:10px; font-family:var(--font-m); font-size:8px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute); z-index:2; }
+.belt__dim::before, .belt__dim::after{ content:""; flex:1; height:1px; background:color-mix(in srgb, var(--ink) 35%, transparent); }
+.belt__dim i{ font-style:normal; white-space:nowrap; }
+.belt__dim b{ position:absolute; top:-3.5px; width:1px; height:8px; background:color-mix(in srgb, var(--ink) 45%, transparent); font-size:0; }
+.belt__dim b:first-of-type{ left:0; }
+.belt__dim b:last-of-type{ right:0; }
+@media (max-width:860px){ .belt__dim{ display:none; } }
+
 /* blueprint callouts: hero stats pinned to machine parts (3D mode only) */
 .belt3d__leads{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:2; opacity:0; transition:opacity .9s ease .25s; }
 .belt3d__lead{ stroke:color-mix(in srgb, var(--ink) 45%, transparent); stroke-width:1; }
@@ -221,6 +230,11 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 .shead h2{ font-family:var(--font-d); font-weight:500; font-size:30px; letter-spacing:-.01em; }
 .shead .c{ margin-left:auto; font-family:var(--font-m); font-size:10px; color:var(--mute); letter-spacing:.08em; }
 .shead + .rule{ margin-bottom:10px; }
+/* drawing title block: every section head carries its sheet data */
+.shead__tb{ display:flex; margin-left:26px; border:1px solid var(--line-2); }
+.shead__tb i{ font-style:normal; font-family:var(--font-m); font-size:8px; letter-spacing:.1em; color:var(--mute); padding:4px 9px; border-left:1px solid var(--line-2); white-space:nowrap; }
+.shead__tb i:first-child{ border-left:0; }
+@media (max-width:860px){ .shead__tb{ display:none; } }
 
 /* ============ EVIDENCE WALL (slack exhibits pinned to a board) ============ */
 .evwall{ position:relative; margin-top:30px; padding:54px 42px 46px; border:1px dashed var(--line-2); border-radius:16px;
@@ -290,6 +304,11 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 .metrics b{ color:var(--accent-2); font-weight:500; }
 .metrics .sep{ color:var(--line-2); }
 
+/* bill-of-materials header above the systems index */
+.bomhead{ display:grid; grid-template-columns:64px minmax(0,1fr) auto auto 34px; gap:22px; padding:12px 6px 9px; font-family:var(--font-m); font-size:8px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute); }
+.bomhead span:nth-child(3), .bomhead span:nth-child(4){ min-width:90px; }
+@media (max-width:760px){ .bomhead{ display:none; } }
+
 /* ============ SYSTEMS INDEX (accordion) ============ */
 /* SSR renders every fold expanded (crawlers / no-JS / print see everything);
    the client collapses pre-paint and gsap animates height from there. */
@@ -298,6 +317,7 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 .fold__head{ position:relative; display:grid; grid-template-columns:64px minmax(0,1fr) auto auto 34px; align-items:center; gap:22px; width:100%; padding:25px 6px; background:transparent; border:0; cursor:pointer; text-align:left; color:var(--ink); font:inherit; transition:background .3s; }
 .fold__head:hover{ background:rgba(var(--accent-rgb),.045); }
 .fold__no{ font-family:var(--font-d); font-style:italic; font-size:24px; line-height:1; color:transparent; -webkit-text-stroke:1px rgba(var(--accent-rgb),.4); transition:color .6s ease, -webkit-text-stroke-color .6s ease; }
+.fold__pn{ display:block; margin-top:5px; font-family:var(--font-m); font-style:normal; font-size:7.5px; letter-spacing:.14em; color:var(--mute); -webkit-text-stroke:0; }
 .fold.is-open .fold__no{ color:var(--accent); -webkit-text-stroke-color:transparent; } /* ink soaks in */
 .fold__hint{ position:absolute; left:0; top:0; pointer-events:none; opacity:0; transition:opacity .25s; font-family:var(--font-m); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); white-space:nowrap; z-index:2; }
 @media (hover:none){ .fold__hint{ display:none; } }
@@ -437,7 +457,10 @@ footer .links{ font-family:var(--font-m); font-size:12px; line-height:2.1; color
 footer .links a{ color:var(--accent-2); }
 footer .links a:hover{ color:var(--accent); }
 footer .links .edit{ color:var(--mute); }
-footer .sysline{ font-family:var(--font-m); font-size:10px; color:var(--mute); text-align:right; line-height:1.9; }
+/* footer as the sheet's title block: the boxed table in a drawing's corner */
+footer .sysline{ font-family:var(--font-m); font-size:9.5px; color:var(--mute); text-align:left; line-height:1.7; border:1px solid var(--line-2); align-self:start; min-width:280px; }
+footer .sysline div{ padding:7px 12px; border-top:1px solid var(--line-2); letter-spacing:.06em; }
+footer .sysline div:first-child{ border-top:0; color:var(--accent); text-transform:uppercase; letter-spacing:.14em; }
 
 /* ============ BOOT INTRO (load curtain) ============ */
 .boot{ position:fixed; inset:0; z-index:120; background:#0A1626; display:flex; align-items:center; justify-content:center; transition:transform .74s cubic-bezier(.76,0,.24,1); will-change:transform; cursor:pointer; }

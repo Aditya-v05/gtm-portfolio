@@ -146,6 +146,7 @@ export default function Home() {
           <span className="n">№ 01</span>
           <h2>Client Signals</h2>
           <span className="c">delivered work · recreated &amp; sanitized</span>
+          <span className="shead__tb" aria-hidden="true"><i>SHEET 01 / 03</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
         </div>
         <hr className="rule" />
         <div className="evwall">
@@ -252,9 +253,13 @@ export default function Home() {
           <span className="n">№ 02</span>
           <h2>Selected Systems</h2>
           <span className="c">ten, indexed · click to unfold</span>
+          <span className="shead__tb" aria-hidden="true"><i>SHEET 02 / 03</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
         </div>
         <hr className="rule" />
 
+        <div className="bomhead" aria-hidden="true">
+          <span>Part №</span><span>Description</span><span>Class</span><span>Status</span><span></span>
+        </div>
         <SystemsAccordion defaultOpen="01">
 
         <SystemFold id="01" station="gripper" title="Diode" lede="The layer above the systems." type="Orchestration" status="live">
@@ -624,6 +629,7 @@ export default function Home() {
           <span className="n">№ 03</span>
           <h2>Also Built &amp; Shipped</h2>
           <span className="c">selected</span>
+          <span className="shead__tb" aria-hidden="true"><i>SHEET 03 / 03</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
         </div>
         <hr className="rule" />
 
@@ -670,6 +676,7 @@ export default function Home() {
               </a>
             </div>
             <div className="sysline">
+              <div>GTM systems · portfolio sheet</div>
               <div>rev. 2026.08</div>
               <div>all figures are real run artifacts</div>
               <div>PII masked · recon target anonymized</div>

@@ -52,6 +52,10 @@ export default function ConveyorLine() {
           <div className="belt__bin"></div>
         </div>
 
+        <div className="belt__dim" aria-hidden="true">
+          <b></b><i>signal</i><i>→</i><i>revenue</i><b></b>
+        </div>
+
         <ConveyorCell />
 
         {/* blueprint callouts: the hero stats, tethered to machine parts by
