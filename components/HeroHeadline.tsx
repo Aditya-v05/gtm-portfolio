@@ -8,7 +8,7 @@ const TEXT1 = "I build GTM systems";
 
 // stroke-draw pacing for the italic line: longer outlines take longer to
 // "write", clamped so dots and serifs don't blink past
-const DRAW_SPEED = 36000; // font units per second
+const DRAW_SPEED = 18000; // font units per second (Space Grotesk upm 1000)
 const DRAW_MIN = 0.12;
 const DRAW_MAX = 0.34;
 
@@ -125,7 +125,7 @@ export default function HeroHeadline() {
               d={g.d}
               fill="currentColor"
               stroke="currentColor"
-              strokeWidth="18"
+              strokeWidth="9"
             />
           ))}
         </svg>

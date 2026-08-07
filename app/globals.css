@@ -15,7 +15,7 @@
   /* terminal — its own little world, always dark (blue-slate console) */
   --term-bg:#0F1722; --term-bar:#16202E; --term-fg:#C6D4E3; --term-dim:#6E8095;
   --term-amber:#D2A24C; --term-green:#7FC583; --term-red:#E0795B;
-  --font-d:var(--font-display), Georgia, serif;
+  --font-d:var(--font-display), Arial, sans-serif;
   --font-b:var(--font-body), system-ui, sans-serif;
   --font-m:var(--font-mono), monospace;
 }

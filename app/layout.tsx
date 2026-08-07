@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
-import { Fraunces, Archivo, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, Archivo, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-const fraunces = Fraunces({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  style: ["normal", "italic"],
   variable: "--font-display",
-  axes: ["opsz"],
 });
 
 const archivo = Archivo({
@@ -64,7 +62,7 @@ export default function RootLayout({
       lang="en"
       data-theme="light"
       suppressHydrationWarning
-      className={`${fraunces.variable} ${archivo.variable} ${jetbrains.variable}`}
+      className={`${spaceGrotesk.variable} ${archivo.variable} ${jetbrains.variable}`}
     >
       <head>
         <script
