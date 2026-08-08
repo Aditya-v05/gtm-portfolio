@@ -1,97 +1,110 @@
 "use client";
 
-// SHEET 01 - the line. One factory record enters at the top and comes out the
-// other end as a verdict. The reader meets a single Illinois plant, watches it
-// get read, correlated and judged, and only then learns it happened 300+ times.
+// SHEET 01 - reason and route.
 //
-// Three primitives only, and everything is built from them:
-//   .raw      raw evidence, document-like, monospace
-//   .ann      system annotation: small labels, rules, measurements
-//   .say      verdict: oversized, clean, almost nothing else
+// The argument: industrial buyers leave no clean intent signal, so you read
+// the places it leaks out, resolve everything to a building rather than a
+// company, and then split what you find into two jobs that are not the same
+// job - the evidence that an account matters now, and the way into it.
 //
-// Structure is a sticky stage rail plus one sticky canvas. Invisible spacers
-// scroll past and swap what the canvas is showing, so the object never
-// changes - only what the system has done to it.
+// Three primitives only:
+//   .raw   evidence, document-like, monospace
+//   .ann   system annotation: labels, rules, measurements
+//   .say   verdict: oversized, clean, almost nothing around it
 //
-// Every value below is read off one real record (observed 2026-07-06). The
-// company is withheld; the numbers are not.
+// HONESTY: every item carries a live/mapped mark. "live" means it is in the
+// export today and the numbers below are read off it (observed 2026-07-06).
+// "mapped" means specced and argued but not shipped. Nothing here invents a
+// relationship, a solicitation or a sponsor the system has not actually seen.
 
 import { useEffect, useRef, useState } from "react";
 
 const STAGES = [
-  { id: "intake", n: "01", k: "Intake" },
-  { id: "read", n: "02", k: "Read" },
-  { id: "correlate", n: "03", k: "Correlate" },
-  { id: "verdict", n: "04", k: "Verdict" },
+  { id: "scatter", n: "01", k: "Scatter" },
+  { id: "sources", n: "02", k: "Sources" },
+  { id: "resolve", n: "03", k: "Resolve" },
+  { id: "split", n: "04", k: "Split" },
+  { id: "correlate", n: "05", k: "Correlate" },
+  { id: "decide", n: "06", k: "Decide" },
 ];
 
 const STEPS = [
-  { id: "i1", s: "intake" },
-  { id: "i2", s: "intake" },
-  { id: "r1", s: "read" },
-  { id: "r2", s: "read" },
-  { id: "r3", s: "read" },
-  { id: "c1", s: "correlate" },
-  { id: "c2", s: "correlate" },
-  { id: "c3", s: "correlate" },
-  { id: "v1", s: "verdict" },
-  { id: "v2", s: "verdict" },
+  { id: "a1", s: "scatter" },
+  { id: "b1", s: "sources" },
+  { id: "c1", s: "resolve" },
+  { id: "c2", s: "resolve" },
+  { id: "d1", s: "split" },
+  { id: "d2", s: "split" },
+  { id: "e1", s: "correlate" },
+  { id: "e2", s: "correlate" },
+  { id: "e3", s: "correlate" },
+  { id: "f1", s: "decide" },
+  { id: "f2", s: "decide" },
 ];
 
 const SOURCES = [
-  { k: "applicant systems", v: "what is unstaffed" },
-  { k: "sam.gov", v: "what is intended" },
-  { k: "usaspending", v: "what was bought" },
-  { k: "partner graph", v: "what already works" },
+  { k: "applicant systems", v: "what is unstaffed", live: true },
+  { k: "usaspending", v: "what was already bought", live: true },
+  { k: "sam.gov", v: "what is intended", live: false },
+  { k: "integrator + OEM libraries", v: "what already works", live: false },
+  { k: "ownership records", v: "who else this owner holds", live: false },
+  { k: "exhibitor lists", v: "who is showing up", live: false },
+];
+
+const REASON = [
+  { k: "hiring pain", v: "13 reposts across 126 days, offer degrading", live: true },
+  { k: "federal spend", v: "awards landing on operators already short-staffed", live: true },
+  { k: "procurement", v: "solicitations, before any award exists", live: false },
+  { k: "expansion + capex", v: "new lines, new buildings, equipment finance", live: false },
+];
+
+const ROUTE = [
+  { k: "the partner graph", v: "integrator case studies publish the relationship", live: false },
+  { k: "sponsor access", v: "one owner, fifteen to forty plants", live: false },
+  { k: "existing customers", v: "who already sells into this building", live: false },
+  { k: "the show floor", v: "exhibitor lists, months ahead", live: false },
 ];
 
 export default function SignalLine() {
-  const [step, setStep] = useState("i1");
+  const [step, setStep] = useState("a1");
   const trackRef = useRef<HTMLDivElement>(null);
+  const railRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
-    const spacers = Array.from(track.querySelectorAll<HTMLElement>("[data-step]"));
-    // fire when a spacer crosses the middle of the viewport
     const io = new IntersectionObserver(
       (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) setStep((e.target as HTMLElement).dataset.step!);
-        }
+        for (const e of entries) if (e.isIntersecting) setStep((e.target as HTMLElement).dataset.step!);
       },
       { rootMargin: "-50% 0px -50% 0px" }
     );
-    spacers.forEach((s) => io.observe(s));
+    track.querySelectorAll<HTMLElement>("[data-step]").forEach((s) => io.observe(s));
     return () => io.disconnect();
   }, []);
 
-  const stage = STEPS.find((s) => s.id === step)?.s ?? "intake";
-  const railRef = useRef<HTMLDivElement>(null);
+  const stage = STEPS.find((s) => s.id === step)?.s ?? "scatter";
 
-  // on narrow screens the rail is a horizontal strip, so the active stage has
-  // to be scrolled into it - scrollLeft rather than scrollIntoView, which
-  // would drag the page with it
+  // narrow screens turn the rail into a strip; keep the active stage in it
   useEffect(() => {
     const rail = railRef.current;
     if (!rail || rail.scrollWidth <= rail.clientWidth) return;
     const on = rail.querySelector<HTMLElement>(".rl.is-on");
     if (!on) return;
-    const target = on.offsetLeft - rail.clientWidth / 2 + on.offsetWidth / 2;
     rail.scrollTo({
-      left: Math.max(0, target),
+      left: Math.max(0, on.offsetLeft - rail.clientWidth / 2 + on.offsetWidth / 2),
       behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
     });
   }, [stage]);
 
   return (
     <section className="ln">
-      {/* ---------- the opening claim: almost nothing on screen ---------- */}
       <div className="ln__open">
-        <h3 className="say say--xl">
-          Factories don&apos;t announce when they&apos;re ready to automate.
-        </h3>
-        <p className="say__sub">We built a system that figures it out anyway.</p>
+        <h3 className="say say--xl">Industrial buyers don&apos;t leave clean intent signals.</h3>
+        <p className="say__sub">
+          No demo request, no pricing page visit, no whitepaper download. So we read the places the
+          intent leaks out instead, and work backwards to the building.
+        </p>
         <div className="ann ln__proof">
           <span>300+ US plants flagged</span>
           <i aria-hidden="true">·</i>
@@ -102,7 +115,6 @@ export default function SignalLine() {
       </div>
 
       <div className="ln__grid">
-        {/* ---------- sticky stage rail ---------- */}
         <div className="ln__rail" ref={railRef} aria-hidden="true">
           {STAGES.map((s) => (
             <div key={s.id} className={`rl${stage === s.id ? " is-on" : ""}`}>
@@ -113,135 +125,129 @@ export default function SignalLine() {
         </div>
 
         <div className="ln__main">
-          {/* ---------- the canvas: one object, transformed ---------- */}
           <div className="ln__canvas">
             <div className="cv" data-step={step}>
-              {/* 01 · i1 - four sources converge */}
-              {step === "i1" && (
+              {/* 01 - the scatter */}
+              {step === "a1" && (
                 <div className="cv__in">
-                  <h4 className="say">Start with the exhaust.</h4>
-                  <div className="pipes">
+                  <h4 className="say">It leaks out in six directions at once.</h4>
+                  <div className="sct">
+                    <span className="sct__i sct__i--tl">hiring</span>
+                    <span className="sct__i sct__i--tr">procurement</span>
+                    <span className="sct__i sct__i--ml">ownership</span>
+                    <span className="sct__i sct__i--mr">partners</span>
+                    <span className="sct__i sct__i--bl">federal spend</span>
+                    <span className="sct__i sct__i--br">the show floor</span>
+                    <span className="sct__hub">one building</span>
+                  </div>
+                  <div className="ann sct__k">none of it published as a buying signal</div>
+                </div>
+              )}
+
+              {/* 02 - the sources, with what is actually running */}
+              {step === "b1" && (
+                <div className="cv__in">
+                  <h4 className="say">Each one answers a different question.</h4>
+                  <div className="srcs">
                     {SOURCES.map((s) => (
-                      <div className="pipe" key={s.k}>
-                        <span className="pipe__k">{s.k}</span>
-                        <span className="pipe__v">{s.v}</span>
+                      <div className={`src2${s.live ? " is-live" : ""}`} key={s.k}>
+                        <span className="src2__d" aria-hidden="true" />
+                        <span className="src2__k">{s.k}</span>
+                        <span className="src2__v">{s.v}</span>
+                        <span className="src2__s">{s.live ? "live" : "mapped"}</span>
                       </div>
                     ))}
-                    <div className="pipes__hub ann">one facility</div>
+                  </div>
+                  <div className="ann srcs__k">
+                    live = in the export today · mapped = specced, not shipped
                   </div>
                 </div>
               )}
 
-              {/* 01 · i2 - a record lands */}
-              {step === "i2" && (
-                <div className="cv__in">
-                  <h4 className="say">One of them lands like this.</h4>
-                  <div className="raw">
-                    <div className="raw__bar">
-                      <span>workday · applicant system</span>
-                      <span>read 2026-07-06</span>
-                    </div>
-                    <div className="raw__b">
-                      <div className="raw__t">Swiss Lathe Machinist IV &mdash; 2nd Shift</div>
-                      <div className="raw__l">Illinois plant · aerospace &amp; defense</div>
-                      <dl className="raw__f">
-                        <div><dt>posted wage</dt><dd>$22 &ndash; 41 / hr</dd></div>
-                        <div><dt>shift</dt><dd>2nd, 10% differential</dd></div>
-                        <div><dt>sign-on</dt><dd>offered</dd></div>
-                        <div><dt>requires</dt><dd>5+ yrs diversified machinist · Swiss lathes, Star machines · CAD/CAM</dd></div>
-                      </dl>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* 02 · r1 - the same record, plain */}
-              {step === "r1" && (
-                <div className="cv__in">
-                  <h4 className="say">On its own it says nothing.</h4>
-                  <div className="raw">
-                    <div className="raw__bar">
-                      <span>workday · applicant system</span>
-                      <span>read 2026-07-06</span>
-                    </div>
-                    <div className="raw__b">
-                      <div className="raw__t">Swiss Lathe Machinist IV &mdash; 2nd Shift</div>
-                      <div className="raw__l">Illinois plant · aerospace &amp; defense</div>
-                      <dl className="raw__f">
-                        <div><dt>posted wage</dt><dd>$22 &ndash; 41 / hr</dd></div>
-                        <div><dt>shift</dt><dd>2nd, 10% differential</dd></div>
-                        <div><dt>sign-on</dt><dd>offered</dd></div>
-                        <div><dt>requires</dt><dd>5+ yrs diversified machinist · Swiss lathes, Star machines · CAD/CAM</dd></div>
-                      </dl>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* 02 · r2 - the same record, annotated */}
-              {step === "r2" && (
-                <div className="cv__in">
-                  <h4 className="say">Every field is a claim about the floor.</h4>
-                  <div className="raw raw--lit">
-                    <div className="raw__bar">
-                      <span>workday · applicant system</span>
-                      <span>parsed</span>
-                    </div>
-                    <div className="raw__b">
-                      <div className="raw__t">
-                        <mark>Swiss Lathe Machinist IV</mark> &mdash; <mark>2nd Shift</mark>
-                        <span className="tick">manual task · undesirable shift</span>
-                      </div>
-                      <div className="raw__l">
-                        <mark>Illinois plant</mark>
-                        <span className="tick">resolved to a site, not a headquarters</span>
-                      </div>
-                      <dl className="raw__f">
-                        <div>
-                          <dt>posted wage</dt>
-                          <dd><mark>$22 &ndash; 41 / hr</mark><span className="tick">a 19-point band is not a salary, it is a plea</span></dd>
-                        </div>
-                        <div>
-                          <dt>sign-on</dt>
-                          <dd><mark>offered</mark><span className="tick">normal hiring already exhausted</span></dd>
-                        </div>
-                        <div>
-                          <dt>requires</dt>
-                          <dd>
-                            5+ yrs diversified machinist · <mark>Swiss lathes, Star machines</mark> ·{" "}
-                            <mark>CAD/CAM</mark>
-                            <span className="tick">the plant already runs the automation this task would need</span>
-                          </dd>
-                        </div>
-                      </dl>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* 02 · r3 - the readout */}
-              {step === "r3" && (
-                <div className="cv__in">
-                  <h4 className="say">Read together, it is a diagnosis.</h4>
-                  <div className="rout">
-                    <div className="rout__hd ann">
-                      <span>signal</span>
-                      <span>reading</span>
-                    </div>
-                    <Row k="persistence" lvl={3} v="chronic · 126 days" />
-                    <Row k="repost frequency" lvl={3} v="13 reposts and variants" />
-                    <Row k="offer degradation" lvl={3} v="confirmed across weekly snapshots" />
-                    <Row k="automation on site" lvl={2} v="confirmed in the requirements" />
-                    <Row k="containment cluster" lvl={2} v="6 QC roles, same facility" />
-                    <div className="rout__ft ann">
-                      persistence is graded persistent, strongly persistent, chronic
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* 03 · c1 - the timeline */}
+              {/* 03 - resolve to a building */}
               {step === "c1" && (
+                <div className="cv__in cv__in--mid">
+                  <div className="say say--num">The account is a building.</div>
+                  <p className="say__sub">
+                    Not a company. A territory rep cannot sell to a Fortune 100 prime, and every
+                    record that stops at the parent is useless to them.
+                  </p>
+                </div>
+              )}
+
+              {step === "c2" && (
+                <div className="cv__in">
+                  <h4 className="say">One prime resolved to twenty-three plants.</h4>
+                  <div className="res">
+                    <div className="res__top ann">one recipient name</div>
+                    <div className="res__fan" aria-hidden="true">
+                      {Array.from({ length: 23 }, (_, i) => (
+                        <span key={i} style={{ animationDelay: `${i * 26}ms` }} />
+                      ))}
+                    </div>
+                    <div className="res__b">
+                      <b>23</b> flagged facilities · <b>6</b> tier A · <b>17</b> tier B
+                    </div>
+                    <div className="corr__note ann">
+                      Signals only count when they land on the same address. That is the difference
+                      between a company that is hiring and a plant that is stuck.
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 04 - the split. the idea the page is built around */}
+              {step === "d1" && (
+                <div className="cv__in cv__in--mid">
+                  <div className="say say--num">Not every source does the same job.</div>
+                  <p className="say__sub">
+                    Half of them tell you an account matters right now. The other half tell you how
+                    to get inside it. Treating those as one pile is why most industrial prospecting
+                    stalls.
+                  </p>
+                </div>
+              )}
+
+              {step === "d2" && (
+                <div className="cv__in">
+                  <div className="split">
+                    <div className="split__col">
+                      <div className="split__h">
+                        <span className="ann">find the reason</span>
+                        <b>why this plant, now</b>
+                      </div>
+                      {REASON.map((r) => (
+                        <div className={`sl2${r.live ? " is-live" : ""}`} key={r.k}>
+                          <span className="sl2__d" aria-hidden="true" />
+                          <span className="sl2__k">{r.k}</span>
+                          <span className="sl2__v">{r.v}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="split__col">
+                      <div className="split__h">
+                        <span className="ann">find the route</span>
+                        <b>how we get in</b>
+                      </div>
+                      {ROUTE.map((r) => (
+                        <div className={`sl2${r.live ? " is-live" : ""}`} key={r.k}>
+                          <span className="sl2__d" aria-hidden="true" />
+                          <span className="sl2__k">{r.k}</span>
+                          <span className="sl2__v">{r.v}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <svg className="split__v" viewBox="0 0 400 44" preserveAspectRatio="none" aria-hidden="true">
+                      <path d="M8 0 L200 40" fill="none" stroke="currentColor" strokeWidth="1" />
+                      <path d="M392 0 L200 40" fill="none" stroke="currentColor" strokeWidth="1" />
+                    </svg>
+                    <div className="split__out">target · now · via</div>
+                  </div>
+                </div>
+              )}
+
+              {/* 05 - correlate over time */}
+              {step === "e1" && (
                 <div className="cv__in">
                   <h4 className="say">One read tells you nothing. The history tells you everything.</h4>
                   <div className="tl">
@@ -254,71 +260,95 @@ export default function SignalLine() {
                         <span key={i} className="tl__t" style={{ left: `${(i / 12) * 100}%` }} />
                       ))}
                     </div>
-                    <div className="tl__k ann">13 reposts · schematic spacing, endpoints are real</div>
+                    <div className="tl__k ann">13 reposts · endpoints real, spacing schematic</div>
                   </div>
                 </div>
               )}
 
-              {/* 03 · c2 - the punch */}
-              {step === "c2" && (
+              {step === "e2" && (
                 <div className="cv__in cv__in--mid">
                   <div className="say say--num">126 days. 13 reposts.</div>
                   <p className="say__sub">
-                    What looked like thirteen job postings was one unresolved labor problem.
+                    What looked like thirteen job postings was one unresolved labor problem. A single
+                    scrape cannot see that. Only weekly snapshots of the same requisition can.
                   </p>
                 </div>
               )}
 
-              {/* 03 · c3 - correlate at the facility */}
-              {step === "c3" && (
+              {step === "e3" && (
                 <div className="cv__in">
-                  <h4 className="say">Then the rest of the address speaks up.</h4>
-                  <div className="corr">
-                    <div className="corr__site ann">same facility · Illinois</div>
-                    <ul className="corr__l">
-                      <li><b>Swiss Lathe Machinist IV</b><span>2nd shift · 126 days · chronic</span></li>
-                      <li>Receiving Inspector A<span>2nd shift</span></li>
-                      <li>Mechanical Receiving Inspector<span>1st shift</span></li>
-                      <li>Mechanical Receiving Inspector<span>2nd shift</span></li>
-                      <li className="corr__more">+ 3 more inspection roles<span>all carrying containment language</span></li>
-                    </ul>
-                    <div className="corr__note ann">
-                      A machinist nobody will take, and six people checking the parts by hand, at
-                      one address.
+                  <h4 className="say">Then a second family lands on the same operator.</h4>
+                  <div className="raw">
+                    <div className="raw__bar">
+                      <span>two families · one recipient</span>
+                      <span>tier A</span>
+                    </div>
+                    <div className="raw__b">
+                      <dl className="raw__f">
+                        <div>
+                          <dt>labor</dt>
+                          <dd>
+                            CNC machinists, weld inspectors and instrumentation techs open across
+                            the flagged sites
+                            <span className="tick">the operator cannot staff the work it has</span>
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>spend</dt>
+                          <dd>
+                            <mark>$5,595,792</mark> NASA award to the same recipient
+                            <span className="tick">and more work is arriving anyway</span>
+                          </dd>
+                        </div>
+                      </dl>
+                      <div className="corr__note ann">
+                        Neither is decisive alone. Together they are the whole argument.
+                      </div>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* 04 · v1 - the verdict */}
-              {step === "v1" && (
+              {/* 06 - the decision */}
+              {step === "f1" && (
                 <div className="cv__in">
                   <div className="vd">
                     <div className="vd__hd">
-                      <span className="ann">illinois plant · aerospace &amp; defense</span>
+                      <span className="ann">private space launch manufacturer · 6 flagged sites</span>
                       <span className="vd__tier">tier A</span>
                     </div>
-                    <div className="vd__rows">
-                      <div><span>persistent labor failure</span><b>chronic · 126 days</b></div>
-                      <div><span>reposting</span><b>13&times;</b></div>
-                      <div><span>offer degradation</span><b>confirmed</b></div>
-                      <div><span>automation already on site</span><b>confirmed</b></div>
-                      <div><span>inspection load, same site</span><b>6 roles</b></div>
-                    </div>
-                    <div className="vd__why">
+
+                    <div className="vd__sec">
                       <span className="ann">why now</span>
+                      <div className="vd__rows">
+                        <div><span>labor pain</span><b>machinists, inspectors, I&amp;C techs open</b></div>
+                        <div><span>federal spend</span><b>$5,595,792 NASA award</b></div>
+                        <div><span>families agreeing</span><b>2 of 2</b></div>
+                      </div>
+                    </div>
+
+                    <div className="vd__sec vd__sec--off">
+                      <span className="ann">how in</span>
+                      <p className="vd__pend">
+                        The partner graph, sponsor access and the show floor are specced and argued.
+                        None of them are in the export yet, so this half of the card is empty on
+                        purpose.
+                      </p>
+                    </div>
+
+                    <div className="vd__why">
+                      <span className="ann">what the system says today</span>
                       <p>
-                        This plant has failed to fill one production role for four consecutive
-                        months while widening its offer, at a site that already runs the automation
-                        the task would need.
+                        The reason is established: two independent families landed on one operator
+                        that already runs the automation the work would need. The route is the half
+                        being built next.
                       </p>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* 04 · v2 - and it was not one plant */}
-              {step === "v2" && (
+              {step === "f2" && (
                 <div className="cv__in cv__in--mid">
                   <div className="say say--num">And it wasn&apos;t one plant.</div>
                   <div className="field" aria-hidden="true">
@@ -328,15 +358,14 @@ export default function SignalLine() {
                   </div>
                   <p className="say__sub">
                     <b>300+</b> US facilities currently carrying the same shape of signal, across
-                    aerospace, defense and automotive. Every one of them found the same way, from
-                    pages their own recruiting teams published.
+                    aerospace, defense and automotive. Every one found the same way, from pages
+                    their own teams published.
                   </p>
                 </div>
               )}
             </div>
           </div>
 
-          {/* invisible scroll spacers drive the canvas */}
           <div className="ln__track" ref={trackRef}>
             {STEPS.map((s) => (
               <div key={s.id} className="ln__sp" data-step={s.id} />
@@ -347,23 +376,10 @@ export default function SignalLine() {
 
       <div className="ln__close">
         <p className="say say--end">
-          The data already existed. The missing layer was deciding which factory mattered today.
+          We didn&apos;t build another database. We connected evidence of demand with routes into
+          the account.
         </p>
       </div>
     </section>
-  );
-}
-
-function Row({ k, lvl, v }: { k: string; lvl: number; v: string }) {
-  return (
-    <div className="rout__r">
-      <span className="rout__k">{k}</span>
-      <span className="rout__m" aria-hidden="true">
-        {[1, 2, 3].map((i) => (
-          <i key={i} className={i <= lvl ? "on" : ""} />
-        ))}
-      </span>
-      <span className="rout__v">{v}</span>
-    </div>
   );
 }
