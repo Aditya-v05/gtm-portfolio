@@ -69,8 +69,8 @@ const TEL: Record<string, string> = {
   d2: "live 2 of 8 · route 0 of 4",
   e1: "window 126d · events 13",
   e2: "persistence CHRONIC",
-  e3: "families 2 · agreement 2 of 2",
-  f1: "tier A · why-now complete",
+  e3: "1 address · 7 correlated roles",
+  f1: "tier A · 126d · why-now complete",
   f2: "n = 300+ facilities",
 };
 
@@ -407,33 +407,30 @@ function StepBody({ step }: { step: string }) {
 
               {step === "e3" && (
                 <div className="cv__in">
-                  <h4 className="say">Then a second family lands on the same operator.</h4>
-                  <div className="raw">
-                    <div className="raw__bar">
-                      <span>two families · one recipient</span>
-                      <span>tier A</span>
-                    </div>
-                    <div className="raw__b">
-                      <dl className="raw__f">
-                        <div>
-                          <dt>labor</dt>
-                          <dd>
-                            CNC machinists, weld inspectors and instrumentation techs open across
-                            the flagged sites
-                            <span className="tick">the operator cannot staff the work it has</span>
-                          </dd>
-                        </div>
-                        <div>
-                          <dt>spend</dt>
-                          <dd>
-                            <mark>$5,595,792</mark> NASA award to the same recipient
-                            <span className="tick">and more work is arriving anyway</span>
-                          </dd>
-                        </div>
-                      </dl>
-                      <div className="corr__note ann">
-                        Neither is decisive alone. Together they are the whole argument.
-                      </div>
+                  <h4 className="say">Then the rest of the address speaks up.</h4>
+                  <div className="corr">
+                    <div className="corr__site ann">same facility · Illinois</div>
+                    <ul className="corr__l">
+                      <li>
+                        <b>Swiss Lathe Machinist IV</b>
+                        <span>2nd shift · 126 days · chronic</span>
+                      </li>
+                      <li>
+                        Receiving Inspector A<span>2nd shift</span>
+                      </li>
+                      <li>
+                        Mechanical Receiving Inspector<span>1st shift</span>
+                      </li>
+                      <li>
+                        Mechanical Receiving Inspector<span>2nd shift</span>
+                      </li>
+                      <li className="corr__more">
+                        + 3 more inspection roles<span>all carrying containment language</span>
+                      </li>
+                    </ul>
+                    <div className="corr__note ann">
+                      A machinist nobody will take, and six people checking the parts by hand, at
+                      one address.
                     </div>
                   </div>
                 </div>
@@ -444,34 +441,45 @@ function StepBody({ step }: { step: string }) {
                 <div className="cv__in">
                   <div className="vd">
                     <div className="vd__hd">
-                      <span className="ann">private space launch manufacturer · 6 flagged sites</span>
+                      <span className="ann">illinois plant · aerospace &amp; defense</span>
                       <span className="vd__tier">tier A</span>
                     </div>
 
                     <div className="vd__sec">
                       <span className="ann">why now</span>
                       <div className="vd__rows">
-                        <div><span>labor pain</span><b>machinists, inspectors, I&amp;C techs open</b></div>
-                        <div><span>federal spend</span><b>$5,595,792 NASA award</b></div>
-                        <div><span>families agreeing</span><b>2 of 2</b></div>
+                        <div>
+                          <span>unfilled since</span>
+                          <b>2 Mar 2026 · 126 days</b>
+                        </div>
+                        <div>
+                          <span>reposted</span>
+                          <b>13&times;</b>
+                        </div>
+                        <div>
+                          <span>offer degradation</span>
+                          <b>confirmed, weekly</b>
+                        </div>
+                        <div>
+                          <span>automation already on site</span>
+                          <b>confirmed</b>
+                        </div>
+                        <div>
+                          <span>inspection load, same address</span>
+                          <b>6 roles</b>
+                        </div>
                       </div>
+                      <p className="vd__read">
+                        Four consecutive months without filling one production role, while the offer
+                        widened, at a site that already runs the automation the task would need.
+                      </p>
                     </div>
 
                     <div className="vd__sec vd__sec--off">
                       <span className="ann">how in</span>
                       <p className="vd__pend">
-                        The partner graph, sponsor access and the show floor are specced and argued.
-                        None of them are in the export yet, so this half of the card is empty on
-                        purpose.
-                      </p>
-                    </div>
-
-                    <div className="vd__why">
-                      <span className="ann">what the system says today</span>
-                      <p>
-                        The reason is established: two independent families landed on one operator
-                        that already runs the automation the work would need. The route is the half
-                        being built next.
+                        Partner graph, sponsor access and the show floor are specced but not in the
+                        export. This half is empty on purpose.
                       </p>
                     </div>
                   </div>
