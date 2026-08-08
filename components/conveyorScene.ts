@@ -903,10 +903,14 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     tl.to(j, { S: atPlace.S, E: atPlace.E, duration: 0.38, ease: "power2.in" });
     tl.to(j, { grip: 1, duration: 0.18 });
     tl.add(() => {
+      // Seat the item on its target SYNCHRONOUSLY. This used to tween into
+      // place, but after() immediately calls settleItem(), which killed that
+      // tween - so the item got parented wherever the gripper released it and
+      // ended up floating off its pallet/carriage.
       settleItem(item);
       scene.attach(item.group);
-      gsap.to(item.group.position, { x: place.x, y: place.y, z: place.z, duration: 0.14 });
-      gsap.to(item.group.rotation, { x: 0, z: 0, duration: 0.14 });
+      item.group.position.copy(place);
+      item.group.rotation.set(0, 0, 0);
       after(item);
     });
     tl.to(j, { S: hoverPlace.S, E: hoverPlace.E, duration: 0.35, ease: "power2.out" }, "+=0.05");
