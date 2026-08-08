@@ -64,7 +64,7 @@ const TEL: Record<string, string> = {
   a1: "sources 6 · resolved 0",
   b1: "sources 6 · live 2 · mapped 4",
   c1: "resolution target: facility",
-  c2: "1 recipient → 23 facilities · 6 corroborated",
+  c2: "1 company name → 23 plants · 6 corroborated",
   d1: "reason 4 · route 4",
   d2: "live 2 of 8 · route 0 of 4",
   e1: "window 126d · events 13",
@@ -299,17 +299,21 @@ function StepBody({ step }: { step: string }) {
                 <div className="cv__in cv__in--mid">
                   <div className="say say--num">The account is a building.</div>
                   <p className="say__sub">
-                    Not a company. A territory rep cannot sell to a Fortune 100 prime, and every
-                    record that stops at the parent is useless to them.
+                    Not a company. The whole point is to reach the exact plant with the problem,
+                    so any record that stops at the parent name is useless.
                   </p>
                 </div>
               )}
 
               {step === "c2" && (
                 <div className="cv__in">
-                  <h4 className="say">One prime resolved to twenty-three plants.</h4>
+                  <h4 className="say">You can&apos;t sell to a company name.</h4>
                   <div className="res">
-                    <div className="res__top ann">one recipient name</div>
+                    <p className="res__lede">
+                      One name in the export. Twenty-three separate plants underneath it, in
+                      twenty-three different towns. A rep covers a territory, not a logo.
+                    </p>
+                    <div className="res__top ann">one company name</div>
                     <div className="res__fan" aria-hidden="true">
                       {Array.from({ length: 23 }, (_, i) => (
                         <span
@@ -322,16 +326,16 @@ function StepBody({ step }: { step: string }) {
                     <div className="res__key">
                       <span>
                         <i className="is-corr" aria-hidden="true" />
-                        <b>6 facilities</b> with more than one signal at the same address
+                        <b>6 plants</b> where more than one signal lands on the same address
                       </span>
                       <span>
                         <i aria-hidden="true" />
-                        <b>17 facilities</b> resting on a single signal
+                        <b>17 plants</b> where only one does
                       </span>
                     </div>
                     <div className="corr__note ann">
-                      Signals only count when they land on the same address. That is the difference
-                      between a company that is hiring and a plant that is stuck.
+                      Those six are the ones with a problem you can point at. That is the
+                      difference between a company that is hiring and a plant that is stuck.
                     </div>
                   </div>
                 </div>

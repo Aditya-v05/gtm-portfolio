@@ -549,6 +549,7 @@ table.dt tr:last-child td{ border-bottom:none; }
 
 /* --- 03 resolve to a building --- */
 .res{ max-width:600px; }
+.res__lede{ font-size:14px; line-height:1.65; color:var(--dim); max-width:58ch; margin-bottom:22px; }
 .res__top{ padding-bottom:12px; border-bottom:1px solid var(--line-2); }
 .res__fan{ display:flex; flex-wrap:wrap; gap:4px; padding:18px 0 16px; }
 .res__fan span{ width:18px; height:26px; border:1px solid var(--accent); border-radius:2px 4px 4px 4px; background:transparent; opacity:0; }
@@ -557,7 +558,7 @@ table.dt tr:last-child td{ border-bottom:none; }
 .card[data-d="0"] .res__fan span{ animation:markIn .42s cubic-bezier(.3,1.5,.5,1) forwards; }
 @keyframes markIn{ from{ opacity:0; transform:translateY(6px) scale(.5) } to{ opacity:1; transform:none } }
 .res__key{ display:grid; gap:9px; padding-top:6px; }
-.res__key span{ display:flex; align-items:center; gap:11px; font-family:var(--font-m); font-size:11.5px; color:var(--mute); }
+.res__key span{ display:flex; align-items:center; gap:11px; line-height:1.5; font-family:var(--font-m); font-size:11.5px; color:var(--mute); }
 .res__key b{ color:var(--ink); font-weight:500; }
 .res__key i{ width:12px; height:17px; flex:none; border:1px solid var(--accent); border-radius:1px 3px 3px 3px; background:transparent; }
 .res__key i.is-corr{ background:var(--accent); }
