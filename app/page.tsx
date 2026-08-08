@@ -100,7 +100,7 @@ export default function Home() {
             structure reaches into the upper band */}
         <ConveyorCell />
         <div className="hero__in">
-          <div className="eyebrow">GTM Engineer · Data &amp; Automation</div>
+          <div className="eyebrow">GTM Engineer · Physical AI</div>
           <a
             className="nowpill cursor-target"
             href="https://rellingsystems.com"
@@ -115,9 +115,10 @@ export default function Home() {
             <HeroHeadline />
           </h1>
           <p className="sub">
-            Signal intelligence, enrichment, overlap detection, LLM classification, and live
-            outbound - built as <b>autonomous systems</b>, not one-off scripts. Each one backed
-            by a real artifact: a log, a verdict, an export.
+            GTM systems for the physical world - robotics, manufacturing, automation. Signal
+            intelligence, enrichment, classification and live outbound, built as{" "}
+            <b>autonomous systems</b> in a market where the data layer does not exist until you
+            build it. Each one backed by a real artifact: a log, a verdict, an export.
           </p>
         </div>
 

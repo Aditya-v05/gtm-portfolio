@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Aditya - GTM Engineer @ Relling",
   description:
-    "Founding GTM Engineer @ Relling (YC S25). I build GTM systems that run themselves - signal intelligence, enrichment, LLM classification, and live outbound.",
+    "Founding GTM Engineer @ Relling (YC S25). I build GTM systems for physical AI - robotics, manufacturing and automation - where the data layer does not exist until you build it.",
   openGraph: {
     title: "Aditya - GTM Engineer @ Relling",
     description:
