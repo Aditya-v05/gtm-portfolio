@@ -9,8 +9,8 @@
 
 import CountUp from "@/components/CountUp";
 import AnimatedContent from "@/components/AnimatedContent";
-import SpotlightCard from "@/components/SpotlightCard";
 import Carousel from "@/components/Carousel";
+import SourceDrawer from "@/components/SourceDrawer";
 
 const reveal = { distance: 26, duration: 0.7, ease: "power3.out" as const };
 
@@ -86,94 +86,6 @@ const FAMILIES = [
       "Exhibitor and attendee lists publish months ahead of a show, and attendance is self-selection: nobody walks an automation floor by accident. Reading GTM job postings across robotics companies, trade show lead capture appears constantly and dedicated event tooling appears nowhere. The leads get imported by hand.",
     ],
     b: "Exhibiting is a marketing budget decision, not a buying signal. It qualifies a conversation; it does not time one.",
-  },
-];
-
-// The sources themselves, given room. The federal pair in particular gets
-// misread constantly, so the distinction between them leads.
-const SOURCES = [
-  {
-    k: "USAspending.gov",
-    tag: "the ledger · what was already bought",
-    m: "Award amounts, recipients, obligations over time, incumbent vendors and spending trends by agency and NAICS. This is the source already wired into the scan: a federal award landing at a company that is simultaneously posting automatable manual roles is the why-now, and the award page is the citation.",
-    b: "Place of performance is often a base or a delivery point rather than the plant. The recipient may be a distributor or an integrator who manufactures nothing. Defense awards are withheld for roughly ninety days.",
-  },
-  {
-    k: "SAM.gov",
-    tag: "the forward book · what is intended",
-    m: "Solicitations, sources sought and presolicitation notices land before any award exists, and their attachments carry part numbers, quantities, delivery schedules and required certifications. Entity records resolve a UEI and CAGE code to a physical address, which is how an award becomes a plant instead of a headquarters.",
-    b: "Most private manufacturers never sell to the federal government. Coverage runs deep through aerospace, defense, shipbuilding and machining, and thin to nothing everywhere else.",
-  },
-  {
-    k: "Applicant tracking systems",
-    tag: "the labor layer · what is unstaffed",
-    m: "Workday, Greenhouse, iCIMS, Paylocity, ADP and a dozen more. Every plant publishes its own pain here, continuously, at facility granularity, with wage bands and shift terms attached. Snapshotting the same requisition week after week is the only reason offer degradation is visible at all.",
-    b: "It is the company writing marketing copy about itself. Titles drift, and one firm will word the same role differently at two plants.",
-  },
-  {
-    k: "Integrator and OEM case libraries",
-    tag: "the partner graph · what already works",
-    m: "Universal Robots, FANUC, ABB, KUKA and the integrator networks underneath them publish who deployed what, where, and with which partner, because in this market the channel is the product. The manufacturer is the subject of those stories and never the author.",
-    b: "Survivorship, and a long lag. Only successful projects that cleared a permissions review get published, sometimes years after the cell went in.",
-  },
-];
-
-const ROWS = [
-  {
-    p: "Fortune 100 aerospace & defense prime",
-    l: "Iowa",
-    t: "automation-ready plant, manual task",
-    o: "—",
-    d: "Posting a Principal Automation Engineer for industrial robotics while manual roles stay open across 23 flagged facilities",
-  },
-  {
-    p: "Publicly traded specialty vehicle maker",
-    l: "Minnesota",
-    t: "confirmed offer degradation",
-    o: "74d · 6 reposts",
-    d: "Welder, 2nd shift. The plant builds automated refuse bodies; the wage band widened week over week",
-  },
-  {
-    p: "Publicly traded specialty vehicle maker",
-    l: "Iowa",
-    t: "technographics gap",
-    o: "161d · 4 reposts",
-    d: "The same welder requisition at a second plant, still unautomated",
-  },
-  {
-    p: "Global tier-one automotive supplier",
-    l: "Minnesota",
-    t: "chronic persistence",
-    o: "138d · 4 reposts",
-    d: "Assembler, weekend days. Sign-on bonus, and 36 hours paid as 40",
-  },
-  {
-    p: "Private aerospace machining shop",
-    l: "Utah",
-    t: "technographics gap",
-    o: "141d",
-    d: "A $5,000 sign-on bonus and tooling reimbursement, for one CNC machinist",
-  },
-  {
-    p: "Engine overhaul and repair provider",
-    l: "Ohio",
-    t: "chronic persistence",
-    o: "214d",
-    d: "Composite technician, weekend shift, 11% differential. Seven months open",
-  },
-  {
-    p: "Major aerostructures manufacturer",
-    l: "Kansas",
-    t: "containment cluster",
-    o: "—",
-    d: "Nine inspection roles at a single facility, every one carrying containment language",
-  },
-  {
-    p: "Private space launch manufacturer",
-    l: "6 sites",
-    t: "why-now demand",
-    o: "—",
-    d: "A $5.6M NASA award correlated against open machinist and inspector roles at the sites that execute it",
   },
 ];
 
@@ -269,28 +181,6 @@ export default function SignalLayer() {
         </div>
       </AnimatedContent>
 
-      <AnimatedContent {...reveal} delay={0.08}>
-        <div className="ev sl__plants">
-          <Carousel label="flagged plants · 8 of ~300" per={3}>
-            {ROWS.map((r, i) => (
-              <article className="pcard cursor-target" key={i}>
-                <div className="pcard__top">
-                  <span className="n">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="loc">{r.l}</span>
-                </div>
-                <h4>{r.p}</h4>
-                <span className="pill pill--a">{r.t}</span>
-                {r.o !== "—" && <div className="pcard__open">{r.o}</div>}
-                <p>{r.d}</p>
-              </article>
-            ))}
-          </Carousel>
-          <div className="ev__cap">
-            <b>▸ evidence</b> - a sample of the scan. Each card resolves to one plant and links back
-            to the live posting it was read from. Identities withheld
-          </div>
-        </div>
-      </AnimatedContent>
 
       <AnimatedContent {...reveal}>
         <div className="sl__gsec">
@@ -353,10 +243,10 @@ export default function SignalLayer() {
       <div className="sl__src">
         <AnimatedContent {...reveal}>
           <div className="sl__famhd">
-            <div className="sl__gk">Where it comes from</div>
+            <div className="sl__gk">The drawer</div>
             <p>
-              All of it is public. None of it was published as a buying signal, which is exactly why
-              it still works.
+              The list, and the four places it is read from. All of it is public. None of it was
+              published as a buying signal, which is exactly why it still works.
             </p>
           </div>
         </AnimatedContent>
@@ -386,27 +276,9 @@ export default function SignalLayer() {
           </div>
         </AnimatedContent>
 
-        <div className="srcgrid">
-          {SOURCES.map((s, i) => (
-            <AnimatedContent key={s.k} {...reveal} delay={0.05 * i}>
-              <SpotlightCard
-                className="src cursor-target"
-                spotlightColor="rgba(99, 174, 242, 0.12)"
-              >
-                <h4>
-                  <span className="d" aria-hidden="true"></span>
-                  {s.k}
-                </h4>
-                <div className="src__tag">{s.tag}</div>
-                <p>{s.m}</p>
-                <div className="sig__b">
-                  <span>what breaks it</span>
-                  {s.b}
-                </div>
-              </SpotlightCard>
-            </AnimatedContent>
-          ))}
-        </div>
+        <AnimatedContent {...reveal} delay={0.06}>
+          <SourceDrawer />
+        </AnimatedContent>
       </div>
 
       <AnimatedContent {...reveal}>

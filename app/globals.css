@@ -528,13 +528,52 @@ table.dt tr:last-child td{ border-bottom:none; }
 .srcchain span{ border:1px solid var(--line-2); border-radius:20px; padding:5px 13px; color:var(--dim); }
 .srcchain b{ border:1px solid var(--accent); border-radius:20px; padding:5px 13px; color:var(--accent-2); font-weight:500; }
 .srcchain i{ color:var(--mute); font-style:normal; }
-.srcgrid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-.srcgrid .card-spotlight{ height:100%; border-radius:12px; border:1px solid var(--line); background:var(--bg-2); padding:24px 26px; --spotlight-color:rgba(var(--accent-rgb),.10) !important; }
-.src h4{ font-family:var(--font-d); font-weight:520; font-size:18px; display:flex; align-items:baseline; gap:10px; color:var(--ink); }
-.src h4 .d{ width:7px; height:7px; background:var(--accent); flex:none; transform:translateY(-2px); }
-.src__tag{ font-family:var(--font-m); font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-top:9px; }
-.src p{ font-size:13.5px; color:var(--dim); margin-top:12px; line-height:1.65; }
-.src .sig__b{ margin-top:14px; padding-top:13px; }
+/* ---- the drawer: folders that open into a dialog of cards ---- */
+.drw__shelf{ display:grid; grid-template-columns:repeat(5,1fr); gap:14px; }
+.fdr{ display:flex; flex-direction:column; align-items:flex-start; gap:0; background:none; border:0; padding:14px 12px 16px; border-radius:12px; cursor:pointer; text-align:left; transition:background .25s; }
+.fdr:hover{ background:rgba(var(--accent-rgb),.05); }
+.fdr:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+.fdr__art{ position:relative; display:block; width:82px; height:62px; margin-bottom:16px; transition:transform .28s ease; }
+.fdr:hover .fdr__art, .fdr:focus-visible .fdr__art{ transform:translateY(-7px); }
+.fdr__tab{ position:absolute; left:0; bottom:100%; width:28px; height:9px; border:1px solid var(--line-2); border-bottom:0; border-radius:4px 4px 0 0; background:var(--bg-2); }
+.fdr__back{ position:absolute; inset:0; border:1px solid var(--line-2); border-radius:0 6px 6px 6px; background:var(--bg-2); }
+/* the paper stack rises out of the folder on hover */
+.pg{ position:absolute; left:50%; bottom:8%; width:66%; height:74%; border:1px solid var(--line-2); border-radius:3px; background:var(--paper); transform:translate(-50%,10%); transition:transform .3s ease-in-out; }
+.pg2{ width:76%; height:64%; }
+.pg3{ width:86%; height:54%; }
+.fdr:hover .pg1, .fdr:focus-visible .pg1{ transform:translate(-78%,-34%) rotate(-11deg); }
+.fdr:hover .pg2, .fdr:focus-visible .pg2{ transform:translate(-22%,-40%) rotate(10deg); }
+.fdr:hover .pg3, .fdr:focus-visible .pg3{ transform:translate(-50%,-52%) rotate(3deg); }
+.fdr__front{ position:absolute; inset:0; z-index:3; border:1px solid var(--accent); border-radius:3px 6px 6px 6px; background:rgba(var(--accent-rgb),.14); transform-origin:bottom; transition:transform .3s ease-in-out; }
+.fdr:hover .fdr__front, .fdr:focus-visible .fdr__front{ transform:skewX(12deg) scaleY(.62); }
+.fdr__label{ font-family:var(--font-m); font-size:11.5px; color:var(--ink); letter-spacing:.02em; }
+.fdr__meta{ font-family:var(--font-m); font-size:8.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--mute); margin-top:6px; }
+
+/* overlay */
+.ovl{ position:fixed; inset:0; z-index:120; display:grid; place-items:center; padding:5vh 20px; }
+.ovl__scrim{ position:absolute; inset:0; background:rgba(8,18,30,.62); backdrop-filter:blur(3px); animation:ovlIn .2s ease-out; }
+.ovl__panel{ position:relative; width:min(940px,100%); max-height:90vh; overflow:auto; background:var(--bg); border:1px solid var(--line-2); border-radius:14px; box-shadow:0 40px 90px -30px rgba(0,0,0,.6); animation:ovlUp .26s cubic-bezier(.2,.7,.3,1); }
+.ovl__panel:focus{ outline:none; }
+.ovl__hd{ display:flex; align-items:flex-start; gap:24px; padding:26px 28px 20px; border-bottom:1px solid var(--line); position:sticky; top:0; background:var(--bg); z-index:2; }
+.ovl__k{ font-family:var(--font-m); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); }
+.ovl__hd h3{ font-family:var(--font-d); font-weight:500; font-size:24px; letter-spacing:-.015em; color:var(--ink); margin-top:8px; }
+.ovl__hd p{ font-size:13.5px; line-height:1.65; color:var(--dim); margin-top:8px; max-width:62ch; }
+.ovl__x{ margin-left:auto; flex:none; width:32px; height:32px; display:grid; place-items:center; border:1px solid var(--line-2); border-radius:50%; background:transparent; color:var(--ink); cursor:pointer; transition:border-color .2s, color .2s; }
+.ovl__x svg{ width:14px; height:14px; }
+.ovl__x:hover{ border-color:var(--accent); color:var(--accent-2); }
+.ovl__body{ padding:22px 28px 28px; }
+.ovl__cards{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.ovl__plants{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+.ocard{ border:1px solid var(--line); border-radius:12px; background:var(--bg-2); padding:20px 22px; }
+.ocard__k{ font-family:var(--font-m); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+.ocard p{ font-size:13.5px; line-height:1.7; color:var(--dim); }
+.ocard code{ font-family:var(--font-m); font-size:11.5px; color:var(--accent-2); background:rgba(var(--accent-rgb),.09); padding:1px 6px; border-radius:4px; white-space:nowrap; }
+@keyframes ovlIn{ from{ opacity:0 } to{ opacity:1 } }
+@keyframes ovlUp{ from{ opacity:0; transform:translateY(14px) } to{ opacity:1; transform:none } }
+@media (prefers-reduced-motion: reduce){
+  .ovl__scrim, .ovl__panel{ animation:none; }
+  .fdr__art, .pg, .fdr__front{ transition:none; }
+}
 
 .sl__close{ margin-top:56px; padding-top:34px; border-top:1px solid var(--line); max-width:68ch; }
 .sl__close p{ font-size:15px; line-height:1.72; color:var(--dim); }
@@ -547,7 +586,10 @@ table.dt tr:last-child td{ border-bottom:none; }
 @media (max-width:860px){
   .sl__count{ flex-direction:column; gap:14px; }
   .frep__rows > div{ grid-template-columns:1fr; gap:4px; }
-  .srcgrid{ grid-template-columns:1fr; }
+  .drw__shelf{ grid-template-columns:repeat(2,1fr); }
+  .ovl__cards, .ovl__plants{ grid-template-columns:1fr; }
+  .ovl{ padding:0; }
+  .ovl__panel{ max-height:100vh; height:100%; border-radius:0; border:0; }
   .srcpull{ padding-left:18px; }
   /* peek the next card so the rail reads as scrollable without arrows */
   .car__track[data-per] > *{ width:86%; }
