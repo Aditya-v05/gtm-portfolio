@@ -47,13 +47,6 @@ export default function SiteNav({
             Contact
           </Link>
           <ThemeToggle />
-          <a
-            className="modebtn navpdf cursor-target"
-            href="/Aditya-GTM-Engineering-Portfolio.pdf"
-            download
-          >
-            <span className="navpdf__t">portfolio.</span>pdf ↓
-          </a>
         </div>
       </div>
     </nav>

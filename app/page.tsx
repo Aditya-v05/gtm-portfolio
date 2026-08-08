@@ -679,14 +679,6 @@ export default function Home() {
               <div><a className="cursor-target" href="https://github.com/Aditya-v05">github.com/Aditya-v05</a></div>
               <div><a className="cursor-target" href="https://rellingsystems.com">rellingsystems.com</a> <span className="edit">- Founding GTM Engineer @ Relling (YC S25)</span></div>
               <div><a className="cursor-target" href="https://gethuntd.com">gethuntd.com</a> <span className="edit">- previously: GTM systems @ Huntd</span></div>
-              <a className="pdfcard cursor-target" href="/Aditya-GTM-Engineering-Portfolio.pdf" download>
-                <span className="ic">PDF</span>
-                <span className="meta">
-                  <span className="fn">Aditya-GTM-Engineering-Portfolio.pdf</span>
-                  <span className="ft">print edition of this site · 12 pages</span>
-                </span>
-                <span className="dl">↓</span>
-              </a>
             </div>
             <div className="sysline">
               <div>GTM systems · portfolio sheet</div>

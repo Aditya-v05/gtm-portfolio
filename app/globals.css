@@ -735,18 +735,6 @@ footer .sysline div:first-child{ border-top:0; color:var(--accent); text-transfo
 /* theme toggle */
 .modebtn{ display:inline-flex; align-items:center; gap:5px; font-family:var(--font-m); font-size:10px; letter-spacing:.08em; color:var(--dim); background:transparent; border:1px solid var(--line-2); border-radius:20px; padding:4px 11px; cursor:pointer; transition:color .25s, border-color .25s; }
 .modebtn svg{ width:12px; height:12px; flex-shrink:0; }
-a.navpdf{ display:inline-flex; align-items:center; gap:0; color:var(--accent); border-color:rgba(var(--accent-rgb),.45); }
-a.navpdf:hover{ border-color:var(--accent); color:var(--accent-2); }
-.modebtn:hover{ color:var(--accent); border-color:var(--accent); }
-
-/* footer pdf artifact chip (styled like the slack file attachments) */
-.pdfcard{ display:flex; align-items:center; gap:12px; margin-top:18px; padding:11px 14px; border:1px solid var(--line-2); border-radius:10px; background:var(--bg-2); max-width:420px; transition:border-color .25s, transform .25s; }
-.pdfcard:hover{ border-color:var(--accent); transform:translateY(-2px); }
-.pdfcard .ic{ width:34px; height:34px; border-radius:7px; background:var(--accent); color:var(--on-accent); font-family:var(--font-m); font-weight:700; font-size:9.5px; display:flex; align-items:center; justify-content:center; flex:none; }
-.pdfcard .meta{ display:flex; flex-direction:column; line-height:1.5; min-width:0; }
-.pdfcard .fn{ font-family:var(--font-m); font-size:11px; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.pdfcard .ft{ font-family:var(--font-m); font-size:9px; color:var(--mute); letter-spacing:.04em; }
-.pdfcard .dl{ margin-left:auto; color:var(--accent); font-family:var(--font-m); font-size:14px; }
 
 /* ============ RESPONSIVE ============ */
 @media (max-width: 880px){
@@ -800,7 +788,7 @@ a.navpdf:hover{ border-color:var(--accent); color:var(--accent-2); }
   nav .brand{ font-size:14px; line-height:1.15; max-width:84px; }
   nav .links{ gap:11px; font-size:11px; flex-wrap:wrap; justify-content:flex-end; row-gap:6px; }
   .modebtn{ padding:3px 8px; }
-  .modebtn__t, .navpdf__t{ display:none; }
+  .modebtn__t{ display:none; }
   h1{ font-size:clamp(38px,10.5vw,48px); }
   .hero .cue{ display:none; }
 }
@@ -846,7 +834,7 @@ a.navpdf:hover{ border-color:var(--accent); color:var(--accent-2); }
   .hink__svg path{ fill-opacity:1 !important; stroke-dashoffset:0 !important; }
 
   /* effects and chrome that make no sense on paper */
-  canvas, .noise-overlay, .target-cursor-wrapper, .navpdf, .pdfcard, .boot,
+  canvas, .noise-overlay, .target-cursor-wrapper, .boot,
   .hero__field, .hero .cue, .belt, .modebtn, .shead .ghost{ display:none !important; }
 
   nav{ position:static; background:var(--bg); backdrop-filter:none; }
