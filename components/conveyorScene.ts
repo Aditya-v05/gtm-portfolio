@@ -8,8 +8,6 @@
 //
 // Vector style throughout: bg-colored fills occlude ink edge lines (hidden-
 // line technical drawing), orthographic camera with adaptive fit, and the
-// hero stats live as blueprint callouts tethered to real parts by elbow
-// leader lines with lug dots.
 // NEVER touch gsap.globalTimeline here (it once froze the whole site).
 
 import * as THREE from "three";
@@ -18,17 +16,17 @@ import { gsap } from "gsap";
 // ---- layout (x runs along the line) ----
 const TOP_A = 1.0; // belt A surface
 const TOP_B = 2.7; // belt B surface (elevated)
-const A_X0 = -7.2, A_X1 = -2.3;
-const B_X0 = 1.6, B_X1 = 6.2;
-const SCAN_A = -5.5, SCAN_B = 3.6;
-const PICK_A = -2.75, PICK_B = 5.75;
+const A_X0 = -6.9, A_X1 = -2.3;
+const B_X0 = 1.6, B_X1 = 5.7;
+const SCAN_A = -5.2, SCAN_B = 3.4;
+const PICK_A = -2.75, PICK_B = 5.25;
 const MID_BASE = new THREE.Vector3(-1.55, 0, -1.7);
 const MID_RISER = 0.55;
-const END_BASE = new THREE.Vector3(7.4, 0, -1.6);
+const END_BASE = new THREE.Vector3(6.6, 0, -1.6);
 const END_RISER = 1.6;
-const TRUCK_X = 10.7; // parked at the loading dock
+const TRUCK_X = 9.1; // parked at the loading dock
 const BED_TOP = 1.15; // cargo floor height
-const PILLAR_X = 8.3; // dock pillar carrying the counter
+const PILLAR_X = 7.5; // dock pillar carrying the counter
 const LIFT_X = 0.35;
 const LIFT_TOP_Y = 2.62; // carriage platform top at its highest
 const LIFT_LOW_Y = 0.62; // carriage platform top at rest
@@ -39,7 +37,9 @@ const BELT_SPEED = 1.15;
 const ITEM_H = 0.56;
 
 // world bounds the camera must always contain
-const FIT = { minX: -9.7, maxX: 13.9, minY: -0.15, maxY: 5.15 };
+// span for the drawn ground line / survey ticks only; the camera envelope
+// is measured from the built geometry at mount
+const FIT = { minX: -9.1, maxX: 12.6, minY: -0.15, maxY: 4.9 };
 
 type Palette = { ink: string; accent: string; bg: string; teal: string };
 
@@ -64,7 +64,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   const scene = new THREE.Scene();
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 100);
   const CAM_BASE = new THREE.Vector3(0.1, 6.15, 15);
-  const LOOK_AT = new THREE.Vector3(1.25, 2.3, 0);
+  const LOOK_AT = new THREE.Vector3(1.75, 2.25, 0);
   camera.position.copy(CAM_BASE);
   camera.lookAt(LOOK_AT);
 
@@ -80,12 +80,8 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     const h = host.clientHeight || 1;
     renderer.setPixelRatio(Math.min(devicePixelRatio, w < 800 ? 1.5 : 2));
     renderer.setSize(w, h);
-    // the camera looks at LOOK_AT, which is NOT the centre of the machine's
-    // bounds - so the half-extents must reach the FURTHER edge on each axis,
-    // otherwise the long end (the truck) clips off frame
-    const needHalfW = Math.max(FIT.maxX - LOOK_AT.x, LOOK_AT.x - FIT.minX) + 0.2;
-    const needHalfH = Math.max(FIT.maxY - LOOK_AT.y, LOOK_AT.y - FIT.minY) + 0.2;
-    const halfW = Math.max(needHalfW, (needHalfH * w) / h);
+    // FRUSTUM is measured from the real geometry in camera space (see mount)
+    const halfW = Math.max(FRUSTUM.halfW, (FRUSTUM.halfH * w) / h);
     const halfH = (halfW * h) / w;
     camera.left = -halfW;
     camera.right = halfW;
@@ -102,9 +98,9 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     polygonOffsetFactor: 1,
     polygonOffsetUnits: 1,
   });
-  const inkMat = new THREE.LineBasicMaterial({ color: new THREE.Color(pal.ink), transparent: true, opacity: 0.8 });
-  const faintMat = new THREE.LineBasicMaterial({ color: new THREE.Color(pal.ink), transparent: true, opacity: 0.32 });
-  const ghostMat = new THREE.LineBasicMaterial({ color: new THREE.Color(pal.ink), transparent: true, opacity: 0.13 });
+  const inkMat = new THREE.LineBasicMaterial({ color: new THREE.Color(pal.ink), transparent: true, opacity: 1 });
+  const faintMat = new THREE.LineBasicMaterial({ color: new THREE.Color(pal.ink), transparent: true, opacity: 0.62 });
+  const ghostMat = new THREE.LineBasicMaterial({ color: new THREE.Color(pal.ink), transparent: true, opacity: 0.22 });
   const tealLine = new THREE.LineBasicMaterial({ color: new THREE.Color(pal.teal), transparent: true, opacity: 0.95 });
   const tealCurtain = new THREE.MeshBasicMaterial({
     color: new THREE.Color(pal.teal),
@@ -146,6 +142,9 @@ export function mountConveyorScene(host: HTMLElement): () => void {
 
   // rotating parts registry
   const spinners: { obj: THREE.Object3D; speed: number; active: () => boolean }[] = [];
+  // objects that must never leave frame (measured at rest to derive the
+  // camera envelope - hand-tuned bounds kept drifting out of date)
+  const mustFit: THREE.Object3D[] = [];
 
   // ---- ground line + survey ticks ----
   {
@@ -193,6 +192,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     const body = part(new THREE.BoxGeometry(len, 0.18, 1.7));
     body.position.set(mid, top - 0.1, 0);
     scene.add(body);
+    mustFit.push(body);
     for (const zs of [-0.92, 0.92]) {
       const rail = part(new THREE.BoxGeometry(len, 0.32, 0.1));
       rail.position.set(mid, top - 0.12, zs);
@@ -238,6 +238,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   }
   buildBelt(A_X0, A_X1, TOP_A);
   buildBelt(B_X0, B_X1, TOP_B);
+  // belts/scanners/lift/arms/dock are added to mustFit as they're built below
 
   // ---- stack lights ----
   function buildStackLight(x: number, y: number, z: number): THREE.MeshBasicMaterial {
@@ -264,7 +265,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   type Scanner = { curtain: THREE.Mesh; sweep: THREE.Group; pulse: () => void; beamY: number };
   function buildScanner(x: number, top: number): Scanner {
     const g = new THREE.Group();
-    const beamY = top + 1.62;
+    const beamY = top + 1.28;
     for (const zs of [-1.2, 1.2]) {
       const post = part(new THREE.BoxGeometry(0.22, beamY + 0.17, 0.3));
       post.position.set(x, (beamY + 0.17) / 2, zs);
@@ -290,6 +291,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     sweep.position.set(x, top + 0.2, 0);
     g.add(sweep);
     scene.add(g);
+    mustFit.push(g);
     const mat = curtain.material as THREE.MeshBasicMaterial;
     const lamp = buildStackLight(x, beamY + 0.17, -1.2);
     const pulse = () => {
@@ -306,7 +308,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   let liftBusy = false;
   const lift = (() => {
     const g = new THREE.Group();
-    const railTop = 4.05;
+    const railTop = 3.62;
     for (const dx of [-0.34, 0.34]) {
       const rail = part(new THREE.BoxGeometry(0.14, railTop, 0.3));
       rail.position.set(LIFT_X + dx, railTop / 2, -0.2);
@@ -356,7 +358,8 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     bridge.position.set((LIFT_X + B_X0) / 2 + 0.08, TOP_B - 0.06, 0);
     g.add(bridge);
     scene.add(g);
-    const lamp = buildStackLight(LIFT_X, railTop, -1.0);
+    mustFit.push(g);
+    const lamp = buildStackLight(LIFT_X, railTop, -0.2); // on the tower head, not behind it
     return { carriage, lamp };
   })();
 
@@ -418,6 +421,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   const pillar = part(new THREE.BoxGeometry(0.5, 1.15, 0.5));
   pillar.position.set(PILLAR_X, 0.575, 0.55);
   scene.add(pillar);
+  mustFit.push(pillar);
   const endLamp = buildStackLight(PILLAR_X, 1.15, 0.55);
 
   const counter = (() => {
@@ -541,6 +545,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     }
     root.position.set(TRUCK_X, 0, 0.15);
     scene.add(root);
+    mustFit.push(root); // measured here, at the dock (departure leaves frame by design)
     return { root, bed, wheels };
   })();
   let truckReady = true;
@@ -559,7 +564,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
       truckMoving = true;
       pulseLamp(endLamp);
     });
-    tl.to(truck.root.position, { x: TRUCK_X + 12.5, duration: 3.0, ease: "power1.in" });
+    tl.to(truck.root.position, { x: TRUCK_X + 18, duration: 2.6, ease: "power2.in" });
     tl.add(() => {
       truckMoving = false;
       // the load left with the truck
@@ -574,9 +579,9 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     // a fresh truck backs in after a beat
     tl.to(truck.root.position, {
       x: TRUCK_X,
-      duration: 2.5,
-      ease: "power1.out",
-      delay: 1.6,
+      duration: 2.8,
+      ease: "power2.out",
+      delay: 1.2,
       onStart: () => {
         truckMoving = true;
       },
@@ -660,6 +665,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   }
   const midArm = buildArm(MID_BASE, MID_RISER);
   const endArm = buildArm(END_BASE, END_RISER);
+  mustFit.push(midArm.turret.parent!, endArm.turret.parent!);
 
   function solveFor(arm: Arm, target: THREE.Vector3) {
     const dx = target.x - arm.base.x;
@@ -726,7 +732,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     item.state = "beltA";
   }
   // pre-warm the line so it starts mid-production
-  for (const px of [-3.4, -5.6]) {
+  for (const px of [-3.4, -5.4]) {
     const it = takeIdle()!;
     it.group.position.set(px, TOP_A + ITEM_H / 2, 0);
     it.group.visible = true;
@@ -734,7 +740,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   }
   {
     const it = takeIdle()!;
-    it.group.position.set(4.4, TOP_B + ITEM_H / 2, 0);
+    it.group.position.set(4.0, TOP_B + ITEM_H / 2, 0);
     it.group.visible = true;
     it.state = "beltB";
   }
@@ -875,9 +881,9 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     arm.busy = true;
     const pickAt = item.group.position.clone();
     const gripY = pickAt.y + ITEM_H / 2 - 0.18;
-    const hoverPick = solveFor(arm, new THREE.Vector3(pickAt.x, gripY + 0.85, pickAt.z));
+    const hoverPick = solveFor(arm, new THREE.Vector3(pickAt.x, gripY + 0.55, pickAt.z));
     const atPick = solveFor(arm, new THREE.Vector3(pickAt.x, gripY, pickAt.z));
-    const hoverPlace = solveFor(arm, new THREE.Vector3(place.x, place.y + 0.9, place.z));
+    const hoverPlace = solveFor(arm, new THREE.Vector3(place.x, place.y + 0.6, place.z));
     const atPlace = solveFor(arm, new THREE.Vector3(place.x, place.y + ITEM_H / 2 - 0.18, place.z));
     const j = arm.joints;
     const tl = gsap.timeline({
@@ -951,67 +957,6 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     tl.add(() => {
       liftMoving = false;
     });
-  }
-
-  // ---- blueprint callouts ----
-  const ANCHORS: Record<string, { world: THREE.Vector3; dx: number; dy: number }> = {
-    scan: { world: new THREE.Vector3(SCAN_B, scanners[1].beamY, 0), dx: -180, dy: -70 },
-    arm: { world: new THREE.Vector3(END_BASE.x, END_RISER + SHOULDER_Y, END_BASE.z), dx: 40, dy: -120 },
-    box: { world: new THREE.Vector3(PILLAR_X, 0.78, 0.81), dx: 30, dy: -170 },
-  };
-  const coEls = new Map<string, HTMLElement>();
-  const leadPaths = new Map<string, SVGPathElement>();
-  const leadDots = new Map<string, SVGCircleElement>();
-  const svg = section?.querySelector(".belt3d__leads") as SVGSVGElement | null;
-  for (const key of Object.keys(ANCHORS)) {
-    const el = section?.querySelector(`[data-co="${key}"]`) as HTMLElement | null;
-    if (el) coEls.set(key, el);
-    if (svg) {
-      const ph = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      ph.setAttribute("class", "belt3d__lead");
-      ph.setAttribute("fill", "none");
-      svg.appendChild(ph);
-      leadPaths.set(key, ph);
-      const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-      dot.setAttribute("class", "belt3d__lug");
-      dot.setAttribute("r", "3");
-      svg.appendChild(dot);
-      leadDots.set(key, dot);
-    }
-  }
-  const proj = new THREE.Vector3();
-  function layCallouts() {
-    const w = host.clientWidth;
-    const h = host.clientHeight;
-    for (const [key, a] of Object.entries(ANCHORS)) {
-      proj.copy(a.world).project(camera);
-      const off = Math.abs(proj.x) > 1.02 || Math.abs(proj.y) > 1.02;
-      const sx = (proj.x * 0.5 + 0.5) * w;
-      const sy = (-proj.y * 0.5 + 0.5) * h;
-      const el = coEls.get(key);
-      const ph = leadPaths.get(key);
-      const dot = leadDots.get(key);
-      if (el) {
-        el.style.opacity = off ? "0" : "";
-        el.style.transform = `translate(${Math.round(sx + a.dx)}px, ${Math.round(sy + a.dy)}px)`;
-      }
-      if (ph && el) {
-        ph.style.opacity = off ? "0" : "";
-        const rect = { x: sx + a.dx, y: sy + a.dy, w: el.offsetWidth, h: el.offsetHeight };
-        // engineering leader: from the part, diagonal to the label's near
-        // bottom corner, then a short horizontal run under the text
-        const toRight = a.dx >= 0;
-        const cornerX = toRight ? rect.x : rect.x + rect.w;
-        const runX = toRight ? rect.x + Math.min(26, rect.w) : rect.x + rect.w - Math.min(26, rect.w);
-        const yB = rect.y + rect.h;
-        ph.setAttribute("d", `M ${sx} ${sy} L ${cornerX} ${yB} L ${runX} ${yB}`);
-      }
-      if (dot) {
-        dot.style.opacity = off ? "0" : "";
-        dot.setAttribute("cx", String(sx));
-        dot.setAttribute("cy", String(sy));
-      }
-    }
   }
 
   // ---- loop ----
@@ -1123,7 +1068,23 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     syncArm(midArm);
     syncArm(endArm);
     renderer.render(scene, camera);
-    layCallouts();
+
+    // projected NDC bounds of the parts that must stay on screen (|x|,|y| < 1).
+    // Excludes the forklift's off-frame home, the departed truck, and the
+    // background ghost line - those leave frame by design.
+    {
+      const bb = new THREE.Box3();
+      const tb = new THREE.Box3();
+      for (const o of mustFit) bb.union(tb.setFromObject(o));
+      const v = new THREE.Vector3();
+      let nx = 1, ny = 1;
+      for (const cx of [bb.min.x, bb.max.x]) for (const cy of [bb.min.y, bb.max.y]) for (const cz of [bb.min.z, bb.max.z]) {
+        v.set(cx, cy, cz).project(camera);
+        nx = Math.max(nx, Math.abs(v.x));
+        ny = Math.max(ny, Math.abs(v.y));
+      }
+      (window as unknown as Record<string, unknown>).__bounds = { nx: Math.round(nx * 1000) / 1000, ny: Math.round(ny * 1000) / 1000, camL: camera.left, camT: camera.top, cw: host.clientWidth, ch: host.clientHeight };
+    }
 
     // state probe for tests/debugging (read-only snapshot)
     (window as unknown as Record<string, unknown>).__plant = {
@@ -1173,6 +1134,47 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     { rootMargin: "10% 0px" }
   );
   vis.observe(host);
+
+  // Derive the camera envelope from the parts themselves, measured in CAMERA
+  // space: the view has a slight yaw, so depth shears screen-x and a
+  // world-space X/Y fit leaves the long ends grazing the frame edge.
+  const FRUSTUM = { halfW: 10, halfH: 3 };
+  {
+    // pose the arms first: they're built lying along +x, and the resting pose
+    // folds them upright - measuring before this understated the height
+    syncArm(midArm);
+    syncArm(endArm);
+    scene.updateMatrixWorld(true);
+    camera.updateMatrixWorld();
+    const inv = camera.matrixWorldInverse.clone();
+    const v = new THREE.Vector3();
+    const bb = new THREE.Box3();
+    const tmp = new THREE.Box3();
+    for (const o of mustFit) bb.union(tmp.setFromObject(o));
+    let minU = Infinity, maxU = -Infinity, minV = Infinity, maxV = -Infinity;
+    const corners: THREE.Vector3[] = [];
+    for (const cx of [bb.min.x, bb.max.x])
+      for (const cy of [bb.min.y, bb.max.y])
+        for (const cz of [bb.min.z, bb.max.z]) corners.push(new THREE.Vector3(cx, cy, cz));
+    for (const c of corners) {
+      v.copy(c).applyMatrix4(inv);
+      minU = Math.min(minU, v.x); maxU = Math.max(maxU, v.x);
+      minV = Math.min(minV, v.y); maxV = Math.max(maxV, v.y);
+    }
+    // recentre the camera on the machine by sliding along its own right/up axes
+    const right = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0);
+    const up = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 1);
+    const cu = (minU + maxU) / 2;
+    const cv = (minV + maxV) / 2;
+    CAM_BASE.addScaledVector(right, cu).addScaledVector(up, cv);
+    LOOK_AT.addScaledVector(right, cu).addScaledVector(up, cv);
+    camera.position.copy(CAM_BASE);
+    camera.lookAt(LOOK_AT);
+    FRUSTUM.halfW = (maxU - minU) / 2 + 0.1;
+    // headroom: the arms sweep above their resting pose while transferring
+    FRUSTUM.halfH = (maxV - minV) / 2 + 0.34;
+    (window as unknown as Record<string, unknown>).__fit = { ...FRUSTUM };
+  }
 
   const ro = new ResizeObserver(resize);
   ro.observe(host);

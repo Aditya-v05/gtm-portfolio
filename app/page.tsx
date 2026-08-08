@@ -1,6 +1,7 @@
 import Noise from "@/components/Noise";
 import HeroHeadline from "@/components/HeroHeadline";
 import ConveyorLine from "@/components/ConveyorLine";
+import ClientMarquee from "@/components/ClientMarquee";
 import CountUp from "@/components/CountUp";
 import SpotlightCard from "@/components/SpotlightCard";
 import AnimatedContent from "@/components/AnimatedContent";
@@ -113,25 +114,18 @@ export default function Home() {
             outbound - built as <b>autonomous systems</b>, not one-off scripts. Each one backed
             by a real artifact: a log, a verdict, an export.
           </p>
-          <div className="meta">
-            <div className="m">
-              <div className="v"><CountUp to={40} duration={1.4} /><span className="plus">+</span></div>
-              <div className="k">systems shipped</div>
-            </div>
-            <div className="m">
-              <div className="v"><CountUp to={100} duration={1.8} /><span className="plus">+</span></div>
-              <div className="k">campaigns automated</div>
-            </div>
-            <div className="m">
-              <div className="v"><CountUp to={10} duration={2} /></div>
-              <div className="k">live signals converged</div>
-            </div>
-          </div>
         </div>
 
         {/* THE LINE: the machine cell runs across the bottom of the hero -
             belt, scanner, transfer arm, belt, scanner, packing arm, box */}
         <ConveyorLine />
+      </section>
+
+      {/* CLIENT MARQUEE: the roster, below the hero */}
+      <section className="marquee">
+        <div className="marquee__k">Systems shipped for</div>
+        <ClientMarquee />
+        <div className="marquee__now">now: founding gtm engineer @ <b>Relling</b> · YC S25</div>
       </section>
 
       {/* print-only client roster: the animated machine can't be trusted in
