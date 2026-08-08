@@ -424,6 +424,73 @@ table.dt tr:last-child td{ border-bottom:none; }
 .dash .redact{ position:absolute; background:#EDEBE6; border-radius:5px; box-shadow:inset 0 0 0 1px rgba(0,0,0,.04); }
 .dash .redact::after{ content:""; position:absolute; inset:0; background-image:repeating-linear-gradient(135deg, rgba(0,0,0,.05) 0 3px, transparent 3px 6px); border-radius:5px; }
 
+/* ============ SIGNAL LAYER (sheet 01) ============ */
+.sl{ padding:34px 0 10px; }
+.sl__thesis{ max-width:68ch; }
+.sl__thesis p{ font-size:16.5px; line-height:1.72; color:var(--dim); }
+.sl__thesis i{ color:var(--ink); font-style:italic; }
+.sl__thesis-pt{ margin-top:16px; }
+.sl__thesis-pt b{ color:var(--accent-2); font-weight:500; }
+
+.sl__count{ display:flex; align-items:flex-start; gap:34px; margin-top:44px; padding:28px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.sl__big{ display:flex; align-items:baseline; font-family:var(--font-d); font-weight:520; font-size:clamp(64px,9vw,104px); line-height:.9; letter-spacing:-.03em; color:var(--ink); flex:none; }
+.sl__big span{ font-size:.45em; color:var(--accent); margin-left:2px; }
+.sl__cbody{ font-size:14.5px; line-height:1.7; color:var(--dim); max-width:52ch; padding-top:6px; }
+.sl__cbody b{ color:var(--ink); font-weight:500; }
+
+/* facility report — paper exhibit, one row of the scan expanded */
+.frep{ border-radius:10px; overflow:hidden; background:var(--paper); color:var(--paper-ink); box-shadow:var(--shadow-exhibit); }
+.frep__bar{ display:flex; align-items:center; justify-content:space-between; padding:10px 15px; background:var(--paper-2); border-bottom:1px solid var(--paper-line); }
+.frep__bar .fn{ font-family:var(--font-m); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--paper-dim); }
+.frep__bar .rc{ font-family:var(--font-m); font-size:9.5px; color:#8A6A2A; }
+.frep__head{ padding:18px 20px 14px; border-bottom:1px solid var(--paper-line); }
+.frep__head h3{ font-family:var(--font-d); font-weight:500; font-size:19px; letter-spacing:-.01em; color:var(--paper-ink); }
+.frep__sub{ font-family:var(--font-m); font-size:10px; letter-spacing:.06em; color:var(--paper-dim); margin-top:6px; }
+.frep__rows{ padding:6px 0 10px; }
+.frep__rows > div{ display:grid; grid-template-columns:88px 1fr; gap:18px; padding:9px 20px; align-items:baseline; }
+.frep__rows dt{ font-family:var(--font-m); font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:#7E93A8; }
+.frep__rows dd{ font-size:13px; line-height:1.6; color:#3B4C60; }
+.frep__rows dd b{ color:var(--paper-ink); font-weight:600; }
+.frep__read{ margin-top:4px; border-top:1px solid #D9E4EE; padding-top:14px !important; }
+.frep__read dt{ color:#2464A4 !important; }
+.frep__read dd{ color:var(--paper-ink) !important; }
+
+/* the sample export: the last column is prose, so it wraps */
+.sl__scroll{ overflow-x:auto; }
+table.dt--wrap{ min-width:760px; }
+table.dt--wrap td.wrapcell{ white-space:normal; line-height:1.55; min-width:280px; color:#4A5D72; }
+table.dt--wrap td{ vertical-align:top; }
+table.dt--wrap .pill{ white-space:nowrap; }
+
+/* signal grammar */
+.sl__gsec{ margin-top:56px; }
+.sl__gk{ font-family:var(--font-m); font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--mute); margin-bottom:20px; }
+.sl__grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+.sig{ position:relative; height:100%; border:1px solid var(--line); border-radius:12px; padding:22px 22px 20px; transition:border-color .3s; }
+.sig:hover{ border-color:var(--line-2); }
+.sig__n{ font-family:var(--font-m); font-size:9.5px; letter-spacing:.14em; color:var(--accent); }
+.sig h4{ font-family:var(--font-m); font-size:12px; letter-spacing:.02em; color:var(--ink); font-weight:500; margin:9px 0 10px; }
+.sig p{ font-size:13.5px; line-height:1.68; color:var(--dim); }
+.sig__b{ margin-top:14px; padding-top:13px; border-top:1px dashed var(--line-2); font-size:12.5px; line-height:1.62; color:var(--mute); }
+.sig__b span{ display:block; font-family:var(--font-m); font-size:8.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin-bottom:6px; }
+
+.sl__close{ margin-top:56px; padding-top:34px; border-top:1px solid var(--line); max-width:68ch; }
+.sl__close p{ font-size:15px; line-height:1.72; color:var(--dim); }
+.sl__punch{ margin:20px 0; font-family:var(--font-d) !important; font-size:clamp(22px,3.2vw,31px) !important; line-height:1.3 !important; letter-spacing:-.015em; color:var(--ink) !important; }
+.sl__punch b{ color:var(--accent-2); font-weight:500; }
+
+@media (max-width:860px){
+  .sl__grid{ grid-template-columns:1fr; }
+  .sl__count{ flex-direction:column; gap:14px; }
+  .frep__rows > div{ grid-template-columns:1fr; gap:4px; }
+}
+
+@media print{
+  .sl__grid{ grid-template-columns:repeat(2,1fr); }
+  .sig{ break-inside:avoid; }
+  .frep, .sl__scroll{ break-inside:avoid; }
+}
+
 /* ============ ALSO BUILT — spotlight cells ============ */
 .grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px; }
 .grid .card-spotlight{ border-radius:12px; border:1px solid var(--line); background:var(--bg-2); padding:24px 26px; --spotlight-color:rgba(var(--accent-rgb),.10) !important; }

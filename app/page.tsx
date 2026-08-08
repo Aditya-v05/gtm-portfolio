@@ -15,6 +15,7 @@ import CursorDRO from "@/components/CursorDRO";
 import NavHeightVar from "@/components/NavHeightVar";
 import EvidenceZoom from "@/components/EvidenceZoom";
 import { SystemsAccordion, SystemFold } from "@/components/SystemsIndex";
+import SignalLayer from "@/components/SignalLayer";
 
 // Pre-formatted terminal blocks: whitespace and newlines are significant
 // (rendered with white-space:pre-wrap), so they are injected as raw HTML to
@@ -142,13 +143,24 @@ export default function Home() {
       </section>
 
       <div className="wrap">
+        {/* THE SIGNAL LAYER: how this market actually works, before any of my work */}
+        <div className="shead" id="market">
+          <span className="ghost">Market</span>
+          <span className="n">№ 01</span>
+          <h2>The Signal Layer</h2>
+          <span className="c">how physical AI GTM actually works</span>
+          <span className="shead__tb" aria-hidden="true"><i>SHEET 01 / 05</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
+        </div>
+        <hr className="rule" />
+        <SignalLayer />
+
         {/* CLIENT SIGNALS */}
         <div className="shead" id="signals">
           <span className="ghost">Signals</span>
-          <span className="n">№ 01</span>
+          <span className="n">№ 02</span>
           <h2>Client Signals</h2>
           <span className="c">delivered work · recreated &amp; sanitized</span>
-          <span className="shead__tb" aria-hidden="true"><i>SHEET 01 / 04</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
+          <span className="shead__tb" aria-hidden="true"><i>SHEET 02 / 05</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
         </div>
         <hr className="rule" />
         <div className="evwall">
@@ -252,10 +264,10 @@ export default function Home() {
         {/* WORK */}
         <div className="shead" id="work">
           <span className="ghost">Systems</span>
-          <span className="n">№ 02</span>
+          <span className="n">№ 03</span>
           <h2>Selected Systems</h2>
           <span className="c">ten, indexed · click to unfold</span>
-          <span className="shead__tb" aria-hidden="true"><i>SHEET 02 / 04</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
+          <span className="shead__tb" aria-hidden="true"><i>SHEET 03 / 05</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
         </div>
         <hr className="rule" />
 
@@ -628,10 +640,10 @@ export default function Home() {
         {/* ALSO BUILT */}
         <div className="shead" id="stack">
           <span className="ghost">Stack</span>
-          <span className="n">№ 03</span>
+          <span className="n">№ 04</span>
           <h2>Also Built &amp; Shipped</h2>
           <span className="c">selected</span>
-          <span className="shead__tb" aria-hidden="true"><i>SHEET 03 / 04</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
+          <span className="shead__tb" aria-hidden="true"><i>SHEET 04 / 05</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
         </div>
         <hr className="rule" />
 
@@ -657,10 +669,10 @@ export default function Home() {
         {/* ABOUT: the bench where the systems got built */}
         <div className="shead" id="about">
           <span className="ghost">Bench</span>
-          <span className="n">№ 04</span>
+          <span className="n">№ 05</span>
           <h2>The Bench</h2>
           <span className="c">who drew this sheet</span>
-          <span className="shead__tb" aria-hidden="true"><i>SHEET 04 / 04</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
+          <span className="shead__tb" aria-hidden="true"><i>SHEET 05 / 05</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
         </div>
         <hr className="rule" />
         <AboutBench />
