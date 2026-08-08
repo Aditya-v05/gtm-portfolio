@@ -64,13 +64,13 @@ const TEL: Record<string, string> = {
   a1: "sources 6 · resolved 0",
   b1: "sources 6 · live 2 · mapped 4",
   c1: "resolution target: facility",
-  c2: "1 recipient → 23 facilities · 6A 17B",
+  c2: "1 recipient → 23 facilities · 6 corroborated",
   d1: "reason 4 · route 4",
   d2: "live 2 of 8 · route 0 of 4",
   e1: "window 126d · events 13",
   e2: "persistence CHRONIC",
   e3: "1 address · 7 correlated roles",
-  f1: "tier A · 126d · why-now complete",
+  f1: "corroborated · 126d · why-now complete",
   f2: "n = 300+ facilities",
 };
 
@@ -316,7 +316,8 @@ function StepBody({ step }: { step: string }) {
                       ))}
                     </div>
                     <div className="res__b">
-                      <b>23</b> flagged facilities · <b>6</b> tier A · <b>17</b> tier B
+                      <b>23</b> flagged facilities · <b>6</b> where signals corroborate ·{" "}
+                      <b>17</b> on a single signal
                     </div>
                     <div className="corr__note ann">
                       Signals only count when they land on the same address. That is the difference
@@ -442,7 +443,7 @@ function StepBody({ step }: { step: string }) {
                   <div className="vd">
                     <div className="vd__hd">
                       <span className="ann">illinois plant · aerospace &amp; defense</span>
-                      <span className="vd__tier">tier A</span>
+                      <span className="vd__tier">corroborated</span>
                     </div>
 
                     <div className="vd__sec">
