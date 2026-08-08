@@ -103,6 +103,31 @@ export default function SignalLine() {
   const idx = Math.max(0, STEPS.findIndex((s) => s.id === step));
   const pct = ((idx + 1) / STEPS.length) * 100;
 
+  // the rail thickens and grows a running head while the page moves, then
+  // settles back when it stops - so the instrument reads as live
+  const [moving, setMoving] = useState(false);
+  useEffect(() => {
+    let t = 0;
+    const onScroll = () => {
+      setMoving(true);
+      clearTimeout(t);
+      t = window.setTimeout(() => setMoving(false), 560);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(t);
+    };
+  }, []);
+
+  // what the reader is scrolling toward; absent on the final step
+  const nextStep = STEPS[idx + 1];
+  const nextLabel = nextStep
+    ? nextStep.s === stage
+      ? "keep scrolling"
+      : `next · ${STAGES.find((x) => x.id === nextStep.s)?.k.toLowerCase()}`
+    : null;
+
   // narrow screens turn the rail into a strip; keep the active stage in it
   useEffect(() => {
     const rail = railRef.current;
@@ -138,7 +163,11 @@ export default function SignalLine() {
 
       <div className="ln__grid">
         <div className="ln__railwrap" aria-hidden="true">
-          <span className="ln__prog"><i style={{ height: `${pct}%`, width: `${pct}%` }} /></span>
+          <span className={`ln__prog${moving ? " is-moving" : ""}`}>
+            <i style={{ height: `${pct}%`, width: `${pct}%` }}>
+              <b />
+            </i>
+          </span>
           <div className="ln__rail" ref={railRef}>
             {STAGES.map((s) => (
               <div key={s.id} className={`rl${stage === s.id ? " is-on" : ""}`}>
@@ -159,6 +188,14 @@ export default function SignalLine() {
               <i className="scope__c scope__c--bl" /><i className="scope__c scope__c--br" />
               <span className="scope__grat" />
             </div>
+            {nextLabel && (
+              <div className="scope__next" aria-hidden="true">
+                <span>{nextLabel}</span>
+                <svg viewBox="0 0 12 20">
+                  <path d="M6 0 V16 M1.5 11.5 L6 16.5 L10.5 11.5" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+            )}
             <div className="scope__tel" aria-hidden="true">
               <span>rec {String(idx + 1).padStart(2, "0")}</span>
               <i />

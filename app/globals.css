@@ -447,8 +447,13 @@ table.dt tr:last-child td{ border-bottom:none; }
 
 .ln__grid{ display:grid; grid-template-columns:148px 1fr; gap:64px; }
 .ln__railwrap{ position:sticky; top:calc(var(--nav-h) + 100px); align-self:start; }
-.ln__prog{ position:absolute; left:-16px; top:2px; bottom:2px; width:1px; background:var(--line); }
-.ln__prog i{ position:absolute; left:0; top:0; width:1px !important; background:var(--accent); transition:height .45s cubic-bezier(.3,.7,.3,1); box-shadow:0 0 8px rgba(var(--accent-rgb),.6); }
+.ln__prog{ position:absolute; left:-16px; top:2px; bottom:2px; width:1px; background:var(--line); transform-origin:center; transition:transform .4s cubic-bezier(.3,.7,.3,1); }
+.ln__prog.is-moving{ transform:scaleX(3.2); }
+.ln__prog i{ position:absolute; left:0; top:0; width:1px !important; background:var(--accent); transition:height .45s cubic-bezier(.3,.7,.3,1), box-shadow .4s; box-shadow:0 0 8px rgba(var(--accent-rgb),.55); }
+.ln__prog.is-moving i{ box-shadow:0 0 16px rgba(var(--accent-rgb),.95); }
+/* a head that rides the fill while the page moves, then settles */
+.ln__prog i b{ position:absolute; left:50%; bottom:0; width:5px; height:5px; margin:0 0 -2.5px -2.5px; border-radius:50%; background:var(--accent); opacity:0; transform:scale(.3); transition:opacity .3s, transform .3s; }
+.ln__prog.is-moving i b{ opacity:1; transform:scale(1); }
 .ln__count{ font-family:var(--font-m); font-size:9.5px; letter-spacing:.16em; color:var(--mute); margin-top:22px; }
 .ln__rail{ position:relative; }
 .rl{ display:flex; align-items:baseline; gap:11px; padding:11px 0 11px 15px; margin-left:-16px; border-left:1px solid transparent; opacity:.3; transition:opacity .4s ease, border-color .4s ease; }
@@ -471,6 +476,9 @@ table.dt tr:last-child td{ border-bottom:none; }
     repeating-linear-gradient(90deg, var(--line-2) 0 1px, transparent 1px 46px) bottom/100% 5px no-repeat,
     repeating-linear-gradient(0deg, var(--line-2) 0 1px, transparent 1px 46px) left/5px 100% no-repeat,
     repeating-linear-gradient(0deg, var(--line-2) 0 1px, transparent 1px 46px) right/5px 100% no-repeat; }
+/* the affordance that keeps you going once you are inside the run */
+.scope__next{ position:absolute; right:-18px; bottom:44px; display:flex; align-items:center; gap:10px; font-family:var(--font-m); font-size:8.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--mute); animation:lnCue 2.6s ease-in-out infinite; }
+.scope__next svg{ width:11px; height:19px; color:var(--accent); flex:none; }
 .scope__tel{ position:absolute; left:-18px; right:-18px; bottom:0; display:flex; align-items:center; gap:11px; padding-top:9px; border-top:1px solid var(--line); font-family:var(--font-m); font-size:8.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute); }
 .scope__tel i{ display:block; width:3px; height:3px; border-radius:50%; background:var(--accent); flex:none; }
 .scope__tel b{ margin-left:auto; font-weight:400; color:var(--line-2); }
@@ -593,8 +601,11 @@ table.dt tr:last-child td{ border-bottom:none; }
 @media (max-width:900px){
   .ln__grid{ grid-template-columns:1fr; gap:0; }
   .ln__railwrap{ position:sticky; top:var(--nav-h); z-index:5; background:var(--bg); min-width:0; max-width:100%; }
-  .ln__prog{ left:0; right:0; top:auto; bottom:0; width:auto; height:1px; }
+  .ln__prog{ left:0; right:0; top:auto; bottom:0; width:auto; height:1px; transform-origin:center; }
+  .ln__prog.is-moving{ transform:scaleY(3.2); }
   .ln__prog i{ width:auto !important; height:1px !important; }
+  .ln__prog i b{ left:auto; right:0; bottom:50%; margin:0 -2.5px -2.5px 0; }
+  .scope__next{ right:-6px; bottom:40px; font-size:8px; letter-spacing:.14em; }
   .ln__count{ display:none; }
   .scope{ inset:-10px -6px 24px -6px; }
   .scope__tel{ left:-6px; right:-6px; font-size:8px; letter-spacing:.1em; gap:8px; }
@@ -618,7 +629,8 @@ table.dt tr:last-child td{ border-bottom:none; }
 }
 
 @media (prefers-reduced-motion: reduce){
-  .cv__in, .tl__t, .field__d{ animation:none; }
+  .cv__in, .tl__t, .field__d, .ln__cue, .scope__next, .sct::before{ animation:none; }
+  .ln__prog, .ln__prog.is-moving{ transform:none; }
 }
 
 @media print{
