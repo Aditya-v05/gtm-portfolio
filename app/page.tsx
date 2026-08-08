@@ -15,7 +15,7 @@ import CursorDRO from "@/components/CursorDRO";
 import NavHeightVar from "@/components/NavHeightVar";
 import EvidenceZoom from "@/components/EvidenceZoom";
 import { SystemsAccordion, SystemFold } from "@/components/SystemsIndex";
-import SignalLayer from "@/components/SignalLayer";
+import SignalLine from "@/components/SignalLine";
 
 // Pre-formatted terminal blocks: whitespace and newlines are significant
 // (rendered with white-space:pre-wrap), so they are injected as raw HTML to
@@ -152,7 +152,7 @@ export default function Home() {
           <span className="shead__tb" aria-hidden="true"><i>SHEET 01 / 05</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
         </div>
         <hr className="rule" />
-        <SignalLayer />
+        <SignalLine />
 
         {/* CLIENT SIGNALS */}
         <div className="shead" id="signals">
