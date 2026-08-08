@@ -58,6 +58,22 @@ const REASON = [
   { k: "expansion + capex", v: "new lines, new buildings, equipment finance", live: false },
 ];
 
+// what the scope footer reports at each step - keeps the frame alive and
+// doubles as a running statement of what is actually loaded
+const TEL: Record<string, string> = {
+  a1: "sources 6 · resolved 0",
+  b1: "sources 6 · live 2 · mapped 4",
+  c1: "resolution target: facility",
+  c2: "1 recipient → 23 facilities · 6A 17B",
+  d1: "reason 4 · route 4",
+  d2: "live 2 of 8 · route 0 of 4",
+  e1: "window 126d · events 13",
+  e2: "persistence CHRONIC",
+  e3: "families 2 · agreement 2 of 2",
+  f1: "tier A · why-now complete",
+  f2: "n = 300+ facilities",
+};
+
 const ROUTE = [
   { k: "the partner graph", v: "integrator case studies publish the relationship", live: false },
   { k: "sponsor access", v: "one owner, fifteen to forty plants", live: false },
@@ -84,6 +100,8 @@ export default function SignalLine() {
   }, []);
 
   const stage = STEPS.find((s) => s.id === step)?.s ?? "scatter";
+  const idx = Math.max(0, STEPS.findIndex((s) => s.id === step));
+  const pct = ((idx + 1) / STEPS.length) * 100;
 
   // narrow screens turn the rail into a strip; keep the active stage in it
   useEffect(() => {
@@ -102,7 +120,7 @@ export default function SignalLine() {
       <div className="ln__open">
         <h3 className="say say--xl">Industrial buyers don&apos;t leave clean intent signals.</h3>
         <p className="say__sub">
-          No demo request, no pricing page visit, no whitepaper download. So we read the places the
+          No demo request, no pricing page visit, no whitepaper download. So I read the places the
           intent leaks out instead, and work backwards to the building.
         </p>
         <div className="ann ln__proof">
@@ -112,26 +130,63 @@ export default function SignalLine() {
           <i aria-hidden="true">·</i>
           <span>public data only</span>
         </div>
+        <div className="ln__cue" aria-hidden="true">
+          <span>scroll</span>
+          <i />
+        </div>
       </div>
 
       <div className="ln__grid">
-        <div className="ln__rail" ref={railRef} aria-hidden="true">
-          {STAGES.map((s) => (
-            <div key={s.id} className={`rl${stage === s.id ? " is-on" : ""}`}>
-              <span className="rl__n">{s.n}</span>
-              <span className="rl__k">{s.k}</span>
-            </div>
-          ))}
+        <div className="ln__railwrap" aria-hidden="true">
+          <span className="ln__prog"><i style={{ height: `${pct}%`, width: `${pct}%` }} /></span>
+          <div className="ln__rail" ref={railRef}>
+            {STAGES.map((s) => (
+              <div key={s.id} className={`rl${stage === s.id ? " is-on" : ""}`}>
+                <span className="rl__n">{s.n}</span>
+                <span className="rl__k">{s.k}</span>
+              </div>
+            ))}
+          </div>
+          <div className="ln__count">
+            {String(idx + 1).padStart(2, "0")} / {STEPS.length}
+          </div>
         </div>
 
         <div className="ln__main">
           <div className="ln__canvas">
+            <div className="scope" aria-hidden="true">
+              <i className="scope__c scope__c--tl" /><i className="scope__c scope__c--tr" />
+              <i className="scope__c scope__c--bl" /><i className="scope__c scope__c--br" />
+              <span className="scope__grat" />
+            </div>
+            <div className="scope__tel" aria-hidden="true">
+              <span>rec {String(idx + 1).padStart(2, "0")}</span>
+              <i />
+              <span>{stage}</span>
+              <i />
+              <span>{TEL[step]}</span>
+              <b>obs 2026-07-06</b>
+            </div>
             <div className="cv" data-step={step}>
               {/* 01 - the scatter */}
               {step === "a1" && (
                 <div className="cv__in">
                   <h4 className="say">It leaks out in six directions at once.</h4>
                   <div className="sct">
+                    <svg className="sct__w" viewBox="0 0 600 300" preserveAspectRatio="none">
+                      {[[86, 34], [514, 34], [58, 150], [542, 150], [86, 266], [514, 266]].map(
+                        ([x, y], i) => (
+                          <line
+                            key={i}
+                            x1={x}
+                            y1={y}
+                            x2={300}
+                            y2={150}
+                            style={{ animationDelay: `${i * 90}ms` }}
+                          />
+                        )
+                      )}
+                    </svg>
                     <span className="sct__i sct__i--tl">hiring</span>
                     <span className="sct__i sct__i--tr">procurement</span>
                     <span className="sct__i sct__i--ml">ownership</span>
@@ -227,7 +282,7 @@ export default function SignalLine() {
                     <div className="split__col">
                       <div className="split__h">
                         <span className="ann">find the route</span>
-                        <b>how we get in</b>
+                        <b>how to get in</b>
                       </div>
                       {ROUTE.map((r) => (
                         <div className={`sl2${r.live ? " is-live" : ""}`} key={r.k}>
@@ -376,8 +431,8 @@ export default function SignalLine() {
 
       <div className="ln__close">
         <p className="say say--end">
-          We didn&apos;t build another database. We connected evidence of demand with routes into
-          the account.
+          I didn&apos;t build another database. I connected evidence of demand with routes into the
+          account.
         </p>
       </div>
     </section>
