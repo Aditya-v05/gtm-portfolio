@@ -176,9 +176,6 @@ export default function SignalLine() {
               </div>
             ))}
           </div>
-          <div className="ln__count">
-            {String(idx + 1).padStart(2, "0")} / {STEPS.length}
-          </div>
         </div>
 
         <div className="ln__main">

@@ -454,7 +454,6 @@ table.dt tr:last-child td{ border-bottom:none; }
 /* a head that rides the fill while the page moves, then settles */
 .ln__prog i b{ position:absolute; left:50%; bottom:0; width:5px; height:5px; margin:0 0 -2.5px -2.5px; border-radius:50%; background:var(--accent); opacity:0; transform:scale(.3); transition:opacity .3s, transform .3s; }
 .ln__prog.is-moving i b{ opacity:1; transform:scale(1); }
-.ln__count{ font-family:var(--font-m); font-size:9.5px; letter-spacing:.16em; color:var(--mute); margin-top:22px; }
 .ln__rail{ position:relative; }
 .rl{ display:flex; align-items:baseline; gap:11px; padding:11px 0 11px 15px; margin-left:-16px; border-left:1px solid transparent; opacity:.3; transition:opacity .4s ease, border-color .4s ease; }
 .rl.is-on{ opacity:1; border-left-color:var(--accent); }
@@ -646,8 +645,7 @@ table.dt tr:last-child td{ border-bottom:none; }
   .ln__prog i{ width:auto !important; height:1px !important; }
   .ln__prog i b{ left:auto; right:0; bottom:50%; margin:0 -2.5px -2.5px 0; }
   .scope__next{ right:-6px; bottom:40px; font-size:8px; letter-spacing:.14em; }
-  .ln__count{ display:none; }
-  .scope{ inset:-10px -6px 24px -6px; }
+    .scope{ inset:-10px -6px 24px -6px; }
   .scope__tel{ left:-6px; right:-6px; font-size:8px; letter-spacing:.1em; gap:8px; }
   .scope__tel b{ display:none; }
   .ln__rail{ position:static; top:auto; z-index:auto; display:flex; gap:18px; overflow-x:auto; padding:12px 0; margin:0 0 8px; background:var(--bg); border-bottom:1px solid var(--line); scrollbar-width:none; }
