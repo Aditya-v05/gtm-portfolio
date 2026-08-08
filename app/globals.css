@@ -462,7 +462,7 @@ table.dt tr:last-child td{ border-bottom:none; }
 .rl__k{ font-family:var(--font-m); font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--ink); }
 
 .ln__main{ position:relative; }
-.ln__canvas{ position:sticky; top:calc(var(--nav-h) + 78px); height:70vh; display:flex; align-items:center; }
+.ln__canvas{ position:sticky; top:calc(var(--nav-h) + 78px); height:70vh; display:block; box-sizing:border-box; padding-bottom:44px; }
 .scope{ position:absolute; inset:-14px -18px 26px -18px; pointer-events:none; }
 .scope__c{ position:absolute; width:15px; height:15px; border:1px solid var(--line-2); }
 .scope__c--tl{ left:0; top:0; border-right:0; border-bottom:0; }
@@ -485,9 +485,27 @@ table.dt tr:last-child td{ border-bottom:none; }
 .scope__tel span:nth-of-type(2){ color:var(--accent-2); }
 .ln__track{ margin-top:-70vh; }
 .ln__sp{ height:100vh; }
+/* the run as a dealt stack: the active card sits upright, spent cards tip
+   back into perspective and recede, upcoming ones wait below the frame */
+.stack{ position:relative; width:100%; height:100%; perspective:1600px; perspective-origin:50% 42%; }
+.card{ position:absolute; left:0; right:0; top:50%; padding:30px 34px; transform-origin:50% 60%;
+  border:1px solid var(--line); border-radius:14px; background:var(--bg);
+  backface-visibility:hidden; pointer-events:none;
+  transition:transform .8s cubic-bezier(.22,.72,.24,1), opacity .55s ease, box-shadow .55s ease; }
+/* -50% is the resting centre, so every state carries it */
+.card[data-d="0"]{ transform:translateY(-50%); opacity:1; pointer-events:auto; z-index:10;
+  box-shadow:var(--shadow-exhibit); }
+/* fixed offsets, not percentages - sheets vary in height and percentage
+   offsets made the recession jump between steps */
+.card[data-d="1"]{ transform:translateY(calc(-50% - 172px)) rotateX(46deg) scale(.9); opacity:.44; z-index:9; }
+.card[data-d="2"]{ transform:translateY(calc(-50% - 252px)) rotateX(58deg) scale(.82); opacity:.15; z-index:8; }
+.card[data-d="3"]{ transform:translateY(calc(-50% - 310px)) rotateX(66deg) scale(.76); opacity:0; z-index:7; }
+.card[data-d="-1"]{ transform:translateY(calc(-50% + 76px)) scale(.97); opacity:0; z-index:1; }
 .cv{ width:100%; }
-.cv__in{ animation:cvIn .5s cubic-bezier(.2,.7,.3,1); }
 .cv__in > .say{ margin-bottom:30px; max-width:24ch; }
+/* entry animations belong to the upright card, so they replay on arrival
+   instead of all firing at once on mount */
+.card[data-d="0"] .cv__in{ animation:cvIn .55s cubic-bezier(.2,.7,.3,1); }
 @keyframes cvIn{ from{ opacity:0; transform:translateY(14px) } to{ opacity:1; transform:none } }
 
 /* --- primitive: raw evidence --- */
@@ -506,7 +524,8 @@ table.dt tr:last-child td{ border-bottom:none; }
 /* --- 01 the scatter: signals orbiting one building --- */
 .sct{ position:relative; max-width:600px; height:300px; }
 .sct__w{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
-.sct__w line{ stroke:var(--line-2); stroke-width:1; stroke-dasharray:420; stroke-dashoffset:420; animation:draw .75s ease-out forwards; }
+.sct__w line{ stroke:var(--line-2); stroke-width:1; stroke-dasharray:420; stroke-dashoffset:420; }
+.card[data-d="0"] .sct__w line{ animation:draw .75s ease-out forwards; }
 @keyframes draw{ to{ stroke-dashoffset:0 } }
 .sct__i{ position:absolute; font-family:var(--font-m); font-size:11px; color:var(--dim); border:1px solid var(--line-2); border-radius:20px; padding:6px 14px; background:var(--bg); white-space:nowrap; }
 .sct__i--tl{ left:0; top:6px; } .sct__i--tr{ right:0; top:6px; }
@@ -532,7 +551,8 @@ table.dt tr:last-child td{ border-bottom:none; }
 .res{ max-width:600px; }
 .res__top{ padding-bottom:12px; border-bottom:1px solid var(--line-2); }
 .res__fan{ display:flex; flex-wrap:wrap; gap:5px; padding:18px 0 16px; }
-.res__fan span{ width:22px; height:28px; border:1px solid var(--accent); border-radius:2px 4px 4px 4px; background:rgba(var(--accent-rgb),.08); animation:dotIn .4s backwards; }
+.res__fan span{ width:22px; height:28px; border:1px solid var(--accent); border-radius:2px 4px 4px 4px; background:rgba(var(--accent-rgb),.08); opacity:0; }
+.card[data-d="0"] .res__fan span{ animation:dotIn .4s forwards; }
 .res__b{ font-family:var(--font-m); font-size:12px; color:var(--dim); padding-top:4px; }
 .res__b b{ color:var(--ink); font-weight:500; }
 
@@ -564,8 +584,9 @@ table.dt tr:last-child td{ border-bottom:none; }
 .tl{ max-width:640px; }
 .tl__ends{ display:flex; justify-content:space-between; gap:20px; margin-bottom:20px; }
 .tl__bar{ position:relative; height:2px; background:var(--line-2); }
-.tl__t{ position:absolute; top:-10px; width:1.5px; height:22px; background:var(--accent); animation:tickIn .4s backwards; }
-@keyframes tickIn{ from{ transform:scaleY(0) } to{ transform:none } }
+.tl__t{ position:absolute; top:-10px; width:1.5px; height:22px; background:var(--accent); transform:scaleY(0); }
+.card[data-d="0"] .tl__t{ animation:tickIn .4s forwards; }
+@keyframes tickIn{ from{ transform:scaleY(0) } to{ transform:scaleY(1) } }
 .tl__k{ margin-top:20px; }
 .corr{ max-width:600px; }
 .corr__site{ padding-bottom:11px; border-bottom:1px solid var(--line-2); }
@@ -593,8 +614,9 @@ table.dt tr:last-child td{ border-bottom:none; }
 
 /* --- the reveal --- */
 .field{ display:grid; grid-template-columns:repeat(30,1fr); gap:6px; max-width:520px; margin:32px 0 28px; }
-.field__d{ width:5px; height:5px; border-radius:50%; background:var(--accent); animation:dotIn .5s backwards; opacity:.5; }
-@keyframes dotIn{ from{ opacity:0; transform:scale(.3) } to{ opacity:.5; transform:none } }
+.field__d{ width:5px; height:5px; border-radius:50%; background:var(--accent); opacity:0; }
+.card[data-d="0"] .field__d{ animation:dotIn .5s forwards; }
+@keyframes dotIn{ from{ opacity:0; transform:scale(.3) } to{ opacity:.55; transform:none } }
 
 .ln__close{ min-height:62vh; display:flex; align-items:center; }
 
@@ -613,13 +635,17 @@ table.dt tr:last-child td{ border-bottom:none; }
   .ln__rail{ position:static; top:auto; z-index:auto; display:flex; gap:18px; overflow-x:auto; padding:12px 0; margin:0 0 8px; background:var(--bg); border-bottom:1px solid var(--line); scrollbar-width:none; }
   .ln__rail::-webkit-scrollbar{ display:none; }
   .rl{ padding:0 0 0 11px; margin:0; flex:none; border-left:1px solid var(--line); }
-  .ln__canvas{ position:sticky; top:calc(var(--nav-h) + 60px); height:auto; min-height:64vh; align-items:flex-start; padding-top:8px; }
-  .ln__track{ margin-top:-64vh; }
+  .ln__canvas{ position:sticky; top:calc(var(--nav-h) + 56px); height:68vh; padding-top:6px; padding-bottom:38px; }
+  .ln__track{ margin-top:-68vh; }
   .raw__f > div{ grid-template-columns:1fr; gap:3px; }
   .rout__hd, .rout__r{ grid-template-columns:1fr 58px; }
   .rout__hd span:last-child{ display:none; }
   .rout__v{ grid-column:1/-1; }
   .field{ grid-template-columns:repeat(20,1fr); }
+  .card{ padding:20px 18px; border-radius:12px; }
+  .card[data-d="1"]{ transform:translateY(calc(-50% - 120px)) rotateX(46deg) scale(.9); }
+  .card[data-d="2"]{ transform:translateY(calc(-50% - 178px)) rotateX(58deg) scale(.82); }
+  .card[data-d="3"]{ transform:translateY(calc(-50% - 220px)) rotateX(66deg) scale(.76); }
   .srcs{ grid-template-columns:1fr; }
   .split{ grid-template-columns:1fr; gap:26px; padding-bottom:76px; }
   .split__v{ display:none; }
@@ -630,6 +656,11 @@ table.dt tr:last-child td{ border-bottom:none; }
 
 @media (prefers-reduced-motion: reduce){
   .cv__in, .tl__t, .field__d, .ln__cue, .scope__next, .sct::before{ animation:none; }
+  /* no perspective theatre: spent cards simply disappear */
+  .card{ transition:opacity .2s; }
+  .card[data-d="1"], .card[data-d="2"], .card[data-d="3"], .card[data-d="-1"]{ transform:none; opacity:0; filter:none; }
+  .card[data-d="0"] .tl__t, .card[data-d="0"] .field__d, .card[data-d="0"] .res__fan span{ animation:none; opacity:1; transform:none; }
+  .card[data-d="0"] .sct__w line{ animation:none; stroke-dashoffset:0; }
   .ln__prog, .ln__prog.is-moving{ transform:none; }
 }
 

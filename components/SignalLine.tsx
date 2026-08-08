@@ -204,7 +204,45 @@ export default function SignalLine() {
               <span>{TEL[step]}</span>
               <b>obs 2026-07-06</b>
             </div>
-            <div className="cv" data-step={step}>
+            <div className="stack" data-step={step}>
+              {STEPS.map((st, j) => {
+                const d = idx - j;
+                return (
+                  <div
+                    key={st.id}
+                    className="card"
+                    data-d={d < 0 ? -1 : Math.min(d, 3)}
+                    aria-hidden={d !== 0}
+                  >
+                    <StepBody step={st.id} />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="ln__track" ref={trackRef}>
+            {STEPS.map((s) => (
+              <div key={s.id} className="ln__sp" data-step={s.id} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="ln__close">
+        <p className="say say--end">
+          I didn&apos;t build another database. I connected evidence of demand with routes into the
+          account.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+// All eleven step bodies, so the whole run can be mounted and stacked.
+function StepBody({ step }: { step: string }) {
+  return (
+    <>
               {/* 01 - the scatter */}
               {step === "a1" && (
                 <div className="cv__in">
@@ -455,23 +493,6 @@ export default function SignalLine() {
                   </p>
                 </div>
               )}
-            </div>
-          </div>
-
-          <div className="ln__track" ref={trackRef}>
-            {STEPS.map((s) => (
-              <div key={s.id} className="ln__sp" data-step={s.id} />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="ln__close">
-        <p className="say say--end">
-          I didn&apos;t build another database. I connected evidence of demand with routes into the
-          account.
-        </p>
-      </div>
-    </section>
+    </>
   );
 }
