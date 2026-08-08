@@ -551,10 +551,16 @@ table.dt tr:last-child td{ border-bottom:none; }
 .res{ max-width:600px; }
 .res__top{ padding-bottom:12px; border-bottom:1px solid var(--line-2); }
 .res__fan{ display:flex; flex-wrap:wrap; gap:4px; padding:18px 0 16px; }
-.res__fan span{ width:18px; height:26px; border:1px solid var(--accent); border-radius:2px 4px 4px 4px; background:rgba(var(--accent-rgb),.08); opacity:0; }
-.card[data-d="0"] .res__fan span{ animation:dotIn .4s forwards; }
-.res__b{ font-family:var(--font-m); font-size:12px; color:var(--dim); padding-top:4px; }
-.res__b b{ color:var(--ink); font-weight:500; }
+.res__fan span{ width:18px; height:26px; border:1px solid var(--accent); border-radius:2px 4px 4px 4px; background:transparent; opacity:0; }
+.res__fan span.is-corr{ background:var(--accent); }
+/* the markers count themselves in, corroborated ones first */
+.card[data-d="0"] .res__fan span{ animation:markIn .42s cubic-bezier(.3,1.5,.5,1) forwards; }
+@keyframes markIn{ from{ opacity:0; transform:translateY(6px) scale(.5) } to{ opacity:1; transform:none } }
+.res__key{ display:grid; gap:9px; padding-top:6px; }
+.res__key span{ display:flex; align-items:center; gap:11px; font-family:var(--font-m); font-size:11.5px; color:var(--mute); }
+.res__key b{ color:var(--ink); font-weight:500; }
+.res__key i{ width:12px; height:17px; flex:none; border:1px solid var(--accent); border-radius:1px 3px 3px 3px; background:transparent; }
+.res__key i.is-corr{ background:var(--accent); }
 
 /* --- 04 the split: reason vs route --- */
 .split{ position:relative; max-width:720px; display:grid; grid-template-columns:1fr 1fr; gap:34px; padding-bottom:88px; }

@@ -312,12 +312,22 @@ function StepBody({ step }: { step: string }) {
                     <div className="res__top ann">one recipient name</div>
                     <div className="res__fan" aria-hidden="true">
                       {Array.from({ length: 23 }, (_, i) => (
-                        <span key={i} style={{ animationDelay: `${i * 26}ms` }} />
+                        <span
+                          key={i}
+                          className={i < 6 ? "is-corr" : ""}
+                          style={{ animationDelay: `${i * 48}ms` }}
+                        />
                       ))}
                     </div>
-                    <div className="res__b">
-                      <b>23</b> flagged facilities · <b>6</b> where signals corroborate ·{" "}
-                      <b>17</b> on a single signal
+                    <div className="res__key">
+                      <span>
+                        <i className="is-corr" aria-hidden="true" />
+                        <b>6 facilities</b> with more than one signal at the same address
+                      </span>
+                      <span>
+                        <i aria-hidden="true" />
+                        <b>17 facilities</b> resting on a single signal
+                      </span>
                     </div>
                     <div className="corr__note ann">
                       Signals only count when they land on the same address. That is the difference
