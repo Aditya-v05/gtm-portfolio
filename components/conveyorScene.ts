@@ -694,9 +694,23 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     arm.fingerR.position.x = spread;
   }
   const HOME = { S: 0.72, E: -1.62 };
-  // rest facing the pick point: the arm returns here after every drop
-  midArm.homeYaw = solveFor(midArm, new THREE.Vector3(PICK_A, TOP_A, 0)).yaw;
-  endArm.homeYaw = solveFor(endArm, new THREE.Vector3(PICK_B, TOP_B, 0)).yaw;
+  // Three states: pick, REST, drop. Rest is the neutral bearing halfway
+  // between the pick and drop points - which lands in the empty gap between
+  // stations. Parking over the pick point instead left the folded gripper
+  // hanging through the belt deck.
+  function restYaw(arm: Arm, pick: THREE.Vector3, drop: THREE.Vector3) {
+    return solveFor(arm, pick.clone().add(drop).multiplyScalar(0.5)).yaw;
+  }
+  midArm.homeYaw = restYaw(
+    midArm,
+    new THREE.Vector3(PICK_A, TOP_A, 0),
+    new THREE.Vector3(LIFT_X, LIFT_LOW_Y + ITEM_H / 2, 0)
+  );
+  endArm.homeYaw = restYaw(
+    endArm,
+    new THREE.Vector3(PICK_B, TOP_B, 0),
+    new THREE.Vector3(TRUCK_X - 0.78, BED_TOP + 0.9, 0.15)
+  );
   midArm.joints.yaw = midArm.homeYaw;
   endArm.joints.yaw = endArm.homeYaw;
 
