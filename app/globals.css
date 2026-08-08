@@ -484,6 +484,9 @@ table.dt tr:last-child td{ border-bottom:none; }
 .scope__tel span:nth-of-type(2){ color:var(--accent-2); }
 .ln__track{ margin-top:-70vh; }
 .ln__sp{ height:100vh; }
+/* the last frame has nothing after it to reveal, so it does not need a full
+   viewport of dwell - that read as the section having stalled */
+.ln__sp:last-child{ height:58vh; }
 /* the run as a dealt stack: the active card sits upright, spent cards tip
    back into perspective and recede, upcoming ones wait below the frame */
 .stack{ position:relative; width:100%; height:100%; perspective:1600px; perspective-origin:50% 42%; }
@@ -701,7 +704,7 @@ table.dt tr:last-child td{ border-bottom:none; }
 .field__k i{ width:10px; height:10px; border-radius:50%; background:var(--accent-2); box-shadow:0 0 0 3.5px rgba(var(--accent-rgb),.22); flex:none; }
 @keyframes dotIn{ from{ opacity:0; transform:scale(.3) } to{ opacity:.55; transform:none } }
 
-.ln__close{ min-height:62vh; display:flex; align-items:center; }
+.ln__close{ min-height:34vh; display:flex; align-items:center; padding:26px 0; }
 
 @media (max-width:900px){
   .ln__grid{ grid-template-columns:1fr; gap:0; }
