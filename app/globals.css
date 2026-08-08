@@ -592,7 +592,7 @@ table.dt tr:last-child td{ border-bottom:none; }
 
 @media (max-width:900px){
   .ln__grid{ grid-template-columns:1fr; gap:0; }
-  .ln__railwrap{ position:sticky; top:var(--nav-h); z-index:5; background:var(--bg); }
+  .ln__railwrap{ position:sticky; top:var(--nav-h); z-index:5; background:var(--bg); min-width:0; max-width:100%; }
   .ln__prog{ left:0; right:0; top:auto; bottom:0; width:auto; height:1px; }
   .ln__prog i{ width:auto !important; height:1px !important; }
   .ln__count{ display:none; }
