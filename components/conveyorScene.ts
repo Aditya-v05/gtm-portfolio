@@ -20,13 +20,14 @@ const A_X0 = -6.9, A_X1 = -2.3;
 const B_X0 = 1.6, B_X1 = 5.7;
 const SCAN_A = -5.2, SCAN_B = 3.4;
 const PICK_A = -2.75, PICK_B = 5.25;
-const MID_BASE = new THREE.Vector3(-1.55, 0, -1.7);
+const MID_BASE = new THREE.Vector3(-1.55, 0, 1.72); // front of the line: reaching from behind speared the lift mast
 const MID_RISER = 0.55;
-const END_BASE = new THREE.Vector3(6.6, 0, -1.6);
+const END_BASE = new THREE.Vector3(6.6, 0, 1.72); // front of the line: loads through the cargo body's open side
 const END_RISER = 1.6;
 const TRUCK_X = 9.1; // parked at the loading dock
 const BED_TOP = 1.15; // cargo floor height
-const PILLAR_X = 7.5; // dock pillar carrying the counter
+const PILLAR_X = 8.6; // dock post carrying the counter
+const PILLAR_Z = 2.05; // foreground: the packing arm sits at z 1.72 and hid it
 const LIFT_X = 0.35;
 const LIFT_TOP_Y = 2.62; // carriage platform top at its highest
 const LIFT_LOW_Y = 0.62; // carriage platform top at rest
@@ -419,10 +420,10 @@ export function mountConveyorScene(host: HTMLElement): () => void {
 
   // ---- loading dock: pillar with the counter, and the flatbed truck ----
   const pillar = part(new THREE.BoxGeometry(0.5, 1.15, 0.5));
-  pillar.position.set(PILLAR_X, 0.575, 0.55);
+  pillar.position.set(PILLAR_X, 0.575, PILLAR_Z);
   scene.add(pillar);
   mustFit.push(pillar);
-  const endLamp = buildStackLight(PILLAR_X, 1.15, 0.55);
+  const endLamp = buildStackLight(PILLAR_X, 1.15, PILLAR_Z);
 
   const counter = (() => {
     let n = 0;
@@ -434,7 +435,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
       new THREE.PlaneGeometry(0.72, 0.36),
       new THREE.MeshBasicMaterial({ map: tex, transparent: true })
     );
-    plane.position.set(PILLAR_X, 0.78, 0.81);
+    plane.position.set(PILLAR_X, 0.78, PILLAR_Z + 0.26);
     scene.add(plane);
     const frame = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(0.78, 0.42)), inkMat);
     frame.position.copy(plane.position);
@@ -603,6 +604,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     joints: { yaw: number; S: number; E: number; grip: number };
     base: THREE.Vector3;
     shoulderWorldY: number;
+    homeYaw: number;
     busy: boolean;
     timeline: gsap.core.Timeline | null;
   };
@@ -659,6 +661,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
       joints: { yaw: 0, S: 0.72, E: -1.62, grip: 1 },
       base: base.clone(),
       shoulderWorldY: riser + SHOULDER_Y,
+      homeYaw: 0,
       busy: false,
       timeline: null,
     };
@@ -691,8 +694,11 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     arm.fingerR.position.x = spread;
   }
   const HOME = { S: 0.72, E: -1.62 };
-  midArm.joints.yaw = solveFor(midArm, new THREE.Vector3(PICK_A, TOP_A, 0)).yaw;
-  endArm.joints.yaw = solveFor(endArm, new THREE.Vector3(PICK_B, TOP_B, 0)).yaw;
+  // rest facing the pick point: the arm returns here after every drop
+  midArm.homeYaw = solveFor(midArm, new THREE.Vector3(PICK_A, TOP_A, 0)).yaw;
+  endArm.homeYaw = solveFor(endArm, new THREE.Vector3(PICK_B, TOP_B, 0)).yaw;
+  midArm.joints.yaw = midArm.homeYaw;
+  endArm.joints.yaw = endArm.homeYaw;
 
   // ---- items ----
   type ItemState = "beltA" | "beltB" | "held" | "liftWait" | "lifting" | "boxed" | "forklift" | "idle";
@@ -915,7 +921,13 @@ export function mountConveyorScene(host: HTMLElement): () => void {
       after(item);
     });
     tl.to(j, { S: hoverPlace.S, E: hoverPlace.E, duration: 0.35, ease: "power2.out" }, "+=0.05");
-    tl.to(j, { S: HOME.S, E: HOME.E, duration: 0.7, ease: "power2.inOut" }, "-=0.1");
+    // fold up AND swing back to the resting bearing - it used to stay slewed
+    // toward the drop until the next box arrived
+    tl.to(
+      j,
+      { yaw: arm.homeYaw, S: HOME.S, E: HOME.E, duration: 0.85, ease: "power2.inOut" },
+      "-=0.1"
+    );
   }
 
   // ---- lift cycle ----
@@ -1068,23 +1080,6 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     syncArm(midArm);
     syncArm(endArm);
     renderer.render(scene, camera);
-
-    // projected NDC bounds of the parts that must stay on screen (|x|,|y| < 1).
-    // Excludes the forklift's off-frame home, the departed truck, and the
-    // background ghost line - those leave frame by design.
-    {
-      const bb = new THREE.Box3();
-      const tb = new THREE.Box3();
-      for (const o of mustFit) bb.union(tb.setFromObject(o));
-      const v = new THREE.Vector3();
-      let nx = 1, ny = 1;
-      for (const cx of [bb.min.x, bb.max.x]) for (const cy of [bb.min.y, bb.max.y]) for (const cz of [bb.min.z, bb.max.z]) {
-        v.set(cx, cy, cz).project(camera);
-        nx = Math.max(nx, Math.abs(v.x));
-        ny = Math.max(ny, Math.abs(v.y));
-      }
-      (window as unknown as Record<string, unknown>).__bounds = { nx: Math.round(nx * 1000) / 1000, ny: Math.round(ny * 1000) / 1000, camL: camera.left, camT: camera.top, cw: host.clientWidth, ch: host.clientHeight };
-    }
 
     // state probe for tests/debugging (read-only snapshot)
     (window as unknown as Record<string, unknown>).__plant = {
