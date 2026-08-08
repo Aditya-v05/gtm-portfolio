@@ -624,9 +624,16 @@ table.dt tr:last-child td{ border-bottom:none; }
 .vd__why p{ font-size:14.5px; line-height:1.68; color:var(--ink); margin-top:11px; }
 
 /* --- the reveal --- */
-.field{ display:grid; grid-template-columns:repeat(30,1fr); gap:6px; max-width:520px; margin:32px 0 28px; }
-.field__d{ width:5px; height:5px; border-radius:50%; background:var(--accent); opacity:0; }
-.card[data-d="0"] .field__d{ animation:dotIn .5s forwards; }
+.field{ display:grid; grid-template-columns:repeat(30,14px); grid-auto-rows:14px; width:max-content; max-width:100%; margin:28px 0 16px; }
+.field__d{ width:6px; height:6px; border-radius:50%; background:var(--accent); opacity:0; justify-self:center; align-self:center; }
+.card[data-d="0"] .field__d{ animation:fieldIn .45s cubic-bezier(.3,1.5,.5,1) forwards; }
+/* the one the run followed: bigger, ringed, and first to land */
+.field__d.is-one{ width:10px; height:10px; background:var(--accent-2); box-shadow:0 0 0 3.5px rgba(var(--accent-rgb),.22); }
+.card[data-d="0"] .field__d.is-one{ animation:fieldInOne .45s cubic-bezier(.3,1.5,.5,1) forwards; }
+@keyframes fieldIn{ from{ opacity:0; transform:scale(.2) } to{ opacity:.5; transform:none } }
+@keyframes fieldInOne{ from{ opacity:0; transform:scale(.2) } to{ opacity:1; transform:none } }
+.field__k{ display:flex; align-items:center; gap:11px; margin-bottom:24px; }
+.field__k i{ width:10px; height:10px; border-radius:50%; background:var(--accent-2); box-shadow:0 0 0 3.5px rgba(var(--accent-rgb),.22); flex:none; }
 @keyframes dotIn{ from{ opacity:0; transform:scale(.3) } to{ opacity:.55; transform:none } }
 
 .ln__close{ min-height:62vh; display:flex; align-items:center; }
@@ -652,7 +659,7 @@ table.dt tr:last-child td{ border-bottom:none; }
   .rout__hd, .rout__r{ grid-template-columns:1fr 58px; }
   .rout__hd span:last-child{ display:none; }
   .rout__v{ grid-column:1/-1; }
-  .field{ grid-template-columns:repeat(20,1fr); }
+  .field{ grid-template-columns:repeat(20,13px); grid-auto-rows:13px; }
   .card{ padding:20px 18px; border-radius:12px; }
   .card[data-d="1"]{ transform:translateY(calc(-50% - 120px)) rotateX(46deg) scale(.9); }
   .card[data-d="2"]{ transform:translateY(calc(-50% - 178px)) rotateX(58deg) scale(.82); }
@@ -667,6 +674,7 @@ table.dt tr:last-child td{ border-bottom:none; }
 
 @media (prefers-reduced-motion: reduce){
   .cv__in, .tl__t, .field__d, .ln__cue, .scope__next, .sct::before{ animation:none; }
+  .field__d{ opacity:.5; } .field__d.is-one{ opacity:1; }
   /* no perspective theatre: spent cards simply disappear */
   .card{ transition:opacity .2s; }
   .card[data-d="1"], .card[data-d="2"], .card[data-d="3"], .card[data-d="-1"]{ transform:none; opacity:0; filter:none; }

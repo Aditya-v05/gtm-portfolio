@@ -504,10 +504,25 @@ function StepBody({ step }: { step: string }) {
               {step === "f2" && (
                 <div className="cv__in cv__in--mid">
                   <div className="say say--num">And it wasn&apos;t one plant.</div>
+                  {/* 300 plants rippling out from the one the run followed */}
                   <div className="field" aria-hidden="true">
-                    {Array.from({ length: 300 }, (_, i) => (
-                      <span key={i} className="field__d" style={{ animationDelay: `${(i % 40) * 12}ms` }} />
-                    ))}
+                    {Array.from({ length: 300 }, (_, i) => {
+                      const col = i % 30;
+                      const row = Math.floor(i / 30);
+                      const one = col === 14 && row === 4;
+                      const d = Math.hypot(col - 14, row - 4);
+                      return (
+                        <span
+                          key={i}
+                          className={`field__d${one ? " is-one" : ""}`}
+                          style={{ animationDelay: `${Math.round(d * 36)}ms` }}
+                        />
+                      );
+                    })}
+                  </div>
+                  <div className="field__k ann">
+                    <i aria-hidden="true" />
+                    the plant you just followed
                   </div>
                   <p className="say__sub">
                     <b>300+</b> US facilities currently carrying the same shape of signal, across
