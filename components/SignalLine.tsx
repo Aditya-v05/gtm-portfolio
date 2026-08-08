@@ -42,6 +42,12 @@ const STEPS = [
   { id: "f2", s: "decide" },
 ];
 
+// Anchor points in the scatter's 600x300 viewBox. The labels are positioned
+// from the same numbers, so a line always ends dead centre of its pill.
+const SCATTER: [number, number][] = [
+  [110, 36], [490, 36], [90, 150], [510, 150], [110, 264], [490, 264],
+];
+
 const SOURCES = [
   { k: "applicant systems", v: "what is unstaffed", live: true },
   { k: "usaspending", v: "what was already bought", live: true },
@@ -245,19 +251,29 @@ function StepBody({ step }: { step: string }) {
                 <div className="cv__in">
                   <h4 className="say">It leaks out in six directions at once.</h4>
                   <div className="sct">
-                    <svg className="sct__w" viewBox="0 0 600 300" preserveAspectRatio="none">
-                      {[[86, 34], [514, 34], [58, 150], [542, 150], [86, 266], [514, 266]].map(
-                        ([x, y], i) => (
-                          <line
-                            key={i}
-                            x1={x}
-                            y1={y}
-                            x2={300}
-                            y2={150}
-                            style={{ animationDelay: `${i * 90}ms` }}
-                          />
-                        )
-                      )}
+                    <svg className="sct__w" viewBox="0 0 600 300">
+                      {SCATTER.map(([x, y], i) => (
+                        <line
+                          key={`l${i}`}
+                          className="sct__l"
+                          x1={x}
+                          y1={y}
+                          x2={300}
+                          y2={150}
+                          style={{ animationDelay: `${i * 90}ms` }}
+                        />
+                      ))}
+                      {SCATTER.map(([x, y], i) => (
+                        <line
+                          key={`p${i}`}
+                          className="sct__p"
+                          x1={x}
+                          y1={y}
+                          x2={300}
+                          y2={150}
+                          style={{ animationDelay: `${900 + i * 300}ms` }}
+                        />
+                      ))}
                     </svg>
                     <span className="sct__i sct__i--tl">hiring</span>
                     <span className="sct__i sct__i--tr">procurement</span>
@@ -398,8 +414,13 @@ function StepBody({ step }: { step: string }) {
                       <span>still open 6 Jul 2026</span>
                     </div>
                     <div className="tl__bar">
+                      <span className="tl__run" />
                       {Array.from({ length: 13 }, (_, i) => (
-                        <span key={i} className="tl__t" style={{ left: `${(i / 12) * 100}%` }} />
+                        <span
+                          key={i}
+                          className="tl__t"
+                          style={{ left: `${(i / 12) * 100}%`, animationDelay: `${520 + i * 90}ms` }}
+                        />
                       ))}
                     </div>
                     <div className="tl__k ann">13 reposts · endpoints real, spacing schematic</div>

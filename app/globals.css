@@ -521,18 +521,32 @@ table.dt tr:last-child td{ border-bottom:none; }
 .tick{ display:block; font-size:10px; letter-spacing:.01em; text-transform:none; color:var(--accent-2); margin-top:6px; line-height:1.5; }
 
 /* --- 01 the scatter: signals orbiting one building --- */
-.sct{ position:relative; max-width:600px; height:300px; }
-.sct__w{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
-.sct__w line{ stroke:var(--line-2); stroke-width:1; stroke-dasharray:420; stroke-dashoffset:420; }
-.card[data-d="0"] .sct__w line{ animation:draw .75s ease-out forwards; }
+/* The box holds the viewBox aspect exactly, so 600x300 coordinates and CSS
+   percentages describe the same points. Uniform scaling also keeps stroke
+   widths and dash lengths honest, which preserveAspectRatio:none did not. */
+.sct{ position:relative; width:100%; max-width:600px; aspect-ratio:2 / 1; }
+.sct__w{ position:absolute; inset:0; width:100%; height:100%; }
+.sct__l{ stroke:var(--line-2); stroke-width:1; stroke-dasharray:300; stroke-dashoffset:300; }
+.card[data-d="0"] .sct__l{ animation:draw .8s ease-out forwards; }
 @keyframes draw{ to{ stroke-dashoffset:0 } }
-.sct__i{ position:absolute; font-family:var(--font-m); font-size:11px; color:var(--dim); border:1px solid var(--line-2); border-radius:20px; padding:6px 14px; background:var(--bg); white-space:nowrap; }
-.sct__i--tl{ left:0; top:6px; } .sct__i--tr{ right:0; top:6px; }
-.sct__i--ml{ left:0; top:50%; transform:translateY(-50%); } .sct__i--mr{ right:0; top:50%; transform:translateY(-50%); }
-.sct__i--bl{ left:0; bottom:6px; } .sct__i--br{ right:0; bottom:6px; }
-.sct__hub{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-family:var(--font-m); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-2); border:1px solid var(--accent); border-radius:22px; padding:11px 22px; background:var(--bg); z-index:1; }
-.sct::before{ content:""; position:absolute; left:50%; top:50%; width:250px; height:250px; margin:-125px 0 0 -125px; border:1px dashed var(--line-2); border-radius:50%; animation:spinSlow 44s linear infinite; }
-@keyframes spinSlow{ to{ transform:rotate(360deg) } }
+/* a packet running the length of each line, into the building */
+.sct__p{ stroke:var(--accent); stroke-width:2; stroke-linecap:round; stroke-dasharray:12 300; stroke-dashoffset:0; opacity:0; }
+.card[data-d="0"] .sct__p{ animation:feed 2.8s cubic-bezier(.5,0,.5,1) infinite; }
+@keyframes feed{
+  0%{ stroke-dashoffset:0; opacity:0 }
+  12%{ opacity:.95 }
+  78%{ opacity:.95 }
+  100%{ stroke-dashoffset:-215; opacity:0 }
+}
+.sct__i{ position:absolute; transform:translate(-50%,-50%); font-family:var(--font-m); font-size:11px; color:var(--dim); border:1px solid var(--line-2); border-radius:20px; padding:6px 14px; background:var(--bg); white-space:nowrap; z-index:1; }
+.sct__i--tl{ left:18.333%; top:12%; }
+.sct__i--tr{ left:81.667%; top:12%; }
+.sct__i--ml{ left:15%;     top:50%; }
+.sct__i--mr{ left:85%;     top:50%; }
+.sct__i--bl{ left:18.333%; top:88%; }
+.sct__i--br{ left:81.667%; top:88%; }
+.sct__hub{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-family:var(--font-m); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-2); border:1px solid var(--accent); border-radius:22px; padding:11px 22px; background:var(--bg); z-index:2; }
+.sct::before{ content:""; position:absolute; left:50%; top:50%; width:44%; aspect-ratio:1; transform:translate(-50%,-50%); border:1px dashed var(--line-2); border-radius:50%; animation:spinSlow 44s linear infinite; }
 .sct__k{ margin-top:22px; }
 
 /* --- 02 sources, with what is actually running --- */
@@ -589,9 +603,15 @@ table.dt tr:last-child td{ border-bottom:none; }
 /* --- correlate: timeline + the rest of the address --- */
 .tl{ max-width:640px; }
 .tl__ends{ display:flex; justify-content:space-between; gap:20px; margin-bottom:20px; }
-.tl__bar{ position:relative; height:2px; background:var(--line-2); }
+.tl__bar{ position:relative; height:2px; background:var(--line-2); transform:scaleX(0); transform-origin:left; }
+.card[data-d="0"] .tl__bar{ animation:axisDraw .55s cubic-bezier(.3,.8,.3,1) forwards; }
+@keyframes axisDraw{ to{ transform:scaleX(1) } }
 .tl__t{ position:absolute; top:-10px; width:1.5px; height:22px; background:var(--accent); transform:scaleY(0); }
-.card[data-d="0"] .tl__t{ animation:tickIn .4s forwards; }
+.card[data-d="0"] .tl__t{ animation:tickIn .34s cubic-bezier(.3,1.4,.5,1) forwards; }
+/* a read head sweeping the window, once the ticks are down */
+.tl__run{ position:absolute; top:-13px; left:0; width:2px; height:28px; background:var(--accent-2); opacity:0; box-shadow:0 0 10px rgba(var(--accent-rgb),.8); }
+.card[data-d="0"] .tl__run{ animation:sweep 3.4s ease-in-out 1.8s infinite; }
+@keyframes sweep{ 0%{ left:0; opacity:0 } 8%{ opacity:1 } 88%{ opacity:1 } 100%{ left:100%; opacity:0 } }
 @keyframes tickIn{ from{ transform:scaleY(0) } to{ transform:scaleY(1) } }
 .tl__k{ margin-top:20px; }
 .corr{ max-width:600px; }
@@ -623,11 +643,14 @@ table.dt tr:last-child td{ border-bottom:none; }
 .vd__why p{ font-size:14.5px; line-height:1.68; color:var(--ink); margin-top:11px; }
 
 /* --- the reveal --- */
-.field{ display:grid; grid-template-columns:repeat(30,14px); grid-auto-rows:14px; width:max-content; max-width:100%; margin:28px 0 16px; }
-.field__d{ width:6px; height:6px; border-radius:50%; background:var(--accent); opacity:0; justify-self:center; align-self:center; }
+.field{ display:grid; grid-template-columns:repeat(30,22px); grid-auto-rows:22px; width:max-content; max-width:100%; margin:26px 0 18px; }
+.field__d{ position:relative; width:7px; height:7px; border-radius:50%; background:var(--accent); opacity:0; justify-self:center; align-self:center; }
 .card[data-d="0"] .field__d{ animation:fieldIn .45s cubic-bezier(.3,1.5,.5,1) forwards; }
 /* the one the run followed: bigger, ringed, and first to land */
-.field__d.is-one{ width:10px; height:10px; background:var(--accent-2); box-shadow:0 0 0 3.5px rgba(var(--accent-rgb),.22); }
+.field__d.is-one{ width:11px; height:11px; background:var(--accent-2); box-shadow:0 0 0 4px rgba(var(--accent-rgb),.22); }
+.field__d.is-one::after{ content:""; position:absolute; inset:-3px; border-radius:50%; border:1.5px solid var(--accent-2); opacity:0; }
+.card[data-d="0"] .field__d.is-one::after{ animation:ping 2.4s cubic-bezier(.2,.6,.3,1) 1s infinite; }
+@keyframes ping{ 0%{ transform:scale(.7); opacity:.9 } 70%{ opacity:0 } 100%{ transform:scale(3.2); opacity:0 } }
 .card[data-d="0"] .field__d.is-one{ animation:fieldInOne .45s cubic-bezier(.3,1.5,.5,1) forwards; }
 @keyframes fieldIn{ from{ opacity:0; transform:scale(.2) } to{ opacity:.5; transform:none } }
 @keyframes fieldInOne{ from{ opacity:0; transform:scale(.2) } to{ opacity:1; transform:none } }
@@ -657,7 +680,7 @@ table.dt tr:last-child td{ border-bottom:none; }
   .rout__hd, .rout__r{ grid-template-columns:1fr 58px; }
   .rout__hd span:last-child{ display:none; }
   .rout__v{ grid-column:1/-1; }
-  .field{ grid-template-columns:repeat(20,13px); grid-auto-rows:13px; }
+  .field{ grid-template-columns:repeat(20,16px); grid-auto-rows:16px; }
   .card{ padding:20px 18px; border-radius:12px; }
   .card[data-d="1"]{ transform:translateY(calc(-50% - 120px)) rotateX(46deg) scale(.9); }
   .card[data-d="2"]{ transform:translateY(calc(-50% - 178px)) rotateX(58deg) scale(.82); }
@@ -673,11 +696,13 @@ table.dt tr:last-child td{ border-bottom:none; }
 @media (prefers-reduced-motion: reduce){
   .cv__in, .tl__t, .field__d, .ln__cue, .scope__next, .sct::before{ animation:none; }
   .field__d{ opacity:.5; } .field__d.is-one{ opacity:1; }
+  .sct__p, .tl__run, .field__d.is-one::after{ display:none; }
+  .tl__bar{ transform:none; }
   /* no perspective theatre: spent cards simply disappear */
   .card{ transition:opacity .2s; }
   .card[data-d="1"], .card[data-d="2"], .card[data-d="3"], .card[data-d="-1"]{ transform:none; opacity:0; filter:none; }
   .card[data-d="0"] .tl__t, .card[data-d="0"] .field__d, .card[data-d="0"] .res__fan span{ animation:none; opacity:1; transform:none; }
-  .card[data-d="0"] .sct__w line{ animation:none; stroke-dashoffset:0; }
+  .card[data-d="0"] .sct__l{ animation:none; stroke-dashoffset:0; }
   .ln__prog, .ln__prog.is-moving{ transform:none; }
 }
 
