@@ -26,8 +26,12 @@ const END_BASE = new THREE.Vector3(6.6, 0, 1.72); // front of the line: loads th
 const END_RISER = 1.6;
 const TRUCK_X = 9.1; // parked at the loading dock
 const BED_TOP = 1.15; // cargo floor height
-const PILLAR_X = 8.6; // dock post carrying the counter
-const PILLAR_Z = 2.05; // foreground: the packing arm sits at z 1.72 and hid it
+const GX = 9.1 - 0.5; // gantry centreline (straddles the truck bay)
+const PALLET_Z = 1.5; // pallet station on the dock floor, under the girder
+const TRUCK_DROP_Z = 0.15; // where the hoist sets the pallet into the cargo
+const HOIST_Y = 6.48; // trolley height on the girder
+const PALLET_PER_TRUCK = 1;
+const BOXES_PER_PALLET = 3;
 const LIFT_X = 0.35;
 const LIFT_TOP_Y = 2.62; // carriage platform top at its highest
 const LIFT_LOW_Y = 0.62; // carriage platform top at rest
@@ -425,52 +429,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     spinners.push({ obj: g2, speed: -2.4, active: () => true });
   }
 
-  // ---- loading dock: pillar with the counter, and the flatbed truck ----
-  const pillar = part(new THREE.BoxGeometry(0.5, 1.15, 0.5));
-  pillar.position.set(PILLAR_X, 0.575, PILLAR_Z);
-  scene.add(pillar);
-  mustFit.push(pillar);
-  const endLamp = buildStackLight(PILLAR_X, 1.15, PILLAR_Z);
-
-  const counter = (() => {
-    let n = 0;
-    const cv = document.createElement("canvas");
-    cv.width = 192;
-    cv.height = 96;
-    const tex = new THREE.CanvasTexture(cv);
-    const plane = new THREE.Mesh(
-      new THREE.PlaneGeometry(0.72, 0.36),
-      new THREE.MeshBasicMaterial({ map: tex, transparent: true })
-    );
-    plane.position.set(PILLAR_X, 0.78, PILLAR_Z + 0.26);
-    scene.add(plane);
-    const frame = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(0.78, 0.42)), inkMat);
-    frame.position.copy(plane.position);
-    scene.add(frame);
-    function redraw() {
-      const p = readPalette();
-      const ctx = cv.getContext("2d")!;
-      const font = getComputedStyle(document.documentElement).getPropertyValue("--font-m") || "monospace";
-      ctx.clearRect(0, 0, 192, 96);
-      ctx.fillStyle = p.bg;
-      ctx.fillRect(0, 0, 192, 96);
-      ctx.fillStyle = p.accent;
-      ctx.font = `500 58px ${font}`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(String(n).padStart(4, "0"), 96, 52);
-      tex.needsUpdate = true;
-    }
-    redraw();
-    return {
-      redraw,
-      tick() {
-        n++;
-        redraw();
-      },
-    };
-  })();
-
+  // ---- the truck ----
   // box truck, cab facing right (its exit). Tall cargo body drawn open on
   // the camera side so the load shows; the arm drops boxes through the open
   // top of the rear section. Boxes attach to the bed and ride along.
@@ -556,6 +515,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     mustFit.push(root); // measured here, at the dock (departure leaves frame by design)
     return { root, bed, wheels };
   })();
+  const truckPallets: THREE.Group[] = [];
   let truckReady = true;
   let truckMoving = false;
   let truckTl: gsap.core.Timeline | null = null;
@@ -575,14 +535,21 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     tl.to(truck.root.position, { x: TRUCK_X + 18, duration: 2.6, ease: "power2.in" });
     tl.add(() => {
       truckMoving = false;
-      // the load left with the truck
-      for (const it of boxStack) {
-        settleItem(it);
-        scene.attach(it.group);
-        it.group.visible = false;
-        it.state = "idle";
+      // the load shipped out with the truck: retire its pallets and recycle
+      // their boxes back into the pool
+      for (const pal of truckPallets) {
+        for (const it of items) {
+          if (it.state === "boxed" && pal.getObjectById(it.group.id)) {
+            settleItem(it);
+            scene.attach(it.group);
+            it.group.visible = false;
+            it.state = "idle";
+          }
+        }
+        pal.parent?.remove(pal);
       }
-      boxStack.length = 0;
+      truckPallets.length = 0;
+      palletsOnTruck = 0;
     });
     // a fresh truck backs in after a beat
     tl.to(truck.root.position, {
@@ -951,6 +918,53 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     );
   }
 
+  // ---- gantry cycle: hoist the loaded pallet into the truck ----
+  let gantryBusy = false;
+  let gantryTl: gsap.core.Timeline | null = null;
+  const palletBoxes: Item[] = [];
+  let palletsOnTruck = 0;
+
+  function runGantry() {
+    gantryBusy = true;
+    const pal = dockPallet;
+    const st = hoist.state;
+    const tl = gsap.timeline({
+      onComplete: () => {
+        gantryBusy = false;
+        gantryTl = null;
+      },
+    });
+    gantryTl = tl;
+    const upd = { onUpdate: hoist.applyDrop };
+    // over the pallet, lower, take the load
+    tl.to(hoist.trolley.position, { z: PALLET_Z, duration: 0.9, ease: "power2.inOut" });
+    tl.to(st, { drop: HOIST_Y - 0.62, duration: 0.75, ease: "power2.in", ...upd });
+    tl.add(() => {
+      pulseLamp(hoist.lamp);
+      hoist.hookG.attach(pal);
+    });
+    // lift clear, traverse over the cargo, set it down
+    tl.to(st, { drop: 1.15, duration: 0.95, ease: "power2.out", ...upd });
+    tl.to(hoist.trolley.position, { z: TRUCK_DROP_Z, duration: 1.25, ease: "power2.inOut" });
+    tl.to(st, { drop: HOIST_Y - BED_TOP - 0.62, duration: 0.8, ease: "power2.in", ...upd });
+    tl.add(() => {
+      truck.bed.attach(pal);
+      truckPallets.push(pal);
+      palletsOnTruck++;
+      // the boxes rode in on the pallet; hand them back to the pool on departure
+      palletBoxes.length = 0;
+      counter.tick();
+      pulseLamp(hoist.lamp);
+    });
+    // hook up, trolley home, fresh pallet on the dock
+    tl.to(st, { drop: 0.6, duration: 0.7, ease: "power2.out", ...upd });
+    tl.to(hoist.trolley.position, { z: PALLET_Z, duration: 1.0, ease: "power2.inOut" });
+    tl.add(() => {
+      dockPallet = makePallet();
+      dockPallet.position.set(GX, 0, PALLET_Z);
+    });
+  }
+
   // ---- lift cycle ----
   let liftTl: gsap.core.Timeline | null = null;
   function runLift(item: Item) {
@@ -994,7 +1008,6 @@ export function mountConveyorScene(host: HTMLElement): () => void {
 
   // ---- loop ----
   const clock = new THREE.Clock();
-  const boxStack: Item[] = [];
   let shiftA = 0;
   let shiftB = 0;
   let raf = 0;
@@ -1077,29 +1090,37 @@ export function mountConveyorScene(host: HTMLElement): () => void {
         item.state = "liftWait";
       });
     }
-    // full load + arm home -> the truck leaves (decided here, never mid-pack)
-    if (truckReady && !endArm.busy && boxStack.length >= 4) {
+    // a full pallet gets hoisted, once the arm is clear of it
+    if (!gantryBusy && !endArm.busy && truckReady && !truckMoving && palletBoxes.length >= BOXES_PER_PALLET) {
+      runGantry();
+    }
+    // loaded truck leaves (decided here, never mid-cycle)
+    if (truckReady && !gantryBusy && !endArm.busy && palletsOnTruck >= PALLET_PER_TRUCK) {
       departTruck();
     }
-    // end arm loads the truck (only while one is docked and stationary)
-    if (waitB && !endArm.busy && truckReady && !truckMoving && boxStack.length < 4) {
-      const n = boxStack.length;
-      const col = n % 2; // rear column first, then toward the front wall
-      const row = Math.floor(n / 2);
+    // packing arm stacks the dock pallet (never while the hoist is over it)
+    if (
+      waitB &&
+      !endArm.busy &&
+      !gantryBusy &&
+      truckReady &&
+      !truckMoving &&
+      palletBoxes.length < BOXES_PER_PALLET
+    ) {
+      const level = palletBoxes.length;
       runTransfer(
         endArm,
         waitB,
         new THREE.Vector3(
-          TRUCK_X - 1.15 + col * 0.75 + (Math.random() - 0.5) * 0.08,
-          BED_TOP + ITEM_H / 2 + row * 0.58,
-          0.15 + (Math.random() - 0.5) * 0.12
+          GX + (Math.random() - 0.5) * 0.1,
+          PALLET_DECK + ITEM_H / 2 + level * 0.34,
+          PALLET_Z + (Math.random() - 0.5) * 0.1
         ),
         (item) => {
           item.state = "boxed";
           settleItem(item);
-          truck.bed.attach(item.group);
-          boxStack.push(item);
-          counter.tick();
+          dockPallet.attach(item.group);
+          palletBoxes.push(item);
           pulseLamp(endLamp);
         }
       );
@@ -1119,7 +1140,10 @@ export function mountConveyorScene(host: HTMLElement): () => void {
       liftBusy,
       liftY: Math.round(lift.carriage.position.y * 100) / 100,
       seated: items.some((it) => it.state === "liftWait"),
-      stack: boxStack.length,
+      gantryBusy,
+      pallet: palletBoxes.length,
+      onTruck: palletsOnTruck,
+      stack: palletBoxes.length,
     };
 
     if (!markedReady) {
@@ -1137,6 +1161,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     liftTl?.play();
     forkliftTl?.play();
     truckTl?.play();
+    gantryTl?.play();
     raf = requestAnimationFrame(tick);
   }
   function stop() {
@@ -1147,6 +1172,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     liftTl?.pause();
     forkliftTl?.pause();
     truckTl?.pause();
+    gantryTl?.pause();
   }
 
   const vis = new IntersectionObserver(
@@ -1199,21 +1225,21 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     (window as unknown as Record<string, unknown>).__fit = { ...FRUSTUM };
   }
 
-  // ---- overhead: gantry crane over the truck bay + ceiling runs ----
-  // Deliberately NOT in mustFit: these hang above the machine and are meant to
-  // continue past the top of the frame, the way plant ceiling structure does.
-  {
-    // gantry crane straddling the dock: legs, bridge girder, hoist trolley
-    const GX = TRUCK_X - 0.5;
+  // ---- the gantry crane: it LOADS the truck ----
+  // The packing arm stacks boxes on a pallet at the dock; the hoist then
+  // traverses over it, lowers, lifts the whole pallet, carries it across and
+  // sets it in the cargo body. Ceiling runs are scenery; the crane is not.
+  // Deliberately outside mustFit: it rises past the top of the frame the way
+  // real plant structure does.
+  const hoist = (() => {
     const legTop = 7.1;
-    for (const gz of [-1.5, 1.9]) {
+    for (const gz of [-1.4, 1.9]) {
       const leg = part(new THREE.BoxGeometry(0.26, legTop, 0.26));
       leg.position.set(GX, legTop / 2, gz);
       scene.add(leg);
       const foot = part(new THREE.BoxGeometry(0.72, 0.14, 0.72), faintMat);
       foot.position.set(GX, 0.07, gz);
       scene.add(foot);
-      // lattice bracing up the leg
       const br: THREE.Vector3[] = [];
       for (let y = 0.6; y < legTop - 0.6; y += 1.0) {
         br.push(new THREE.Vector3(GX - 0.13, y, gz), new THREE.Vector3(GX + 0.13, y + 0.5, gz));
@@ -1222,55 +1248,119 @@ export function mountConveyorScene(host: HTMLElement): () => void {
       scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(br), ghostMat));
     }
     const girder = part(new THREE.BoxGeometry(0.5, 0.62, 3.9));
-    girder.position.set(GX, legTop - 0.3, 0.2);
+    girder.position.set(GX, legTop - 0.3, 0.25);
     scene.add(girder);
-    // hoist trolley + hook block hanging over the truck
-    const trolley = part(new THREE.BoxGeometry(0.62, 0.34, 0.72));
-    trolley.position.set(GX, legTop - 0.78, 0.35);
-    scene.add(trolley);
-    for (const hx of [-0.16, 0.16]) {
-      scene.add(
-        new THREE.Line(
-          new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(GX + hx, legTop - 0.95, 0.35),
-            new THREE.Vector3(GX + hx, legTop - 2.6, 0.35),
-          ]),
-          faintMat
-        )
-      );
-    }
-    const hook = part(new THREE.BoxGeometry(0.5, 0.3, 0.5), faintMat);
-    hook.position.set(GX, legTop - 2.75, 0.35);
-    scene.add(hook);
 
-    // ceiling runs: a cable tray and a pipe pair crossing the upper band,
-    // with drop hangers - they read as the plant continuing overhead
+    // trolley rides the girder in z; the hook hangs from it on cables
+    const trolley = new THREE.Group();
+    trolley.position.set(GX, HOIST_Y, PALLET_Z);
+    scene.add(trolley);
+    const body = part(new THREE.BoxGeometry(0.62, 0.34, 0.78));
+    trolley.add(body);
+    const cables: THREE.Group[] = [];
+    for (const cz of [-0.2, 0.2]) {
+      const c = part(new THREE.BoxGeometry(0.035, 1, 0.035), faintMat, false);
+      c.position.set(0, -0.5, cz);
+      trolley.add(c);
+      cables.push(c);
+    }
+    const hookG = new THREE.Group();
+    const block = part(new THREE.BoxGeometry(0.56, 0.3, 0.62), faintMat);
+    hookG.add(block);
+    const hookLine = new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(0, -0.15, 0),
+      new THREE.Vector3(0, -0.42, 0),
+    ]);
+    hookG.add(new THREE.Line(hookLine, faintMat));
+    trolley.add(hookG);
+
+    const state = { drop: 0.6 };
+    function applyDrop() {
+      hookG.position.y = -state.drop;
+      for (const c of cables) {
+        c.scale.y = Math.max(0.001, state.drop - 0.15);
+        c.position.y = -(state.drop - 0.15) / 2 - 0.15;
+      }
+    }
+    applyDrop();
+    const lamp = buildStackLight(GX, legTop, 1.9);
+    return { trolley, hookG, state, applyDrop, lamp };
+  })();
+
+  // counter mounted on the gantry's front leg
+  const counter = (() => {
+    let n = 0;
+    const cv = document.createElement("canvas");
+    cv.width = 192;
+    cv.height = 96;
+    const tex = new THREE.CanvasTexture(cv);
+    const plane = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.72, 0.36),
+      new THREE.MeshBasicMaterial({ map: tex, transparent: true })
+    );
+    plane.position.set(GX, 1.75, 2.06);
+    scene.add(plane);
+    const frame = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(0.78, 0.42)), inkMat);
+    frame.position.copy(plane.position);
+    scene.add(frame);
+    function redraw() {
+      const p = readPalette();
+      const ctx = cv.getContext("2d")!;
+      const font = getComputedStyle(document.documentElement).getPropertyValue("--font-m") || "monospace";
+      ctx.clearRect(0, 0, 192, 96);
+      ctx.fillStyle = p.bg;
+      ctx.fillRect(0, 0, 192, 96);
+      ctx.fillStyle = p.accent;
+      ctx.font = `500 58px ${font}`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(String(n).padStart(4, "0"), 96, 52);
+      tex.needsUpdate = true;
+    }
+    redraw();
+    return { redraw, tick() { n++; redraw(); } };
+  })();
+  const endLamp = hoist.lamp;
+
+  // ---- pallets ----
+  function makePallet(): THREE.Group {
+    const g = new THREE.Group();
+    for (const dz of [-0.42, -0.14, 0.14, 0.42]) {
+      const slat = part(new THREE.BoxGeometry(1.45, 0.07, 0.22));
+      slat.position.set(0, 0.16, dz);
+      g.add(slat);
+    }
+    for (const dz of [-0.5, 0, 0.5]) {
+      const str = part(new THREE.BoxGeometry(1.45, 0.12, 0.1), faintMat);
+      str.position.set(0, 0.06, dz);
+      g.add(str);
+    }
+    scene.add(g);
+    return g;
+  }
+  const PALLET_DECK = 0.2;
+  let dockPallet = makePallet();
+  dockPallet.position.set(GX, 0, PALLET_Z);
+
+  // ---- ceiling runs (scenery) ----
+  {
     const runZ = -1.1;
     const runY = 6.9;
-    // start right of the copy block: overhead structure crossing the headline
-    // was unreadable, and the upper RIGHT is the space this is meant to fill
     const x0 = 0.4;
     const x1 = FIT.maxX + 2.2;
     const tray = part(new THREE.BoxGeometry(x1 - x0, 0.2, 0.62), ghostMat, false);
     tray.position.set((x0 + x1) / 2, runY, runZ);
     scene.add(tray);
-    // rungs along the tray
     const rungs: THREE.Vector3[] = [];
     for (let x = x0 + 0.4; x < x1; x += 0.62) {
       rungs.push(new THREE.Vector3(x, runY + 0.1, runZ - 0.31), new THREE.Vector3(x, runY + 0.1, runZ + 0.31));
     }
     scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(rungs), ghostMat));
-    // pipe pair slightly below and behind
     for (const py of [runY - 0.55, runY - 0.9]) {
-      const pipe = part(
-        new THREE.CylinderGeometry(0.13, 0.13, x1 - x0, 10).rotateZ(Math.PI / 2),
-        ghostMat,
-        false
-      );
+      const pipe = part(new THREE.CylinderGeometry(0.13, 0.13, x1 - x0, 10).rotateZ(Math.PI / 2), ghostMat, false);
       pipe.position.set((x0 + x1) / 2, py, runZ - 0.75);
       scene.add(pipe);
     }
-    // drop hangers from the ceiling line down to the tray
     const hangers: THREE.Vector3[] = [];
     for (let x = x0 + 2.2; x < x1; x += 4.4) {
       hangers.push(new THREE.Vector3(x, runY + 0.1, runZ), new THREE.Vector3(x, runY + 1.9, runZ));
@@ -1291,6 +1381,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     forkliftTl?.kill();
     liftTl?.kill();
     truckTl?.kill();
+    gantryTl?.kill();
     vis.disconnect();
     ro.disconnect();
     themeObserver.disconnect();
