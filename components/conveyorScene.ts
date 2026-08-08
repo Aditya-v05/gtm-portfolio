@@ -1205,6 +1205,11 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     const bb = new THREE.Box3();
     const tmp = new THREE.Box3();
     for (const o of mustFit) bb.union(tmp.setFromObject(o));
+    // include the forklift at its delivery stop so it is fully in frame when
+    // it sets a box down - it was bleeding off the left edge. This widens the
+    // envelope, which is what steps the whole machine down a little.
+    const forkDeliverX = A_X0 + 0.45 - 1.65;
+    bb.expandByPoint(new THREE.Vector3(forkDeliverX - 1.15, 0.4, 0.15));
     let minU = Infinity, maxU = -Infinity, minV = Infinity, maxV = -Infinity;
     const corners: THREE.Vector3[] = [];
     for (const cx of [bb.min.x, bb.max.x])
