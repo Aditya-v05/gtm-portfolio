@@ -802,8 +802,28 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   })();
   let forkliftTl: gsap.core.Timeline | null = null;
 
+  // How many boxes may be moving through the line at once.
+  //
+  // The packing arm stalls whenever the truck is away or the hoist is over
+  // the pallet, but the feeder used to run regardless - so every stall left
+  // another box parked on belt B and the queue grew for as long as the page
+  // was open. This is the backpressure: the forklift only fetches when the
+  // line has room, which also keeps the belts looking calm rather than full.
+  const MAX_IN_FLIGHT = 3;
+  const MOVING: ItemState[] = ["forklift", "beltA", "held", "liftWait", "lifting", "beltB"];
+
+  function inFlight() {
+    let n = 0;
+    for (const it of items) if (MOVING.includes(it.state)) n++;
+    return n;
+  }
+
   function forkliftCycle() {
     if (disposed) return;
+    if (inFlight() >= MAX_IN_FLIGHT) {
+      gsap.delayedCall(1.1, forkliftCycle);
+      return;
+    }
     const item = takeIdle();
     if (!item) {
       gsap.delayedCall(2, forkliftCycle);
@@ -1149,6 +1169,13 @@ export function mountConveyorScene(host: HTMLElement): () => void {
       pallet: palletBoxes.length,
       onTruck: palletsOnTruck,
       stack: palletBoxes.length,
+    };
+    (window as unknown as Record<string, unknown>).__plantStates = () => {
+      const c: Record<string, number> = {
+        beltA: 0, beltB: 0, held: 0, liftWait: 0, lifting: 0, boxed: 0, forklift: 0, idle: 0,
+      };
+      for (const it of items) c[it.state] = (c[it.state] ?? 0) + 1;
+      return c;
     };
 
     if (!markedReady) {
