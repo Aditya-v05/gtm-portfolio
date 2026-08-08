@@ -56,11 +56,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    // suppressHydrationWarning on <html>: the inline script below may switch
-    // data-theme to the stored value before React hydrates.
+    // Dark is the default. suppressHydrationWarning on <html>: the inline
+    // script below may switch data-theme to a stored preference before React
+    // hydrates, so the server and client markup can legitimately differ.
     <html
       lang="en"
-      data-theme="light"
+      data-theme="dark"
       suppressHydrationWarning
       className={`${spaceGrotesk.variable} ${archivo.variable} ${jetbrains.variable}`}
     >
