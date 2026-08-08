@@ -374,8 +374,12 @@ function StepBody({ step }: { step: string }) {
                         <span className="ann">find the reason</span>
                         <b>why this plant, now</b>
                       </div>
-                      {REASON.map((r) => (
-                        <div className={`sl2${r.live ? " is-live" : ""}`} key={r.k}>
+                      {REASON.map((r, i) => (
+                        <div
+                          className={`sl2${r.live ? " is-live" : ""}`}
+                          key={r.k}
+                          style={{ animationDelay: `${180 + i * 90}ms` }}
+                        >
                           <span className="sl2__d" aria-hidden="true" />
                           <span className="sl2__k">{r.k}</span>
                           <span className="sl2__v">{r.v}</span>
@@ -387,8 +391,12 @@ function StepBody({ step }: { step: string }) {
                         <span className="ann">find the route</span>
                         <b>how to get in</b>
                       </div>
-                      {ROUTE.map((r) => (
-                        <div className={`sl2${r.live ? " is-live" : ""}`} key={r.k}>
+                      {ROUTE.map((r, i) => (
+                        <div
+                          className={`sl2${r.live ? " is-live" : ""}`}
+                          key={r.k}
+                          style={{ animationDelay: `${560 + i * 90}ms` }}
+                        >
                           <span className="sl2__d" aria-hidden="true" />
                           <span className="sl2__k">{r.k}</span>
                           <span className="sl2__v">{r.v}</span>
@@ -396,8 +404,10 @@ function StepBody({ step }: { step: string }) {
                       ))}
                     </div>
                     <svg className="split__v" viewBox="0 0 400 44" preserveAspectRatio="none" aria-hidden="true">
-                      <path d="M8 0 L200 40" fill="none" stroke="currentColor" strokeWidth="1" />
-                      <path d="M392 0 L200 40" fill="none" stroke="currentColor" strokeWidth="1" />
+                      <path className="split__arm" d="M8 0 L200 40" />
+                      <path className="split__arm" d="M392 0 L200 40" />
+                      <path className="split__pk" d="M8 0 L200 40" />
+                      <path className="split__pk split__pk--b" d="M392 0 L200 40" />
                     </svg>
                     <div className="split__out">target · now · via</div>
                   </div>
@@ -419,7 +429,11 @@ function StepBody({ step }: { step: string }) {
                         <span
                           key={i}
                           className="tl__t"
-                          style={{ left: `${(i / 12) * 100}%`, animationDelay: `${520 + i * 90}ms` }}
+                          style={{
+                            left: `${(i / 12) * 100}%`,
+                            animationDelay: `${520 + i * 90}ms`,
+                            ["--pass" as string]: `${(1.8 + (i / 12) * 3.4).toFixed(2)}s`,
+                          } as React.CSSProperties}
                         />
                       ))}
                     </div>
