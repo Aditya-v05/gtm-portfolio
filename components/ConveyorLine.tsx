@@ -1,11 +1,7 @@
-// The hero machine cell. Two layers:
-//  - .belt__flat: pure-CSS fallback (no-JS, reduced-motion, loading state)
-//  - ConveyorCell: the 3D transfer line (belt > scanner > arm > belt >
-//    scanner > arm > box) that replaces the flat layer once running by
-//    adding .belt--3d to the wrapper.
-// Lives at the bottom of the hero section, full width, no clipping.
+// Pure-CSS fallback band for the hero machine: shown for no-JS, reduced
+// motion, and while three.js loads. The 3D cell is a hero-level layer
+// (ConveyorCell); once it renders it adds .hero--3d, which hides this.
 
-import ConveyorCell from "@/components/ConveyorCell";
 
 const DUR = 30;
 const PLATES = 6;
@@ -52,7 +48,6 @@ export default function ConveyorLine() {
           <div className="belt__bin"></div>
         </div>
 
-        <ConveyorCell />
 
       </div>
 

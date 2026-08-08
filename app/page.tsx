@@ -1,6 +1,7 @@
 import Noise from "@/components/Noise";
 import HeroHeadline from "@/components/HeroHeadline";
 import ConveyorLine from "@/components/ConveyorLine";
+import ConveyorCell from "@/components/ConveyorCell";
 import ClientMarquee from "@/components/ClientMarquee";
 import CountUp from "@/components/CountUp";
 import SpotlightCard from "@/components/SpotlightCard";
@@ -94,6 +95,9 @@ export default function Home() {
         <div className="hero__field">
           <ThemedDotField />
         </div>
+        {/* the machine spans the whole hero: it sits low, and its overhead
+            structure reaches into the upper band */}
+        <ConveyorCell />
         <div className="hero__in">
           <div className="eyebrow">GTM Engineer · Data &amp; Automation</div>
           <a

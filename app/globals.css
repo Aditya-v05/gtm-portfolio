@@ -81,11 +81,11 @@ nav .links a::after{ content:""; position:absolute; left:0; bottom:-3px; width:0
 nav .links a:hover{ color:var(--ink); } nav .links a:hover::after{ width:100%; }
 
 /* ============ HERO ============ */
-.hero{ position:relative; height:calc(100dvh - var(--nav-h)); min-height:600px; display:flex; flex-direction:column; justify-content:flex-end; border-bottom:1px solid var(--line); overflow:hidden; }
+.hero{ position:relative; height:calc(100dvh - var(--nav-h)); min-height:600px; display:flex; flex-direction:column; justify-content:flex-start; border-bottom:1px solid var(--line); overflow:hidden; }
 .hero__field{ position:absolute; inset:0; z-index:0; opacity:.8;
   -webkit-mask-image:radial-gradient(120% 100% at 50% 40%, #000 30%, transparent 78%);
   mask-image:radial-gradient(120% 100% at 50% 40%, #000 30%, transparent 78%); }
-.hero__in{ position:relative; z-index:2; flex:0 0 auto; margin:auto auto 0; padding:26px 56px 0; width:100%; }
+.hero__in{ position:relative; z-index:2; flex:0 0 auto; margin:0; padding:30px 56px 0; width:100%; }
 .hero .eyebrow{ font-family:var(--font-m); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:14px; margin-bottom:12px; }
 
 /* current-role marker: reads as a status readout, not a badge */
@@ -146,12 +146,12 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 .belt{ position:relative; z-index:1; width:100%; flex:1 1 auto; min-height:0; display:flex; flex-direction:column; padding:0; }
 .belt__stage{ position:relative; flex:1 1 auto; min-height:min(26vw, 56vh); width:100%; }
 /* flat (CSS) machine: base experience + loading state; hidden once 3D runs */
-.belt__flat{ position:absolute; left:0; right:0; top:50%; height:150px; transform:translateY(-50%); }
-.belt--3d .belt__flat{ display:none; }
+.belt__flat{ position:absolute; left:0; right:0; bottom:56px; height:150px; }
+.hero--3d .belt{ display:none; }
 /* 3D cell canvas */
-.belt3d{ position:absolute; inset:0; }
+.belt3d{ position:absolute; inset:0; z-index:1; pointer-events:none; }
 .belt3d canvas{ display:block; width:100%; height:100%; opacity:0; transition:opacity .8s ease; }
-.belt--3d .belt3d canvas{ opacity:1; }
+.hero--3d .belt3d canvas{ opacity:1; }
 
 /* rail pairs: two hairlines each, above and below the channel */
 .belt__rail{ position:absolute; left:0; right:0; height:7px; }

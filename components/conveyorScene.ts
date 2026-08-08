@@ -56,7 +56,7 @@ function readPalette(): Palette {
 }
 
 export function mountConveyorScene(host: HTMLElement): () => void {
-  const section = host.closest(".belt") as HTMLElement | null;
+  const section = host.closest(".hero") as HTMLElement | null;
 
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setClearColor(0x000000, 0);
@@ -69,6 +69,9 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   camera.position.copy(CAM_BASE);
   camera.lookAt(LOOK_AT);
 
+  let vertShift = 0; // how far to raise the view so the machine sits low
+  const camUp = new THREE.Vector3();
+  const lookNow = new THREE.Vector3();
   const par = { tx: 0, ty: 0, x: 0, y: 0, on: matchMedia("(hover: hover) and (pointer: fine)").matches };
   const onPointer = (e: MouseEvent) => {
     par.tx = (e.clientX / innerWidth) * 2 - 1;
@@ -81,7 +84,10 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     const h = host.clientHeight || 1;
     renderer.setPixelRatio(Math.min(devicePixelRatio, w < 800 ? 1.5 : 2));
     renderer.setSize(w, h);
-    // FRUSTUM is measured from the real geometry in camera space (see mount)
+    // FRUSTUM is measured from the real geometry in camera space (see mount).
+    // The canvas now spans the whole hero, so it is far taller than the
+    // machine: stay width-bound (the machine keeps its size) and park the
+    // machine at the bottom, leaving the upper band for overhead structure.
     const halfW = Math.max(FRUSTUM.halfW, (FRUSTUM.halfH * w) / h);
     const halfH = (halfW * h) / w;
     camera.left = -halfW;
@@ -89,6 +95,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     camera.top = halfH;
     camera.bottom = -halfH;
     camera.updateProjectionMatrix();
+    vertShift = Math.max(0, halfH - FRUSTUM.halfH - 0.15);
   }
 
   // ---- materials ----
@@ -1009,11 +1016,18 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     raf = requestAnimationFrame(tick);
     const dt = Math.min(clock.getDelta(), 0.05);
 
-    if (par.on) {
-      par.x += (par.tx - par.x) * 0.05;
-      par.y += (par.ty - par.y) * 0.05;
-      camera.position.set(CAM_BASE.x + par.x * 0.55, CAM_BASE.y - par.y * 0.35, CAM_BASE.z);
-      camera.lookAt(LOOK_AT);
+    {
+      if (par.on) {
+        par.x += (par.tx - par.x) * 0.05;
+        par.y += (par.ty - par.y) * 0.05;
+      }
+      camUp.setFromMatrixColumn(camera.matrixWorld, 1).normalize();
+      camera.position
+        .copy(CAM_BASE)
+        .addScaledVector(camUp, vertShift)
+        .add(new THREE.Vector3(par.x * 0.55, -par.y * 0.35, 0));
+      lookNow.copy(LOOK_AT).addScaledVector(camUp, vertShift);
+      camera.lookAt(lookNow);
     }
 
     shiftA = (shiftA + BELT_SPEED * dt) % (A_X1 - A_X0);
@@ -1110,7 +1124,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
 
     if (!markedReady) {
       markedReady = true;
-      section?.classList.add("belt--3d");
+      section?.classList.add("hero--3d");
     }
   }
 
@@ -1185,6 +1199,86 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     (window as unknown as Record<string, unknown>).__fit = { ...FRUSTUM };
   }
 
+  // ---- overhead: gantry crane over the truck bay + ceiling runs ----
+  // Deliberately NOT in mustFit: these hang above the machine and are meant to
+  // continue past the top of the frame, the way plant ceiling structure does.
+  {
+    // gantry crane straddling the dock: legs, bridge girder, hoist trolley
+    const GX = TRUCK_X - 0.5;
+    const legTop = 7.1;
+    for (const gz of [-1.5, 1.9]) {
+      const leg = part(new THREE.BoxGeometry(0.26, legTop, 0.26));
+      leg.position.set(GX, legTop / 2, gz);
+      scene.add(leg);
+      const foot = part(new THREE.BoxGeometry(0.72, 0.14, 0.72), faintMat);
+      foot.position.set(GX, 0.07, gz);
+      scene.add(foot);
+      // lattice bracing up the leg
+      const br: THREE.Vector3[] = [];
+      for (let y = 0.6; y < legTop - 0.6; y += 1.0) {
+        br.push(new THREE.Vector3(GX - 0.13, y, gz), new THREE.Vector3(GX + 0.13, y + 0.5, gz));
+        br.push(new THREE.Vector3(GX + 0.13, y + 0.5, gz), new THREE.Vector3(GX - 0.13, y + 1.0, gz));
+      }
+      scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(br), ghostMat));
+    }
+    const girder = part(new THREE.BoxGeometry(0.5, 0.62, 3.9));
+    girder.position.set(GX, legTop - 0.3, 0.2);
+    scene.add(girder);
+    // hoist trolley + hook block hanging over the truck
+    const trolley = part(new THREE.BoxGeometry(0.62, 0.34, 0.72));
+    trolley.position.set(GX, legTop - 0.78, 0.35);
+    scene.add(trolley);
+    for (const hx of [-0.16, 0.16]) {
+      scene.add(
+        new THREE.Line(
+          new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(GX + hx, legTop - 0.95, 0.35),
+            new THREE.Vector3(GX + hx, legTop - 2.6, 0.35),
+          ]),
+          faintMat
+        )
+      );
+    }
+    const hook = part(new THREE.BoxGeometry(0.5, 0.3, 0.5), faintMat);
+    hook.position.set(GX, legTop - 2.75, 0.35);
+    scene.add(hook);
+
+    // ceiling runs: a cable tray and a pipe pair crossing the upper band,
+    // with drop hangers - they read as the plant continuing overhead
+    const runZ = -1.1;
+    const runY = 6.9;
+    // start right of the copy block: overhead structure crossing the headline
+    // was unreadable, and the upper RIGHT is the space this is meant to fill
+    const x0 = 0.4;
+    const x1 = FIT.maxX + 2.2;
+    const tray = part(new THREE.BoxGeometry(x1 - x0, 0.2, 0.62), ghostMat, false);
+    tray.position.set((x0 + x1) / 2, runY, runZ);
+    scene.add(tray);
+    // rungs along the tray
+    const rungs: THREE.Vector3[] = [];
+    for (let x = x0 + 0.4; x < x1; x += 0.62) {
+      rungs.push(new THREE.Vector3(x, runY + 0.1, runZ - 0.31), new THREE.Vector3(x, runY + 0.1, runZ + 0.31));
+    }
+    scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(rungs), ghostMat));
+    // pipe pair slightly below and behind
+    for (const py of [runY - 0.55, runY - 0.9]) {
+      const pipe = part(
+        new THREE.CylinderGeometry(0.13, 0.13, x1 - x0, 10).rotateZ(Math.PI / 2),
+        ghostMat,
+        false
+      );
+      pipe.position.set((x0 + x1) / 2, py, runZ - 0.75);
+      scene.add(pipe);
+    }
+    // drop hangers from the ceiling line down to the tray
+    const hangers: THREE.Vector3[] = [];
+    for (let x = x0 + 2.2; x < x1; x += 4.4) {
+      hangers.push(new THREE.Vector3(x, runY + 0.1, runZ), new THREE.Vector3(x, runY + 1.9, runZ));
+      hangers.push(new THREE.Vector3(x - 0.5, runY + 1.9, runZ), new THREE.Vector3(x + 0.5, runY + 1.9, runZ));
+    }
+    scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(hangers), ghostMat));
+  }
+
   const ro = new ResizeObserver(resize);
   ro.observe(host);
   resize();
@@ -1201,7 +1295,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     ro.disconnect();
     themeObserver.disconnect();
     if (par.on) window.removeEventListener("mousemove", onPointer);
-    section?.classList.remove("belt--3d");
+    section?.classList.remove("hero--3d");
     renderer.dispose();
     scene.traverse((o) => {
       const any = o as THREE.Mesh;
