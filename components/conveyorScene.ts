@@ -27,9 +27,10 @@ const END_RISER = 1.6;
 const TRUCK_X = 9.1; // parked at the loading dock
 const BED_TOP = 1.15; // cargo floor height
 const GX = 9.1 - 0.5; // gantry centreline (straddles the truck bay)
-const PALLET_Z = 1.5; // pallet station on the dock floor, under the girder
+const PALLET_Z = 1.02; // pallet station: offset from the near gantry leg (z 1.9)
 const TRUCK_DROP_Z = 0.15; // where the hoist sets the pallet into the cargo
 const HOIST_Y = 6.48; // trolley height on the girder
+const HOIST_REST_Z = -0.85; // parks clear of both the pallet and the cargo
 const PALLET_PER_TRUCK = 1;
 const BOXES_PER_PALLET = 3;
 const LIFT_X = 0.35;
@@ -958,7 +959,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
     });
     // hook up, trolley home, fresh pallet on the dock
     tl.to(st, { drop: 0.6, duration: 0.7, ease: "power2.out", ...upd });
-    tl.to(hoist.trolley.position, { z: PALLET_Z, duration: 1.0, ease: "power2.inOut" });
+    tl.to(hoist.trolley.position, { z: HOIST_REST_Z, duration: 1.0, ease: "power2.inOut" });
     tl.add(() => {
       dockPallet = makePallet();
       dockPallet.position.set(GX, 0, PALLET_Z);
@@ -1113,7 +1114,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
         waitB,
         new THREE.Vector3(
           GX + (Math.random() - 0.5) * 0.1,
-          PALLET_DECK + ITEM_H / 2 + level * 0.34,
+          PALLET_DECK + ITEM_H / 2 + level * (ITEM_H + 0.04),
           PALLET_Z + (Math.random() - 0.5) * 0.1
         ),
         (item) => {
@@ -1232,18 +1233,31 @@ export function mountConveyorScene(host: HTMLElement): () => void {
   // Deliberately outside mustFit: it rises past the top of the frame the way
   // real plant structure does.
   const hoist = (() => {
+    // A-frame legs. Straight legs sat at the same world x as the load and,
+    // in this near-orthographic side view, drew straight through the pallet
+    // stack. Splaying the feet clears the load and converges at the girder.
     const legTop = 7.1;
+    const SPLAY = 1.25;
+    const legLen = Math.hypot(SPLAY, legTop);
+    const legAng = Math.atan2(SPLAY, legTop);
     for (const gz of [-1.4, 1.9]) {
-      const leg = part(new THREE.BoxGeometry(0.26, legTop, 0.26));
-      leg.position.set(GX, legTop / 2, gz);
-      scene.add(leg);
-      const foot = part(new THREE.BoxGeometry(0.72, 0.14, 0.72), faintMat);
-      foot.position.set(GX, 0.07, gz);
-      scene.add(foot);
+      for (const sx of [-1, 1]) {
+        const leg = part(new THREE.BoxGeometry(0.22, legLen, 0.24));
+        leg.position.set(GX + (sx * SPLAY) / 2, legTop / 2, gz);
+        leg.rotation.z = sx * legAng; // feet splayed out, apex at the girder
+        scene.add(leg);
+        const foot = part(new THREE.BoxGeometry(0.66, 0.14, 0.7), faintMat);
+        foot.position.set(GX + sx * SPLAY, 0.07, gz);
+        scene.add(foot);
+      }
+      // cross-bracing between the splayed legs
       const br: THREE.Vector3[] = [];
-      for (let y = 0.6; y < legTop - 0.6; y += 1.0) {
-        br.push(new THREE.Vector3(GX - 0.13, y, gz), new THREE.Vector3(GX + 0.13, y + 0.5, gz));
-        br.push(new THREE.Vector3(GX + 0.13, y + 0.5, gz), new THREE.Vector3(GX - 0.13, y + 1.0, gz));
+      for (let y = 1.1; y < legTop - 1.0; y += 1.5) {
+        const w0 = SPLAY * (1 - y / legTop);
+        const w1 = SPLAY * (1 - (y + 1.5) / legTop);
+        br.push(new THREE.Vector3(GX - w0, y, gz), new THREE.Vector3(GX + w1, y + 1.5, gz));
+        br.push(new THREE.Vector3(GX + w0, y, gz), new THREE.Vector3(GX - w1, y + 1.5, gz));
+        br.push(new THREE.Vector3(GX - w0, y, gz), new THREE.Vector3(GX + w0, y, gz));
       }
       scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(br), ghostMat));
     }
@@ -1253,7 +1267,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
 
     // trolley rides the girder in z; the hook hangs from it on cables
     const trolley = new THREE.Group();
-    trolley.position.set(GX, HOIST_Y, PALLET_Z);
+    trolley.position.set(GX, HOIST_Y, HOIST_REST_Z);
     scene.add(trolley);
     const body = part(new THREE.BoxGeometry(0.62, 0.34, 0.78));
     trolley.add(body);
@@ -1298,7 +1312,7 @@ export function mountConveyorScene(host: HTMLElement): () => void {
       new THREE.PlaneGeometry(0.72, 0.36),
       new THREE.MeshBasicMaterial({ map: tex, transparent: true })
     );
-    plane.position.set(GX, 1.75, 2.06);
+    plane.position.set(GX, 2.75, 2.06);
     scene.add(plane);
     const frame = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(0.78, 0.42)), inkMat);
     frame.position.copy(plane.position);
