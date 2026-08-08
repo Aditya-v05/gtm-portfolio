@@ -10,6 +10,7 @@
 import CountUp from "@/components/CountUp";
 import AnimatedContent from "@/components/AnimatedContent";
 import SpotlightCard from "@/components/SpotlightCard";
+import Carousel from "@/components/Carousel";
 
 const reveal = { distance: 26, duration: 0.7, ease: "power3.out" as const };
 
@@ -57,15 +58,14 @@ const FAMILIES = [
     tag: "relationship · readiness",
     q: "Who does this plant already trust, and can anyone nearby actually deploy?",
     m: [
-      "A manufacturer almost never publishes the fact that it automated a line. The integrator does, because it sells engineering services, an intangible, and a named customer is the only credible proof it can do the work. The OEM then amplifies that story to prove the channel is real, since a robot with no local integrator is unsellable.",
+      "A manufacturer almost never publishes the fact that it automated a line. The integrator does, because it sells an intangible and a named customer is its only credible proof. The OEM amplifies that story to prove the channel is real, since a robot with no local integrator is unsellable.",
       <>
-        So the relationship edge is public, and sometimes it is literally in the URL. Universal
-        Robots publishes roughly 230 case stories and a whole class of them encodes the pair
-        directly: <code>lactalis-via-sermaz</code>, <code>steelcase-via-robotindus</code>. Acieta
-        names the customer in about 93% of its stories and titles them by customer slug. FANUC
-        carries a <code>Solution By</code> field across a 244-integrator network.
+        So the edge is public, and sometimes it sits in the URL. Universal Robots publishes roughly
+        230 case stories and a class of them encodes the pair directly: <code>lactalis-via-sermaz</code>,{" "}
+        <code>steelcase-via-robotindus</code>. Acieta names the customer in about 93% of its
+        stories. FANUC carries a <code>Solution By</code> field across 244 integrators.
       </>,
-      "Knowing a plant already works with an integrator who resells a given brand and has built three similar cells in the region is three things at once: proof it will buy automation, proof of which application fits, and a warm path in.",
+      "A plant already working with an integrator who resells a given brand and has built similar cells nearby is proof it buys automation, proof of which application fits, and a warm path in.",
     ],
     b: "Survivorship. You only see the projects that succeeded and were granted permission to publish, so the absence of a case study means nothing at all.",
   },
@@ -270,53 +270,33 @@ export default function SignalLayer() {
       </AnimatedContent>
 
       <AnimatedContent {...reveal} delay={0.08}>
-        <div className="ev">
-          <div className="data">
-            <div className="data__bar">
-              <span className="fn">flagged-plants.csv</span>
-              <span className="rc">8 of ~300 · identities withheld</span>
-            </div>
-            <div className="sl__scroll">
-              <table className="dt dt--wrap">
-                <thead>
-                  <tr>
-                    <th>Facility</th>
-                    <th>Trigger</th>
-                    <th>Open</th>
-                    <th>What the posting says</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ROWS.map((r, i) => (
-                    <tr key={i}>
-                      <td>
-                        {r.p}
-                        <span className="mut"> · {r.l}</span>
-                      </td>
-                      <td>
-                        <span className="pill pill--a">{r.t}</span>
-                      </td>
-                      <td className="mut">{r.o}</td>
-                      <td className="wrapcell">{r.d}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+        <div className="ev sl__plants">
+          <Carousel label="flagged plants · 8 of ~300" per={3}>
+            {ROWS.map((r, i) => (
+              <article className="pcard cursor-target" key={i}>
+                <div className="pcard__top">
+                  <span className="n">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="loc">{r.l}</span>
+                </div>
+                <h4>{r.p}</h4>
+                <span className="pill pill--a">{r.t}</span>
+                {r.o !== "—" && <div className="pcard__open">{r.o}</div>}
+                <p>{r.d}</p>
+              </article>
+            ))}
+          </Carousel>
           <div className="ev__cap">
-            <b>▸ evidence</b> - a sample of the scan. Each row resolves to one plant and links back
-            to the live posting it was read from
+            <b>▸ evidence</b> - a sample of the scan. Each card resolves to one plant and links back
+            to the live posting it was read from. Identities withheld
           </div>
         </div>
       </AnimatedContent>
 
-      <div className="sl__gsec">
-        <div className="sl__gk">How each signal is read</div>
-        <div className="sl__grid">
-          {GRAMMAR.map((g, i) => (
-            <AnimatedContent key={g.k} {...reveal} delay={0.04 * i}>
-              <div className="sig cursor-target">
+      <AnimatedContent {...reveal}>
+        <div className="sl__gsec">
+          <Carousel label="how each signal is read" per={3}>
+            {GRAMMAR.map((g, i) => (
+              <div className="sig cursor-target" key={g.k}>
                 <div className="sig__n">{String(i + 1).padStart(2, "0")}</div>
                 <h4>{g.k}</h4>
                 <p>{g.m}</p>
@@ -325,10 +305,10 @@ export default function SignalLayer() {
                   {g.b}
                 </div>
               </div>
-            </AnimatedContent>
-          ))}
+            ))}
+          </Carousel>
         </div>
-      </div>
+      </AnimatedContent>
 
       {/* The scan tags every signal family/dimension. Everything above is one
           pair. Saying so plainly is better than pretending the map stops here. */}
@@ -345,26 +325,26 @@ export default function SignalLayer() {
           </div>
         </AnimatedContent>
 
-        {FAMILIES.map((f, i) => (
-          <AnimatedContent key={f.k} {...reveal} delay={0.05 * i}>
-            <div className="fam cursor-target">
-              <div className="fam__side">
+        <AnimatedContent {...reveal} delay={0.06}>
+          <Carousel label="the families not yet running" per={2} className="car--ragged">
+            {FAMILIES.map((f) => (
+              <div className="fam cursor-target" key={f.k}>
                 <h4>{f.k}</h4>
                 <div className="fam__tag">{f.tag}</div>
                 <div className="fam__q">{f.q}</div>
-              </div>
-              <div className="fam__body">
-                {f.m.map((para, j) => (
-                  <p key={j}>{para}</p>
-                ))}
+                <div className="fam__body">
+                  {f.m.map((para, j) => (
+                    <p key={j}>{para}</p>
+                  ))}
+                </div>
                 <div className="sig__b">
                   <span>what breaks it</span>
                   {f.b}
                 </div>
               </div>
-            </div>
-          </AnimatedContent>
-        ))}
+            ))}
+          </Carousel>
+        </AnimatedContent>
       </div>
 
       {/* Sources, given room rather than crammed into a table. The federal
