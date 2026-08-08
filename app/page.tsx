@@ -2,7 +2,6 @@ import Noise from "@/components/Noise";
 import HeroHeadline from "@/components/HeroHeadline";
 import ConveyorLine from "@/components/ConveyorLine";
 import ConveyorCell from "@/components/ConveyorCell";
-import AboutBench from "@/components/AboutBench";
 import ClientMarquee from "@/components/ClientMarquee";
 import CountUp from "@/components/CountUp";
 import SpotlightCard from "@/components/SpotlightCard";
@@ -149,7 +148,7 @@ export default function Home() {
           <span className="n">№ 01</span>
           <h2>The Signal Layer</h2>
           <span className="c">how physical AI GTM actually works</span>
-          <span className="shead__tb" aria-hidden="true"><i>SHEET 01 / 05</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
+          <span className="shead__tb" aria-hidden="true"><i>SHEET 01 / 04</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
         </div>
         <hr className="rule" />
         <SignalLine />
@@ -160,7 +159,7 @@ export default function Home() {
           <span className="n">№ 02</span>
           <h2>Client Signals</h2>
           <span className="c">delivered work · recreated &amp; sanitized</span>
-          <span className="shead__tb" aria-hidden="true"><i>SHEET 02 / 05</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
+          <span className="shead__tb" aria-hidden="true"><i>SHEET 02 / 04</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
         </div>
         <hr className="rule" />
         <div className="evwall">
@@ -267,7 +266,7 @@ export default function Home() {
           <span className="n">№ 03</span>
           <h2>Selected Systems</h2>
           <span className="c">ten, indexed · click to unfold</span>
-          <span className="shead__tb" aria-hidden="true"><i>SHEET 03 / 05</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
+          <span className="shead__tb" aria-hidden="true"><i>SHEET 03 / 04</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
         </div>
         <hr className="rule" />
 
@@ -643,7 +642,7 @@ export default function Home() {
           <span className="n">№ 04</span>
           <h2>Also Built &amp; Shipped</h2>
           <span className="c">selected</span>
-          <span className="shead__tb" aria-hidden="true"><i>SHEET 04 / 05</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
+          <span className="shead__tb" aria-hidden="true"><i>SHEET 04 / 04</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
         </div>
         <hr className="rule" />
 
@@ -665,17 +664,6 @@ export default function Home() {
           <span>+ React dashboards</span>
           <span>+ MCP tool servers</span>
         </div>
-
-        {/* ABOUT: the bench where the systems got built */}
-        <div className="shead" id="about">
-          <span className="ghost">Bench</span>
-          <span className="n">№ 05</span>
-          <h2>The Bench</h2>
-          <span className="c">who drew this sheet</span>
-          <span className="shead__tb" aria-hidden="true"><i>SHEET 05 / 05</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
-        </div>
-        <hr className="rule" />
-        <AboutBench />
 
         {/* FOOTER */}
         <footer id="contact">

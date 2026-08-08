@@ -902,53 +902,6 @@ a.navpdf:hover{ border-color:var(--accent); color:var(--accent-2); }
 }
 
 
-/* ============ THE BENCH (about) ============ */
-.about__stage{ position:relative; width:100%; height:clamp(390px, 38vw, 545px); margin-top:12px; }
-.about3d{ position:absolute; inset:0; }
-.about3d canvas{ display:block; width:100%; height:100%; opacity:0; transition:opacity .8s ease; }
-.about--3d .about3d canvas{ opacity:1; }
-
-/* the control panel bolted to the workshop wall. Positioned over the drawn
-   mounting plate once the scene runs; before that (and with no JS or reduced
-   motion) it just sits on the right of the band. */
-.cpanel{ position:absolute; z-index:2; top:6%; right:2%; width:min(374px, 92%); border:1px solid var(--line-2); background:color-mix(in srgb, var(--bg-2) 92%, transparent); box-shadow:0 10px 30px -22px rgba(15,35,60,.5); }
-.cpanel__screw{ position:absolute; width:7px; height:7px; border-radius:50%; border:1px solid var(--line-2); }
-.cpanel__screw::after{ content:""; position:absolute; inset:2px 1px; border-top:1px solid var(--line-2); transform:rotate(35deg); }
-.cpanel__screw--tl{ top:6px; left:6px; } .cpanel__screw--tr{ top:6px; right:6px; }
-.cpanel__screw--bl{ bottom:6px; left:6px; } .cpanel__screw--br{ bottom:6px; right:6px; }
-.cpanel__head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; padding:11px 20px 10px; border-bottom:1px solid var(--line-2); font-family:var(--font-m); font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--mute); }
-.cpanel__head b{ color:var(--accent); font-weight:500; }
-
-.cpanel__rail{ display:grid; grid-template-columns:repeat(4,1fr); border-bottom:1px solid var(--line-2); }
-.cswitch{ display:flex; flex-direction:column; align-items:center; gap:7px; padding:13px 4px 11px; background:transparent; border:0; border-right:1px solid var(--line-2); cursor:pointer; font:inherit; color:inherit; }
-.cswitch:last-child{ border-right:0; }
-.cswitch__lamp{ width:8px; height:8px; border-radius:50%; border:1px solid var(--line-2); background:transparent; transition:background .25s, box-shadow .25s, border-color .25s; }
-.cswitch.is-on .cswitch__lamp{ background:var(--accent); border-color:var(--accent); box-shadow:0 0 0 3px rgba(var(--accent-rgb),.18), 0 0 10px rgba(var(--accent-rgb),.55); }
-/* the toggle itself: a lever in a slot that throws when selected */
-.cswitch__body{ position:relative; width:20px; height:30px; border:1px solid var(--line-2); border-radius:3px; background:color-mix(in srgb, var(--ink) 5%, transparent); }
-.cswitch__lever{ position:absolute; left:50%; width:6px; height:15px; border-radius:3px; background:var(--dim); transform:translateX(-50%); top:3px; transition:top .22s cubic-bezier(.6,0,.3,1), background .22s; }
-.cswitch.is-on .cswitch__lever{ top:12px; background:var(--accent); }
-.cswitch__label{ font-family:var(--font-m); font-size:8px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute); }
-.cswitch.is-on .cswitch__label{ color:var(--ink); }
-.cswitch:hover .cswitch__label{ color:var(--ink); }
-
-.cpanel__screen{ padding:16px 20px 19px; min-height:190px;
-  background-image:repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 4%, transparent) 0 1px, transparent 1px 4px); }
-.cpanel__screen p{ font-size:13.5px; line-height:1.72; color:var(--dim); }
-
-@media (max-width:900px){
-  .about__stage{ height:auto; }
-  .about3d{ position:relative; height:300px; }
-  .cpanel, .about--3d .cpanel{ position:relative; top:auto; right:auto; left:auto; width:100%; transform:none !important; margin-top:14px; }
-  .cpanel__screen{ min-height:0; }
-}
-@media print{
-  .about3d{ display:none; }
-  .cpanel, .about--3d .cpanel{ position:static; width:100%; transform:none !important; }
-  .cpanel__screen p[hidden]{ display:block !important; }
-  .cpanel__rail{ display:none; }
-}
-
 /* ============================ BLOG ============================ */
 /* Uses existing theme tokens (--accent, --ink, fonts) so light
    (parchment/green) and dark (night-ops) themes both work automatically. */
