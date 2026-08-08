@@ -9,6 +9,7 @@
 
 import CountUp from "@/components/CountUp";
 import AnimatedContent from "@/components/AnimatedContent";
+import SpotlightCard from "@/components/SpotlightCard";
 
 const reveal = { distance: 26, duration: 0.7, ease: "power3.out" as const };
 
@@ -44,6 +45,76 @@ const GRAMMAR = [
     k: "desperation markers",
     m: "Sign-on bonuses, dropped experience requirements, widened shift premiums, no experience required. Normal hiring has been exhausted.",
     b: "Bonuses are regional and seasonal. They carry weight only against a role that is already persistent at that same facility.",
+  },
+];
+
+// Everything the scan ships today is tagged labor / pain. These are the other
+// families - mapped and argued, but deliberately not dressed up as running
+// data, because they are not in the export yet.
+const FAMILIES = [
+  {
+    k: "the partner graph",
+    tag: "relationship · readiness",
+    q: "Who does this plant already trust, and can anyone nearby actually deploy?",
+    m: [
+      "A manufacturer almost never publishes the fact that it automated a line. The integrator does, because it sells engineering services, an intangible, and a named customer is the only credible proof it can do the work. The OEM then amplifies that story to prove the channel is real, since a robot with no local integrator is unsellable.",
+      <>
+        So the relationship edge is public, and sometimes it is literally in the URL. Universal
+        Robots publishes roughly 230 case stories and a whole class of them encodes the pair
+        directly: <code>lactalis-via-sermaz</code>, <code>steelcase-via-robotindus</code>. Acieta
+        names the customer in about 93% of its stories and titles them by customer slug. FANUC
+        carries a <code>Solution By</code> field across a 244-integrator network.
+      </>,
+      "Knowing a plant already works with an integrator who resells a given brand and has built three similar cells in the region is three things at once: proof it will buy automation, proof of which application fits, and a warm path in.",
+    ],
+    b: "Survivorship. You only see the projects that succeeded and were granted permission to publish, so the absence of a case study means nothing at all.",
+  },
+  {
+    k: "sponsor access",
+    tag: "ownership · reach",
+    q: "Who else does this owner control?",
+    m: [
+      "A single private equity sponsor holds fifteen to forty portfolio manufacturers, and the operating partner carries a margin mandate across all of them. One relationship converts into many plants, and the introduction arrives from the owner rather than from a cold sequence.",
+    ],
+    b: "Portfolio ownership is a reach multiplier, not a timing signal. It tells you how many doors open behind one conversation; it never tells you which plant needs a cell this quarter.",
+  },
+  {
+    k: "the floor",
+    tag: "intent · timing",
+    q: "Who is showing up, and who is being shown to?",
+    m: [
+      "Exhibitor and attendee lists publish months ahead of a show, and attendance is self-selection: nobody walks an automation floor by accident. Reading GTM job postings across robotics companies, trade show lead capture appears constantly and dedicated event tooling appears nowhere. The leads get imported by hand.",
+    ],
+    b: "Exhibiting is a marketing budget decision, not a buying signal. It qualifies a conversation; it does not time one.",
+  },
+];
+
+// The sources themselves, given room. The federal pair in particular gets
+// misread constantly, so the distinction between them leads.
+const SOURCES = [
+  {
+    k: "USAspending.gov",
+    tag: "the ledger · what was already bought",
+    m: "Award amounts, recipients, obligations over time, incumbent vendors and spending trends by agency and NAICS. This is the source already wired into the scan: a federal award landing at a company that is simultaneously posting automatable manual roles is the why-now, and the award page is the citation.",
+    b: "Place of performance is often a base or a delivery point rather than the plant. The recipient may be a distributor or an integrator who manufactures nothing. Defense awards are withheld for roughly ninety days.",
+  },
+  {
+    k: "SAM.gov",
+    tag: "the forward book · what is intended",
+    m: "Solicitations, sources sought and presolicitation notices land before any award exists, and their attachments carry part numbers, quantities, delivery schedules and required certifications. Entity records resolve a UEI and CAGE code to a physical address, which is how an award becomes a plant instead of a headquarters.",
+    b: "Most private manufacturers never sell to the federal government. Coverage runs deep through aerospace, defense, shipbuilding and machining, and thin to nothing everywhere else.",
+  },
+  {
+    k: "Applicant tracking systems",
+    tag: "the labor layer · what is unstaffed",
+    m: "Workday, Greenhouse, iCIMS, Paylocity, ADP and a dozen more. Every plant publishes its own pain here, continuously, at facility granularity, with wage bands and shift terms attached. Snapshotting the same requisition week after week is the only reason offer degradation is visible at all.",
+    b: "It is the company writing marketing copy about itself. Titles drift, and one firm will word the same role differently at two plants.",
+  },
+  {
+    k: "Integrator and OEM case libraries",
+    tag: "the partner graph · what already works",
+    m: "Universal Robots, FANUC, ABB, KUKA and the integrator networks underneath them publish who deployed what, where, and with which partner, because in this market the channel is the product. The manufacturer is the subject of those stories and never the author.",
+    b: "Survivorship, and a long lag. Only successful projects that cleared a permissions review get published, sometimes years after the cell went in.",
   },
 ];
 
@@ -254,6 +325,105 @@ export default function SignalLayer() {
                   {g.b}
                 </div>
               </div>
+            </AnimatedContent>
+          ))}
+        </div>
+      </div>
+
+      {/* The scan tags every signal family/dimension. Everything above is one
+          pair. Saying so plainly is better than pretending the map stops here. */}
+      <div className="sl__fam">
+        <AnimatedContent {...reveal}>
+          <div className="sl__famhd">
+            <div className="sl__gk">Labor pain is one family</div>
+            <p>
+              Every signal above carries the same two tags: <code>labor</code> and{" "}
+              <code>pain</code>. The plant is struggling, and it shows in what it posts. That is one
+              axis, and it is the one running today. Three more are mapped, and each answers a
+              different question.
+            </p>
+          </div>
+        </AnimatedContent>
+
+        {FAMILIES.map((f, i) => (
+          <AnimatedContent key={f.k} {...reveal} delay={0.05 * i}>
+            <div className="fam cursor-target">
+              <div className="fam__side">
+                <h4>{f.k}</h4>
+                <div className="fam__tag">{f.tag}</div>
+                <div className="fam__q">{f.q}</div>
+              </div>
+              <div className="fam__body">
+                {f.m.map((para, j) => (
+                  <p key={j}>{para}</p>
+                ))}
+                <div className="sig__b">
+                  <span>what breaks it</span>
+                  {f.b}
+                </div>
+              </div>
+            </div>
+          </AnimatedContent>
+        ))}
+      </div>
+
+      {/* Sources, given room rather than crammed into a table. The federal
+          pair carries the reframe: these are demand-shock detectors, not
+          bidding tools. */}
+      <div className="sl__src">
+        <AnimatedContent {...reveal}>
+          <div className="sl__famhd">
+            <div className="sl__gk">Where it comes from</div>
+            <p>
+              All of it is public. None of it was published as a buying signal, which is exactly why
+              it still works.
+            </p>
+          </div>
+        </AnimatedContent>
+
+        <AnimatedContent {...reveal} delay={0.06}>
+          <div className="srcpull">
+            <p>
+              <b>SAM.gov is what the government intends to buy. USAspending is what it already
+              bought.</b>{" "}
+              Neither is being used here to bid on anything, which is the part most people get
+              backwards.
+            </p>
+            <div className="srcchain" aria-label="prime wins award, tier-two supplier absorbs the volume, capacity gap, that plant is the lead">
+              <span>prime wins the award</span>
+              <i aria-hidden="true">→</i>
+              <span>tier-two supplier absorbs the volume</span>
+              <i aria-hidden="true">→</i>
+              <span>capacity gap on fixed headcount</span>
+              <i aria-hidden="true">→</i>
+              <b>that plant is the lead</b>
+            </div>
+            <p className="srcpull__k">
+              A prime winning a billion-dollar contract is not a lead. The supplier who now has to
+              double output without doubling headcount is. Anyone can pull these files. Resolving one
+              into <i>this exact plant may need this exact class of equipment, now</i> is the work.
+            </p>
+          </div>
+        </AnimatedContent>
+
+        <div className="srcgrid">
+          {SOURCES.map((s, i) => (
+            <AnimatedContent key={s.k} {...reveal} delay={0.05 * i}>
+              <SpotlightCard
+                className="src cursor-target"
+                spotlightColor="rgba(99, 174, 242, 0.12)"
+              >
+                <h4>
+                  <span className="d" aria-hidden="true"></span>
+                  {s.k}
+                </h4>
+                <div className="src__tag">{s.tag}</div>
+                <p>{s.m}</p>
+                <div className="sig__b">
+                  <span>what breaks it</span>
+                  {s.b}
+                </div>
+              </SpotlightCard>
             </AnimatedContent>
           ))}
         </div>
