@@ -121,7 +121,7 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 @keyframes cueFloat{ 0%,100%{ transform:translate(-50%,0); opacity:.6;} 50%{ transform:translate(-50%,7px); opacity:1;} }
 
 /* ============ CLIENT MARQUEE (below the hero) ============ */
-.marquee{ padding:30px 0 26px; border-bottom:1px solid var(--line); position:relative; z-index:1; background:var(--bg); }
+.marquee{ padding:30px 0 26px; border-bottom:1px solid var(--line); position:relative; z-index:1; background:var(--bg); overflow:hidden; }
 .marquee .scroller{ font-family:var(--font-d); font-weight:520; font-size:54px; line-height:1.24; padding-bottom:.1em; letter-spacing:-.02em;
   color:transparent; -webkit-text-stroke:1px rgba(var(--accent-rgb),.5); }
 .marquee .scroller .sep{ -webkit-text-stroke:0; color:var(--accent); font-family:var(--font-m); font-size:20px; vertical-align:middle; padding:0 26px; }
@@ -734,7 +734,6 @@ table.dt tr:last-child td{ border-bottom:none; }
   .srcs{ grid-template-columns:1fr; }
   .split{ grid-template-columns:1fr; gap:26px; padding-bottom:76px; }
   .split__v{ display:none; }
-  .sct{ height:290px; }
   .sct__i{ font-size:10px; padding:5px 10px; }
   .sct::before{ width:190px; height:190px; margin:-95px 0 0 -95px; }
 }
@@ -1184,4 +1183,97 @@ footer .sysline div:first-child{ border-top:0; color:var(--accent); text-transfo
   .postcards .card-spotlight:hover {
     transform: none;
   }
+}
+
+
+/* ============ PHONE ============ */
+/* The signal-layer sheets are content-sized and pinned inside a viewport-
+   height scope, so on a phone every one of them has to fit what is left
+   after the nav and the stage strip. The split card did not, and was being
+   clipped at both ends. Everything here is in service of that, plus touch
+   targets and a readable floor on body text. */
+/* a couple of px of horizontal slop have always been present; clip rather
+   than hidden, which would make body a scroll container and break every
+   position:sticky on the page */
+html, body{ overflow-x:clip; }
+
+@media (max-width:560px){
+  /* nav: brand on one line, real tap targets, and the two links that also
+     live in the footer step aside to make room */
+  nav .in{ padding:0 18px; gap:12px; }
+  nav .brand{ font-size:14px; white-space:nowrap; flex:none; }
+  nav .links{ gap:12px; font-size:12px; align-items:center; flex:none; }
+  nav .links a{ padding:13px 0; }
+  .modebtn{ min-height:38px; min-width:44px; display:inline-flex; align-items:center; justify-content:center; }
+  nav .links a[href$="#contact"], nav .links a[href*="github.com"]{ display:none; }
+
+  .wrap{ padding:0 18px; }
+  .marquee__k, .marquee__now{ padding:0 18px; }
+
+  /* more room for the sheet, less chrome around it */
+  .ln__canvas{ top:calc(var(--nav-h) + 48px); height:72vh; padding-top:2px; padding-bottom:34px; }
+  .ln__track{ margin-top:-72vh; }
+  .ln__rail{ gap:14px; padding:9px 0; }
+  .rl__k{ font-size:10px; letter-spacing:.12em; }
+  .ln__open{ min-height:66vh; }
+  .ln__proof{ margin-top:30px; gap:8px; font-size:8.5px; letter-spacing:.14em; }
+  .ln__cue{ margin-top:30px; }
+
+  .card{ padding:13px 14px; border-radius:11px; }
+  .cv__in > .say{ margin-bottom:20px; }
+  .say{ font-size:clamp(19px,5.6vw,25px); }
+  .say--xl{ font-size:clamp(28px,8.6vw,40px); }
+  .say--num{ font-size:clamp(24px,7.4vw,34px); }
+  .say--end{ font-size:clamp(20px,6vw,28px); }
+  .say__sub{ font-size:14px; margin-top:14px; }
+
+  /* 04 split has the most to fit, so it compresses the hardest */
+  .split{ gap:12px; padding-bottom:52px; }
+  .split__h{ padding-bottom:6px; margin-bottom:0; }
+  .split__h b{ font-size:14px; margin-top:4px; }
+  .sl2{ padding:5px 0; gap:1px 10px; }
+  .sl2__k{ font-size:11.5px; }
+  .sl2__v{ font-size:11px; line-height:1.35; }
+  .split__out{ font-size:9px; padding:7px 13px; letter-spacing:.1em; }
+
+  /* 02 six source tiles, 06 the 300-dot field: both were taller than the
+     scope. Fewer rows in the field does the most work - 15 columns meant
+     twenty rows of dots. */
+  .src2{ padding:9px 12px; gap:3px 10px; }
+  .src2__v{ line-height:1.4; }
+  .srcs__k{ margin-top:12px; }
+  .field{ grid-template-columns:repeat(25,13px); grid-auto-rows:13px; margin:18px 0 12px; }
+  .field__d{ width:5px; height:5px; }
+  .field__d.is-one{ width:9px; height:9px; box-shadow:0 0 0 3px rgba(var(--accent-rgb),.22); }
+  .field__k{ margin-bottom:16px; font-size:8.5px; }
+}
+
+/* the smallest phones still in use: the split and the field need the last
+   few pixels to clear the telemetry bar */
+@media (max-width:400px){
+  .sl2{ padding:4px 0; }
+  .split{ gap:10px; padding-bottom:48px; }
+  .field{ grid-template-columns:repeat(25,12px); grid-auto-rows:12px; margin:9px 0 6px; }
+  .field__k{ margin-bottom:9px; }
+  .say__sub{ margin-top:11px; }
+
+  /* readable floor for descriptions; the .ann labels stay deliberately small */
+  .src2__v, .corr__l li, .fam__body p, .ocard p{ font-size:12px; }
+  .vd__rows > div{ font-size:11px; gap:12px; }
+  .vd__read{ font-size:13px; }
+  .rout__k, .rout__v{ font-size:11px; }
+  .res__lede{ font-size:13px; margin-bottom:16px; }
+  .res__key span{ font-size:11px; gap:9px; }
+  .corr__note{ font-size:12.5px; }
+
+  .field{ grid-template-columns:repeat(15,18px); grid-auto-rows:18px; }
+  .tl__ends{ font-size:8.5px; letter-spacing:.1em; }
+  .sct__i{ font-size:9.5px; padding:4px 9px; }
+  .sct__hub{ font-size:10px; padding:9px 15px; }
+}
+
+/* only the narrowest phones lose the surname; above this it clears the links
+   comfortably, and the brand is the last thing that should be cut */
+@media (max-width:430px){
+  nav .brand em{ display:none; }
 }
