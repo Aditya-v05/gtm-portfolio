@@ -735,7 +735,6 @@ table.dt tr:last-child td{ border-bottom:none; }
   .split{ grid-template-columns:1fr; gap:26px; padding-bottom:76px; }
   .split__v{ display:none; }
   .sct__i{ font-size:10px; padding:5px 10px; }
-  .sct::before{ width:190px; height:190px; margin:-95px 0 0 -95px; }
 }
 
 @media (prefers-reduced-motion: reduce){
