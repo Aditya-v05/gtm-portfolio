@@ -63,6 +63,7 @@ export default async function BlogPost({
               {formatDate(post.date)}
             </time>
             <h1 className="post__title">{post.title}</h1>
+            {post.subtitle && <p className="post__sub">{post.subtitle}</p>}
           </header>
           <div className="prose">{content}</div>
         </article>

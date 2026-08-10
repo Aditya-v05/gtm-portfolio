@@ -9,6 +9,7 @@ export type PostFrontmatter = {
   date: string; // ISO YYYY-MM-DD
   summary: string;
   cover: string; // absolute path under /public, e.g. /blog/hello.png
+  subtitle?: string; // optional dek, rendered under the title
 };
 
 export type Post = PostFrontmatter & {
@@ -47,6 +48,9 @@ function readPost(slug: string): Post {
     date: normalizeDate(slug, data.date),
     summary: data.summary,
     cover: data.cover,
+    ...(typeof data.subtitle === "string" && data.subtitle
+      ? { subtitle: data.subtitle }
+      : {}),
     content,
   };
 }
