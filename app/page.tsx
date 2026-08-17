@@ -666,7 +666,9 @@ export default function Home() {
         </div>
 
         {/* FOOTER */}
-        <footer id="contact">
+        {/* .sitefoot, not a bare `footer` selector: these rules carry 80px of
+            bottom margin, and any other <footer> on the page would inherit it */}
+        <footer id="contact" className="sitefoot">
           <hr className="rule" />
           <div className="big">
             Let&apos;s build the <span className="ital">GTM stack</span>.{" "}
@@ -677,14 +679,9 @@ export default function Home() {
               <div><span style={{ color: "var(--mute)" }}>// reach me</span></div>
               <div><a className="cursor-target" href="mailto:adityaspark05@gmail.com">adityaspark05@gmail.com</a></div>
               <div><a className="cursor-target" href="https://github.com/Aditya-v05">github.com/Aditya-v05</a></div>
+              <div><a className="cursor-target" href="https://www.linkedin.com/in/aditya-venkatesan-26055531b/">linkedin.com/in/aditya-venkatesan</a></div>
               <div><a className="cursor-target" href="https://rellingsystems.com">rellingsystems.com</a> <span className="edit">- ex-Founding GTM Engineer @ Relling (YC S25)</span></div>
               <div><a className="cursor-target" href="https://gethuntd.com">gethuntd.com</a> <span className="edit">- previously: GTM systems @ Huntd</span></div>
-            </div>
-            <div className="sysline">
-              <div>GTM systems · portfolio sheet</div>
-              <div>rev. 2026.08</div>
-              <div>all figures are real run artifacts</div>
-              <div>PII masked · recon target anonymized</div>
             </div>
           </div>
         </footer>

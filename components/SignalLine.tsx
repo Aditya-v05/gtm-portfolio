@@ -18,7 +18,6 @@
 // relationship, a solicitation or a sponsor the system has not actually seen.
 
 import { useEffect, useRef, useState } from "react";
-
 const STAGES = [
   { id: "scatter", n: "01", k: "Scatter" },
   { id: "sources", n: "02", k: "Sources" },
@@ -90,7 +89,6 @@ const ROUTE = [
 export default function SignalLine() {
   const [step, setStep] = useState("a1");
   const trackRef = useRef<HTMLDivElement>(null);
-  const railRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -107,24 +105,11 @@ export default function SignalLine() {
 
   const stage = STEPS.find((s) => s.id === step)?.s ?? "scatter";
   const idx = Math.max(0, STEPS.findIndex((s) => s.id === step));
-  const pct = ((idx + 1) / STEPS.length) * 100;
 
-  // the rail thickens and grows a running head while the page moves, then
-  // settles back when it stops - so the instrument reads as live
-  const [moving, setMoving] = useState(false);
-  useEffect(() => {
-    let t = 0;
-    const onScroll = () => {
-      setMoving(true);
-      clearTimeout(t);
-      t = window.setTimeout(() => setMoving(false), 560);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      clearTimeout(t);
-    };
-  }, []);
+  // which of the six stages the current step belongs to; the telemetry line
+  // is the only place the reader is told, so it carries the count too
+  const stageIdx = Math.max(0, STAGES.findIndex((s) => s.id === stage));
+
 
   // what the reader is scrolling toward; absent on the final step
   const nextStep = STEPS[idx + 1];
@@ -134,17 +119,6 @@ export default function SignalLine() {
       : `next · ${STAGES.find((x) => x.id === nextStep.s)?.k.toLowerCase()}`
     : null;
 
-  // narrow screens turn the rail into a strip; keep the active stage in it
-  useEffect(() => {
-    const rail = railRef.current;
-    if (!rail || rail.scrollWidth <= rail.clientWidth) return;
-    const on = rail.querySelector<HTMLElement>(".rl.is-on");
-    if (!on) return;
-    rail.scrollTo({
-      left: Math.max(0, on.offsetLeft - rail.clientWidth / 2 + on.offsetWidth / 2),
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
-    });
-  }, [stage]);
 
   return (
     <section className="ln">
@@ -168,22 +142,6 @@ export default function SignalLine() {
       </div>
 
       <div className="ln__grid">
-        <div className="ln__railwrap" aria-hidden="true">
-          <span className={`ln__prog${moving ? " is-moving" : ""}`}>
-            <i style={{ height: `${pct}%`, width: `${pct}%` }}>
-              <b />
-            </i>
-          </span>
-          <div className="ln__rail" ref={railRef}>
-            {STAGES.map((s) => (
-              <div key={s.id} className={`rl${stage === s.id ? " is-on" : ""}`}>
-                <span className="rl__n">{s.n}</span>
-                <span className="rl__k">{s.k}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
         <div className="ln__main">
           <div className="ln__canvas">
             <div className="scope" aria-hidden="true">
@@ -200,7 +158,7 @@ export default function SignalLine() {
               </div>
             )}
             <div className="scope__tel" aria-hidden="true">
-              <span>rec {String(idx + 1).padStart(2, "0")}</span>
+              <span>{String(stageIdx + 1).padStart(2, "0")} / 06</span>
               <i />
               <span>{stage}</span>
               <i />
