@@ -107,8 +107,8 @@ export default function Home() {
             target="_blank"
             rel="noreferrer"
           >
-            <span className="nowpill__dot"></span>
-            now: Founding GTM Engineer @ <b>Relling</b>
+            <span className="nowpill__dot nowpill__dot--past"></span>
+            ex-Founding GTM Engineer @ <b>Relling</b>
             <span className="nowpill__yc">YC S25</span>
           </a>
           <h1>
@@ -131,14 +131,14 @@ export default function Home() {
       <section className="marquee">
         <div className="marquee__k">Systems shipped for</div>
         <ClientMarquee />
-        <div className="marquee__now">now: founding gtm engineer @ <b>Relling</b> · YC S25</div>
+        <div className="marquee__now">ex-founding gtm engineer @ <b>Relling</b> · YC S25</div>
       </section>
 
       {/* print-only client roster: the animated machine can't be trusted in
           print, so the six client names get a guaranteed static line here */}
       <section className="print-clients" aria-hidden="true">
         <span className="k">Systems shipped for</span>
-        <span className="names">Brex · Rho · Peec AI · Warp · Hyperbound · Qashio · now @ Relling (YC S25)</span>
+        <span className="names">Brex · Rho · Peec AI · Warp · Hyperbound · Qashio · ex-Relling (YC S25)</span>
       </section>
 
       <div className="wrap">
@@ -333,13 +333,13 @@ export default function Home() {
               <div className="dash dash--full cursor-target" data-zoom>
                 <img src="/raven-command.jpg" alt="Raven command center dashboard" />
               </div>
-              <div className="ev__cap"><b>▸ evidence</b> - Raven&apos;s command center: 124 signals watched, 9 active leads, last sweep 7 hours ago</div>
+              <div className="ev__cap"><b>▸ evidence</b> - Raven&apos;s command center: 124 signals watched, 9 active leads, last sweep 7 hours ago (tracked company names redacted)</div>
             </div>
             <div className="ev">
               <div className="dash dash--full cursor-target" data-zoom>
                 <img src="/raven-leads.jpg" alt="Raven leads view with scored lead and fit reason" />
               </div>
-              <div className="ev__cap"><b>▸ evidence</b> - a 100-score lead with its written fit reason, synced to Attio (identities masked)</div>
+              <div className="ev__cap"><b>▸ evidence</b> - a 100-score lead with its written fit reason, synced to Attio (identity and identifying company details redacted)</div>
             </div>
           </div>
         </article>
@@ -677,7 +677,7 @@ export default function Home() {
               <div><span style={{ color: "var(--mute)" }}>// reach me</span></div>
               <div><a className="cursor-target" href="mailto:adityaspark05@gmail.com">adityaspark05@gmail.com</a></div>
               <div><a className="cursor-target" href="https://github.com/Aditya-v05">github.com/Aditya-v05</a></div>
-              <div><a className="cursor-target" href="https://rellingsystems.com">rellingsystems.com</a> <span className="edit">- Founding GTM Engineer @ Relling (YC S25)</span></div>
+              <div><a className="cursor-target" href="https://rellingsystems.com">rellingsystems.com</a> <span className="edit">- ex-Founding GTM Engineer @ Relling (YC S25)</span></div>
               <div><a className="cursor-target" href="https://gethuntd.com">gethuntd.com</a> <span className="edit">- previously: GTM systems @ Huntd</span></div>
             </div>
             <div className="sysline">

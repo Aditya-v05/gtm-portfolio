@@ -92,6 +92,8 @@ nav .links a:hover{ color:var(--ink); } nav .links a:hover::after{ width:100%; }
 .nowpill{ display:inline-flex; align-items:center; gap:9px; margin-bottom:22px; font-family:var(--font-m); font-size:10.5px; letter-spacing:.05em; color:var(--accent); text-decoration:none; border:1px solid rgba(var(--accent-rgb),.4); border-radius:20px; padding:6px 14px; transition:border-color .25s, transform .25s, box-shadow .25s; }
 .nowpill:hover{ border-color:var(--accent); transform:translateY(-1px); box-shadow:0 4px 18px -8px rgba(var(--accent-rgb),.5); }
 .nowpill__dot{ width:6px; height:6px; border-radius:50%; background:var(--accent); animation:foldpulse 2.2s ease-in-out infinite; flex:none; }
+/* the dot pulses to read as "live". on a past role it holds steady instead. */
+.nowpill__dot--past{ animation:none; background:var(--mute); }
 .nowpill b{ font-weight:600; }
 .nowpill__yc{ font-size:9px; letter-spacing:.08em; padding:1.5px 6px; border:1px solid rgba(var(--accent-rgb),.55); border-radius:4px; }
 @media (prefers-reduced-motion: reduce){ .nowpill__dot{ animation:none; } }

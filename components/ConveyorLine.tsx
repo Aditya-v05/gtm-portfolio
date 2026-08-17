@@ -11,7 +11,7 @@ export default function ConveyorLine() {
   return (
     <div
       className="belt"
-      aria-label="Systems shipped for Brex, Rho, Peec AI, Warp, Hyperbound, Qashio. Now founding at Relling (YC S25)."
+      aria-label="Systems shipped for Brex, Rho, Peec AI, Warp, Hyperbound, Qashio. Previously founding GTM engineer at Relling (YC S25)."
     >
       <div className="belt__stage" aria-hidden="true">
         <div className="belt__flat">
