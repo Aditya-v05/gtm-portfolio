@@ -1,0 +1,1609 @@
+{
+  "version": 1,
+  "week": "2026-W38",
+  "generatedAt": "2026-09-14T08:00:00Z",
+  "engineVersion": "sample",
+  "scoringVersion": "sample",
+  "sample": true,
+  "signalOfTheWeek": {
+    "nicheId": "soc2-compliance",
+    "domain": "quillmere.example",
+    "headline": "Quillmere: job posts mention SOC 2 and security questionnaires",
+    "body": "Job posts mention SOC 2 and security questionnaires. Companies at this stage usually start a compliance program within a quarter. This is sample data, shown until the engine produces a real week."
+  },
+  "niches": [
+    {
+      "id": "soc2-compliance",
+      "name": "SOC 2 / compliance automation",
+      "description": "Companies about to need a compliance program: first security hires, enterprise deals and fresh funding.",
+      "talkTo": "Head of Security, or the CTO at companies under 100 people",
+      "companies": [
+        {
+          "rank": 1,
+          "domain": "quillmere.example",
+          "name": "Quillmere",
+          "score": 93,
+          "band": "very strong",
+          "reviewed": true,
+          "whyNow": "Job posts mention SOC 2 and security questionnaires. Companies at this stage usually start a compliance program within a quarter.",
+          "opener": "Congrats on the enterprise push. Happy to share how teams your size get SOC 2 done before the first big deal asks for it.",
+          "signals": [
+            {
+              "type": "need_keywords",
+              "label": "Job posts mention SOC 2 and security questionnaires",
+              "firedAt": "2026-09-11",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/quillmere/need_keywords",
+                  "title": "Quillmere: job post",
+                  "seenAt": "2026-09-11"
+                }
+              ]
+            },
+            {
+              "type": "trust_page_appears",
+              "label": "A trust page appeared on their site",
+              "firedAt": "2026-09-06",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/quillmere/trust_page_appears",
+                  "title": "Quillmere: site page",
+                  "seenAt": "2026-09-06"
+                }
+              ]
+            },
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-03",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/quillmere/form_d_filed",
+                  "title": "Quillmere: SEC filing",
+                  "seenAt": "2026-09-03"
+                }
+              ]
+            },
+            {
+              "type": "gtm_or_leadership_hire",
+              "label": "First enterprise account executive role",
+              "firedAt": "2026-09-01",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/quillmere/gtm_or_leadership_hire",
+                  "title": "Quillmere: job post",
+                  "seenAt": "2026-09-01"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "domain": "brightforgeledger.example",
+          "name": "Brightforge Ledger",
+          "score": 92,
+          "band": "very strong",
+          "reviewed": true,
+          "whyNow": "Form D filed. Companies at this stage usually start a compliance program within a quarter.",
+          "opener": "Saw the new security role go up. Most teams at your stage hit their first security questionnaire around now.",
+          "signals": [
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-09",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/brightforgeledger/form_d_filed",
+                  "title": "Brightforge Ledger: SEC filing",
+                  "seenAt": "2026-09-09"
+                }
+              ]
+            },
+            {
+              "type": "trust_page_appears",
+              "label": "A trust page appeared on their site",
+              "firedAt": "2026-09-04",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/brightforgeledger/trust_page_appears",
+                  "title": "Brightforge Ledger: site page",
+                  "seenAt": "2026-09-04"
+                }
+              ]
+            },
+            {
+              "type": "first_role_in_function",
+              "label": "First security engineer role",
+              "firedAt": "2026-09-01",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/brightforgeledger/first_role_in_function",
+                  "title": "Brightforge Ledger: job post",
+                  "seenAt": "2026-09-01"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "domain": "tessary.example",
+          "name": "Tessary",
+          "score": 81,
+          "band": "strong",
+          "reviewed": true,
+          "whyNow": "Job posts mention SOC 2 and security questionnaires and first security engineer role in the same month. SOC 2 is usually what stalls the first enterprise deal.",
+          "opener": "Congrats on the enterprise push. Happy to share how teams your size get SOC 2 done before the first big deal asks for it.",
+          "signals": [
+            {
+              "type": "need_keywords",
+              "label": "Job posts mention SOC 2 and security questionnaires",
+              "firedAt": "2026-09-12",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/tessary/need_keywords",
+                  "title": "Tessary: job post",
+                  "seenAt": "2026-09-12"
+                }
+              ]
+            },
+            {
+              "type": "first_role_in_function",
+              "label": "First security engineer role",
+              "firedAt": "2026-09-09",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/tessary/first_role_in_function",
+                  "title": "Tessary: job post",
+                  "seenAt": "2026-09-09"
+                }
+              ]
+            },
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-07",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/tessary/form_d_filed",
+                  "title": "Tessary: SEC filing",
+                  "seenAt": "2026-09-07"
+                }
+              ]
+            },
+            {
+              "type": "trust_page_appears",
+              "label": "A trust page appeared on their site",
+              "firedAt": "2026-09-04",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/tessary/trust_page_appears",
+                  "title": "Tessary: site page",
+                  "seenAt": "2026-09-04"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "domain": "marrowlight.example",
+          "name": "Marrowlight",
+          "score": 79,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "A trust page appeared on their site, right after a Form D filing. Security reviews tend to land on a team that does not exist yet.",
+          "opener": "Saw the new security role go up. Most teams at your stage hit their first security questionnaire around now.",
+          "signals": [
+            {
+              "type": "trust_page_appears",
+              "label": "A trust page appeared on their site",
+              "firedAt": "2026-09-10",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/marrowlight/trust_page_appears",
+                  "title": "Marrowlight: site page",
+                  "seenAt": "2026-09-10"
+                }
+              ]
+            },
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-07",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/marrowlight/form_d_filed",
+                  "title": "Marrowlight: SEC filing",
+                  "seenAt": "2026-09-07"
+                }
+              ]
+            },
+            {
+              "type": "first_role_in_function",
+              "label": "First security engineer role",
+              "firedAt": "2026-09-02",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/marrowlight/first_role_in_function",
+                  "title": "Marrowlight: job post",
+                  "seenAt": "2026-09-02"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 5,
+          "domain": "ondrelcloud.example",
+          "name": "Ondrel Cloud",
+          "score": 78,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "First security engineer role and a Form D filing in the same month. SOC 2 is usually what stalls the first enterprise deal.",
+          "opener": "Saw the new security role go up. Most teams at your stage hit their first security questionnaire around now.",
+          "signals": [
+            {
+              "type": "first_role_in_function",
+              "label": "First security engineer role",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/ondrelcloud/first_role_in_function",
+                  "title": "Ondrel Cloud: job post",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-10",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/ondrelcloud/form_d_filed",
+                  "title": "Ondrel Cloud: SEC filing",
+                  "seenAt": "2026-09-10"
+                }
+              ]
+            },
+            {
+              "type": "need_keywords",
+              "label": "Job posts mention SOC 2 and security questionnaires",
+              "firedAt": "2026-09-05",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/ondrelcloud/need_keywords",
+                  "title": "Ondrel Cloud: job post",
+                  "seenAt": "2026-09-05"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 6,
+          "domain": "corvanehealth.example",
+          "name": "Corvane Health",
+          "score": 75,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "Form D filed, right after job posts mention SOC 2 and security questionnaires. Security reviews tend to land on a team that does not exist yet.",
+          "opener": "Congrats on the enterprise push. Happy to share how teams your size get SOC 2 done before the first big deal asks for it.",
+          "signals": [
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/corvanehealth/form_d_filed",
+                  "title": "Corvane Health: SEC filing",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "need_keywords",
+              "label": "Job posts mention SOC 2 and security questionnaires",
+              "firedAt": "2026-09-08",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/corvanehealth/need_keywords",
+                  "title": "Corvane Health: job post",
+                  "seenAt": "2026-09-08"
+                }
+              ]
+            },
+            {
+              "type": "gtm_or_leadership_hire",
+              "label": "First enterprise account executive role",
+              "firedAt": "2026-09-03",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/corvanehealth/gtm_or_leadership_hire",
+                  "title": "Corvane Health: job post",
+                  "seenAt": "2026-09-03"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 7,
+          "domain": "pellucidpay.example",
+          "name": "Pellucid Pay",
+          "score": 62,
+          "band": "medium",
+          "reviewed": false,
+          "whyNow": "A trust page appeared on their site, right after first enterprise account executive role. Security reviews tend to land on a team that does not exist yet.",
+          "opener": "Congrats on the enterprise push. Happy to share how teams your size get SOC 2 done before the first big deal asks for it.",
+          "signals": [
+            {
+              "type": "trust_page_appears",
+              "label": "A trust page appeared on their site",
+              "firedAt": "2026-09-11",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/pellucidpay/trust_page_appears",
+                  "title": "Pellucid Pay: site page",
+                  "seenAt": "2026-09-11"
+                }
+              ]
+            },
+            {
+              "type": "gtm_or_leadership_hire",
+              "label": "First enterprise account executive role",
+              "firedAt": "2026-09-06",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/pellucidpay/gtm_or_leadership_hire",
+                  "title": "Pellucid Pay: job post",
+                  "seenAt": "2026-09-06"
+                }
+              ]
+            },
+            {
+              "type": "first_role_in_function",
+              "label": "First security engineer role",
+              "firedAt": "2026-09-03",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/pellucidpay/first_role_in_function",
+                  "title": "Pellucid Pay: job post",
+                  "seenAt": "2026-09-03"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 8,
+          "domain": "stratareef.example",
+          "name": "Strata Reef",
+          "score": 58,
+          "band": "medium",
+          "reviewed": false,
+          "whyNow": "Form D filed. Companies at this stage usually start a compliance program within a quarter.",
+          "opener": "Saw the new security role go up. Most teams at your stage hit their first security questionnaire around now.",
+          "signals": [
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-11",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/stratareef/form_d_filed",
+                  "title": "Strata Reef: SEC filing",
+                  "seenAt": "2026-09-11"
+                }
+              ]
+            },
+            {
+              "type": "need_keywords",
+              "label": "Job posts mention SOC 2 and security questionnaires",
+              "firedAt": "2026-09-09",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/stratareef/need_keywords",
+                  "title": "Strata Reef: job post",
+                  "seenAt": "2026-09-09"
+                }
+              ]
+            },
+            {
+              "type": "first_role_in_function",
+              "label": "First security engineer role",
+              "firedAt": "2026-09-06",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/stratareef/first_role_in_function",
+                  "title": "Strata Reef: job post",
+                  "seenAt": "2026-09-06"
+                }
+              ]
+            },
+            {
+              "type": "gtm_or_leadership_hire",
+              "label": "First enterprise account executive role",
+              "firedAt": "2026-09-01",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/stratareef/gtm_or_leadership_hire",
+                  "title": "Strata Reef: job post",
+                  "seenAt": "2026-09-01"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 9,
+          "domain": "vantory.example",
+          "name": "Vantory",
+          "score": 56,
+          "band": "medium",
+          "reviewed": false,
+          "whyNow": "First security engineer role and a Form D filing in the same month. SOC 2 is usually what stalls the first enterprise deal.",
+          "opener": "Congrats on the enterprise push. Happy to share how teams your size get SOC 2 done before the first big deal asks for it.",
+          "signals": [
+            {
+              "type": "first_role_in_function",
+              "label": "First security engineer role",
+              "firedAt": "2026-09-12",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/vantory/first_role_in_function",
+                  "title": "Vantory: job post",
+                  "seenAt": "2026-09-12"
+                }
+              ]
+            },
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-09",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/vantory/form_d_filed",
+                  "title": "Vantory: SEC filing",
+                  "seenAt": "2026-09-09"
+                }
+              ]
+            },
+            {
+              "type": "need_keywords",
+              "label": "Job posts mention SOC 2 and security questionnaires",
+              "firedAt": "2026-09-04",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/vantory/need_keywords",
+                  "title": "Vantory: job post",
+                  "seenAt": "2026-09-04"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 10,
+          "domain": "lumeck.example",
+          "name": "Lumeck",
+          "score": 54,
+          "band": "medium",
+          "reviewed": false,
+          "whyNow": "First enterprise account executive role. Companies at this stage usually start a compliance program within a quarter.",
+          "opener": "Saw the new security role go up. Most teams at your stage hit their first security questionnaire around now.",
+          "signals": [
+            {
+              "type": "gtm_or_leadership_hire",
+              "label": "First enterprise account executive role",
+              "firedAt": "2026-09-07",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/lumeck/gtm_or_leadership_hire",
+                  "title": "Lumeck: job post",
+                  "seenAt": "2026-09-07"
+                }
+              ]
+            },
+            {
+              "type": "first_role_in_function",
+              "label": "First security engineer role",
+              "firedAt": "2026-09-02",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/lumeck/first_role_in_function",
+                  "title": "Lumeck: job post",
+                  "seenAt": "2026-09-02"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "observability",
+      "name": "Observability",
+      "description": "Engineering teams growing fast enough that monitoring and incident tooling becomes a budget line.",
+      "talkTo": "VP Engineering, or Head of Platform",
+      "companies": [
+        {
+          "rank": 1,
+          "domain": "ironmoss.example",
+          "name": "Ironmoss",
+          "score": 95,
+          "band": "very strong",
+          "reviewed": true,
+          "whyNow": "Form D filed, alongside first SRE role. A first SRE hire usually comes with a tooling review.",
+          "opener": "Your engineering hiring roughly doubled this quarter. That is usually when on-call starts to hurt.",
+          "signals": [
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-11",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/ironmoss/form_d_filed",
+                  "title": "Ironmoss: SEC filing",
+                  "seenAt": "2026-09-11"
+                }
+              ]
+            },
+            {
+              "type": "first_role_in_function",
+              "label": "First SRE role",
+              "firedAt": "2026-09-06",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/ironmoss/first_role_in_function",
+                  "title": "Ironmoss: job post",
+                  "seenAt": "2026-09-06"
+                }
+              ]
+            },
+            {
+              "type": "hiring_surge",
+              "label": "Engineering openings up 2.1x on their 12-week average",
+              "firedAt": "2026-09-03",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/ironmoss/hiring_surge",
+                  "title": "Ironmoss: job board",
+                  "seenAt": "2026-09-03"
+                }
+              ]
+            },
+            {
+              "type": "competitor_churn",
+              "label": "Mentions of their current monitoring tool halved",
+              "firedAt": "2026-09-01",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/ironmoss/competitor_churn",
+                  "title": "Ironmoss: job post",
+                  "seenAt": "2026-09-01"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "domain": "kestrelwork.example",
+          "name": "Kestrelwork",
+          "score": 90,
+          "band": "very strong",
+          "reviewed": true,
+          "whyNow": "Kubernetes mentioned in job posts for the first time and first SRE role. The platform team is being built now, and so is its stack.",
+          "opener": "Your engineering hiring roughly doubled this quarter. That is usually when on-call starts to hurt.",
+          "signals": [
+            {
+              "type": "technology_adoption",
+              "label": "Kubernetes mentioned in job posts for the first time",
+              "firedAt": "2026-09-09",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/kestrelwork/technology_adoption",
+                  "title": "Kestrelwork: job post",
+                  "seenAt": "2026-09-09"
+                }
+              ]
+            },
+            {
+              "type": "first_role_in_function",
+              "label": "First SRE role",
+              "firedAt": "2026-09-04",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/kestrelwork/first_role_in_function",
+                  "title": "Kestrelwork: job post",
+                  "seenAt": "2026-09-04"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "domain": "neverfallanalytics.example",
+          "name": "Neverfall Analytics",
+          "score": 89,
+          "band": "strong",
+          "reviewed": true,
+          "whyNow": "Form D filed. When engineering grows this fast, monitoring cost and coverage both break at once.",
+          "opener": "Your engineering hiring roughly doubled this quarter. That is usually when on-call starts to hurt.",
+          "signals": [
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-12",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/neverfallanalytics/form_d_filed",
+                  "title": "Neverfall Analytics: SEC filing",
+                  "seenAt": "2026-09-12"
+                }
+              ]
+            },
+            {
+              "type": "competitor_churn",
+              "label": "Mentions of their current monitoring tool halved",
+              "firedAt": "2026-09-09",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/neverfallanalytics/competitor_churn",
+                  "title": "Neverfall Analytics: job post",
+                  "seenAt": "2026-09-09"
+                }
+              ]
+            },
+            {
+              "type": "first_role_in_function",
+              "label": "First SRE role",
+              "firedAt": "2026-09-07",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/neverfallanalytics/first_role_in_function",
+                  "title": "Neverfall Analytics: job post",
+                  "seenAt": "2026-09-07"
+                }
+              ]
+            },
+            {
+              "type": "hiring_surge",
+              "label": "Engineering openings up 2.1x on their 12-week average",
+              "firedAt": "2026-09-04",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/neverfallanalytics/hiring_surge",
+                  "title": "Neverfall Analytics: job board",
+                  "seenAt": "2026-09-04"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "domain": "oakhavencloud.example",
+          "name": "Oakhaven Cloud",
+          "score": 80,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "Mentions of their current monitoring tool halved, alongside engineering openings up 2.1x on their 12-week average. A first SRE hire usually comes with a tooling review.",
+          "opener": "Your engineering hiring roughly doubled this quarter. That is usually when on-call starts to hurt.",
+          "signals": [
+            {
+              "type": "competitor_churn",
+              "label": "Mentions of their current monitoring tool halved",
+              "firedAt": "2026-09-10",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/oakhavencloud/competitor_churn",
+                  "title": "Oakhaven Cloud: job post",
+                  "seenAt": "2026-09-10"
+                }
+              ]
+            },
+            {
+              "type": "hiring_surge",
+              "label": "Engineering openings up 2.1x on their 12-week average",
+              "firedAt": "2026-09-02",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/oakhavencloud/hiring_surge",
+                  "title": "Oakhaven Cloud: job board",
+                  "seenAt": "2026-09-02"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 5,
+          "domain": "quorrasystems.example",
+          "name": "Quorra Systems",
+          "score": 76,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "Engineering openings up 2.1x on their 12-week average and first SRE role. The platform team is being built now, and so is its stack.",
+          "opener": "Noticed the first SRE role. Whoever takes it usually inherits the monitoring bill in week one.",
+          "signals": [
+            {
+              "type": "hiring_surge",
+              "label": "Engineering openings up 2.1x on their 12-week average",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/quorrasystems/hiring_surge",
+                  "title": "Quorra Systems: job board",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "first_role_in_function",
+              "label": "First SRE role",
+              "firedAt": "2026-09-10",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/quorrasystems/first_role_in_function",
+                  "title": "Quorra Systems: job post",
+                  "seenAt": "2026-09-10"
+                }
+              ]
+            },
+            {
+              "type": "competitor_churn",
+              "label": "Mentions of their current monitoring tool halved",
+              "firedAt": "2026-09-05",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/quorrasystems/competitor_churn",
+                  "title": "Quorra Systems: job post",
+                  "seenAt": "2026-09-05"
+                }
+              ]
+            },
+            {
+              "type": "technology_adoption",
+              "label": "Kubernetes mentioned in job posts for the first time",
+              "firedAt": "2026-09-02",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/quorrasystems/technology_adoption",
+                  "title": "Quorra Systems: job post",
+                  "seenAt": "2026-09-02"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 6,
+          "domain": "rivetline.example",
+          "name": "Rivetline",
+          "score": 66,
+          "band": "medium",
+          "reviewed": false,
+          "whyNow": "Engineering openings up 2.1x on their 12-week average. When engineering grows this fast, monitoring cost and coverage both break at once.",
+          "opener": "Your engineering hiring roughly doubled this quarter. That is usually when on-call starts to hurt.",
+          "signals": [
+            {
+              "type": "hiring_surge",
+              "label": "Engineering openings up 2.1x on their 12-week average",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/rivetline/hiring_surge",
+                  "title": "Rivetline: job board",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-08",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/rivetline/form_d_filed",
+                  "title": "Rivetline: SEC filing",
+                  "seenAt": "2026-09-08"
+                }
+              ]
+            },
+            {
+              "type": "first_role_in_function",
+              "label": "First SRE role",
+              "firedAt": "2026-09-05",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/rivetline/first_role_in_function",
+                  "title": "Rivetline: job post",
+                  "seenAt": "2026-09-05"
+                }
+              ]
+            },
+            {
+              "type": "competitor_churn",
+              "label": "Mentions of their current monitoring tool halved",
+              "firedAt": "2026-09-03",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/rivetline/competitor_churn",
+                  "title": "Rivetline: job post",
+                  "seenAt": "2026-09-03"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 7,
+          "domain": "saltmarshdata.example",
+          "name": "Saltmarsh Data",
+          "score": 62,
+          "band": "medium",
+          "reviewed": false,
+          "whyNow": "Form D filed, alongside mentions of their current monitoring tool halved. A first SRE hire usually comes with a tooling review.",
+          "opener": "Noticed the first SRE role. Whoever takes it usually inherits the monitoring bill in week one.",
+          "signals": [
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-11",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/saltmarshdata/form_d_filed",
+                  "title": "Saltmarsh Data: SEC filing",
+                  "seenAt": "2026-09-11"
+                }
+              ]
+            },
+            {
+              "type": "competitor_churn",
+              "label": "Mentions of their current monitoring tool halved",
+              "firedAt": "2026-09-06",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/saltmarshdata/competitor_churn",
+                  "title": "Saltmarsh Data: job post",
+                  "seenAt": "2026-09-06"
+                }
+              ]
+            },
+            {
+              "type": "hiring_surge",
+              "label": "Engineering openings up 2.1x on their 12-week average",
+              "firedAt": "2026-09-03",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/saltmarshdata/hiring_surge",
+                  "title": "Saltmarsh Data: job board",
+                  "seenAt": "2026-09-03"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 8,
+          "domain": "thistleops.example",
+          "name": "Thistle Ops",
+          "score": 61,
+          "band": "medium",
+          "reviewed": false,
+          "whyNow": "Form D filed and Kubernetes mentioned in job posts for the first time. The platform team is being built now, and so is its stack.",
+          "opener": "Your engineering hiring roughly doubled this quarter. That is usually when on-call starts to hurt.",
+          "signals": [
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-09",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/thistleops/form_d_filed",
+                  "title": "Thistle Ops: SEC filing",
+                  "seenAt": "2026-09-09"
+                }
+              ]
+            },
+            {
+              "type": "technology_adoption",
+              "label": "Kubernetes mentioned in job posts for the first time",
+              "firedAt": "2026-09-06",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/thistleops/technology_adoption",
+                  "title": "Thistle Ops: job post",
+                  "seenAt": "2026-09-06"
+                }
+              ]
+            },
+            {
+              "type": "first_role_in_function",
+              "label": "First SRE role",
+              "firedAt": "2026-09-01",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/thistleops/first_role_in_function",
+                  "title": "Thistle Ops: job post",
+                  "seenAt": "2026-09-01"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 9,
+          "domain": "umbrelfreight.example",
+          "name": "Umbrel Freight",
+          "score": 56,
+          "band": "medium",
+          "reviewed": false,
+          "whyNow": "Kubernetes mentioned in job posts for the first time, alongside first SRE role. A first SRE hire usually comes with a tooling review.",
+          "opener": "Your engineering hiring roughly doubled this quarter. That is usually when on-call starts to hurt.",
+          "signals": [
+            {
+              "type": "technology_adoption",
+              "label": "Kubernetes mentioned in job posts for the first time",
+              "firedAt": "2026-09-12",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/umbrelfreight/technology_adoption",
+                  "title": "Umbrel Freight: job post",
+                  "seenAt": "2026-09-12"
+                }
+              ]
+            },
+            {
+              "type": "first_role_in_function",
+              "label": "First SRE role",
+              "firedAt": "2026-09-09",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/umbrelfreight/first_role_in_function",
+                  "title": "Umbrel Freight: job post",
+                  "seenAt": "2026-09-09"
+                }
+              ]
+            },
+            {
+              "type": "hiring_surge",
+              "label": "Engineering openings up 2.1x on their 12-week average",
+              "firedAt": "2026-09-04",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/umbrelfreight/hiring_surge",
+                  "title": "Umbrel Freight: job board",
+                  "seenAt": "2026-09-04"
+                }
+              ]
+            },
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-01",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/umbrelfreight/form_d_filed",
+                  "title": "Umbrel Freight: SEC filing",
+                  "seenAt": "2026-09-01"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 10,
+          "domain": "velvetgrid.example",
+          "name": "Velvetgrid",
+          "score": 54,
+          "band": "medium",
+          "reviewed": false,
+          "whyNow": "First SRE role. When engineering grows this fast, monitoring cost and coverage both break at once.",
+          "opener": "Noticed the first SRE role. Whoever takes it usually inherits the monitoring bill in week one.",
+          "signals": [
+            {
+              "type": "first_role_in_function",
+              "label": "First SRE role",
+              "firedAt": "2026-09-07",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/velvetgrid/first_role_in_function",
+                  "title": "Velvetgrid: job post",
+                  "seenAt": "2026-09-07"
+                }
+              ]
+            },
+            {
+              "type": "hiring_surge",
+              "label": "Engineering openings up 2.1x on their 12-week average",
+              "firedAt": "2026-09-02",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/velvetgrid/hiring_surge",
+                  "title": "Velvetgrid: job board",
+                  "seenAt": "2026-09-02"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ctv-programmatic",
+      "name": "CTV / programmatic advertising (DSPs)",
+      "description": "Brands building performance marketing teams that are moving budget into streaming and programmatic.",
+      "talkTo": "Head of Growth, or VP Performance Marketing",
+      "companies": [
+        {
+          "rank": 1,
+          "domain": "wexbury.example",
+          "name": "Wexbury",
+          "score": 92,
+          "band": "very strong",
+          "reviewed": true,
+          "whyNow": "First programmatic media buyer role and a Form D filing. The budget is moving before the tooling has been picked.",
+          "opener": "Your marketing team is growing fast. Happy to share what a first CTV test looks like at your spend.",
+          "signals": [
+            {
+              "type": "gtm_or_leadership_hire",
+              "label": "First programmatic media buyer role",
+              "firedAt": "2026-09-11",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/wexbury/gtm_or_leadership_hire",
+                  "title": "Wexbury: job post",
+                  "seenAt": "2026-09-11"
+                }
+              ]
+            },
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-06",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/wexbury/form_d_filed",
+                  "title": "Wexbury: SEC filing",
+                  "seenAt": "2026-09-06"
+                }
+              ]
+            },
+            {
+              "type": "tool_detected",
+              "label": "An ad measurement pixel appeared on their site",
+              "firedAt": "2026-09-03",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/wexbury/tool_detected",
+                  "title": "Wexbury: page source",
+                  "seenAt": "2026-09-03"
+                }
+              ]
+            },
+            {
+              "type": "hiring_surge",
+              "label": "Marketing openings up 1.8x on their 12-week average",
+              "firedAt": "2026-09-01",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/wexbury/hiring_surge",
+                  "title": "Wexbury: job board",
+                  "seenAt": "2026-09-01"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "domain": "yarrowtech.example",
+          "name": "Yarrowtech",
+          "score": 91,
+          "band": "very strong",
+          "reviewed": true,
+          "whyNow": "Form D filed and first programmatic media buyer role. The budget is moving before the tooling has been picked.",
+          "opener": "Your marketing team is growing fast. Happy to share what a first CTV test looks like at your spend.",
+          "signals": [
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-09",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/yarrowtech/form_d_filed",
+                  "title": "Yarrowtech: SEC filing",
+                  "seenAt": "2026-09-09"
+                }
+              ]
+            },
+            {
+              "type": "gtm_or_leadership_hire",
+              "label": "First programmatic media buyer role",
+              "firedAt": "2026-09-04",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/yarrowtech/gtm_or_leadership_hire",
+                  "title": "Yarrowtech: job post",
+                  "seenAt": "2026-09-04"
+                }
+              ]
+            },
+            {
+              "type": "tool_detected",
+              "label": "An ad measurement pixel appeared on their site",
+              "firedAt": "2026-09-01",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/yarrowtech/tool_detected",
+                  "title": "Yarrowtech: page source",
+                  "seenAt": "2026-09-01"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "domain": "zephyrin.example",
+          "name": "Zephyrin",
+          "score": 84,
+          "band": "strong",
+          "reviewed": true,
+          "whyNow": "Form D filed and marketing openings up 1.8x on their 12-week average. The budget is moving before the tooling has been picked.",
+          "opener": "Your marketing team is growing fast. Happy to share what a first CTV test looks like at your spend.",
+          "signals": [
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-12",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/zephyrin/form_d_filed",
+                  "title": "Zephyrin: SEC filing",
+                  "seenAt": "2026-09-12"
+                }
+              ]
+            },
+            {
+              "type": "hiring_surge",
+              "label": "Marketing openings up 1.8x on their 12-week average",
+              "firedAt": "2026-09-07",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/zephyrin/hiring_surge",
+                  "title": "Zephyrin: job board",
+                  "seenAt": "2026-09-07"
+                }
+              ]
+            },
+            {
+              "type": "need_keywords",
+              "label": "Job posts mention CTV and streaming ads",
+              "firedAt": "2026-09-04",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/zephyrin/need_keywords",
+                  "title": "Zephyrin: job post",
+                  "seenAt": "2026-09-04"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "domain": "arclightledger.example",
+          "name": "Arclight Ledger",
+          "score": 82,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "An ad measurement pixel appeared on their site. Marketing teams that add streaming to the plan tend to test more than one DSP.",
+          "opener": "Your marketing team is growing fast. Happy to share what a first CTV test looks like at your spend.",
+          "signals": [
+            {
+              "type": "tool_detected",
+              "label": "An ad measurement pixel appeared on their site",
+              "firedAt": "2026-09-10",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/arclightledger/tool_detected",
+                  "title": "Arclight Ledger: page source",
+                  "seenAt": "2026-09-10"
+                }
+              ]
+            },
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-02",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/arclightledger/form_d_filed",
+                  "title": "Arclight Ledger: SEC filing",
+                  "seenAt": "2026-09-02"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 5,
+          "domain": "bramblecast.example",
+          "name": "Bramblecast",
+          "score": 81,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "Job posts mention CTV and streaming ads and marketing openings up 1.8x on their 12-week average. The budget is moving before the tooling has been picked.",
+          "opener": "Saw the programmatic buyer role. Teams that make that hire usually run a CTV test in the first 90 days.",
+          "signals": [
+            {
+              "type": "need_keywords",
+              "label": "Job posts mention CTV and streaming ads",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/bramblecast/need_keywords",
+                  "title": "Bramblecast: job post",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "hiring_surge",
+              "label": "Marketing openings up 1.8x on their 12-week average",
+              "firedAt": "2026-09-05",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/bramblecast/hiring_surge",
+                  "title": "Bramblecast: job board",
+                  "seenAt": "2026-09-05"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 6,
+          "domain": "cindral.example",
+          "name": "Cindral",
+          "score": 79,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "Job posts mention CTV and streaming ads, plus a Form D filing. Hiring a programmatic buyer usually means a DSP decision within a quarter.",
+          "opener": "Your marketing team is growing fast. Happy to share what a first CTV test looks like at your spend.",
+          "signals": [
+            {
+              "type": "need_keywords",
+              "label": "Job posts mention CTV and streaming ads",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/cindral/need_keywords",
+                  "title": "Cindral: job post",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-08",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/cindral/form_d_filed",
+                  "title": "Cindral: SEC filing",
+                  "seenAt": "2026-09-08"
+                }
+              ]
+            },
+            {
+              "type": "hiring_surge",
+              "label": "Marketing openings up 1.8x on their 12-week average",
+              "firedAt": "2026-09-03",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/cindral/hiring_surge",
+                  "title": "Cindral: job board",
+                  "seenAt": "2026-09-03"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 7,
+          "domain": "emberlane.example",
+          "name": "Emberlane",
+          "score": 77,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "Form D filed and marketing openings up 1.8x on their 12-week average. The budget is moving before the tooling has been picked.",
+          "opener": "Your marketing team is growing fast. Happy to share what a first CTV test looks like at your spend.",
+          "signals": [
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-11",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/emberlane/form_d_filed",
+                  "title": "Emberlane: SEC filing",
+                  "seenAt": "2026-09-11"
+                }
+              ]
+            },
+            {
+              "type": "hiring_surge",
+              "label": "Marketing openings up 1.8x on their 12-week average",
+              "firedAt": "2026-09-08",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/emberlane/hiring_surge",
+                  "title": "Emberlane: job board",
+                  "seenAt": "2026-09-08"
+                }
+              ]
+            },
+            {
+              "type": "gtm_or_leadership_hire",
+              "label": "First programmatic media buyer role",
+              "firedAt": "2026-09-06",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/emberlane/gtm_or_leadership_hire",
+                  "title": "Emberlane: job post",
+                  "seenAt": "2026-09-06"
+                }
+              ]
+            },
+            {
+              "type": "need_keywords",
+              "label": "Job posts mention CTV and streaming ads",
+              "firedAt": "2026-09-03",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/emberlane/need_keywords",
+                  "title": "Emberlane: job post",
+                  "seenAt": "2026-09-03"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 8,
+          "domain": "fernhollow.example",
+          "name": "Fernhollow",
+          "score": 66,
+          "band": "medium",
+          "reviewed": false,
+          "whyNow": "Form D filed. Marketing teams that add streaming to the plan tend to test more than one DSP.",
+          "opener": "Saw the programmatic buyer role. Teams that make that hire usually run a CTV test in the first 90 days.",
+          "signals": [
+            {
+              "type": "form_d_filed",
+              "label": "Form D filed",
+              "firedAt": "2026-09-09",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/fernhollow/form_d_filed",
+                  "title": "Fernhollow: SEC filing",
+                  "seenAt": "2026-09-09"
+                }
+              ]
+            },
+            {
+              "type": "hiring_surge",
+              "label": "Marketing openings up 1.8x on their 12-week average",
+              "firedAt": "2026-09-06",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/fernhollow/hiring_surge",
+                  "title": "Fernhollow: job board",
+                  "seenAt": "2026-09-06"
+                }
+              ]
+            },
+            {
+              "type": "need_keywords",
+              "label": "Job posts mention CTV and streaming ads",
+              "firedAt": "2026-09-01",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/fernhollow/need_keywords",
+                  "title": "Fernhollow: job post",
+                  "seenAt": "2026-09-01"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 9,
+          "domain": "glassmere.example",
+          "name": "Glassmere",
+          "score": 64,
+          "band": "medium",
+          "reviewed": false,
+          "whyNow": "First programmatic media buyer role and job posts mention CTV and streaming ads. The budget is moving before the tooling has been picked.",
+          "opener": "Your marketing team is growing fast. Happy to share what a first CTV test looks like at your spend.",
+          "signals": [
+            {
+              "type": "gtm_or_leadership_hire",
+              "label": "First programmatic media buyer role",
+              "firedAt": "2026-09-12",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/glassmere/gtm_or_leadership_hire",
+                  "title": "Glassmere: job post",
+                  "seenAt": "2026-09-12"
+                }
+              ]
+            },
+            {
+              "type": "need_keywords",
+              "label": "Job posts mention CTV and streaming ads",
+              "firedAt": "2026-09-04",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/glassmere/need_keywords",
+                  "title": "Glassmere: job post",
+                  "seenAt": "2026-09-04"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 10,
+          "domain": "hollowpeak.example",
+          "name": "Hollowpeak",
+          "score": 55,
+          "band": "medium",
+          "reviewed": false,
+          "whyNow": "An ad measurement pixel appeared on their site, plus job posts mention CTV and streaming ads. Hiring a programmatic buyer usually means a DSP decision within a quarter.",
+          "opener": "Your marketing team is growing fast. Happy to share what a first CTV test looks like at your spend.",
+          "signals": [
+            {
+              "type": "tool_detected",
+              "label": "An ad measurement pixel appeared on their site",
+              "firedAt": "2026-09-12",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/hollowpeak/tool_detected",
+                  "title": "Hollowpeak: page source",
+                  "seenAt": "2026-09-12"
+                }
+              ]
+            },
+            {
+              "type": "need_keywords",
+              "label": "Job posts mention CTV and streaming ads",
+              "firedAt": "2026-09-07",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/hollowpeak/need_keywords",
+                  "title": "Hollowpeak: job post",
+                  "seenAt": "2026-09-07"
+                }
+              ]
+            },
+            {
+              "type": "gtm_or_leadership_hire",
+              "label": "First programmatic media buyer role",
+              "firedAt": "2026-09-02",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://example.com/sample/hollowpeak/gtm_or_leadership_hire",
+                  "title": "Hollowpeak: job post",
+                  "seenAt": "2026-09-02"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
