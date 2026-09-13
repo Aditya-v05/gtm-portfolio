@@ -52,6 +52,9 @@ export const STATIONS = {
   sorter: (
     <svg viewBox="0 0 16 16" {...G}><path d="M8 1v5M8 6L3 10M8 6v8M8 6l5 4" /><path d="M2 13h2M7 15h2M12 13h2" /></svg>
   ),
+  linker: (
+    <svg viewBox="0 0 16 16" {...G}><circle cx="3" cy="12" r="1.7" /><circle cx="8" cy="3.8" r="1.7" /><circle cx="13" cy="11" r="1.7" /><path d="M4.1 10.4 7 5.3M9.2 5.1l2.7 4.4" /></svg>
+  ),
   radar: (
     <svg viewBox="0 0 16 16" {...G}><path d="M2 14A12 12 0 0 1 14 2M2 14A7 7 0 0 1 9 7M2 14L11 5" /><circle cx="2" cy="14" r="1.2" /></svg>
   ),

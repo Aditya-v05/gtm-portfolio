@@ -28,11 +28,11 @@ export default function SiteNav({
           )}
         </div>
         <div className="links">
-          <Link className="cursor-target" href={`${base}#market`}>
-            Market
-          </Link>
           <Link className="cursor-target" href={`${base}#work`}>
             Work
+          </Link>
+          <Link className="cursor-target" href={`${base}#market`}>
+            Market
           </Link>
           <Link className="cursor-target" href={`${base}#stack`}>
             Stack

@@ -276,6 +276,9 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 
 /* ============ CASE STUDIES ============ */
 .case{ display:grid; grid-template-columns:190px 1fr; gap:52px; padding:64px 0; border-bottom:1px solid var(--line); }
+/* a grid item will not shrink below its content by default, so one wide table
+   was enough to push the whole body column past the page edge */
+.case > .body{ min-width:0; }
 .case:last-of-type{ border-bottom:0; }
 .rail{ font-family:var(--font-m); font-size:11px; line-height:1.5; color:var(--dim); }
 .rail .id{ font-family:var(--font-d); font-style:italic; font-size:46px; line-height:1; color:transparent; -webkit-text-stroke:1px rgba(var(--accent-rgb),.45); }
@@ -373,6 +376,38 @@ h1 .ital, h1 .ital *{ font-style:italic; color:var(--accent); font-weight:420; }
 .term__body .pr{ color:#9FCF86; } .term__body .ok{ color:var(--term-green); } .term__body .er{ color:var(--term-red); }
 .term__body .dm{ color:var(--term-dim); } .term__body .tl{ color:var(--term-amber); } .term__body .wt{ color:#EAF2F9; font-weight:500; } .term__body .ac{ color:#9FCF86; }
 
+/* run graph - always-dark console, like .term. Colours are fixed rather than
+   themed for the same reason the terminal's are: the exhibit is a screen. */
+.wpg{ background:var(--term-bg); border:1px solid var(--line-2); border-radius:10px; overflow:hidden;
+  box-shadow:0 0 0 1px rgba(0,0,0,.4), 0 24px 60px -24px rgba(0,0,0,.8), 0 0 50px -18px rgba(99,174,242,.14); }
+.wpg__svg{ display:block; width:100%; height:auto; }
+.wpg__dust{ fill:#6E8095; opacity:.32; }
+.wpg__tried{ fill:none; stroke:#6E8095; stroke-width:.6; opacity:.16; }
+.wpg__spoke{ stroke:#6E8095; stroke-width:.7; opacity:.35; }
+.wpg__hub{ fill:#0F1722; stroke:#93AAC2; stroke-width:1.2; }
+.wpg__p{ fill:#6E8095; opacity:.8; }
+.wpg__p.is-hit{ fill:#EAF2F9; opacity:1; }
+.wpg__our{ fill:#93AAC2; opacity:.7; }
+.wpg__our.is-champ{ fill:#63AEF2; opacity:1; }
+.wpg__edge{ fill:none; stroke-width:1.6; opacity:.55; }
+.wpg__pulse{ fill:none; stroke-width:2.6; stroke-linecap:round; stroke-dasharray:.07 .93; animation:wpgRun 3.2s linear infinite; }
+@keyframes wpgRun{ from{ stroke-dashoffset:1; } to{ stroke-dashoffset:0; } }
+.wpg__lit--vs .wpg__edge, .wpg__lit--vs .wpg__pulse{ stroke:#7FC583; }
+.wpg__lit--s  .wpg__edge, .wpg__lit--s  .wpg__pulse{ stroke:#63AEF2; }
+.wpg__lit--m  .wpg__edge, .wpg__lit--m  .wpg__pulse{ stroke:#D2A24C; }
+.wpg__bridge{ fill:none; stroke:#D2A24C; stroke-width:1.3; stroke-dasharray:2 2; }
+/* a halo in the console colour, so a label stays legible over the nodes and
+   dust it lands on */
+.wpg__score{ font-family:var(--font-m); font-size:11px; fill:#EAF2F9; paint-order:stroke; stroke:#0F1722; stroke-width:4px; stroke-linejoin:round; }
+.wpg__acct{ font-family:var(--font-m); font-size:9.5px; fill:#93AAC2; letter-spacing:.04em; paint-order:stroke; stroke:#0F1722; stroke-width:4px; stroke-linejoin:round; }
+.wpg__k{ font-family:var(--font-m); font-size:9px; letter-spacing:.18em; text-transform:uppercase; fill:#6E8095; }
+.wpg__legend text{ font-family:var(--font-m); font-size:9.5px; fill:#93AAC2; }
+@media (prefers-reduced-motion: reduce){ .wpg__pulse{ animation:none; opacity:0; } }
+
+/* a withheld name. The text under the blur is a placeholder, never the real
+   name: CSS blur is cosmetic and view-source would read anything behind it. */
+.blr{ filter:blur(3.6px); user-select:none; -webkit-user-select:none; }
+
 /* data table — paper exhibit */
 .data{ border-radius:10px; overflow:hidden; background:var(--paper); box-shadow:var(--shadow-exhibit); }
 /* sticky left: when .data scrolls horizontally on mobile, the title bar
@@ -384,6 +419,24 @@ table.dt{ width:100%; border-collapse:collapse; font-family:var(--font-m); font-
 table.dt th{ text-align:left; background:#E4EDF5; color:#7E93A8; font-weight:500; padding:8px 12px; letter-spacing:.05em; text-transform:uppercase; font-size:8.5px; border-bottom:1px solid var(--paper-line); }
 table.dt td{ padding:8px 12px; border-bottom:1px solid #D9E4EE; color:#3B4C60; white-space:nowrap; }
 table.dt tr:last-child td{ border-bottom:none; }
+/* the path ledger fits its exhibit at every width, never scrolls. Wide, the
+   long columns wrap; narrow, each row stacks into a small card, since six
+   columns cannot share a few hundred px without scrolling or shrinking the
+   text past reading. Keyed to the TABLE's width, not the viewport's: at 760px
+   the page is not phone-sized but the column beside the rail is only 454px. */
+.data--ledger{ container-type:inline-size; }
+table.dt--paths th, table.dt--paths td{ padding:8px 9px; white-space:normal; vertical-align:middle; }
+table.dt--paths td:nth-child(1), table.dt--paths td:nth-child(2), table.dt--paths td:nth-child(6){ white-space:nowrap; }
+table.dt--paths td:nth-child(3){ min-width:190px; line-height:1.55; }
+@container (max-width:600px){
+  table.dt--paths thead{ display:none; }
+  table.dt--paths, table.dt--paths tbody, table.dt--paths tr, table.dt--paths td{ display:block; width:100%; }
+  table.dt--paths tr{ padding:12px 15px; border-bottom:1px solid #D9E4EE; }
+  table.dt--paths tr:last-child{ border-bottom:0; }
+  table.dt--paths td{ border:0; padding:2px 0; min-width:0 !important; white-space:normal !important; }
+  table.dt--paths td:nth-child(1), table.dt--paths td:nth-child(2){ display:inline-block; width:auto; margin-right:10px; }
+  table.dt--paths td[data-k]::before{ content:attr(data-k) " "; color:#8FA3B8; font-size:8.5px; letter-spacing:.08em; text-transform:uppercase; margin-right:6px; }
+}
 .pill{ display:inline-block; padding:1px 8px; border-radius:20px; font-size:8.5px; font-weight:500; }
 .pill--v{ background:rgba(47,106,71,.12); color:#2F6A47; } .pill--a{ background:#E0EAF3; color:#4A6E92; }
 .pill--l{ background:#E2EAF0; color:#3C6485; } .pill--n{ background:#E7EDF3; color:#8493A2; }

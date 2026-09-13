@@ -15,6 +15,7 @@ import NavHeightVar from "@/components/NavHeightVar";
 import EvidenceZoom from "@/components/EvidenceZoom";
 import { SystemsAccordion, SystemFold } from "@/components/SystemsIndex";
 import SignalLine from "@/components/SignalLine";
+import WarmPathGraph from "@/components/WarmPathGraph";
 
 // Pre-formatted terminal blocks: whitespace and newlines are significant
 // (rendered with white-space:pre-wrap), so they are injected as raw HTML to
@@ -67,6 +68,22 @@ const term08 = `<span class="tl">[AUTH]</span> phase 1b: scraping login page <sp
 <span class="wt">── report.md ─────────────────────────</span>
 verdict:  <span class="er">ENUMERABLE</span>      method: <span class="tl">api_response_diff</span>
 pages tested: 3 · non-SSO findings: 3 · confidence: high`;
+
+// Warmest Path batch run. Stage counts, the config version and the top lead are from
+// the real 4,426-target run; the org is withheld and names are blurred
+// placeholders, never real names under a CSS blur.
+const termGraph = `<span class="dm">$</span> <span class="pr">warmest-path batch</span> --targets accounts.csv --org <span class="dm">&lt;withheld&gt;</span>
+
+<span class="tl">[resolve]</span>  org page · domain · roster indexed with full career histories
+<span class="tl">[targets]</span>  <span class="wt">4,426</span> loaded · emails present, <span class="ok">never read</span>
+<span class="tl">[score]</span>    pure core · no network · no LLM · config <span class="wt">2026-07-30.1</span>
+<span class="tl">[score]</span>    <span class="ok">4,426 / 4,426</span> scored  <span class="dm">⏱ 41s from cache</span>
+<span class="tl">[rank]</span>     <span class="wt">85 leads</span> · 36 champions · 34 accounts
+           <span class="ok">6 very strong</span> · 10 strong · 14 medium · <span class="dm">55 weak</span>
+<span class="tl">[stage 2]</span>  893 unreached → team-sliced bridges → <span class="ok">9 found</span>
+
+<span class="wt">─ top lead</span>  <span class="ok">0.72</span>  <span class="blr">Qmvre Tolsk</span> → <span class="blr">Dnare Wlupht</span>  <span class="dm">(Exec Director @ EY)</span>
+           shared <span class="wt">EY Business Consulting</span> · ~120 people · 26 months overlap`;
 
 const reveal = {
   distance: 40,
@@ -143,23 +160,13 @@ export default function Home() {
 
       <div className="wrap">
         {/* THE SIGNAL LAYER: how this market actually works, before any of my work */}
-        <div className="shead" id="market">
-          <span className="ghost">Market</span>
-          <span className="n">№ 01</span>
-          <h2>The Signal Layer</h2>
-          <span className="c">how physical AI GTM actually works</span>
-          <span className="shead__tb" aria-hidden="true"><i>SHEET 01 / 04</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
-        </div>
-        <hr className="rule" />
-        <SignalLine />
-
         {/* CLIENT SIGNALS */}
         <div className="shead" id="signals">
           <span className="ghost">Signals</span>
-          <span className="n">№ 02</span>
+          <span className="n">№ 01</span>
           <h2>Client Signals</h2>
           <span className="c">delivered work · recreated &amp; sanitized</span>
-          <span className="shead__tb" aria-hidden="true"><i>SHEET 02 / 04</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
+          <span className="shead__tb" aria-hidden="true"><i>SHEET 01 / 04</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
         </div>
         <hr className="rule" />
         <div className="evwall">
@@ -263,10 +270,10 @@ export default function Home() {
         {/* WORK */}
         <div className="shead" id="work">
           <span className="ghost">Systems</span>
-          <span className="n">№ 03</span>
+          <span className="n">№ 02</span>
           <h2>Selected Systems</h2>
-          <span className="c">ten, indexed · click to unfold</span>
-          <span className="shead__tb" aria-hidden="true"><i>SHEET 03 / 04</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
+          <span className="c">eleven, indexed · click to unfold</span>
+          <span className="shead__tb" aria-hidden="true"><i>SHEET 02 / 04</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
         </div>
         <hr className="rule" />
 
@@ -275,10 +282,64 @@ export default function Home() {
         </div>
         <SystemsAccordion defaultOpen="01">
 
-        <SystemFold id="01" station="gripper" title="Diode" lede="The layer above the systems." type="Orchestration" status="live">
+        <SystemFold id="01" station="linker" title="Warmest Path" lede="Shared history in, the warm intro out." type="Relationship graph">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">01</span><span className="of">/ 10 · selected</span></div>
+            <div className="idwrap"><span className="id">01</span><span className="of">/ 11 · selected</span></div>
+            <div className="seg"><div className="h">Type</div><div className="v">Relationship graph<br />Warm-intro search</div></div>
+            <div className="seg"><div className="h">Stack</div><div className="v"><div>TypeScript · SQLite</div><div>Apollo · HarvestAPI</div><div>Azure OpenAI</div><div>three.js</div></div></div>
+            <div className="st"><span className="d"></span> shipped · 1 run</div>
+          </div>
+          <div className="body">
+            <div className="tag">Warmest Path</div>
+            <h3>Warmest Path, the Intro Finder</h3>
+            <div className="lede">Shared history in, the warm intro out.</div>
+            <p>
+              A LinkedIn connection is not a relationship. <b>Shared history is</b>: the same team in the
+              same years, the same cohort, the same small company. Given a list of target accounts,
+              it pulls our roster and every target&apos;s career history, finds where two careers
+              actually overlapped, and <b>prices each overlap by how small the group was</b> - two of ~120
+              in EY&apos;s consulting unit, not two of 406,000 at EY. Paths run up to three hops, the last
+              one inside the target&apos;s own company, and <b>every path ships with its proof</b>. Scoring
+              is a pure function: no network, no LLM, 993 tests.
+            </p>
+            <div className="metrics"><b>4,426</b> targets scored <span className="sep">/</span> <b>85</b> leads + 9 via a bridge <span className="sep">/</span> 41s rescore from cache</div>
+            <div className="ev">
+              <WarmPathGraph />
+              <div className="ev__cap"><b>▸ shape</b> - the run as a graph: our roster left, target accounts right, the unreached as dust (recreated layout, real accounts)</div>
+            </div>
+            <div className="ev">
+              <div className="data data--ledger cursor-target" data-zoom>
+                <div className="data__bar"><span className="fn">warmest-path · leads.csv</span><span className="rc">85 rows · 6 very strong</span></div>
+                <table className="dt dt--paths">
+                  <thead><tr><th>score</th><th>band</th><th>path</th><th>shared history</th><th>group size</th><th>time together</th></tr></thead>
+                  <tbody>
+                    <tr><td><b>0.72</b></td><td><span className="pill pill--v">very strong</span></td><td><span className="blr">Qmvre Tolsk</span> → <span className="blr">Dnare Wlupht</span> <span className="mut">· Exec Director @ EY</span></td><td data-k="shared history">EY Business Consulting</td><td data-k="group size">~120 people</td><td data-k="time together">26 mo</td></tr>
+                    <tr><td><b>0.71</b></td><td><span className="pill pill--v">very strong</span></td><td><span className="blr">Hrost Venalk</span> → <span className="blr">Pwiden Oskar</span> <span className="mut">· VP Software @ Goldman Sachs</span></td><td data-k="shared history">Intralinks engineering</td><td data-k="group size">~140 people</td><td data-k="time together">9 mo</td></tr>
+                    <tr><td><b>0.69</b></td><td><span className="pill pill--v">very strong</span></td><td><span className="blr">Lumer Tadvik</span> → <span className="blr">Csorn Bethal</span> <span className="mut">· Technical Architect @ State Street</span></td><td data-k="shared history">Nuance engineering</td><td data-k="group size">~608 people</td><td data-k="time together">63 mo</td></tr>
+                    <tr><td><b>0.57</b></td><td><span className="pill pill--a">strong</span></td><td><span className="blr">Fenwa Ristol</span> → <span className="blr">Grund Makelo</span> <span className="mut">· AVP Engineering @ Citi</span></td><td data-k="shared history">Chewy engineering</td><td data-k="group size">~1,636 people</td><td data-k="time together">25 mo</td></tr>
+                    <tr><td><b>0.49</b></td><td><span className="pill pill--a">strong</span></td><td><span className="blr">Ostra Kilven</span> → <span className="blr">Wemdal Truys</span> <span className="mut">· Director of Engineering @ Cityblock Health</span></td><td data-k="shared history">CloudHealth Technologies</td><td data-k="group size">~16 people</td><td data-k="time together">8 mo</td></tr>
+                    <tr><td><b>0.34</b></td><td><span className="pill pill--l">medium</span></td><td><span className="blr">Rendo Walc</span> → <span className="blr">Bratem Soyl</span> → <span className="blr">Dany Yeoc</span> <span className="mut">· Sales Engineering @ Motorola Solutions</span></td><td data-k="shared history">Sophos, then Motorola engineering</td><td data-k="group size">~5, then ~7,350 people</td><td data-k="time together">11 mo</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - top paths from the real run. <b>Group size</b> is how many people were in that team or company while the two overlapped: two of ~16 almost certainly worked together, two of ~1,636 may never have met, so the smaller the group the higher the score. Names blurred, titles generalised; the last path runs through a bridge inside the target&apos;s company</div>
+            </div>
+            <div className="ev">
+              <div className="term cursor-target" data-zoom>
+                <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">warmest-path batch · accounts.csv</span></div>
+                <div className="term__body" dangerouslySetInnerHTML={{ __html: termGraph }} />
+              </div>
+              <div className="ev__cap"><b>▸ shape</b> - recreated log; the stage counts are from the real 4,426-target run, the org is withheld</div>
+            </div>
+          </div>
+        </article>
+        </SystemFold>
+
+        <SystemFold id="02" station="gripper" title="Diode" lede="The layer above the systems." type="Orchestration" status="live">
+        <article className="case">
+          <div className="rail">
+            <div className="idwrap"><span className="id">02</span><span className="of">/ 11</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Orchestration agent<br />Control layer</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Hermes harness</div><div>Claude · MCP</div><div>Slack · Linear</div><div>Notion · Attio</div></div></div>
             <div className="st"><span className="d"></span> live</div>
@@ -307,10 +368,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="02" station="scanner" title="Raven" lede="Ten signals in, scored leads in the CRM out." type="Signal intelligence" status="live">
+        <SystemFold id="03" station="scanner" title="Raven" lede="Ten signals in, scored leads in the CRM out." type="Signal intelligence" status="live">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">02</span><span className="of">/ 10</span></div>
+            <div className="idwrap"><span className="id">03</span><span className="of">/ 11</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Signal intelligence<br />Lead generation</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Claude · OpenAI</div><div>Apify</div><div>Apollo × Clay</div><div>Attio</div></div></div>
             <div className="st"><span className="d"></span> live</div>
@@ -345,10 +406,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="03" station="outfeed" title="LinkedIn Campaign Autopilot" lede="Drop a doc, say go, and LinkedIn campaigns go live." type="Outbound agent" status="live">
+        <SystemFold id="04" station="outfeed" title="LinkedIn Campaign Autopilot" lede="Drop a doc, say go, and LinkedIn campaigns go live." type="Outbound agent" status="live">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">03</span><span className="of">/ 10</span></div>
+            <div className="idwrap"><span className="id">04</span><span className="of">/ 11</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Autonomous agent<br />Outbound delivery</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Claude Agent SDK</div><div>OpenCLAW</div><div>Aimfox API</div><div>MongoDB · Node</div></div></div>
             <div className="st"><span className="d"></span> live</div>
@@ -386,10 +447,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="04" station="probe" title="Customer-Overlap Detection Engine" lede="Does this prospect already use the product?" type="Headless automation">
+        <SystemFold id="05" station="probe" title="Customer-Overlap Detection Engine" lede="Does this prospect already use the product?" type="Headless automation">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">04</span><span className="of">/ 10</span></div>
+            <div className="idwrap"><span className="id">05</span><span className="of">/ 11</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Signal<br />Headless automation</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Puppeteer (stealth)</div><div>Evomi · 2captcha</div><div>Azure OpenAI</div><div>MongoDB · Express</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -418,10 +479,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="05" station="stamper" title="B2B / SaaS Classifier" lede="Noisy Apollo exports into a clean, targetable universe." type="LLM pipeline">
+        <SystemFold id="06" station="stamper" title="B2B / SaaS Classifier" lede="Noisy Apollo exports into a clean, targetable universe." type="LLM pipeline">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">05</span><span className="of">/ 10</span></div>
+            <div className="idwrap"><span className="id">06</span><span className="of">/ 11</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">LLM pipeline<br />Classification</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>TypeScript</div><div>Azure OpenAI</div><div>Cheerio · Evomi</div><div>CSV streams</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -448,10 +509,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="06" station="funnel" title="Apollo × LeadMagic Enrichment" lede="Verified emails in, duplicate outreach out." type="Enrichment">
+        <SystemFold id="07" station="funnel" title="Apollo × LeadMagic Enrichment" lede="Verified emails in, duplicate outreach out." type="Enrichment">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">06</span><span className="of">/ 10</span></div>
+            <div className="idwrap"><span className="id">07</span><span className="of">/ 11</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Enrichment<br />Email waterfall</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Node</div><div>Apollo API</div><div>LeadMagic API</div><div>MongoDB</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -486,10 +547,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="07" station="capture" title="Sales Navigator Capture Extension" lede="Export Sales Nav leads natively, no copy-paste." type="Extension">
+        <SystemFold id="08" station="capture" title="Sales Navigator Capture Extension" lede="Export Sales Nav leads natively, no copy-paste." type="Extension">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">07</span><span className="of">/ 10</span></div>
+            <div className="idwrap"><span className="id">08</span><span className="of">/ 11</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Browser extension<br />Manifest V3</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>JS (ES2020+)</div><div>Chrome MV3</div><div>service worker</div><div>page-world inject</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -524,10 +585,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="08" station="extractor" title="Customer Poacher" lede="One company URL in; its customers' buyers out." type="Discovery workflow">
+        <SystemFold id="09" station="extractor" title="Customer Poacher" lede="One company URL in; its customers' buyers out." type="Discovery workflow">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">08</span><span className="of">/ 10</span></div>
+            <div className="idwrap"><span className="id">09</span><span className="of">/ 11</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Workflow agent<br />CLI</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>TypeScript · Mastra</div><div>Azure AI (Claude)</div><div>Zyte · Serper</div><div>MongoDB</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -562,10 +623,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="09" station="sorter" title="Lead Bucketing Agent" lede="A flat lead list, segmented into outreach-ready niches." type="Segmentation">
+        <SystemFold id="10" station="sorter" title="Lead Bucketing Agent" lede="A flat lead list, segmented into outreach-ready niches." type="Segmentation">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">09</span><span className="of">/ 10</span></div>
+            <div className="idwrap"><span className="id">10</span><span className="of">/ 11</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Agent<br />Segmentation</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Claude Agent SDK</div><div>Apify Search</div><div>Zod · Node</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -603,10 +664,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="10" station="radar" title="Auth-Enumeration Recon Agent" lede="Probes auth flows the way a researcher would." type="Security recon">
+        <SystemFold id="11" station="radar" title="Auth-Enumeration Recon Agent" lede="Probes auth flows the way a researcher would." type="Security recon">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">10</span><span className="of">/ 10</span></div>
+            <div className="idwrap"><span className="id">11</span><span className="of">/ 11</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Autonomous agent<br />Security recon</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Python (agent sdk)</div><div>TS · Mastra</div><div>Playwright · MCP</div><div>2captcha</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -635,6 +696,17 @@ export default function Home() {
         </SystemFold>
 
         </SystemsAccordion>
+
+        {/* SIGNAL LAYER: how the market reads, after the systems that act on it */}
+        <div className="shead" id="market">
+          <span className="ghost">Market</span>
+          <span className="n">№ 03</span>
+          <h2>The Signal Layer</h2>
+          <span className="c">how physical AI GTM actually works</span>
+          <span className="shead__tb" aria-hidden="true"><i>SHEET 03 / 04</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
+        </div>
+        <hr className="rule" />
+        <SignalLine />
 
         {/* ALSO BUILT */}
         <div className="shead" id="stack">
