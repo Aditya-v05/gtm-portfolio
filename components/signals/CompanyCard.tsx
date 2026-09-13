@@ -33,8 +33,8 @@ export default function CompanyCard({
       </header>
 
       <ol className="sigcard__signals">
-        {c.signals.map((s) => (
-          <li key={`${s.type}-${s.firedAt}`} className="sigrow">
+        {c.signals.map((s, i) => (
+          <li key={`${s.type}-${s.firedAt}-${i}`} className="sigrow">
             <span className={`sigrow__dot sigrow__dot--${s.confidence}`} aria-hidden="true" />
             <span className="sigrow__label">{s.label}</span>
             <time className="sigrow__date" dateTime={s.firedAt}>

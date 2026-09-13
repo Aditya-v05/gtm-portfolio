@@ -124,6 +124,15 @@ suits the niches chosen, and traditional companies are underrepresented.
 Every signal is an **event**: a change detected between weekly snapshots, never a steady state.
 "Started hiring security engineers" fires once; "has security roles open" fires nothing.
 
+**Readings (added 2026-09-14, while building).** Change signals need weeks of history, so the
+first issues would be empty. Each card can also carry readings: what is true this week, labelled
+as a count ("2 open security roles", "Job posts describe SOC 2 work underway or planned", "Site
+runs the Meta pixel"). Readings weigh less than changes in every niche config. Tools in use
+(`reading_job_tools`, `reading_site_tools`) are fit, not timing, and never list a company on their
+own. Need-term mentions are read by the model in context and count only when it says the company
+needs the work (`reading_need_terms`) or already has it (`reading_has_term`, negative weight);
+several terms from one pasted paragraph merge into one reading.
+
 ### 6.1 Version 1
 
 | Group | Signal | Source | Fires when | Confidence |
@@ -181,6 +190,10 @@ interface NicheConfig {
     regions?: string[];
   };
   talkTo: string;                // "Head of Security, or the CTO under 100 people"
+  sellers: { text: RegExp; tags: string[] }; // YC one-liner or tags that mark a vendor in this category
+  openRoles: Array<{ key: string; min: number }>; // readings, e.g. { key: "fn:security", min: 1 }
+  needMeaning: string;           // what a need term means here, for the model reading job-post context
+  exclude: { competitorOnSite: boolean; competitorInJobs: boolean };
   signals: Array<{ type: SignalType; weight: number; params?: Record<string, unknown> }>;
   needTerms: string[];           // for need keywords
   competitors: string[];         // tools that mean "already bought"
@@ -196,7 +209,7 @@ interface NicheConfig {
 | Niche | Key buying signals | Excluded when | Talk to |
 |---|---|---|---|
 | SOC 2 / compliance automation | first security or compliance hire · need terms "SOC 2", "ISO 27001", "security questionnaire" · first enterprise sales role · Form D · trust page appears | a compliance-automation badge or tool is already detected | Head of Security, or the CTO under 100 people |
-| Observability | first SRE or platform hire · engineering surge · adoption of or churn from monitoring tools in job posts · Form D | a direct competitor detected and no churn signal | VP Engineering, Head of Platform |
+| Observability | first SRE or platform hire · engineering surge · adoption of or churn from monitoring tools in job posts · Form D | never: a team already paying for monitoring is a buyer of the category and a displacement target | VP Engineering, Head of Platform |
 | CTV / programmatic (DSPs) | performance or programmatic marketing hires · need terms "CTV", "programmatic", "streaming ads" · marketing surge · Form D · ad pixels detected | a competing DSP pixel detected and no churn signal | Head of Growth, VP Performance Marketing |
 
 **Niche heat score (vendor side, private):** for each candidate niche, from its `vendors` list:
@@ -225,8 +238,11 @@ bands          = 90+ very strong, 75+ strong, 50+ medium, below 50 not shown
 ```
 
 - **Exclusions remove a company outright** rather than subtracting points.
+- **A vendor in the category is never its buyer.** Companies on the niche's vendor list, or whose
+  YC one-liner or tags match the niche's `sellers`, are skipped before scoring.
 - **Negative weights are allowed** for signals that argue against buying.
-- **A company needs at least one high or medium confidence event** to be listed.
+- **A company needs at least one high or medium confidence timing signal** to be listed. Fit-only
+  readings (tools in use) do not count towards this.
 - **Top 10 per niche** by raw score, ties broken by the most recent event.
 - **A niche can show fewer than 10.** When fewer companies clear the band floor or the
   confidence rule, the page shows what qualifies rather than padding the list. Early weeks will

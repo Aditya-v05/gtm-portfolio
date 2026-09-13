@@ -14,16 +14,16 @@ const SIGNAL_TYPES = [
   ["Hiring surge", "Public job boards"],
   ["GTM or leadership role posted", "Public job boards"],
   ["First role in a new country or state", "Public job boards"],
-  ["Role closed", "Public job boards"],
   ["Technology adoption", "Job post text"],
   ["Competitor churn", "Job post text"],
   ["Need keywords", "Job post text"],
-  ["Project detected", "Job post text"],
   ["Form D filed", "SEC EDGAR"],
-  ["Tool detected in page source", "Company websites"],
+  ["Tool appears on a homepage", "Company websites"],
   ["Trust or security page appears", "Company websites"],
-  ["Pricing page changed", "Company websites"],
-  ["Yes/no page check", "Company websites"],
+  ["Pricing page adds an enterprise path", "Company websites"],
+  ["Open roles this week (reading)", "Public job boards"],
+  ["Need described in job posts (reading)", "Job post text, checked by a model"],
+  ["Tools in use (reading)", "Job post text and homepages"],
 ] as const;
 
 export default function HowItWorks() {
@@ -55,20 +55,39 @@ export default function HowItWorks() {
             vendors are well funded and building their GTM teams.
           </p>
 
-          <h2>Signals are changes, not states</h2>
+          <h2>Changes, and this week&apos;s readings</h2>
           <p>
-            A signal fires when something changes between weekly snapshots. &quot;Started hiring security
-            engineers&quot; fires once. &quot;Has security roles open&quot; fires nothing. Growth is measured
-            against each company&apos;s own recent baseline, so a large company is not rewarded just for
-            always having more openings.
+            Most signals are changes between weekly snapshots. &quot;Started hiring security engineers&quot;
+            fires once, in the week it happens. Growth is measured against each company&apos;s own recent
+            baseline, so a large company is not rewarded just for always having more openings.
           </p>
+          <p>
+            Changes need history, and the engine is new. So each card can also carry readings: what is
+            true this week, labelled as a count, like &quot;2 open security roles&quot;. Readings weigh less than
+            changes in every niche, and tools a company already uses never list it on their own. As
+            weeks of history build, changes take over the top of each list.
+          </p>
+
+          <h2>How job posts are read</h2>
+          <ul>
+            <li>Titles are classified into a function and seniority by rules written against real job board titles.</li>
+            <li>A tool counts only in a role that would use it. Kubernetes in an electrician&apos;s posting says nothing about the platform team.</li>
+            <li>Counts are distinct roles, so a role reposted in five cities, or a paragraph pasted into every posting, counts once.</li>
+            <li>
+              A keyword cannot tell &quot;you will lead our first SOC 2 audit&quot; from &quot;exposure to SOC 2 is a
+              plus&quot;. A language model reads the text around each mention and decides whether the company
+              needs the work, already has it, or is only describing a candidate. Only the first two count.
+            </li>
+          </ul>
 
           <h2>Scoring</h2>
           <ul>
-            <li>Each event is weighted by how much it matters for that niche, how confident it is, and how recent it is.</li>
-            <li>Signals from different groups in the same month score higher than any single signal.</li>
-            <li>A company already using a direct competitor is removed, not scored down.</li>
-            <li>The score is a percentile within that niche for the week. Every weight is a starting assumption, versioned, and tuned against results.</li>
+            <li>Each signal is weighted by how much it matters for that niche, how confident it is, and how recent it is. Nothing older than 90 days counts.</li>
+            <li>Signals from different groups (hiring, job text, money, website) in the same month score higher than any single signal.</li>
+            <li>A company needs at least one medium or high confidence timing signal to be listed.</li>
+            <li>For SOC 2 and CTV, a company already using a direct competitor is removed, not scored down. For observability it is not, because a team paying for monitoring is still a buyer of the category.</li>
+            <li>The score is a percentile within that niche for the week. Every weight is a starting assumption, versioned on each weekly file, and tuned against results.</li>
+            <li>&quot;Why now&quot; and the opener are written by a model from that card&apos;s signals only, then checked: no named people, no certainty, and they must point at a signal. Anything that fails is replaced with plain text built from the signals.</li>
           </ul>
 
           <h2>Precision</h2>
@@ -93,10 +112,11 @@ export default function HowItWorks() {
 
           <h2>Known limits</h2>
           <ul>
-            <li>Public job boards over-represent tech startups. Traditional companies are underrepresented.</li>
+            <li>The company pool is Y Combinator companies with a public website, and only those whose job board is linked from their own site. That over-represents tech startups.</li>
             <li>&quot;First ever&quot; signals need our own history, so they stay low confidence for the first 8 weeks.</li>
-            <li>SEC Form D is US-only, and not every funding round files one.</li>
-            <li>Page source only shows tools that load in the browser. &quot;No competitor found&quot; means none visible.</li>
+            <li>SEC Form D is US-only, not every round files one, and a filing is matched only when exactly one company in the pool carries its legal name.</li>
+            <li>Homepages are read as served, so a pixel that a tag manager loads later is missed. &quot;No competitor found&quot; means none visible.</li>
+            <li>Workable job boards publish no description text, so job text signals skip those companies.</li>
           </ul>
         </section>
       </main>
