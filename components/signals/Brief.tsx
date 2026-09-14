@@ -1,6 +1,26 @@
 import Link from "next/link";
-import type { Company } from "@/lib/signals";
+import type { Company, Signal } from "@/lib/signals";
 import { formatDay, SOURCE_LABEL, sourceOf } from "@/lib/signals";
+
+/** Every signal behind a company, with its source, date and a citation. */
+export function Record({ signals, lead = false }: { signals: Signal[]; lead?: boolean }) {
+  return (
+    <ol className={`record${lead ? " record--lead" : ""}`}>
+      {signals.map((s, i) => (
+        <li key={`${s.type}-${i}`} className="record__item">
+          <span className={`src src--${sourceOf(s.type)}`}>{SOURCE_LABEL[sourceOf(s.type)]}</span>
+          <span className="record__label">{s.label}</span>
+          <time className="record__date" dateTime={s.firedAt}>
+            {formatDay(s.firedAt)}
+          </time>
+          <a className="record__cite cursor-target" href={s.evidence[0].url} target="_blank" rel="noreferrer">
+            source ↗
+          </a>
+        </li>
+      ))}
+    </ol>
+  );
+}
 
 // One company as a newspaper brief: the name and the strongest piece of evidence up
 // front, the reasoning and every cited source behind a click. Built on <details>, so it
@@ -58,20 +78,7 @@ export default function Brief({
           <p className="brief__opener">
             <b>Opener.</b> <q>{c.opener}</q>
           </p>
-          <ol className="record">
-            {c.signals.map((s, i) => (
-              <li key={`${s.type}-${i}`} className="record__item">
-                <span className={`src src--${sourceOf(s.type)}`}>{SOURCE_LABEL[sourceOf(s.type)]}</span>
-                <span className="record__label">{s.label}</span>
-                <time className="record__date" dateTime={s.firedAt}>
-                  {formatDay(s.firedAt)}
-                </time>
-                <a className="record__cite cursor-target" href={s.evidence[0].url} target="_blank" rel="noreferrer">
-                  source ↗
-                </a>
-              </li>
-            ))}
-          </ol>
+          <Record signals={c.signals} />
           {showFileLink && (
             <Link className="brief__file cursor-target" href={`/signals/companies/${c.domain}`}>
               Company file →

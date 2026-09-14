@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import SiteNav from "@/components/SiteNav";
-import Paper from "@/components/signals/Paper";
+import { FrontPage } from "@/components/signals/Paper";
+import Turn from "@/components/signals/Turn";
 import { getAllWeeks } from "@/lib/signals";
 
 export const metadata: Metadata = {
@@ -17,7 +18,9 @@ export default function SignalsLatest() {
     <>
       <SiteNav variant="page" />
       {latest ? (
-        <Paper week={latest} weeks={weeks} />
+        <Turn key="front" page={1}>
+          <FrontPage week={latest} weeks={weeks} />
+        </Turn>
       ) : (
         <main className="sig">
           <header className="sig__head">

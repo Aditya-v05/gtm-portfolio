@@ -3,8 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteNav from "@/components/SiteNav";
 import Brief from "@/components/signals/Brief";
-import { Masthead, SampleBanner } from "@/components/signals/Paper";
-import { formatWeek, getAllWeeks, getCompany, getCompanyIndex, issueNumber, weekSlug } from "@/lib/signals";
+import { Folio, SampleBanner, sectionHref } from "@/components/signals/Paper";
+import { formatWeek, getAllWeeks, getCompany, getCompanyIndex, issueNumber } from "@/lib/signals";
 
 export const dynamicParams = false;
 
@@ -37,7 +37,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ domain
       <SiteNav variant="page" />
       <main className="paper">
         {sample && <SampleBanner />}
-        <Masthead week={latest} compact />
+        <Folio week={latest} label="Company file" />
 
         <article className="file">
           <p className="lead__kicker">Company file</p>
@@ -53,7 +53,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ domain
             return (
               <section key={`${a.week}-${a.nicheId}`} className="dispatch">
                 <p className="dispatch__line">
-                  <Link className="cursor-target" href={`/signals/${weekSlug(a.week)}#${a.nicheId}`}>
+                  <Link className="cursor-target" href={sectionHref(week, niche)}>
                     No. {issueNumber(a.week)} · {formatWeek(a.week)}
                   </Link>
                   <span>{a.nicheName}</span>
