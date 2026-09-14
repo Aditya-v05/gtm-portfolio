@@ -52,6 +52,14 @@ export type SignalOfTheWeek = {
   body: string;
 };
 
+export type Coverage = {
+  companies: number;
+  boards: number;
+  postings: number;
+  homepages: number;
+  filings: number;
+};
+
 export type SignalsWeek = {
   version: 1;
   week: string; // "2026-W38"
@@ -59,6 +67,7 @@ export type SignalsWeek = {
   engineVersion: string;
   scoringVersion: string;
   sample: boolean;
+  coverage: Coverage | null;
   signalOfTheWeek: SignalOfTheWeek | null;
   niches: Niche[];
 };
@@ -93,7 +102,7 @@ function noEmDash(file: string, where: string, v: string) {
 function validateWeek(file: string, raw: unknown): SignalsWeek {
   exactKeys(file, "week", raw, [
     "version", "week", "generatedAt", "engineVersion", "scoringVersion",
-    "sample", "signalOfTheWeek", "niches",
+    "sample", "coverage", "signalOfTheWeek", "niches",
   ]);
   const w = raw as SignalsWeek;
   if (w.version !== 1) fail(file, "version", "expected 1");
@@ -103,6 +112,14 @@ function validateWeek(file: string, raw: unknown): SignalsWeek {
   str(file, "engineVersion", w.engineVersion);
   str(file, "scoringVersion", w.scoringVersion);
   if (typeof w.sample !== "boolean") fail(file, "sample", "expected a boolean");
+  if (w.coverage !== null) {
+    const keys = ["companies", "boards", "postings", "homepages", "filings"] as const;
+    exactKeys(file, "coverage", w.coverage, [...keys]);
+    for (const k of keys) {
+      const v = w.coverage[k];
+      if (!Number.isInteger(v) || v < 0) fail(file, `coverage.${k}`, "expected a count");
+    }
+  }
   if (!Array.isArray(w.niches) || w.niches.length === 0) fail(file, "niches", "expected at least one niche");
 
   w.niches.forEach((n, ni) => {
@@ -160,14 +177,17 @@ function validateWeek(file: string, raw: unknown): SignalsWeek {
 
 // ---- reading ----
 
-const cache = new Map<string, SignalsWeek>();
+// Keyed by modification time, so a week the engine rewrites shows up on the next
+// request in dev instead of after a server restart.
+const cache = new Map<string, { mtimeMs: number; week: SignalsWeek }>();
 
 function readWeek(file: string): SignalsWeek {
+  const full = path.join(SIGNALS_DIR, file);
+  const { mtimeMs } = fs.statSync(full);
   const hit = cache.get(file);
-  if (hit) return hit;
-  const raw = JSON.parse(fs.readFileSync(path.join(SIGNALS_DIR, file), "utf8"));
-  const week = validateWeek(file, raw);
-  cache.set(file, week);
+  if (hit && hit.mtimeMs === mtimeMs) return hit.week;
+  const week = validateWeek(file, JSON.parse(fs.readFileSync(full, "utf8")));
+  cache.set(file, { mtimeMs, week });
   return week;
 }
 
@@ -255,4 +275,29 @@ export function getCompanyIndex(): Map<string, CompanyHistory> {
 
 export function getCompany(domain: string): CompanyHistory | null {
   return getCompanyIndex().get(domain) ?? null;
+}
+
+// ---- presentation helpers ----
+
+export type SourceGroup = "hiring" | "jobs" | "sec" | "web";
+
+export const SOURCE_LABEL: Record<SourceGroup, string> = {
+  hiring: "Hiring",
+  jobs: "Job posts",
+  sec: "SEC filing",
+  web: "Website",
+};
+
+/** Where a signal type comes from, for tags and the front-page figure. */
+export function sourceOf(type: string): SourceGroup {
+  if (type === "funding_filing" || type === "form_d_filed") return "sec";
+  if (/^(trust_page|tool_|pricing_|reading_site_tools)/.test(type)) return "web";
+  if (/^(technology_adoption|competitor_churn|need_keywords|reading_need_terms|reading_has_term|reading_job_tools|project_)/.test(type)) return "jobs";
+  return "hiring";
+}
+
+/** Issue number: the week's position among all published weeks, oldest first. */
+export function issueNumber(week: string): number {
+  const all = getAllWeeks().map((w) => w.week).sort();
+  return all.indexOf(week) + 1;
 }

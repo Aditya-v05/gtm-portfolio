@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteNav from "@/components/SiteNav";
-import CompanyCard from "@/components/signals/CompanyCard";
-import { SampleBanner } from "@/components/signals/WeekView";
-import { formatWeek, getAllWeeks, getCompany, getCompanyIndex, weekSlug } from "@/lib/signals";
+import Brief from "@/components/signals/Brief";
+import { Masthead, SampleBanner } from "@/components/signals/Paper";
+import { formatWeek, getAllWeeks, getCompany, getCompanyIndex, issueNumber, weekSlug } from "@/lib/signals";
 
 export const dynamicParams = false;
 
@@ -28,46 +28,46 @@ export default async function CompanyPage({ params }: { params: Promise<{ domain
   if (!company) notFound();
 
   const weeks = getAllWeeks();
+  const latest = weeks[0]!;
   const sample = weeks.some((w) => w.sample && company.appearances.some((a) => a.week === w.week));
   const niches = [...new Set(company.appearances.map((a) => a.nicheName))];
 
   return (
     <>
       <SiteNav variant="page" />
-      <main className="sig">
+      <main className="paper">
         {sample && <SampleBanner />}
-        <header className="sig__head">
-          <p className="sig__eyebrow">
-            <Link className="cursor-target" href="/signals">
-              Signals
-            </Link>{" "}
-            · company
-          </p>
-          <h1 className="sig__title">{company.name}</h1>
-          <p className="sig__lede">
-            {company.domain} · appeared in {company.appearances.length}{" "}
-            {company.appearances.length === 1 ? "week" : "weeks"}, as a potential customer for{" "}
-            {niches.join(" and ")}.
-          </p>
-        </header>
+        <Masthead week={latest} compact />
 
-        <ol className="sighist">
+        <article className="file">
+          <p className="lead__kicker">Company file</p>
+          <h1 className="lead__hed">{company.name}</h1>
+          <p className="lead__deck">
+            {company.domain} appeared in {company.appearances.length}{" "}
+            {company.appearances.length === 1 ? "issue" : "issues"}, as a potential customer for {niches.join(" and ")}.
+          </p>
+
           {company.appearances.map((a) => {
             const week = weeks.find((w) => w.week === a.week)!;
             const niche = week.niches.find((n) => n.id === a.nicheId)!;
             return (
-              <li key={`${a.week}-${a.nicheId}`} className="sighist__item">
-                <p className="sighist__k">
-                  <Link className="cursor-target" href={`/signals/${weekSlug(a.week)}`}>
-                    {a.week}
-                  </Link>{" "}
-                  · {formatWeek(a.week)} · {a.nicheName} · rank {a.company.rank}
+              <section key={`${a.week}-${a.nicheId}`} className="dispatch">
+                <p className="dispatch__line">
+                  <Link className="cursor-target" href={`/signals/${weekSlug(a.week)}#${a.nicheId}`}>
+                    No. {issueNumber(a.week)} · {formatWeek(a.week)}
+                  </Link>
+                  <span>{a.nicheName}</span>
+                  <span>
+                    Rank {a.company.rank} of {niche.companies.length}
+                  </span>
                 </p>
-                <CompanyCard company={a.company} talkTo={niche.talkTo} />
-              </li>
+                <ol className="desk__briefs desk__briefs--single">
+                  <Brief company={a.company} talkTo={niche.talkTo} open showFileLink={false} />
+                </ol>
+              </section>
             );
           })}
-        </ol>
+        </article>
       </main>
     </>
   );

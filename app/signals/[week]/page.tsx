@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SiteNav from "@/components/SiteNav";
-import WeekView from "@/components/signals/WeekView";
+import Paper from "@/components/signals/Paper";
 import { formatWeek, getAllWeeks, getWeekBySlug, weekSlug } from "@/lib/signals";
 
 // Only weeks that exist are built; anything else 404s.
@@ -29,7 +29,7 @@ export default async function SignalsWeekPage({ params }: { params: Promise<{ we
   return (
     <>
       <SiteNav variant="page" />
-      <WeekView week={w} weeks={getAllWeeks()} />
+      <Paper week={w} weeks={getAllWeeks()} />
     </>
   );
 }
