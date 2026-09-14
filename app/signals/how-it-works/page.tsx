@@ -33,7 +33,8 @@ const pct = (x: number) => `${Math.round(x * 100)}%`;
 function precisionText(p: PrecisionEntry): string {
   if (p.status === "not measured") return p.labelled ? `not measured yet (${p.labelled} labelled)` : "not measured yet";
   const range = p.low !== null && p.high !== null ? `, 95% range ${pct(p.low)} to ${pct(p.high)}` : "";
-  const base = `${pct(p.precision ?? 0)} of ${p.labelled}${range}`;
+  const who = p.reviewedBy ? `, reviewed by ${p.reviewedBy}` : "";
+  const base = `${pct(p.precision ?? 0)} of ${p.labelled}${range}${who}`;
   return p.status === "hidden" ? `${base}; hidden` : base;
 }
 
@@ -113,12 +114,14 @@ export default function HowItWorks() {
 
           <h2>Precision</h2>
           <p>
-            Signals are sampled at random from everything the engine scored, not only what reached the page. A
-            model drafts a verdict for each one against the same rule a person would use, and a person confirms or
-            overrides it with the evidence in front of them: model-drafted, checked by hand. Only the person&apos;s
-            verdict counts, and how often they overrode the model is recorded. A type is measured once it has 30
-            labels (unsure calls do not count), and from then on it is left out of scoring and off the page if fewer
-            than 70% are right.
+            Signals are sampled at random from everything the engine scored, not only what reached the page, and
+            each one is judged against a written rule with its evidence in front of the reviewer. So far the
+            reviewer is an AI: one model drafts a verdict and Claude, a second model that never sees the draft,
+            reviews the signal independently. Only the reviewer&apos;s verdict counts. These numbers measure how
+            often the engine agrees with a careful AI reading of the same evidence, not a human audit; each row
+            says who reviewed it, and hand checks will be marked as such. A type is measured once it has 30
+            labels (unsure calls do not count), and from then on it is left out of scoring and off the page if
+            fewer than 70% are right.
           </p>
           <div className="sigprec">
             <div className="sigprec__head" aria-hidden="true">

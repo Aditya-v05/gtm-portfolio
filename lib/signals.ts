@@ -70,6 +70,7 @@ export type PrecisionEntry = {
   low: number | null;
   high: number | null;
   status: "not measured" | "published" | "hidden";
+  reviewedBy: string;
 };
 
 export type SignalsWeek = {
@@ -128,7 +129,7 @@ function validateWeek(file: string, raw: unknown): SignalsWeek {
   if (!Array.isArray(w.precision)) fail(file, "precision", "expected an array");
   w.precision.forEach((p, i) => {
     const at = `precision[${i}]`;
-    exactKeys(file, at, p, ["type", "name", "source", "labelled", "correct", "precision", "low", "high", "status"]);
+    exactKeys(file, at, p, ["type", "name", "source", "labelled", "correct", "precision", "low", "high", "status", "reviewedBy"]);
     str(file, `${at}.name`, p.name);
     noEmDash(file, `${at}.name`, p.name);
     oneOf(file, `${at}.status`, p.status, ["not measured", "published", "hidden"]);
