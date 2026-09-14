@@ -279,18 +279,20 @@ export function getCompany(domain: string): CompanyHistory | null {
 
 // ---- presentation helpers ----
 
-export type SourceGroup = "hiring" | "jobs" | "sec" | "web";
+export type SourceGroup = "hiring" | "jobs" | "sec" | "web" | "posts";
 
 export const SOURCE_LABEL: Record<SourceGroup, string> = {
   hiring: "Hiring",
   jobs: "Job posts",
   sec: "SEC filing",
   web: "Website",
+  posts: "Company posts",
 };
 
 /** Where a signal type comes from, for tags and the front-page figure. */
 export function sourceOf(type: string): SourceGroup {
   if (type === "funding_filing" || type === "form_d_filed") return "sec";
+  if (type === "company_announcement") return "posts";
   if (/^(trust_page|tool_|pricing_|reading_site_tools)/.test(type)) return "web";
   if (/^(technology_adoption|competitor_churn|need_keywords|reading_need_terms|reading_has_term|reading_job_tools|project_)/.test(type)) return "jobs";
   return "hiring";

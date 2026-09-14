@@ -1337,7 +1337,7 @@ table.dt--paths td:nth-child(3){ min-width:190px; line-height:1.55; }
 .fig{ margin:0; }
 .halftone__plate{ height:210px; border-bottom:1px solid var(--ink); }
 .halftone__plate canvas{ display:block; width:100%; height:100%; }
-.halftone__keys{ list-style:none; margin:0; padding:9px 0 0; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); }
+.halftone__keys{ list-style:none; margin:0; padding:9px 0 0; display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr); }
 .halftone__keys li{ display:flex; flex-direction:column; align-items:center; gap:3px; text-align:center; }
 .halftone__keys b{ font-family:var(--font-d); font-weight:600; font-size:20px; color:var(--ink); font-variant-numeric:tabular-nums; }
 .halftone__keys span{ font-family:var(--font-m); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--mute); }
@@ -1357,6 +1357,7 @@ table.dt--paths td:nth-child(3){ min-width:190px; line-height:1.55; }
 .src::before{ content:""; width:7px; height:7px; flex:none; background:var(--accent); }
 .src--jobs::before{ background:var(--term-green); border-radius:50%; }
 .src--sec::before{ background:var(--term-amber); transform:rotate(45deg) scale(.85); }
+.src--posts::before{ background:var(--accent-2); clip-path:polygon(50% 0, 100% 100%, 0 100%); }
 .src--web::before{ background:transparent; border:1.5px solid var(--term-red); border-radius:50%; width:6px; height:6px; }
 
 /* the record: every signal with its date and a citation */

@@ -21,7 +21,7 @@ export function pagesOf(week: SignalsWeek) {
   ];
 }
 
-const GROUP_ORDER: SourceGroup[] = ["hiring", "jobs", "sec", "web"];
+const GROUP_ORDER: SourceGroup[] = ["hiring", "jobs", "posts", "sec", "web"];
 const fmt = (n: number) => n.toLocaleString("en-US");
 
 function sourceBars(companies: Company[]) {
@@ -365,7 +365,7 @@ export function SectionPage({ week, niche }: { week: SignalsWeek; niche: Niche }
                   </div>
                   <div>
                     <dt>Sources used</dt>
-                    <dd>{bars.filter((b) => b.value > 0).length} of 4</dd>
+                    <dd>{bars.filter((b) => b.value > 0).length} of {bars.length}</dd>
                   </div>
                 </dl>
               </section>

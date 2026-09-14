@@ -1,7 +1,7 @@
 {
   "version": 1,
   "week": "2026-W37",
-  "generatedAt": "2026-09-14T02:07:45.442Z",
+  "generatedAt": "2026-09-14T02:50:43.725Z",
   "engineVersion": "signal-engine@0.1.0",
   "scoringVersion": "2026-09-14.1",
   "sample": false,
@@ -13,10 +13,10 @@
     "filings": 1151
   },
   "signalOfTheWeek": {
-    "nicheId": "observability",
-    "domain": "fieldguide.com",
-    "headline": "Fieldguide: Job posts call for observability work",
-    "body": "They are hiring for observability work, with 10 engineering roles and an SRE or platform opening suggesting monitoring needs may be growing."
+    "nicheId": "ctv-programmatic",
+    "domain": "photoroom.com",
+    "headline": "Photoroom: Site runs the Meta pixel",
+    "body": "They are expanding performance marketing and may be focused on incrementality, suggesting readiness to test channels beyond social and search."
   },
   "niches": [
     {
@@ -581,9 +581,417 @@
       "companies": [
         {
           "rank": 1,
+          "domain": "replit.com",
+          "name": "Replit",
+          "score": 100,
+          "band": "very strong",
+          "reviewed": false,
+          "whyNow": "Their hiring points to active observability and SLO work, alongside 12 open engineering roles, which may increase monitoring needs and costs.",
+          "opener": "As your team grows engineering and platform capacity, a practical review of monitoring coverage and spend may help keep production visibility high without costs rising unchecked.",
+          "signals": [
+            {
+              "type": "reading_need_terms",
+              "label": "Job posts call for observability, SLO and monitoring and alerting work",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/replit/8fbbe594-596a-4a4f-844b-dc00111e717f",
+                  "title": "Software Engineer, Mobile",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/replit/6481ec1e-527c-4c1f-a041-2fb5021e7bd5",
+                  "title": "Staff Infrastructure Engineer",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/replit/bb52f792-58c2-41ab-954d-555c821fe3fe",
+                  "title": "Principal Software Engineer, Money Infrastructure",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "1 open SRE or platform role",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/replit/6481ec1e-527c-4c1f-a041-2fb5021e7bd5",
+                  "title": "Staff Infrastructure Engineer",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "12 open engineering roles",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/replit/2f1de5f1-48c2-4104-a697-a51fe1620508",
+                  "title": "Design Engineer",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/replit/47235851-fadd-4bd7-9cc6-61f545059ac1",
+                  "title": "Staff Software Engineer, Product",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/replit/8fbbe594-596a-4a4f-844b-dc00111e717f",
+                  "title": "Software Engineer, Mobile",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs Sentry",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://replit.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs Datadog",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://replit.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "domain": "ironcladapp.com",
+          "name": "Ironclad",
+          "score": 99,
+          "band": "very strong",
+          "reviewed": false,
+          "whyNow": "Their hiring points to growing observability needs, with engineering and platform roles open and Kubernetes in the mix. They also run New Relic, so cost and coverage may be under review.",
+          "opener": "With observability and Kubernetes work showing up in your hiring, your team may be balancing broader coverage with New Relic spend. A practical review can help keep production visibility high as engineering grows.",
+          "signals": [
+            {
+              "type": "reading_need_terms",
+              "label": "Job posts call for observability work",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/ironcladhq/b5d4466f-ffe3-4b31-9463-22a926206ece",
+                  "title": "Staff Application Security Engineer",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/ironcladhq/d58d6ff6-40fc-434e-adbd-010c77522573",
+                  "title": "Staff IT Engineer",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "1 open SRE or platform role",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/ironcladhq/a460a920-d839-4bcb-9a05-3ea1f07b4742",
+                  "title": "Staff Site Reliability Engineer",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "10 open engineering roles",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/ironcladhq/ffad759b-ff33-47bd-98d2-3da2827697be",
+                  "title": "Demo Engineer",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/ironcladhq/18ac97be-a2dd-49c2-a334-ae77d85d4dd0",
+                  "title": "Principal Engineer",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/ironcladhq/9d44c8b0-8c81-4ad2-8ae6-8f7e916cfe8b",
+                  "title": "Sr. Enterprise Architect",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs New Relic",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://ironcladapp.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_job_tools",
+              "label": "Job posts name Kubernetes",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/ironcladhq/b5d4466f-ffe3-4b31-9463-22a926206ece",
+                  "title": "Staff Application Security Engineer",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/ironcladhq/18ac97be-a2dd-49c2-a334-ae77d85d4dd0",
+                  "title": "Principal Engineer",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/ironcladhq/f01fb172-7a43-4686-b897-10f1288fbcd0",
+                  "title": "Senior Staff Software Engineer",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "domain": "flexport.com",
+          "name": "Flexport",
+          "score": 98,
+          "band": "very strong",
+          "reviewed": false,
+          "whyNow": "Recent hiring signals mention observability and Kubernetes, with six engineering roles and an SRE or platform opening suggesting monitoring needs may be growing.",
+          "opener": "With Kubernetes appearing in recent roles, your team may find a practical review useful for keeping production visibility high and monitoring spend controlled as engineering grows.",
+          "signals": [
+            {
+              "type": "reading_need_terms",
+              "label": "Job posts call for observability work",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://job-boards.greenhouse.io/flexport/jobs/7921068",
+                  "title": "Senior Software Engineer: Platform",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://job-boards.greenhouse.io/flexport/jobs/7906161",
+                  "title": "Software Engineer II",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://job-boards.greenhouse.io/flexport/jobs/8064123",
+                  "title": "Staff Software Engineer: Platform SRE",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "1 open SRE or platform role",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://job-boards.greenhouse.io/flexport/jobs/8064123",
+                  "title": "Staff Software Engineer: Platform SRE",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "6 open engineering roles",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://job-boards.greenhouse.io/flexport/jobs/8015840",
+                  "title": "Automation Engineer I",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://job-boards.greenhouse.io/flexport/jobs/8131941",
+                  "title": "Senior Software Engineer",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://job-boards.greenhouse.io/flexport/jobs/8164901",
+                  "title": "Senior Systems Engineer (Identity and Access)",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs Datadog",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://www.flexport.com/careers/jobs/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_job_tools",
+              "label": "Job posts name Kubernetes",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://job-boards.greenhouse.io/flexport/jobs/8164847",
+                  "title": "Senior Security Engineer, Detection & Response",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://job-boards.greenhouse.io/flexport/jobs/7921068",
+                  "title": "Senior Software Engineer: Platform",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://job-boards.greenhouse.io/flexport/jobs/8064123",
+                  "title": "Staff Software Engineer: Platform SRE",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "domain": "goteleport.com",
+          "name": "Teleport",
+          "score": 98,
+          "band": "very strong",
+          "reviewed": false,
+          "whyNow": "They are adding SRE and platform capacity while observability appears in hiring plans, which may prompt a monitoring review.",
+          "opener": "With your team hiring across SRE and platform work, you may be weighing how to keep production visibility strong without letting monitoring spend climb. A practical review of coverage and cost drivers could help.",
+          "signals": [
+            {
+              "type": "reading_open_roles",
+              "label": "2 open SRE or platform roles",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/goteleport/1ceb2d28-1745-4d0d-b21e-3fa88be9b996",
+                  "title": "Senior Site Reliability Engineer - US",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/goteleport/219963ed-01b6-4e78-a9c8-7048c0109141",
+                  "title": "Site Reliability Engineer (Forward Deployed)",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_need_terms",
+              "label": "Job posts call for observability work",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/goteleport/1ceb2d28-1745-4d0d-b21e-3fa88be9b996",
+                  "title": "Senior Site Reliability Engineer - US",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "8 open engineering roles",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/goteleport/317e01b3-fe64-4885-ba81-33ef988c21ab",
+                  "title": "Senior Field Engineer",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/goteleport/f920e496-90bd-4e62-a479-e45c47940d07",
+                  "title": "Senior Software Engineer, Security - US",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/goteleport/0a448299-d1f6-4eab-ac8e-efdfda2efc04",
+                  "title": "Senior Backend Engineer",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs Sentry",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://goteleport.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_job_tools",
+              "label": "Job posts name Kubernetes",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/goteleport/317e01b3-fe64-4885-ba81-33ef988c21ab",
+                  "title": "Senior Field Engineer",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/goteleport/f920e496-90bd-4e62-a479-e45c47940d07",
+                  "title": "Senior Software Engineer, Security - US",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/goteleport/5fc09c78-7237-4135-9c53-783badeea0e7",
+                  "title": "Senior Backend Engineer",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 5,
           "domain": "fieldguide.com",
           "name": "Fieldguide",
-          "score": 100,
+          "score": 97,
           "band": "very strong",
           "reviewed": false,
           "whyNow": "They are hiring for observability work, with 10 engineering roles and an SRE or platform opening suggesting monitoring needs may be growing.",
@@ -677,10 +1085,10 @@
           ]
         },
         {
-          "rank": 2,
+          "rank": 6,
           "domain": "happyrobot.ai",
           "name": "HappyRobot",
-          "score": 100,
+          "score": 97,
           "band": "very strong",
           "reviewed": false,
           "whyNow": "They may be reviewing monitoring as they hire across engineering, with observability work and an SRE or platform role appearing in current openings.",
@@ -784,10 +1192,10 @@
           ]
         },
         {
-          "rank": 3,
+          "rank": 7,
           "domain": "onebrief.com",
           "name": "Onebrief",
-          "score": 100,
+          "score": 97,
           "band": "very strong",
           "reviewed": false,
           "whyNow": "Their hiring signals point to observability and SLO work, alongside four open SRE or platform roles, suggesting they may be reviewing production visibility as the team grows.",
@@ -906,127 +1314,10 @@
           ]
         },
         {
-          "rank": 4,
-          "domain": "replit.com",
-          "name": "Replit",
-          "score": 100,
-          "band": "very strong",
-          "reviewed": false,
-          "whyNow": "Their hiring mentions SLOs, monitoring, and alerting, alongside 12 engineering roles and an SRE or platform opening, which may raise observability needs.",
-          "opener": "As hiring expands across engineering and SRE or platform work, your team may find a service-level view of production signals and monitoring spend useful for planning.",
-          "signals": [
-            {
-              "type": "reading_need_terms",
-              "label": "Job posts call for observability, SLO and monitoring and alerting work",
-              "firedAt": "2026-09-13",
-              "confidence": "high",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/replit/8fbbe594-596a-4a4f-844b-dc00111e717f",
-                  "title": "Software Engineer, Mobile",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/replit/6481ec1e-527c-4c1f-a041-2fb5021e7bd5",
-                  "title": "Staff Infrastructure Engineer",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/replit/bb52f792-58c2-41ab-954d-555c821fe3fe",
-                  "title": "Principal Software Engineer, Money Infrastructure",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_open_roles",
-              "label": "1 open SRE or platform role",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/replit/6481ec1e-527c-4c1f-a041-2fb5021e7bd5",
-                  "title": "Staff Infrastructure Engineer",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_open_roles",
-              "label": "12 open engineering roles",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/replit/2f1de5f1-48c2-4104-a697-a51fe1620508",
-                  "title": "Design Engineer",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/replit/47235851-fadd-4bd7-9cc6-61f545059ac1",
-                  "title": "Staff Software Engineer, Product",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/replit/8fbbe594-596a-4a4f-844b-dc00111e717f",
-                  "title": "Software Engineer, Mobile",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_job_tools",
-              "label": "Job posts name Kubernetes",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/replit/6481ec1e-527c-4c1f-a041-2fb5021e7bd5",
-                  "title": "Staff Infrastructure Engineer",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/replit/e903b65b-1f63-46a6-b27f-d1d4a0bfbf14",
-                  "title": "Security Operations Lead",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/replit/37f81c18-c742-4f7d-bf81-34c3f5142973",
-                  "title": "Software Engineer, Growth Infrastructure",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_job_tools",
-              "label": "Job posts name Terraform",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/replit/6481ec1e-527c-4c1f-a041-2fb5021e7bd5",
-                  "title": "Staff Infrastructure Engineer",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/replit/f98605a1-36d2-4b2f-b9be-f66064a02645",
-                  "title": "Staff Software Engineer, Replit Cloud",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/replit/7fa1826e-d7fd-4837-8485-97de895ba7fc",
-                  "title": "Senior Software Engineer, Replit Cloud",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "rank": 5,
+          "rank": 8,
           "domain": "supabase.com",
           "name": "Supabase",
-          "score": 100,
+          "score": 97,
           "band": "very strong",
           "reviewed": false,
           "whyNow": "They may be reviewing observability as hiring expands, with posts calling for OpenTelemetry and SLO work plus two open SRE or platform roles.",
@@ -1145,10 +1436,112 @@
           ]
         },
         {
-          "rank": 6,
+          "rank": 9,
+          "domain": "ziphq.com",
+          "name": "Zip",
+          "score": 93,
+          "band": "very strong",
+          "reviewed": false,
+          "whyNow": "Their hiring plans include observability work, with eight engineering openings and Kubernetes and Terraform mentioned, suggesting monitoring needs may be growing.",
+          "opener": "With observability work appearing in your hiring plans, your team may benefit from a practical framework for keeping production visibility high across Kubernetes and Terraform while monitoring costs stay controlled.",
+          "signals": [
+            {
+              "type": "reading_need_terms",
+              "label": "Job posts call for observability work",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/zip/c72dacde-b007-45ea-901b-ed9f6d7a4746",
+                  "title": "Software Engineer, Core Infrastructure (Mid-Senior level)",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/zip/31522dcb-e818-4f7b-a5c8-eda2873468cd",
+                  "title": "Senior Technical Support Engineer",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/zip/11aaa23c-a963-420d-9c55-345d530e7b13",
+                  "title": "Engineering Manager, Online Storage - SF",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "8 open engineering roles",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/zip/0c1b3417-9ba4-4630-8590-f6b45c40310a",
+                  "title": "Software Engineer, Frontend (All Levels)",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/zip/2bc7327b-1c06-418a-beeb-bec1dd70480e",
+                  "title": "Software Engineer Intern (Winter 2027)",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/zip/adf33342-3882-4808-952f-76bb6ecca275",
+                  "title": "Senior Software Engineer, Developer Platform",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs Sentry",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://zip.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_job_tools",
+              "label": "Job posts name Kubernetes",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/zip/0c1b3417-9ba4-4630-8590-f6b45c40310a",
+                  "title": "Software Engineer, Frontend (All Levels)",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/zip/839f373e-b260-4cb5-a166-0de895029f21",
+                  "title": "Senior Security Engineer",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_job_tools",
+              "label": "Job posts name Terraform",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/zip/839f373e-b260-4cb5-a166-0de895029f21",
+                  "title": "Senior Security Engineer",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 10,
           "domain": "deepgram.com",
           "name": "Deepgram",
-          "score": 96,
+          "score": 93,
           "band": "very strong",
           "reviewed": false,
           "whyNow": "Their hiring includes monitoring responsibilities and two SRE or platform roles, which may signal a need to revisit production visibility as the engineering team grows.",
@@ -1265,424 +1658,6 @@
               ]
             }
           ]
-        },
-        {
-          "rank": 7,
-          "domain": "gridware.io",
-          "name": "Gridware",
-          "score": 96,
-          "band": "very strong",
-          "reviewed": false,
-          "whyNow": "Their hiring signals include dedicated observability work and an open SRE or platform role, suggesting monitoring needs may be growing now.",
-          "opener": "With observability work appearing in your hiring plans, you may be reviewing how visibility scales. A practical cost and coverage review can help keep production signals useful as the team grows.",
-          "signals": [
-            {
-              "type": "reading_need_terms",
-              "label": "Job posts call for observability work",
-              "firedAt": "2026-09-13",
-              "confidence": "high",
-              "evidence": [
-                {
-                  "url": "https://jobs.lever.co/gridware/ffe216c9-1fb4-4e35-87a6-af89ab08c28c",
-                  "title": "Data Engineer",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.lever.co/gridware/03c82c42-bf4b-4b59-b474-c6d9e1696295",
-                  "title": "Director of Engineering, Data",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.lever.co/gridware/c70668f2-69ea-4dc3-a081-78e794672da1",
-                  "title": "ML Infrastructure Engineer",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_open_roles",
-              "label": "1 open SRE or platform role",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.lever.co/gridware/c70668f2-69ea-4dc3-a081-78e794672da1",
-                  "title": "ML Infrastructure Engineer",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_open_roles",
-              "label": "8 open engineering roles",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.lever.co/gridware/03c82c42-bf4b-4b59-b474-c6d9e1696295",
-                  "title": "Director of Engineering, Data",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.lever.co/gridware/c70668f2-69ea-4dc3-a081-78e794672da1",
-                  "title": "ML Infrastructure Engineer",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.lever.co/gridware/f6b0c905-b6c9-4afb-89dc-2b511646f3ac",
-                  "title": "R&D Test Engineer, Instrumentation",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_job_tools",
-              "label": "Job posts name Kubernetes",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.lever.co/gridware/c70668f2-69ea-4dc3-a081-78e794672da1",
-                  "title": "ML Infrastructure Engineer",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.lever.co/gridware/cebb7035-b458-41cb-8b8a-3989aca21793",
-                  "title": "Senior Cloud Engineer",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.lever.co/gridware/dd25acdc-a24b-45a1-b3b4-e98b22105b13",
-                  "title": "Senior Software Engineer, Grid Communications",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_job_tools",
-              "label": "Job posts name Terraform",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.lever.co/gridware/03c82c42-bf4b-4b59-b474-c6d9e1696295",
-                  "title": "Director of Engineering, Data",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.lever.co/gridware/cebb7035-b458-41cb-8b8a-3989aca21793",
-                  "title": "Senior Cloud Engineer",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "rank": 8,
-          "domain": "ironcladapp.com",
-          "name": "Ironclad",
-          "score": 96,
-          "band": "very strong",
-          "reviewed": false,
-          "whyNow": "Their hiring plans include observability work, alongside an SRE or platform opening and 10 engineering roles, suggesting monitoring needs may grow.",
-          "opener": "With observability work showing up in your hiring plans, you may find a practical review of production coverage and monitoring spend useful as the team grows.",
-          "signals": [
-            {
-              "type": "reading_need_terms",
-              "label": "Job posts call for observability work",
-              "firedAt": "2026-09-13",
-              "confidence": "high",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/b5d4466f-ffe3-4b31-9463-22a926206ece",
-                  "title": "Staff Application Security Engineer",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/d58d6ff6-40fc-434e-adbd-010c77522573",
-                  "title": "Staff IT Engineer",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_open_roles",
-              "label": "1 open SRE or platform role",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/a460a920-d839-4bcb-9a05-3ea1f07b4742",
-                  "title": "Staff Site Reliability Engineer",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_open_roles",
-              "label": "10 open engineering roles",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/ffad759b-ff33-47bd-98d2-3da2827697be",
-                  "title": "Demo Engineer",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/18ac97be-a2dd-49c2-a334-ae77d85d4dd0",
-                  "title": "Principal Engineer",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/9d44c8b0-8c81-4ad2-8ae6-8f7e916cfe8b",
-                  "title": "Sr. Enterprise Architect",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_job_tools",
-              "label": "Job posts name Kubernetes",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/b5d4466f-ffe3-4b31-9463-22a926206ece",
-                  "title": "Staff Application Security Engineer",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/18ac97be-a2dd-49c2-a334-ae77d85d4dd0",
-                  "title": "Principal Engineer",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/f01fb172-7a43-4686-b897-10f1288fbcd0",
-                  "title": "Senior Staff Software Engineer",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_job_tools",
-              "label": "Job posts name Terraform",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/f55e6b4f-6b18-44c4-b8e3-30814365c1c0",
-                  "title": "Staff IAM Engineer",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/b5d4466f-ffe3-4b31-9463-22a926206ece",
-                  "title": "Staff Application Security Engineer",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/a460a920-d839-4bcb-9a05-3ea1f07b4742",
-                  "title": "Staff Site Reliability Engineer",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "rank": 9,
-          "domain": "ziina.com",
-          "name": "Ziina",
-          "score": 96,
-          "band": "very strong",
-          "reviewed": false,
-          "whyNow": "They may be evaluating observability as hiring grows, with roles covering monitoring work, Kubernetes and Terraform, plus two SRE or platform openings.",
-          "opener": "With your team hiring across engineering and platform work and naming Kubernetes and Terraform, a practical approach to preserve production visibility while keeping monitoring spend in check may help.",
-          "signals": [
-            {
-              "type": "reading_need_terms",
-              "label": "Job posts call for observability work",
-              "firedAt": "2026-09-13",
-              "confidence": "high",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/ziina/b52d240f-2ccb-4aea-800b-623e9ca8ae09",
-                  "title": "Backend Engineer, Payments Platform",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ziina/0e2861ef-b501-4591-88bd-f418a63620d8",
-                  "title": "Senior Platform Engineer (Infrastructure)",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_open_roles",
-              "label": "2 open SRE or platform roles",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/ziina/0e2861ef-b501-4591-88bd-f418a63620d8",
-                  "title": "Senior Platform Engineer (Infrastructure)",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ziina/b72caf1d-e9a0-483f-9fb9-4d1cd7f28ecb",
-                  "title": "Platform Engineer (Developer Enablement)",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_open_roles",
-              "label": "5 open engineering roles",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/ziina/b52d240f-2ccb-4aea-800b-623e9ca8ae09",
-                  "title": "Backend Engineer, Payments Platform",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ziina/e1f0f84a-2867-45a6-967d-44462c66ce59",
-                  "title": "Senior Full-Stack Engineer (Web)",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ziina/0e2861ef-b501-4591-88bd-f418a63620d8",
-                  "title": "Senior Platform Engineer (Infrastructure)",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_job_tools",
-              "label": "Job posts name Kubernetes",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/ziina/b52d240f-2ccb-4aea-800b-623e9ca8ae09",
-                  "title": "Backend Engineer, Payments Platform",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ziina/e1f0f84a-2867-45a6-967d-44462c66ce59",
-                  "title": "Senior Full-Stack Engineer (Web)",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ziina/0e2861ef-b501-4591-88bd-f418a63620d8",
-                  "title": "Senior Platform Engineer (Infrastructure)",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_job_tools",
-              "label": "Job posts name Terraform",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/ziina/b52d240f-2ccb-4aea-800b-623e9ca8ae09",
-                  "title": "Backend Engineer, Payments Platform",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ziina/e1f0f84a-2867-45a6-967d-44462c66ce59",
-                  "title": "Senior Full-Stack Engineer (Web)",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ziina/0e2861ef-b501-4591-88bd-f418a63620d8",
-                  "title": "Senior Platform Engineer (Infrastructure)",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "rank": 10,
-          "domain": "vapi.ai",
-          "name": "Vapi",
-          "score": 93,
-          "band": "very strong",
-          "reviewed": false,
-          "whyNow": "They may be reassessing observability as they hire an SRE or platform engineer and seek stronger OpenTelemetry and SLO practices.",
-          "opener": "With an SRE or platform role open, you may be reviewing how visibility and alerting scale. A practical framework can help keep production insight high while monitoring costs stay controlled.",
-          "signals": [
-            {
-              "type": "reading_open_roles",
-              "label": "1 open SRE or platform role",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/vapi/2d702840-a588-4273-8b98-49ed815c0c50",
-                  "title": "Member of Technical Staff, DevOps",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_need_terms",
-              "label": "Job posts call for observability, OpenTelemetry and SLO work",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/vapi/d270d613-30b8-4fdc-96e0-514993ca7a82",
-                  "title": "Member of Technical Staff, Backend",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_job_tools",
-              "label": "Job posts name Kubernetes",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/vapi/d270d613-30b8-4fdc-96e0-514993ca7a82",
-                  "title": "Member of Technical Staff, Backend",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_job_tools",
-              "label": "Job posts name Terraform",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/vapi/2d702840-a588-4273-8b98-49ed815c0c50",
-                  "title": "Member of Technical Staff, DevOps",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_job_tools",
-              "label": "Job posts name Prometheus",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/vapi/4b6abd59-ac74-40e9-8cab-74253078aaf4",
-                  "title": "Member of Technical Staff, Site Reliablity Engineer",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            }
-          ]
         }
       ]
     },
@@ -1694,10 +1669,332 @@
       "companies": [
         {
           "rank": 1,
-          "domain": "lemfi.com",
-          "name": "LemFi",
+          "domain": "photoroom.com",
+          "name": "Photoroom",
           "score": 100,
           "band": "very strong",
+          "reviewed": false,
+          "whyNow": "They are expanding performance marketing and may be focused on incrementality, suggesting readiness to test channels beyond social and search.",
+          "opener": "With your team hiring in performance marketing and exploring incrementality, you may find it useful to see how streaming TV can be measured alongside paid social.",
+          "signals": [
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs the Meta pixel",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://www.photoroom.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs the TikTok pixel",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://www.photoroom.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs Google Ads conversion tracking",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://www.photoroom.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "2 open performance marketing roles",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/photoroom/321aa19e-bd58-4ac2-bd65-da23aea6299b",
+                  "title": "Senior Growth Marketing",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/photoroom/93fc05c2-63e0-422f-9501-3171be3be840",
+                  "title": "Senior User Acquisition Manager",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_need_terms",
+              "label": "Job posts call for incrementality work",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/photoroom/93fc05c2-63e0-422f-9501-3171be3be840",
+                  "title": "Senior User Acquisition Manager",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "domain": "slash.com",
+          "name": "Slash",
+          "score": 94,
+          "band": "very strong",
+          "reviewed": false,
+          "whyNow": "They are already tracking conversions across Meta, Google, and Reddit, while two open marketing roles may signal room to expand paid acquisition.",
+          "opener": "With conversion tracking already in place across paid channels, your team may be able to test streaming TV with reporting that aligns with social performance.",
+          "signals": [
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs the Meta pixel",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://www.slash.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs Google Ads conversion tracking",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://www.slash.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs the Reddit pixel",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://www.slash.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "2 open marketing roles",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/slash-financial/ee0c4aa3-dd1b-4988-8e9b-0a53913e53cc",
+                  "title": "Head of Brand",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/slash-financial/dc77cf77-b1ed-491c-b1a2-b4f38c20e0d9",
+                  "title": "Senior Video Editor",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 3,
+          "domain": "ziina.com",
+          "name": "Ziina",
+          "score": 94,
+          "band": "very strong",
+          "reviewed": false,
+          "whyNow": "They track conversions across Meta, TikTok, and Google Ads and are hiring in marketing, which may signal room to expand paid acquisition.",
+          "opener": "With conversion tracking across Meta, TikTok, and Google Ads, your team may value a way to add streaming TV while measuring it alongside paid social.",
+          "signals": [
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs the Meta pixel",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://ziina.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs the TikTok pixel",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://ziina.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs Google Ads conversion tracking",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://ziina.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "2 open marketing roles",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/ziina/0a424b07-85a9-42ea-9daf-58b9de905398",
+                  "title": "Head of Marketing",
+                  "seenAt": "2026-09-13"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/ziina/edf1492b-7ade-429b-835a-bba2e7d9374b",
+                  "title": "Brand Marketing Manager",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 4,
+          "domain": "arqfinance.com",
+          "name": "ARQ",
+          "score": 81,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "They run Meta and Google Ads tracking, while hiring signals point to interest in streaming TV, suggesting they may be ready to expand paid acquisition.",
+          "opener": "With streaming TV work appearing in your hiring plans, you may value a way to add those campaigns while measuring results alongside paid social.",
+          "signals": [
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs the Meta pixel",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://www.arqfinance.com/en-MX",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs Google Ads conversion tracking",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://www.arqfinance.com/en-MX",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_need_terms",
+              "label": "Job posts call for streaming TV ad work",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/arq/7c7d8951-7b71-403d-a21a-efde6d306e8d",
+                  "title": "Head of Growth - Mexico",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 5,
+          "domain": "vori.com",
+          "name": "Vori",
+          "score": 81,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "They already track Meta and Google Ads conversions, and an open performance marketing role may signal room to expand paid acquisition into streaming TV.",
+          "opener": "With Meta and Google conversion tracking in place, your team may be able to add streaming TV while comparing results in the same framework as paid social.",
+          "signals": [
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs the Meta pixel",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://www.vori.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs Google Ads conversion tracking",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://www.vori.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "1 open performance marketing role",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/vori/82c6d5a2-69a2-49a5-b8b2-f81c16a233fb",
+                  "title": "Growth Marketing Lead",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 6,
+          "domain": "lemfi.com",
+          "name": "LemFi",
+          "score": 69,
+          "band": "medium",
           "reviewed": false,
           "whyNow": "They have three open marketing roles, with posts calling for programmatic work, which may signal room to expand paid acquisition into streaming TV.",
           "opener": "With programmatic work showing up in your hiring plans, you may be weighing new paid channels. A simple way to test streaming TV is to measure it against the same outcomes as paid social.",
@@ -1754,77 +2051,11 @@
           ]
         },
         {
-          "rank": 2,
-          "domain": "photoroom.com",
-          "name": "Photoroom",
-          "score": 100,
-          "band": "very strong",
-          "reviewed": false,
-          "whyNow": "They are hiring across performance and marketing, while seeking incrementality expertise, which may signal readiness to test and measure new acquisition channels.",
-          "opener": "As you explore incrementality, your team may benefit from a way to add streaming TV and compare its impact with paid social using consistent measurement.",
-          "signals": [
-            {
-              "type": "reading_open_roles",
-              "label": "2 open performance marketing roles",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/photoroom/321aa19e-bd58-4ac2-bd65-da23aea6299b",
-                  "title": "Senior Growth Marketing",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/photoroom/93fc05c2-63e0-422f-9501-3171be3be840",
-                  "title": "Senior User Acquisition Manager",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_need_terms",
-              "label": "Job posts call for incrementality work",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/photoroom/93fc05c2-63e0-422f-9501-3171be3be840",
-                  "title": "Senior User Acquisition Manager",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_open_roles",
-              "label": "3 open marketing roles",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/photoroom/2a60b45d-61c3-440f-8003-a98051ff6b48",
-                  "title": "Account Based Marketing & Events Lead",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/photoroom/321aa19e-bd58-4ac2-bd65-da23aea6299b",
-                  "title": "Senior Growth Marketing",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/photoroom/93fc05c2-63e0-422f-9501-3171be3be840",
-                  "title": "Senior User Acquisition Manager",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "rank": 3,
+          "rank": 7,
           "domain": "getlokalapp.com",
           "name": "Lokal",
-          "score": 88,
-          "band": "strong",
+          "score": 63,
+          "band": "medium",
           "reviewed": false,
           "whyNow": "They have three performance-focused marketing openings and 16 marketing roles listed, which may signal room to expand paid acquisition.",
           "opener": "With several performance-focused roles open, you may be expanding acquisition. A streaming TV test measured alongside paid social can help compare channels on the same terms.",
@@ -1878,11 +2109,11 @@
           ]
         },
         {
-          "rank": 4,
+          "rank": 8,
           "domain": "harperinsure.com",
           "name": "Harper",
-          "score": 88,
-          "band": "strong",
+          "score": 63,
+          "band": "medium",
           "reviewed": false,
           "whyNow": "Their seven marketing openings, including a performance marketing role, may signal growing acquisition needs and interest in adding new channels.",
           "opener": "With several marketing openings and a performance marketing role, you may be expanding acquisition efforts. A practical way to test streaming TV is to measure it alongside paid social.",
@@ -1926,78 +2157,10 @@
           ]
         },
         {
-          "rank": 5,
-          "domain": "stepful.com",
-          "name": "Stepful",
-          "score": 88,
-          "band": "strong",
-          "reviewed": false,
-          "whyNow": "They have two open marketing roles, which may signal growing capacity for paid acquisition and new channels.",
-          "opener": "With two marketing roles open, your team may be expanding acquisition capacity. A testing framework could help measure streaming TV alongside paid social using comparable metrics.",
-          "signals": [
-            {
-              "type": "reading_open_roles",
-              "label": "1 open performance marketing role",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/stepful/cbaa2068-03ac-4f0f-9979-424c653d1f1f",
-                  "title": "Manager, Growth Marketing",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_open_roles",
-              "label": "2 open marketing roles",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/stepful/cbaa2068-03ac-4f0f-9979-424c653d1f1f",
-                  "title": "Manager, Growth Marketing",
-                  "seenAt": "2026-09-13"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/stepful/ec0e3b7c-fdb1-40c0-a92b-9d87036cb28a",
-                  "title": "Growth Manager, Student Engagement",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "rank": 6,
-          "domain": "arqfinance.com",
-          "name": "ARQ",
-          "score": 71,
-          "band": "medium",
-          "reviewed": false,
-          "whyNow": "They may be exploring streaming TV buying now, with job posts calling for streaming TV ad work.",
-          "opener": "As your team adds streaming TV ad work, a practical next step may be a measurement plan that lines up with paid social results.",
-          "signals": [
-            {
-              "type": "reading_need_terms",
-              "label": "Job posts call for streaming TV ad work",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/arq/7c7d8951-7b71-403d-a21a-efde6d306e8d",
-                  "title": "Head of Growth - Mexico",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "rank": 7,
+          "rank": 9,
           "domain": "gocardless.com",
           "name": "GoCardless",
-          "score": 71,
+          "score": 50,
           "band": "medium",
           "reviewed": false,
           "whyNow": "They have an open performance marketing role, which may signal near-term focus on scaling and measuring paid acquisition across new channels.",
@@ -2019,35 +2182,10 @@
           ]
         },
         {
-          "rank": 8,
-          "domain": "vori.com",
-          "name": "Vori",
-          "score": 71,
-          "band": "medium",
-          "reviewed": false,
-          "whyNow": "They have an open performance marketing role, which may signal a push to expand or strengthen paid acquisition efforts.",
-          "opener": "With a performance marketing role open, your team may be evaluating new acquisition channels. A useful starting point is a streaming TV test measured with the same outcomes as paid social.",
-          "signals": [
-            {
-              "type": "reading_open_roles",
-              "label": "1 open performance marketing role",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/vori/82c6d5a2-69a2-49a5-b8b2-f81c16a233fb",
-                  "title": "Growth Marketing Lead",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "rank": 9,
+          "rank": 10,
           "domain": "whatnot.com",
           "name": "Whatnot",
-          "score": 71,
+          "score": 50,
           "band": "medium",
           "reviewed": false,
           "whyNow": "A Form D shows they recently completed a $547M round, which may support testing new paid acquisition channels such as streaming TV and programmatic.",
