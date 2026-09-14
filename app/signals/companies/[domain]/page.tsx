@@ -17,8 +17,8 @@ export async function generateMetadata({ params }: { params: Promise<{ domain: s
   const c = getCompany(domain);
   if (!c) return {};
   return {
-    title: `${c.name} - Signals - Aditya`,
-    description: `Every week ${c.name} appeared on Signals, and the public evidence behind it.`,
+    title: `${c.name} - The Paper Trail - Aditya`,
+    description: `Every issue of The Paper Trail that ${c.name} appeared in, and the public evidence behind it.`,
   };
 }
 

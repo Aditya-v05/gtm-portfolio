@@ -50,7 +50,7 @@ export function Masthead({ week }: { week: SignalsWeek }) {
         </span>
         <span>Public data · company level</span>
       </div>
-      <p className="mast__name">Signals</p>
+      <p className="mast__name">The Paper Trail</p>
       <p className="mast__motto">Who is about to buy, and the public record that says so.</p>
     </header>
   );
@@ -61,7 +61,7 @@ export function Folio({ week, page, label }: { week: SignalsWeek; page?: number;
   return (
     <header className="folio">
       <Link className="folio__name cursor-target" href={frontHref(week)}>
-        Signals
+        The Paper Trail
       </Link>
       <span className="folio__mid">{label}</span>
       <span className="folio__meta">

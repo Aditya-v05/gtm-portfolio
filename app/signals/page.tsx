@@ -5,7 +5,7 @@ import Turn from "@/components/signals/Turn";
 import { getAllWeeks } from "@/lib/signals";
 
 export const metadata: Metadata = {
-  title: "Signals - Aditya",
+  title: "The Paper Trail - Aditya",
   description:
     "Every week, the companies most likely to buy from a few hot software categories, with the public evidence behind each one.",
 };
@@ -24,7 +24,7 @@ export default function SignalsLatest() {
       ) : (
         <main className="sig">
           <header className="sig__head">
-            <h1 className="sig__title">Signals</h1>
+            <h1 className="sig__title">The Paper Trail</h1>
             <p className="sig__lede">The first weekly list is on its way.</p>
           </header>
         </main>

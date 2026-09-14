@@ -3,8 +3,8 @@ import Link from "next/link";
 import SiteNav from "@/components/SiteNav";
 
 export const metadata: Metadata = {
-  title: "How Signals works - Aditya",
-  description: "Where the Signals lists come from, how companies are scored, and how accurate each signal is.",
+  title: "How The Paper Trail is made - Aditya",
+  description: "Where The Paper Trail's lists come from, how companies are scored, and how accurate each signal is.",
 };
 
 // Precision is measured by hand-labelling fired events before a signal type can
@@ -35,7 +35,7 @@ export default function HowItWorks() {
         <header className="sig__head">
           <p className="sig__eyebrow">
             <Link className="cursor-target" href="/signals">
-              Signals
+              The Paper Trail
             </Link>{" "}
             · how it works
           </p>

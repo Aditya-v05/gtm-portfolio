@@ -1305,7 +1305,7 @@ table.dt--paths td:nth-child(3){ min-width:190px; line-height:1.55; }
   border-top:3px solid var(--ink); border-bottom:1px solid var(--ink);
   font-family:var(--font-m); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
 .mast__name{ margin:16px 0 2px; text-align:center; font-family:var(--font-d); font-weight:700;
-  font-size:clamp(72px,14.5vw,184px); line-height:.9; letter-spacing:-.055em; color:var(--ink); }
+  font-size:clamp(40px,9.6vw,128px); line-height:.95; letter-spacing:-.05em; color:var(--ink); text-wrap:balance; }
 .mast__name a{ color:inherit; }
 .mast__motto{ margin:clamp(20px,3.2vw,40px) 0 14px; text-align:center; font-family:var(--font-b); font-style:italic; font-size:15px; color:var(--dim); }
 
@@ -1446,7 +1446,7 @@ details[open] .brief__open::after{ transform:translate(-50%,-50%) rotate(0deg); 
 
 /* inside pages */
 .folio{ display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:baseline; gap:6px 24px; padding:9px 0; border-top:3px solid var(--ink); border-bottom:1px solid var(--ink); }
-.folio__name{ font-family:var(--font-d); font-weight:700; font-size:28px; line-height:1; letter-spacing:-.045em; color:var(--ink); }
+.folio__name{ font-family:var(--font-d); font-weight:700; font-size:26px; line-height:1; letter-spacing:-.04em; color:var(--ink); white-space:nowrap; }
 .folio__name:hover{ color:var(--accent); }
 .folio__mid{ text-align:center; font-family:var(--font-m); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--dim); }
 .folio__meta{ font-family:var(--font-m); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--mute); white-space:nowrap; }

@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ week: str
   const w = getWeekBySlug(week);
   if (!w) return {};
   return {
-    title: `Signals ${w.week} - Aditya`,
+    title: `The Paper Trail, ${w.week} - Aditya`,
     description: `Potential customers for ${w.niches.map((n) => n.name).join(", ")}, ${formatWeek(w.week)}.`,
   };
 }

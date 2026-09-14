@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ week: str
   const hit = find(week, section);
   if (!hit) return {};
   return {
-    title: `${hit.niche.name} - Signals ${hit.week.week} - Aditya`,
+    title: `${hit.niche.name} - The Paper Trail, ${hit.week.week} - Aditya`,
     description: `Potential customers for ${hit.niche.name}, ${formatWeek(hit.week.week)}, with the public evidence behind each one.`,
   };
 }
