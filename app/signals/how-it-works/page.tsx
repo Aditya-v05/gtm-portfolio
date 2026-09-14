@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SiteNav from "@/components/SiteNav";
+import { getLatestWeek, type PrecisionEntry } from "@/lib/signals";
 
 export const metadata: Metadata = {
   title: "How The Paper Trail is made - Aditya",
@@ -27,7 +28,20 @@ const SIGNAL_TYPES = [
   ["Company announcement", "The company's own LinkedIn posts, read by a model"],
 ] as const;
 
+const pct = (x: number) => `${Math.round(x * 100)}%`;
+
+function precisionText(p: PrecisionEntry): string {
+  if (p.status === "not measured") return p.labelled ? `not measured yet (${p.labelled} labelled)` : "not measured yet";
+  const range = p.low !== null && p.high !== null ? `, 95% range ${pct(p.low)} to ${pct(p.high)}` : "";
+  const base = `${pct(p.precision ?? 0)} of ${p.labelled}${range}`;
+  return p.status === "hidden" ? `${base}; hidden` : base;
+}
+
 export default function HowItWorks() {
+  const measured = getLatestWeek()?.precision ?? [];
+  const rows: Array<{ name: string; source: string; value: string; status: string }> = measured.length
+    ? measured.map((p) => ({ name: p.name, source: p.source, value: precisionText(p), status: p.status }))
+    : SIGNAL_TYPES.map(([name, source]) => ({ name, source, value: "not measured yet", status: "not measured" }));
   return (
     <>
       <SiteNav variant="page" />
@@ -99,8 +113,9 @@ export default function HowItWorks() {
 
           <h2>Precision</h2>
           <p>
-            Before a signal type can appear publicly, up to 50 of its events are checked by hand against
-            the evidence. A type needs at least 30 labels, and it stays hidden if fewer than 70% are right.
+            Signals are checked by hand against their evidence, sampled at random from everything the engine
+            scored, not only what reached the page. A type is measured once it has 30 labels (unsure calls do not
+            count), and from then on it is left out of scoring and off the page if fewer than 70% are right.
           </p>
           <div className="sigprec">
             <div className="sigprec__head" aria-hidden="true">
@@ -108,11 +123,11 @@ export default function HowItWorks() {
               <span>Source</span>
               <span>Precision</span>
             </div>
-            {SIGNAL_TYPES.map(([name, source]) => (
-              <div className="sigprec__row" key={name}>
-                <span>{name}</span>
-                <span className="sigprec__src">{source}</span>
-                <span className="sigprec__val">not measured yet</span>
+            {rows.map((r) => (
+              <div className="sigprec__row" key={r.name}>
+                <span>{r.name}</span>
+                <span className="sigprec__src">{r.source}</span>
+                <span className={`sigprec__val sigprec__val--${r.status.replace(" ", "-")}`}>{r.value}</span>
               </div>
             ))}
           </div>

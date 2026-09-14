@@ -1,7 +1,7 @@
 {
   "version": 1,
   "week": "2026-W37",
-  "generatedAt": "2026-09-14T04:13:53.429Z",
+  "generatedAt": "2026-09-14T13:01:19.872Z",
   "engineVersion": "signal-engine@0.1.0",
   "scoringVersion": "2026-09-14.2",
   "sample": false,
@@ -12,6 +12,74 @@
     "homepages": 4021,
     "filings": 1151
   },
+  "precision": [
+    {
+      "type": "company_announcement",
+      "name": "Company announcement",
+      "source": "The company's own LinkedIn posts, read by a model",
+      "labelled": 0,
+      "correct": 0,
+      "precision": null,
+      "low": null,
+      "high": null,
+      "status": "not measured"
+    },
+    {
+      "type": "funding_filing",
+      "name": "Form D filed",
+      "source": "SEC EDGAR",
+      "labelled": 0,
+      "correct": 0,
+      "precision": null,
+      "low": null,
+      "high": null,
+      "status": "not measured"
+    },
+    {
+      "type": "reading_job_tools",
+      "name": "Tools named in job posts",
+      "source": "Job post text",
+      "labelled": 0,
+      "correct": 0,
+      "precision": null,
+      "low": null,
+      "high": null,
+      "status": "not measured"
+    },
+    {
+      "type": "reading_need_terms",
+      "name": "Need described in job posts",
+      "source": "Job post text, checked by a model",
+      "labelled": 0,
+      "correct": 0,
+      "precision": null,
+      "low": null,
+      "high": null,
+      "status": "not measured"
+    },
+    {
+      "type": "reading_open_roles",
+      "name": "Open roles this week",
+      "source": "Public job boards",
+      "labelled": 0,
+      "correct": 0,
+      "precision": null,
+      "low": null,
+      "high": null,
+      "status": "not measured"
+    },
+    {
+      "type": "reading_site_tools",
+      "name": "Tools on the company's site",
+      "source": "Company homepages",
+      "labelled": 0,
+      "correct": 0,
+      "precision": null,
+      "low": null,
+      "high": null,
+      "status": "not measured"
+    }
+  ],
   "signalOfTheWeek": {
     "nicheId": "observability",
     "domain": "thndr.app",

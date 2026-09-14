@@ -60,6 +60,18 @@ export type Coverage = {
   filings: number;
 };
 
+export type PrecisionEntry = {
+  type: string;
+  name: string;
+  source: string;
+  labelled: number;
+  correct: number;
+  precision: number | null;
+  low: number | null;
+  high: number | null;
+  status: "not measured" | "published" | "hidden";
+};
+
 export type SignalsWeek = {
   version: 1;
   week: string; // "2026-W38"
@@ -68,6 +80,7 @@ export type SignalsWeek = {
   scoringVersion: string;
   sample: boolean;
   coverage: Coverage | null;
+  precision: PrecisionEntry[];
   signalOfTheWeek: SignalOfTheWeek | null;
   niches: Niche[];
 };
@@ -102,7 +115,7 @@ function noEmDash(file: string, where: string, v: string) {
 function validateWeek(file: string, raw: unknown): SignalsWeek {
   exactKeys(file, "week", raw, [
     "version", "week", "generatedAt", "engineVersion", "scoringVersion",
-    "sample", "coverage", "signalOfTheWeek", "niches",
+    "sample", "coverage", "precision", "signalOfTheWeek", "niches",
   ]);
   const w = raw as SignalsWeek;
   if (w.version !== 1) fail(file, "version", "expected 1");
@@ -112,6 +125,18 @@ function validateWeek(file: string, raw: unknown): SignalsWeek {
   str(file, "engineVersion", w.engineVersion);
   str(file, "scoringVersion", w.scoringVersion);
   if (typeof w.sample !== "boolean") fail(file, "sample", "expected a boolean");
+  if (!Array.isArray(w.precision)) fail(file, "precision", "expected an array");
+  w.precision.forEach((p, i) => {
+    const at = `precision[${i}]`;
+    exactKeys(file, at, p, ["type", "name", "source", "labelled", "correct", "precision", "low", "high", "status"]);
+    str(file, `${at}.name`, p.name);
+    noEmDash(file, `${at}.name`, p.name);
+    oneOf(file, `${at}.status`, p.status, ["not measured", "published", "hidden"]);
+    for (const k of ["precision", "low", "high"] as const) {
+      const v = p[k];
+      if (v !== null && (typeof v !== "number" || v < 0 || v > 1)) fail(file, `${at}.${k}`, "expected 0 to 1 or null");
+    }
+  });
   if (w.coverage !== null) {
     const keys = ["companies", "boards", "postings", "homepages", "filings"] as const;
     exactKeys(file, "coverage", w.coverage, [...keys]);
