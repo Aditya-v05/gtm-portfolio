@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Company, Niche, SignalsWeek } from "@/lib/signals";
 import { formatDay, formatWeek, independentSources, issueNumber, SOURCE_LABEL, sourceOf, weekSlug, type SourceGroup } from "@/lib/signals";
-import Brief, { Record } from "./Brief";
+import BriefList, { Record } from "./Brief";
 import Halftone from "./Halftone";
 import PageKeys from "./PageKeys";
 import { IntroButton } from "./PaperIntro";
@@ -293,8 +293,11 @@ export function FrontPage({ week, weeks }: { week: SignalsWeek; weeks: SignalsWe
       <MoneyColumn week={week} />
 
       <section className="inside" aria-labelledby="inside-k">
-        <p id="inside-k" className="inside__k">
-          Inside this issue
+        <p id="inside-k" className="inside__k inside__k--row">
+          <span>Inside this issue</span>
+          <a className="csvlink cursor-target" href={`${frontHref(week)}/csv`} download>
+            Download this issue as CSV ↓
+          </a>
         </p>
         <div className="inside__grid">
           {week.niches.map((n, i) => (
@@ -427,13 +430,14 @@ export function SectionPage({ week, niche }: { week: SignalsWeek; niche: Niche }
             <section className="desk desk--inside" aria-label="The rest of the list">
               <p className="desk__rule">
                 <span>The rest of the list</span>
-                <span>Ranks 2 to {niche.companies.length}</span>
+                <span>
+                  Ranks 2 to {niche.companies.length} ·{" "}
+                  <a className="csvlink cursor-target" href={`${sectionHref(week, niche)}/csv`} download>
+                    Download CSV ↓
+                  </a>
+                </span>
               </p>
-              <ol className="desk__briefs">
-                {rest.map((c) => (
-                  <Brief key={c.domain} company={c} />
-                ))}
-              </ol>
+              <BriefList companies={rest} />
             </section>
           )}
         </>

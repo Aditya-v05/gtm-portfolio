@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteNav from "@/components/SiteNav";
-import Brief from "@/components/signals/Brief";
+import BriefList from "@/components/signals/Brief";
 import { Folio, SampleBanner, sectionHref } from "@/components/signals/Paper";
 import { formatWeek, getAllWeeks, getCompany, getCompanyIndex, issueNumber } from "@/lib/signals";
 
@@ -61,9 +61,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ domain
                     Rank {a.company.rank} of {niche.companies.length}
                   </span>
                 </p>
-                <ol className="desk__briefs desk__briefs--single">
-                  <Brief company={a.company} talkTo={niche.talkTo} open showFileLink={false} />
-                </ol>
+                <BriefList companies={[a.company]} talkTo={niche.talkTo} defaultOpen={a.company.domain} columns={1} showFileLink={false} />
               </section>
             );
           })}

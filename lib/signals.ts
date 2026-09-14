@@ -289,9 +289,6 @@ export function formatWeek(week: string): string {
     : `${from} to ${fmt(end, { month: "short", day: "numeric" })}, ${end.getUTCFullYear()}`;
 }
 
-export function formatDay(iso: string): string {
-  return fmt(new Date(iso.length === 10 ? `${iso}T00:00:00Z` : iso), { month: "short", day: "numeric" });
-}
 
 // ---- company permalinks ----
 
@@ -326,35 +323,11 @@ export function getCompany(domain: string): CompanyHistory | null {
   return getCompanyIndex().get(domain) ?? null;
 }
 
-// ---- presentation helpers ----
-
-export type SourceGroup = "hiring" | "jobs" | "sec" | "web" | "posts";
-
-export const SOURCE_LABEL: Record<SourceGroup, string> = {
-  hiring: "Hiring",
-  jobs: "Job posts",
-  sec: "SEC filing",
-  web: "Website",
-  posts: "Company posts",
-};
-
-/** Where a signal type comes from, for tags and the front-page figure. */
-export function sourceOf(type: string): SourceGroup {
-  if (type === "funding_filing" || type === "form_d_filed") return "sec";
-  if (type === "company_announcement") return "posts";
-  if (/^(trust_page|tool_|pricing_|reading_site_tools)/.test(type)) return "web";
-  if (/^(technology_adoption|competitor_churn|need_keywords|reading_need_terms|reading_has_term|reading_job_tools|project_)/.test(type)) return "jobs";
-  return "hiring";
-}
-
 /** Issue number: the week's position among all published weeks, oldest first. */
 export function issueNumber(week: string): number {
   const all = getAllWeeks().map((w) => w.week).sort();
   return all.indexOf(week) + 1;
 }
 
-/** Independent sources behind a set of signals. Hiring and job-post text share one source. */
-export function independentSources(signals: Signal[]): string[] {
-  const names: Record<SourceGroup, string> = { hiring: "Job boards", jobs: "Job boards", posts: "LinkedIn", sec: "SEC", web: "Website" };
-  return [...new Set(signals.map((s) => names[sourceOf(s.type)]))];
-}
+// Display helpers live apart from the file reading above, so client components can use them.
+export { formatDay, independentSources, SOURCE_LABEL, sourceOf, type SourceGroup } from "./signals-format";
