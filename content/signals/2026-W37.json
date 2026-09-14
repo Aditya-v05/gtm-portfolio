@@ -1,7 +1,7 @@
 {
   "version": 1,
   "week": "2026-W37",
-  "generatedAt": "2026-09-14T13:01:19.872Z",
+  "generatedAt": "2026-09-14T13:21:52.373Z",
   "engineVersion": "signal-engine@0.1.0",
   "scoringVersion": "2026-09-14.2",
   "sample": false,
@@ -82,9 +82,9 @@
   ],
   "signalOfTheWeek": {
     "nicheId": "observability",
-    "domain": "thndr.app",
-    "headline": "Thndr: trading growth and SRE hiring suggest possible observability software needs",
-    "body": "Their trading activity has reached one trillion pounds as job posts call for observability, SLO work, and an SRE or platform hire, suggesting production monitoring needs may be growing."
+    "domain": "razorpay.com",
+    "headline": "Razorpay: Vulcan AI infrastructure and Sentry use suggest observability interest",
+    "body": "Their AI infrastructure post, open SRE role, and Kubernetes and Terraform work suggest growing operational complexity, while Sentry points to a monitoring setup that may need to scale."
   },
   "niches": [
     {
@@ -100,8 +100,8 @@
           "score": 100,
           "band": "strong",
           "reviewed": false,
-          "whyNow": "They may be preparing for more buyer scrutiny: security questionnaire work is already showing up, and a fresh $27M raise could accelerate growth of their AI risk platform.",
-          "opener": "With security questionnaires already on your team’s plate and new funding behind growth, a focused path to SOC 2 or ISO 27001 may help meet buyer requests without slowing product work.",
+          "whyNow": "Their $27 million raise and growing security questionnaire work may signal a need for formal compliance as they pursue more enterprise opportunities.",
+          "opener": "As security questionnaires become part of the work, your team may benefit from a practical path to SOC 2 or ISO 27001 that keeps product work moving and organizes evidence early.",
           "signals": [
             {
               "type": "reading_need_terms",
@@ -118,7 +118,7 @@
             },
             {
               "type": "company_announcement",
-              "label": "On LinkedIn, raised $27 million to develop its AI content risk platform",
+              "label": "On LinkedIn, raised $27 million to advance its AI marketing compliance platform",
               "firedAt": "2026-09-08",
               "confidence": "medium",
               "evidence": [
@@ -625,17 +625,94 @@
       "companies": [
         {
           "rank": 1,
-          "domain": "thndr.app",
-          "name": "Thndr",
+          "domain": "razorpay.com",
+          "name": "Razorpay",
           "score": 100,
-          "band": "strong",
+          "band": "very strong",
           "reviewed": false,
-          "whyNow": "Their trading activity has reached one trillion pounds as job posts call for observability, SLO work, and an SRE or platform hire, suggesting production monitoring needs may be growing.",
-          "opener": "With observability, SLO, Kubernetes, and Terraform work underway, you may benefit from a practical way to keep production visibility high while controlling monitoring costs as your team grows.",
+          "whyNow": "Their AI infrastructure post, open SRE role, and Kubernetes and Terraform work suggest growing operational complexity, while Sentry points to a monitoring setup that may need to scale.",
+          "opener": "With Kubernetes and Terraform in your job posts, your team may be expanding its platform footprint. A practical review can help keep production visibility high while monitoring spend stays predictable.",
           "signals": [
             {
               "type": "company_announcement",
-              "label": "On LinkedIn, reached one trillion pounds in cumulative trading value",
+              "label": "On LinkedIn, highlighted Vulcan’s infrastructure powering AI across billions of transactions",
+              "firedAt": "2026-09-12",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://www.linkedin.com/posts/razorpay_razorpay-gff26-activity-7504423609021571072-EpXR",
+                  "title": "LinkedIn post",
+                  "seenAt": "2026-09-12"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "1 open SRE or platform role",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4730552005",
+                  "title": "DevOps Enginer",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs Sentry",
+              "firedAt": "2026-09-13",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://razorpay.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_job_tools",
+              "label": "Job posts name Kubernetes",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4730552005",
+                  "title": "DevOps Enginer",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            },
+            {
+              "type": "reading_job_tools",
+              "label": "Job posts name Terraform",
+              "firedAt": "2026-09-13",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4730552005",
+                  "title": "DevOps Enginer",
+                  "seenAt": "2026-09-13"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "domain": "thndr.app",
+          "name": "Thndr",
+          "score": 99,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "Their trading volume recently reached EGP 1 trillion, while hiring signals point to observability, SLO, Kubernetes, Terraform, and SRE work. They may be scaling production visibility now.",
+          "opener": "With observability and SLO work alongside Kubernetes and Terraform, your team may benefit from a practical way to keep production visibility high while controlling monitoring costs as systems grow.",
+          "signals": [
+            {
+              "type": "company_announcement",
+              "label": "On LinkedIn, reached one trillion Egyptian pounds in cumulative trading value",
               "firedAt": "2026-09-10",
               "confidence": "medium",
               "evidence": [
@@ -716,10 +793,10 @@
           ]
         },
         {
-          "rank": 2,
+          "rank": 3,
           "domain": "happyrobot.ai",
           "name": "HappyRobot",
-          "score": 99,
+          "score": 98,
           "band": "strong",
           "reviewed": false,
           "whyNow": "Their observability-focused job posts, Kubernetes work, and six engineering openings suggest they may be scaling production systems, while a recent $150M round could support that growth.",
@@ -823,10 +900,10 @@
           ]
         },
         {
-          "rank": 3,
+          "rank": 4,
           "domain": "replit.com",
           "name": "Replit",
-          "score": 98,
+          "score": 97,
           "band": "strong",
           "reviewed": false,
           "whyNow": "They are hiring across engineering, including SRE work focused on observability and alerting, while already using Sentry and Datadog. That growth may create pressure to keep visibility high and costs controlled.",
@@ -920,7 +997,7 @@
           ]
         },
         {
-          "rank": 4,
+          "rank": 5,
           "domain": "metriport.com",
           "name": "Metriport",
           "score": 97,
@@ -963,7 +1040,7 @@
           ]
         },
         {
-          "rank": 5,
+          "rank": 6,
           "domain": "ironcladapp.com",
           "name": "Ironclad",
           "score": 96,
@@ -1065,10 +1142,10 @@
           ]
         },
         {
-          "rank": 6,
+          "rank": 7,
           "domain": "flexport.com",
           "name": "Flexport",
-          "score": 96,
+          "score": 95,
           "band": "strong",
           "reviewed": false,
           "whyNow": "They may be outgrowing their Datadog setup as observability work, Kubernetes, and several engineering roles point to growing production complexity.",
@@ -1172,10 +1249,10 @@
           ]
         },
         {
-          "rank": 7,
+          "rank": 8,
           "domain": "ziphq.com",
           "name": "Zip",
-          "score": 95,
+          "score": 94,
           "band": "strong",
           "reviewed": false,
           "whyNow": "They are hiring for observability work across eight engineering roles, while Kubernetes and Terraform suggest growing infrastructure complexity. Their site runs Sentry, so monitoring needs may be expanding.",
@@ -1274,10 +1351,10 @@
           ]
         },
         {
-          "rank": 8,
+          "rank": 9,
           "domain": "pave.com",
           "name": "Pave",
-          "score": 94,
+          "score": 93,
           "band": "strong",
           "reviewed": false,
           "whyNow": "Their observability-focused hiring, five open engineering roles, and use of Sentry may signal a need to expand production visibility as their stack grows.",
@@ -1366,10 +1443,10 @@
           ]
         },
         {
-          "rank": 9,
+          "rank": 10,
           "domain": "goteleport.com",
           "name": "Teleport",
-          "score": 93,
+          "score": 92,
           "band": "strong",
           "reviewed": false,
           "whyNow": "With two SRE or platform roles and eight engineering openings, they may be expanding observability needs while running Sentry and Kubernetes.",
@@ -1466,83 +1543,6 @@
               ]
             }
           ]
-        },
-        {
-          "rank": 10,
-          "domain": "lemfi.com",
-          "name": "LemFi",
-          "score": 92,
-          "band": "strong",
-          "reviewed": false,
-          "whyNow": "Their open SRE or platform role calls for observability work, while the site shows Sentry and New Relic in use, which may signal growing needs around visibility and monitoring costs.",
-          "opener": "With an SRE or platform role calling for observability work and Kubernetes experience, your team may be balancing more signals and services. A practical review can help keep production visibility high without letting monitoring costs climb.",
-          "signals": [
-            {
-              "type": "reading_open_roles",
-              "label": "1 open SRE or platform role",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/lemfi/26215174-361a-4c1c-93bc-db6aaadb3d05",
-                  "title": "Senior Platform Engineer",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_need_terms",
-              "label": "Job posts call for observability work",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/lemfi/26215174-361a-4c1c-93bc-db6aaadb3d05",
-                  "title": "Senior Platform Engineer",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_site_tools",
-              "label": "Site runs Sentry",
-              "firedAt": "2026-09-13",
-              "confidence": "high",
-              "evidence": [
-                {
-                  "url": "https://lemfi.com/en-ca/",
-                  "title": "Homepage source",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_site_tools",
-              "label": "Site runs New Relic",
-              "firedAt": "2026-09-13",
-              "confidence": "high",
-              "evidence": [
-                {
-                  "url": "https://lemfi.com/en-ca/",
-                  "title": "Homepage source",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            },
-            {
-              "type": "reading_job_tools",
-              "label": "Job posts name Kubernetes",
-              "firedAt": "2026-09-13",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/lemfi/26215174-361a-4c1c-93bc-db6aaadb3d05",
-                  "title": "Senior Platform Engineer",
-                  "seenAt": "2026-09-13"
-                }
-              ]
-            }
-          ]
         }
       ]
     },
@@ -1554,17 +1554,81 @@
       "companies": [
         {
           "rank": 1,
-          "domain": "cleanly.com",
-          "name": "Cleanly",
+          "domain": "selia.co",
+          "name": "Selia",
           "score": 100,
           "band": "strong",
           "reviewed": false,
-          "whyNow": "They are promoting laundry services and their booking app, while Meta pixel and Google Ads tracking suggest active paid acquisition that could extend into measurable streaming TV.",
-          "opener": "With your recent laundry and app promotions, a simple streaming TV test plan could help compare reach and bookings with paid social using shared conversion signals.",
+          "whyNow": "Their Meta, TikTok, and Google tracking suggests active paid acquisition, while a recent mental health awareness campaign shows they are also investing in broader outreach.",
+          "opener": "With Meta, TikTok, and Google conversion tracking in place, you may be able to add streaming TV and compare its acquisition impact using the same approach as paid social.",
           "signals": [
             {
               "type": "company_announcement",
-              "label": "On LinkedIn, promoted laundry service during the US Open",
+              "label": "On LinkedIn, ran a mental health awareness campaign for employees",
+              "firedAt": "2026-09-10",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://www.linkedin.com/posts/seliaco_hoy-en-el-d%C3%ADa-mundial-de-la-prevenci%C3%B3n-del-activity-7503890198410326016-aDES",
+                  "title": "LinkedIn post",
+                  "seenAt": "2026-09-10"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs the Meta pixel",
+              "firedAt": "2026-09-14",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://www.selia.co/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-14"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs the TikTok pixel",
+              "firedAt": "2026-09-14",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://www.selia.co/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-14"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs Google Ads conversion tracking",
+              "firedAt": "2026-09-14",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://www.selia.co/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-14"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "domain": "cleanly.com",
+          "name": "Cleanly",
+          "score": 91,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "They are promoting laundry services around a major sports event while using Meta and Google conversion tracking, so a new booking app may make measurable streaming TV tests timely.",
+          "opener": "With your new booking app and existing Meta and Google conversion tracking, streaming TV could be tested using the same acquisition measures as paid social, with focused audiences and clear conversion goals.",
+          "signals": [
+            {
+              "type": "company_announcement",
+              "label": "On LinkedIn, promoted laundry services during the US Open",
               "firedAt": "2026-09-01",
               "confidence": "medium",
               "evidence": [
@@ -1577,7 +1641,7 @@
             },
             {
               "type": "company_announcement",
-              "label": "On LinkedIn, promoted the ByNext app for booking and managing laundry services",
+              "label": "On LinkedIn, launched an app for booking and managing laundry pickup and delivery",
               "firedAt": "2026-08-25",
               "confidence": "medium",
               "evidence": [
@@ -1617,18 +1681,18 @@
           ]
         },
         {
-          "rank": 2,
+          "rank": 3,
           "domain": "trii.co",
           "name": "trii",
-          "score": 89,
+          "score": 82,
           "band": "strong",
           "reviewed": false,
-          "whyNow": "Their Atlético Nacional sponsorship may signal broader brand investment, while the Meta pixel points to an active paid acquisition setup that could support adding streaming TV.",
-          "opener": "With your Atlético Nacional sponsorship and Meta pixel in place, you may be ready to test streaming TV alongside paid social and compare both through one measurement view.",
+          "whyNow": "Their new sports sponsorship and financial education push may call for broader reach, while the Meta pixel suggests an existing paid acquisition foundation to extend into streaming TV.",
+          "opener": "With your sports sponsorship and Meta-based acquisition already in place, you could test streaming TV using the same audience and conversion framework used for paid social.",
           "signals": [
             {
               "type": "company_announcement",
-              "label": "On LinkedIn, became a sponsor of Atlético Nacional",
+              "label": "On LinkedIn, announced a sports sponsorship and financial education program",
               "firedAt": "2026-09-07",
               "confidence": "medium",
               "evidence": [
@@ -1655,10 +1719,10 @@
           ]
         },
         {
-          "rank": 3,
+          "rank": 4,
           "domain": "helloaxel.com",
           "name": "Axel Travel",
-          "score": 78,
+          "score": 73,
           "band": "strong",
           "reviewed": false,
           "whyNow": "Their recent product launch and active Meta, TikTok, and Google conversion tracking suggest they may be expanding paid acquisition and ready to test streaming TV.",
@@ -1719,18 +1783,18 @@
           ]
         },
         {
-          "rank": 4,
+          "rank": 5,
           "domain": "avironactive.com",
           "name": "Aviron Interactive",
-          "score": 67,
+          "score": 64,
           "band": "strong",
           "reviewed": false,
-          "whyNow": "They recently expanded their connected fitness lineup with three treadmill launches while using Meta and Google conversion tracking, suggesting paid acquisition is active and streaming TV may be timely.",
-          "opener": "With three new treadmills launched and conversion tracking already in place, your team may be able to test streaming TV with reporting aligned to paid social and existing acquisition goals.",
+          "whyNow": "They recently launched three treadmill models and already use Meta pixel and Google Ads conversion tracking, suggesting a push to measure and scale acquisition as the lineup grows.",
+          "opener": "With three new treadmill models recently launched, you may be weighing how to extend paid acquisition beyond social. A streaming TV test measured against the same conversion signals could help assess demand.",
           "signals": [
             {
               "type": "company_announcement",
-              "label": "On LinkedIn, launched three new treadmill models expanding its connected fitness lineup",
+              "label": "On LinkedIn, launched three treadmills expanding its connected fitness ecosystem",
               "firedAt": "2026-09-09",
               "confidence": "medium",
               "evidence": [
@@ -1743,7 +1807,7 @@
             },
             {
               "type": "company_announcement",
-              "label": "On LinkedIn, launched three new treadmills within its connected fitness ecosystem",
+              "label": "On LinkedIn, launched three new treadmills across its connected fitness ecosystem",
               "firedAt": "2026-08-25",
               "confidence": "medium",
               "evidence": [
@@ -1796,14 +1860,14 @@
           ]
         },
         {
-          "rank": 5,
+          "rank": 6,
           "domain": "gather.town",
           "name": "Gather",
-          "score": 56,
+          "score": 55,
           "band": "strong",
           "reviewed": false,
-          "whyNow": "Recent product launches and Meta tracking suggest the team may be investing in growth and could be ready to test streaming TV alongside paid social.",
-          "opener": "Recent releases and Meta tracking suggest you may be scaling acquisition. A practical plan could show how streaming TV fits alongside paid social with comparable measurement.",
+          "whyNow": "Recent product launches, a feature relaunch, and Meta pixel use suggest they may be building acquisition momentum and could now consider streaming TV alongside paid social.",
+          "opener": "With recent product releases and the Meta pixel on your site, your team may be scaling paid acquisition. A practical next step is testing streaming TV with measurement aligned to social.",
           "signals": [
             {
               "type": "company_announcement",
@@ -1820,7 +1884,7 @@
             },
             {
               "type": "company_announcement",
-              "label": "On LinkedIn, brought interactive applause effects back in Gather 2.0",
+              "label": "On LinkedIn, relaunched the Applause feature in Gather 2.0",
               "firedAt": "2026-09-04",
               "confidence": "medium",
               "evidence": [
