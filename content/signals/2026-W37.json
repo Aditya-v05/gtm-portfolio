@@ -1,9 +1,9 @@
 {
   "version": 1,
   "week": "2026-W37",
-  "generatedAt": "2026-09-14T16:40:13.411Z",
+  "generatedAt": "2026-09-14T16:58:29.682Z",
   "engineVersion": "signal-engine@0.1.0",
-  "scoringVersion": "2026-09-14.2",
+  "scoringVersion": "2026-09-14.3",
   "sample": false,
   "coverage": {
     "companies": 4291,
@@ -84,6 +84,105 @@
       "high": 0.995,
       "status": "published",
       "reviewedBy": "Claude (AI)"
+    }
+  ],
+  "money": [
+    {
+      "domain": "sensible.bio",
+      "name": "Sensible Biotechnologies",
+      "sold": 13518941,
+      "offering": 15000000,
+      "firstSale": "2026-08-17",
+      "filedOn": "2026-09-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/1964363/000196436326000003/",
+      "sections": [
+        "SOC 2 / compliance automation",
+        "Observability"
+      ],
+      "match": "exact"
+    },
+    {
+      "domain": "standard.ai",
+      "name": "Standard AI",
+      "sold": 1000000,
+      "offering": 3000000,
+      "firstSale": "2026-08-07",
+      "filedOn": "2026-08-20",
+      "url": "https://www.sec.gov/Archives/edgar/data/1755359/000175535926000004/",
+      "sections": [
+        "SOC 2 / compliance automation",
+        "Observability"
+      ],
+      "match": "exact"
+    },
+    {
+      "domain": "whatnot.com",
+      "name": "Whatnot",
+      "sold": 547000000,
+      "offering": 547000000,
+      "firstSale": "2026-08-05",
+      "filedOn": "2026-08-18",
+      "url": "https://www.sec.gov/Archives/edgar/data/1844768/000184476826000001/",
+      "sections": [
+        "Observability",
+        "CTV / programmatic advertising"
+      ],
+      "match": "exact"
+    },
+    {
+      "domain": "djamo.com",
+      "name": "Djamo",
+      "sold": 1500000,
+      "offering": 7000000,
+      "firstSale": "2026-07-08",
+      "filedOn": "2026-08-10",
+      "url": "https://www.sec.gov/Archives/edgar/data/1952394/000195239426000002/",
+      "sections": [
+        "SOC 2 / compliance automation",
+        "Observability"
+      ],
+      "match": "exact"
+    },
+    {
+      "domain": "fly.io",
+      "name": "Fly.io",
+      "sold": 23199945,
+      "offering": 24999937,
+      "firstSale": "2026-07-07",
+      "filedOn": "2026-07-22",
+      "url": "https://www.sec.gov/Archives/edgar/data/2144091/000214409126000001/",
+      "sections": [
+        "SOC 2 / compliance automation",
+        "Observability"
+      ],
+      "match": "exact"
+    },
+    {
+      "domain": "notabene.id",
+      "name": "Notabene",
+      "sold": 11499968,
+      "offering": 20000000,
+      "firstSale": "2026-06-29",
+      "filedOn": "2026-07-30",
+      "url": "https://www.sec.gov/Archives/edgar/data/1880160/000188016026000003/",
+      "sections": [
+        "SOC 2 / compliance automation",
+        "Observability"
+      ],
+      "match": "exact"
+    },
+    {
+      "domain": "legionhealth.com",
+      "name": "Legion Health",
+      "sold": 16015934,
+      "offering": 25000000,
+      "firstSale": "2026-06-17",
+      "filedOn": "2026-07-01",
+      "url": "https://www.sec.gov/Archives/edgar/data/1916502/000191650226000002/",
+      "sections": [
+        "SOC 2 / compliance automation"
+      ],
+      "match": "exact"
     }
   ],
   "signalOfTheWeek": {

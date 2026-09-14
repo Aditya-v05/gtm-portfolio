@@ -30,6 +30,46 @@ function sourceBars(companies: Company[]) {
   return GROUP_ORDER.map((g) => ({ label: SOURCE_LABEL[g], value: counts.get(g) ?? 0 }));
 }
 
+const usd = (n: number | null) =>
+  n === null ? "Undisclosed" : n >= 1e9 ? `$${+(n / 1e9).toFixed(1)}B` : n >= 1e6 ? `$${+(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `$${Math.round(n / 1e3)}K` : `$${n}`;
+
+/** The business page: recent private rounds by companies that fit a section. */
+function MoneyColumn({ week }: { week: SignalsWeek }) {
+  if (week.money.length === 0) return null;
+  const formD = week.precision.find((p) => p.type === "funding_filing");
+  const measured = formD && formD.status === "published" && formD.precision !== null;
+  return (
+    <section className="money" aria-labelledby="money-k">
+      <p id="money-k" className="inside__k">
+        Money <span className="money__deck">Private rounds filed with the SEC in the last 90 days, by companies that fit a section</span>
+      </p>
+      <ol className="money__list">
+        {week.money.map((m) => (
+          <li key={`${m.domain}-${m.firstSale}`} className="money__item">
+            <span className="money__amount">
+              {usd(m.sold)}
+              {m.offering !== null && m.sold !== null && m.sold < m.offering && <em> of {usd(m.offering)}</em>}
+            </span>
+            <span className="money__name">{m.name}</span>
+            <span className="money__meta">
+              First sale {formatDay(m.firstSale)} · {m.sections.join(", ")}
+              {m.match === "loose" ? " · name match confirmed by state" : ""}
+            </span>
+            <a className="record__cite cursor-target" href={m.url} target="_blank" rel="noreferrer">
+              SEC filing ↗
+            </a>
+          </li>
+        ))}
+      </ol>
+      <p className="money__note">
+        {measured
+          ? `Filings are matched to companies by name; ${Math.round((formD!.precision ?? 0) * 100)}% of ${formD!.labelled} reviewed matches were right.`
+          : `Filings are matched to companies by name. Match precision is not measured yet${formD?.labelled ? ` (${formD.labelled} reviewed so far)` : ""}.`}
+      </p>
+    </section>
+  );
+}
+
 const barsLabel = (bars: { label: string; value: number }[]) => bars.map((b) => `${b.label} ${b.value}`).join(", ");
 
 export function SampleBanner() {
@@ -244,6 +284,8 @@ export function FrontPage({ week, weeks }: { week: SignalsWeek; weeks: SignalsWe
           )}
         </aside>
       </section>
+
+      <MoneyColumn week={week} />
 
       <section className="inside" aria-labelledby="inside-k">
         <p id="inside-k" className="inside__k">

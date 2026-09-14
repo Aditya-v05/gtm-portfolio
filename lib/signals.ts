@@ -73,6 +73,18 @@ export type PrecisionEntry = {
   reviewedBy: string;
 };
 
+export type MoneyEntry = {
+  domain: string;
+  name: string;
+  sold: number | null;
+  offering: number | null;
+  firstSale: string;
+  filedOn: string;
+  url: string;
+  sections: string[];
+  match: "exact" | "loose";
+};
+
 export type SignalsWeek = {
   version: 1;
   week: string; // "2026-W38"
@@ -82,6 +94,7 @@ export type SignalsWeek = {
   sample: boolean;
   coverage: Coverage | null;
   precision: PrecisionEntry[];
+  money: MoneyEntry[];
   signalOfTheWeek: SignalOfTheWeek | null;
   niches: Niche[];
 };
@@ -116,7 +129,7 @@ function noEmDash(file: string, where: string, v: string) {
 function validateWeek(file: string, raw: unknown): SignalsWeek {
   exactKeys(file, "week", raw, [
     "version", "week", "generatedAt", "engineVersion", "scoringVersion",
-    "sample", "coverage", "precision", "signalOfTheWeek", "niches",
+    "sample", "coverage", "precision", "money", "signalOfTheWeek", "niches",
   ]);
   const w = raw as SignalsWeek;
   if (w.version !== 1) fail(file, "version", "expected 1");
@@ -126,6 +139,16 @@ function validateWeek(file: string, raw: unknown): SignalsWeek {
   str(file, "engineVersion", w.engineVersion);
   str(file, "scoringVersion", w.scoringVersion);
   if (typeof w.sample !== "boolean") fail(file, "sample", "expected a boolean");
+  if (!Array.isArray(w.money)) fail(file, "money", "expected an array");
+  w.money.forEach((m, i) => {
+    const at = `money[${i}]`;
+    exactKeys(file, at, m, ["domain", "name", "sold", "offering", "firstSale", "filedOn", "url", "sections", "match"]);
+    str(file, `${at}.name`, m.name);
+    noEmDash(file, `${at}.name`, m.name);
+    if (!/^https:\/\//.test(m.url)) fail(file, `${at}.url`, "expected an https URL");
+    oneOf(file, `${at}.match`, m.match, ["exact", "loose"]);
+    if (!Array.isArray(m.sections) || m.sections.length === 0) fail(file, `${at}.sections`, "expected at least one section");
+  });
   if (!Array.isArray(w.precision)) fail(file, "precision", "expected an array");
   w.precision.forEach((p, i) => {
     const at = `precision[${i}]`;
