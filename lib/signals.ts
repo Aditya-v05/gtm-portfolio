@@ -303,3 +303,9 @@ export function issueNumber(week: string): number {
   const all = getAllWeeks().map((w) => w.week).sort();
   return all.indexOf(week) + 1;
 }
+
+/** Independent sources behind a set of signals. Hiring and job-post text share one source. */
+export function independentSources(signals: Signal[]): string[] {
+  const names: Record<SourceGroup, string> = { hiring: "Job boards", jobs: "Job boards", posts: "LinkedIn", sec: "SEC", web: "Website" };
+  return [...new Set(signals.map((s) => names[sourceOf(s.type)]))];
+}

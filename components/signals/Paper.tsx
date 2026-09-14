@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Company, Niche, SignalsWeek } from "@/lib/signals";
-import { formatDay, formatWeek, issueNumber, SOURCE_LABEL, sourceOf, weekSlug, type SourceGroup } from "@/lib/signals";
+import { formatDay, formatWeek, independentSources, issueNumber, SOURCE_LABEL, sourceOf, weekSlug, type SourceGroup } from "@/lib/signals";
 import Brief, { Record } from "./Brief";
 import Halftone from "./Halftone";
 import PageKeys from "./PageKeys";
@@ -188,7 +188,11 @@ export function FrontPage({ week, weeks }: { week: SignalsWeek; weeks: SignalsWe
             kicker={`Signal of the week · ${leadNiche.name}`}
             headline={sotw.headline}
             deck={sotw.body}
-            byline={["By the signal engine", `Filed ${formatDay(week.generatedAt)}`, `Rank ${lead.rank} of ${leadNiche.companies.length} in ${leadNiche.name}`]}
+            byline={[
+              `${independentSources(lead.signals).length} independent sources: ${independentSources(lead.signals).join(", ")}`,
+              `Filed ${formatDay(week.generatedAt)}`,
+              `Rank ${lead.rank} of ${leadNiche.companies.length} in ${leadNiche.name}`,
+            ]}
             company={lead}
             talkTo={leadNiche.talkTo}
           />
@@ -337,7 +341,7 @@ export function SectionPage({ week, niche }: { week: SignalsWeek; niche: Niche }
               kicker={`No. 1 in ${niche.name}`}
               headline={`${first.name}: ${first.signals[0]?.label ?? ""}`}
               deck={first.whyNow}
-              byline={[first.domain, first.band, `${first.signals.length} ${first.signals.length === 1 ? "signal" : "signals"}`]}
+              byline={[first.domain, first.band, `${independentSources(first.signals).length} independent sources: ${independentSources(first.signals).join(", ")}`]}
               company={first}
               talkTo={niche.talkTo}
             />

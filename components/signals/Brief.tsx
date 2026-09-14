@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Company, Signal } from "@/lib/signals";
-import { formatDay, SOURCE_LABEL, sourceOf } from "@/lib/signals";
+import { formatDay, independentSources, SOURCE_LABEL, sourceOf } from "@/lib/signals";
 
 /** Every signal behind a company, with its source, date and a citation. */
 export function Record({ signals, lead = false }: { signals: Signal[]; lead?: boolean }) {
@@ -39,6 +39,7 @@ export default function Brief({
   const c = company;
   const [top, ...rest] = c.signals;
   const sources = [...new Set(c.signals.map((s) => sourceOf(s.type)))];
+  const agree = independentSources(c.signals).length;
 
   return (
     <li className="brief" id={c.domain}>
@@ -51,6 +52,9 @@ export default function Brief({
             <span className="brief__top">
               <span className="brief__name">{c.name}</span>
               <span className="brief__domain">{c.domain}</span>
+              <span className="brief__agree" title={independentSources(c.signals).join(", ")}>
+                {agree} {agree === 1 ? "source" : "sources"}
+              </span>
               <span className={`brief__band brief__band--${c.band.replace(" ", "-")}`}>{c.band}</span>
             </span>
             <span className="brief__hed">{top?.label}</span>

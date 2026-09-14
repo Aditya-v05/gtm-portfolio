@@ -24,6 +24,7 @@ const SIGNAL_TYPES = [
   ["Open roles this week (reading)", "Public job boards"],
   ["Need described in job posts (reading)", "Job post text, checked by a model"],
   ["Tools in use (reading)", "Job post text and homepages"],
+  ["Company announcement", "The company's own LinkedIn posts, read by a model"],
 ] as const;
 
 export default function HowItWorks() {
@@ -80,13 +81,19 @@ export default function HowItWorks() {
             </li>
           </ul>
 
-          <h2>Scoring</h2>
+          <h2>Scoring: agreement compounds</h2>
+          <p>
+            A company that is hiring is not news. A company that is hiring security engineers, announced an
+            enterprise plan on its own LinkedIn page, and added a trust page to its site the same month is. The
+            score is built to reward that agreement, not volume from any one place.
+          </p>
           <ul>
+            <li>There are four independent sources: job boards, the company&apos;s own LinkedIn posts, its website, and SEC filings. Hiring and job-post text count as one source, because they come from the same postings.</li>
+            <li>Within a source, each further signal counts for less: the first in full, the second half, the rest a quarter. Five hiring signals are one story, not five.</li>
+            <li>Across sources, agreement multiplies. Every extra source with timing evidence in the same month raises the score sharply; a source that only shows fit, like the tools a site runs, raises it a little.</li>
+            <li>Bands mean breadth. Very strong needs three sources in agreement, strong needs two. A company seen through one source can be listed, but never above medium.</li>
             <li>Each signal is weighted by how much it matters for that niche, how confident it is, and how recent it is. Nothing older than 90 days counts.</li>
-            <li>Signals from different groups (hiring, job text, money, website) in the same month score higher than any single signal.</li>
-            <li>A company needs at least one medium or high confidence timing signal to be listed.</li>
-            <li>For SOC 2 and CTV, a company already using a direct competitor is removed, not scored down. For observability it is not, because a team paying for monitoring is still a buyer of the category.</li>
-            <li>The score is a percentile within that niche for the week. Every weight is a starting assumption, versioned on each weekly file, and tuned against results.</li>
+            <li>For SOC 2 and CTV, a company already using a direct competitor is removed, not scored down. Vendors in a category are never listed as its buyers.</li>
             <li>&quot;Why now&quot; and the opener are written by a model from that card&apos;s signals only, then checked: no named people, no certainty, and they must point at a signal. Anything that fails is replaced with plain text built from the signals.</li>
           </ul>
 

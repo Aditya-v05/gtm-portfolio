@@ -237,6 +237,12 @@ display score  = percentile of raw score among that niche's scored companies thi
 bands          = 90+ very strong, 75+ strong, 50+ medium, below 50 not shown
 ```
 
+- **Revised 2026-09-14 (scoring 2026-09-14.2): agreement compounds.** Four independent sources:
+  job boards (hiring and job-post text together), the company's own LinkedIn posts, its website,
+  SEC filings. Within a source, signals count 1, 0.5, then 0.25 each. Across sources, the
+  multiplier is 1 + 0.6 per extra source with timing evidence in 30 days, + 0.3 per fit-only
+  source. Bands need breadth: very strong = percentile 75+ and 3 sources, strong = 50+ and 2
+  sources, medium = 50+. This replaces the 1.25/1.5 stacking factor above.
 - **Exclusions remove a company outright** rather than subtracting points.
 - **A vendor in the category is never its buyer.** Companies on the niche's vendor list, or whose
   YC one-liner or tags match the niche's `sellers`, are skipped before scoring.
