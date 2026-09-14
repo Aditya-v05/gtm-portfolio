@@ -47,7 +47,7 @@ export const metadata: Metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0A1626",
+  themeColor: "#EDF2F8",
 };
 
 export default function RootLayout({
@@ -56,12 +56,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    // Dark is the default. suppressHydrationWarning on <html>: the inline
+    // Light is the default. suppressHydrationWarning on <html>: the inline
     // script below may switch data-theme to a stored preference before React
     // hydrates, so the server and client markup can legitimately differ.
     <html
       lang="en"
-      data-theme="dark"
+      data-theme="light"
       suppressHydrationWarning
       className={`${spaceGrotesk.variable} ${archivo.variable} ${jetbrains.variable}`}
     >

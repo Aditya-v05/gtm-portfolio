@@ -79,6 +79,14 @@ nav .links{ display:flex; gap:26px; font-size:13px; color:var(--dim); }
 nav .links a{ position:relative; }
 nav .links a::after{ content:""; position:absolute; left:0; bottom:-3px; width:0; height:1px; background:var(--accent); transition:width .25s; }
 nav .links a:hover{ color:var(--ink); } nav .links a:hover::after{ width:100%; }
+nav .links a, .modebtn{ transition:color .2s ease, transform .16s cubic-bezier(.2,.8,.2,1); }
+nav .links a:active, .modebtn:active{ transform:scale(.94); }
+/* The Paper Trail link breathes a soft glow, so the paper is easy to find */
+nav .links a.nav__paper{ color:var(--ink); text-shadow:0 0 14px rgba(var(--accent-rgb),.35); }
+nav .links a.nav__paper::before{ content:""; position:absolute; inset:-7px -12px; border-radius:999px; pointer-events:none; z-index:-1;
+  background:radial-gradient(closest-side, rgba(var(--accent-rgb),.32), rgba(var(--accent-rgb),0)); animation:paperGlow 3s ease-in-out infinite; }
+@keyframes paperGlow{ 0%,100%{ opacity:.25; transform:scale(.9); } 50%{ opacity:.9; transform:scale(1.08); } }
+@media (prefers-reduced-motion:reduce){ nav .links a.nav__paper::before{ animation:none; opacity:.45; } }
 
 /* ============ HERO ============ */
 .hero{ position:relative; height:calc(100dvh - var(--nav-h)); min-height:600px; display:flex; flex-direction:column; justify-content:flex-start; border-bottom:1px solid var(--line); overflow:hidden; }
@@ -1487,6 +1495,82 @@ details[open] .brief__open::after{ transform:translate(-50%,-50%) rotate(0deg); 
 .pager__dots a:hover{ border-color:var(--accent); color:var(--ink); }
 .pager__dots a[aria-current="page"]{ background:var(--ink); border-color:var(--ink); color:var(--bg); }
 .paper--inside + .paper__back, .paper .pager + .paper__back{ margin-top:40px; }
+
+/* ---- motion: every control answers a hover and a press ---- */
+:where(.paper, .file) :is(a, button, summary){
+  transition:color .2s ease, background-color .2s ease, border-color .2s ease, box-shadow .25s ease, transform .16s cubic-bezier(.2,.8,.2,1), opacity .2s ease; }
+:where(.paper, .file) :is(a, button):active{ transform:scale(.96); }
+:where(.paper, .file) :is(a, button, summary):focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:2px; }
+.paper__index a, .paper__what{ padding:4px 2px; }
+.paper__index a:hover span, .paper__what:hover span{ transform:rotate(-8deg) scale(1.15); }
+.paper__index span{ display:inline-block; transition:transform .25s cubic-bezier(.2,.8,.2,1); }
+.paper__what{ display:inline-flex; align-items:center; gap:8px; background:none; border:0; font:inherit; letter-spacing:inherit; text-transform:inherit; color:var(--ink); cursor:pointer; }
+.paper__what span{ color:var(--accent); }
+.paper__what:hover{ color:var(--accent); }
+.folio__what{ background:none; border:0; padding:0; font:inherit; letter-spacing:inherit; text-transform:inherit; color:var(--accent); cursor:pointer; }
+.folio__what:hover{ color:var(--ink); }
+.teaser{ transition:background .25s ease, transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease; }
+.teaser:hover{ transform:translateY(-3px); box-shadow:0 14px 30px -22px rgba(var(--accent-rgb),.55); }
+.teaser:active{ transform:translateY(-1px) scale(.99); }
+.teaser__turn{ transition:color .2s, letter-spacing .25s; }
+.teaser:hover .teaser__turn{ letter-spacing:.1em; }
+.brief__sum{ transition:background-color .2s ease; border-radius:2px; }
+.brief__sum:hover{ background:var(--accent-ghost); }
+.brief__sum:active .brief__rank{ transform:scale(.9); }
+.brief__rank{ transition:color .2s, transform .16s cubic-bezier(.2,.8,.2,1); }
+.brief details[open] .brief__body{ animation:briefOpen .32s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes briefOpen{ from{ opacity:0; transform:translateY(-6px); } to{ opacity:1; transform:none; } }
+.pager__turn span{ display:inline-block; transition:transform .25s cubic-bezier(.2,.8,.2,1); }
+.pager > div:first-child .pager__turn:hover span{ transform:translateX(-4px); }
+.pager > div:last-of-type .pager__turn:hover span{ transform:translateX(4px); }
+.pager__dots a:hover{ transform:translateY(-2px); }
+.pager__dots a:active{ transform:scale(.9); }
+.record__cite{ display:inline-block; }
+.record__cite:hover{ transform:translate(1px,-1px); }
+.brief__file, .lead .brief__file{ display:inline-block; }
+.brief__file:hover{ transform:translateX(3px); }
+.money__item{ transition:background .25s ease; }
+.money__item:hover{ background:var(--accent-ghost); }
+
+/* ---- the first-visit walkthrough ---- */
+.intro{ position:fixed; inset:0; z-index:200; display:grid; place-items:center; padding:20px;
+  background:rgba(10,22,38,.42); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); animation:introFade .25s ease both; }
+.intro.is-leaving{ animation:introFadeOut .22s ease both; }
+.intro.is-leaving .intro__card{ animation:introSink .22s ease both; }
+.intro__card{ width:min(560px,100%); background:var(--bg); color:var(--ink); border:1px solid var(--ink);
+  box-shadow:0 40px 90px -35px rgba(0,0,0,.5); animation:introRise .42s cubic-bezier(.2,.8,.2,1) both; }
+.intro__head{ display:flex; justify-content:space-between; align-items:center; padding:12px 20px; border-bottom:4px double var(--ink); }
+.intro__name{ font-family:var(--font-d); font-weight:700; font-size:20px; letter-spacing:-.035em; }
+.intro__skip{ background:none; border:0; padding:6px 4px; font-family:var(--font-m); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--mute); cursor:pointer; transition:color .2s; }
+.intro__skip:hover{ color:var(--ink); }
+.intro__body{ padding:22px 24px 10px; min-height:276px; overflow:hidden; }
+.intro__step{ animation:introStep .34s cubic-bezier(.2,.8,.2,1) both; }
+.intro__kicker{ margin:0; font-family:var(--font-m); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); }
+.intro__title{ margin:10px 0 14px; font-family:var(--font-d); font-weight:700; font-size:clamp(26px,4.2vw,34px); line-height:1.05; letter-spacing:-.03em; text-wrap:balance; }
+.intro__body p{ margin:0 0 10px; font-size:15px; line-height:1.62; color:var(--dim); }
+.intro__body ul{ margin:0; padding-left:18px; display:flex; flex-direction:column; gap:6px; font-size:15px; line-height:1.55; color:var(--dim); }
+.intro__foot{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 24px 18px; border-top:1px solid var(--line); }
+.intro__dots{ display:flex; gap:7px; }
+.intro__dots span{ width:8px; height:8px; border-radius:50%; background:var(--line-2); transition:background .25s, transform .25s cubic-bezier(.2,.8,.2,1); }
+.intro__dots span.is-on{ background:var(--accent); transform:scale(1.3); }
+.intro__btns{ display:flex; gap:8px; }
+.intro__btn{ font-family:var(--font-m); font-size:11px; letter-spacing:.1em; text-transform:uppercase; padding:11px 16px; border:1px solid var(--line-2); background:transparent; color:var(--ink); cursor:pointer;
+  transition:background .2s, color .2s, border-color .2s, transform .16s cubic-bezier(.2,.8,.2,1), box-shadow .25s; }
+.intro__btn:hover{ border-color:var(--ink); transform:translateY(-1px); }
+.intro__btn:active{ transform:scale(.95); }
+.intro__btn--primary{ background:var(--ink); color:var(--bg); border-color:var(--ink); }
+.intro__btn--primary:hover{ background:var(--accent); border-color:var(--accent); color:var(--on-accent); box-shadow:0 10px 24px -12px rgba(var(--accent-rgb),.8); }
+.intro__btn:focus-visible, .intro__skip:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+@keyframes introFade{ from{ opacity:0; } to{ opacity:1; } }
+@keyframes introFadeOut{ to{ opacity:0; } }
+@keyframes introRise{ from{ opacity:0; transform:translateY(22px) scale(.97); } to{ opacity:1; transform:none; } }
+@keyframes introSink{ to{ opacity:0; transform:translateY(12px) scale(.98); } }
+@keyframes introStep{ from{ opacity:0; transform:translateX(14px); } to{ opacity:1; transform:none; } }
+
+@media (prefers-reduced-motion:reduce){
+  .intro, .intro__card, .intro__step, .brief details[open] .brief__body{ animation:none !important; }
+  :where(.paper, .file) :is(a, button, summary), .teaser, .pager__turn span{ transition:none !important; transform:none !important; }
+}
 
 /* back page */
 .paper__back{ margin-top:64px; padding-top:14px; border-top:4px double var(--ink); display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.4fr); gap:24px 48px; }

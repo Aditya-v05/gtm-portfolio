@@ -4,6 +4,7 @@ import { formatDay, formatWeek, independentSources, issueNumber, SOURCE_LABEL, s
 import Brief, { Record } from "./Brief";
 import Halftone from "./Halftone";
 import PageKeys from "./PageKeys";
+import { IntroButton } from "./PaperIntro";
 
 // /signals as a weekly newspaper, one page per section. Page 1 is the front page (the
 // masthead, the lead story, the numbers, and what is inside); every niche is its own
@@ -106,7 +107,8 @@ export function Folio({ week, page, label }: { week: SignalsWeek; page?: number;
       <span className="folio__mid">{label}</span>
       <span className="folio__meta">
         No. {issueNumber(week.week)} · {formatWeek(week.week)}
-        {page ? ` · Page ${page}` : ""}
+        {page ? ` · Page ${page}` : ""} ·{" "}
+        <IntroButton className="folio__what cursor-target">What is this?</IntroButton>
       </span>
     </header>
   );
@@ -220,6 +222,9 @@ export function FrontPage({ week, weeks }: { week: SignalsWeek; weeks: SignalsWe
         <Link className="cursor-target" href="/signals/how-it-works">
           <span>?</span> How this paper is made
         </Link>
+        <IntroButton className="paper__what cursor-target">
+          <span>i</span> What is this?
+        </IntroButton>
       </nav>
 
       <section className="front">

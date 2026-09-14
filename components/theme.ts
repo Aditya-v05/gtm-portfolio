@@ -57,7 +57,7 @@ export function setTheme(t: Theme, origin?: { x: number; y: number }) {
 export function useTheme(): Theme {
   // matches the server-rendered default, so the toggle icon does not flip
   // on the first paint before the effect reads the real value
-  const [theme, set] = useState<Theme>("dark");
+  const [theme, set] = useState<Theme>("light");
   useEffect(() => {
     set(currentTheme());
     const onChange = () => set(currentTheme());

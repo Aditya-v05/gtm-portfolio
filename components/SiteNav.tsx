@@ -37,7 +37,7 @@ export default function SiteNav({
           <Link className="cursor-target" href={`${base}#stack`}>
             Stack
           </Link>
-          <Link className="cursor-target" href="/signals">
+          <Link className="nav__paper cursor-target" href="/signals">
             Paper Trail
           </Link>
           <Link className="cursor-target" href="/blog">
