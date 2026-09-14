@@ -82,11 +82,19 @@ nav .links a:hover{ color:var(--ink); } nav .links a:hover::after{ width:100%; }
 nav .links a, .modebtn{ transition:color .2s ease, transform .16s cubic-bezier(.2,.8,.2,1); }
 nav .links a:active, .modebtn:active{ transform:scale(.94); }
 /* The Paper Trail link breathes a soft glow, so the paper is easy to find */
-nav .links a.nav__paper{ color:var(--ink); text-shadow:0 0 14px rgba(var(--accent-rgb),.35); }
-nav .links a.nav__paper::before{ content:""; position:absolute; inset:-7px -12px; border-radius:999px; pointer-events:none; z-index:-1;
-  background:radial-gradient(closest-side, rgba(var(--accent-rgb),.32), rgba(var(--accent-rgb),0)); animation:paperGlow 3s ease-in-out infinite; }
-@keyframes paperGlow{ 0%,100%{ opacity:.25; transform:scale(.9); } 50%{ opacity:.9; transform:scale(1.08); } }
-@media (prefers-reduced-motion:reduce){ nav .links a.nav__paper::before{ animation:none; opacity:.45; } }
+/* The Paper Trail link carries a live dot: a small accent point that sends out a ripple,
+   like an "on air" light. The hover underline starts after the dot. */
+nav .links a.nav__paper{ padding-left:14px; color:var(--ink); }
+nav .links a.nav__paper::before{ content:""; position:absolute; left:0; top:50%; width:6px; height:6px; margin-top:-3px; border-radius:50%;
+  background:var(--accent); box-shadow:0 0 0 0 rgba(var(--accent-rgb),.5); animation:paperPing 2.4s cubic-bezier(.2,.8,.2,1) infinite; }
+nav .links a.nav__paper::after{ left:14px; }
+nav .links a.nav__paper:hover::after{ width:calc(100% - 14px); }
+@keyframes paperPing{
+  0%{ box-shadow:0 0 0 0 rgba(var(--accent-rgb),.55); }
+  70%{ box-shadow:0 0 0 7px rgba(var(--accent-rgb),0); }
+  100%{ box-shadow:0 0 0 0 rgba(var(--accent-rgb),0); }
+}
+@media (prefers-reduced-motion:reduce){ nav .links a.nav__paper::before{ animation:none; } }
 
 /* ============ HERO ============ */
 .hero{ position:relative; height:calc(100dvh - var(--nav-h)); min-height:600px; display:flex; flex-direction:column; justify-content:flex-start; border-bottom:1px solid var(--line); overflow:hidden; }
