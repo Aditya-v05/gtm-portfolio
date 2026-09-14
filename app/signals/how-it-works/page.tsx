@@ -113,9 +113,12 @@ export default function HowItWorks() {
 
           <h2>Precision</h2>
           <p>
-            Signals are checked by hand against their evidence, sampled at random from everything the engine
-            scored, not only what reached the page. A type is measured once it has 30 labels (unsure calls do not
-            count), and from then on it is left out of scoring and off the page if fewer than 70% are right.
+            Signals are sampled at random from everything the engine scored, not only what reached the page. A
+            model drafts a verdict for each one against the same rule a person would use, and a person confirms or
+            overrides it with the evidence in front of them: model-drafted, checked by hand. Only the person&apos;s
+            verdict counts, and how often they overrode the model is recorded. A type is measured once it has 30
+            labels (unsure calls do not count), and from then on it is left out of scoring and off the page if fewer
+            than 70% are right.
           </p>
           <div className="sigprec">
             <div className="sigprec__head" aria-hidden="true">
