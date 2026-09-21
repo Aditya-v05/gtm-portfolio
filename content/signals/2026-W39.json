@@ -1,7 +1,7 @@
 {
   "version": 1,
   "week": "2026-W39",
-  "generatedAt": "2026-09-21T15:34:39.511Z",
+  "generatedAt": "2026-09-21T15:48:52.004Z",
   "engineVersion": "signal-engine@0.1.0",
   "scoringVersion": "2026-09-14.3",
   "sample": false,
@@ -101,23 +101,23 @@
       "type": "reading_job_tools",
       "name": "Tools named in job posts",
       "source": "Job post text",
-      "labelled": 49,
-      "correct": 28,
-      "precision": 0.571,
-      "low": 0.433,
-      "high": 0.7,
-      "status": "hidden",
+      "labelled": 71,
+      "correct": 59,
+      "precision": 0.831,
+      "low": 0.727,
+      "high": 0.901,
+      "status": "published",
       "reviewedBy": "Claude (AI)"
     },
     {
       "type": "reading_need_terms",
       "name": "Need described in job posts",
       "source": "Job post text, checked by a model",
-      "labelled": 50,
-      "correct": 47,
-      "precision": 0.94,
-      "low": 0.838,
-      "high": 0.979,
+      "labelled": 48,
+      "correct": 46,
+      "precision": 0.958,
+      "low": 0.86,
+      "high": 0.988,
       "status": "published",
       "reviewedBy": "Claude (AI)"
     },
@@ -274,10 +274,10 @@
     }
   ],
   "signalOfTheWeek": {
-    "nicheId": "observability",
+    "nicheId": "soc2-compliance",
     "domain": "replit.com",
-    "headline": "Replit: SRE hiring and Datadog use suggest observability software interest",
-    "body": "They are hiring for SRE and platform work focused on SLOs, observability, and alerting, while their site runs Datadog, suggesting monitoring needs and spend may be under review."
+    "headline": "Replit: SOC 2 hiring and London support growth may signal compliance software interest",
+    "body": "Their roles span SOC 2, ISO 27001 and FedRAMP, while SLO and monitoring hires suggest a more formal operating model. That may make compliance automation timely as they expand into London."
   },
   "niches": [
     {
@@ -288,9 +288,208 @@
       "companies": [
         {
           "rank": 1,
+          "domain": "replit.com",
+          "name": "Replit",
+          "score": 100,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "Their roles span SOC 2, ISO 27001 and FedRAMP, while SLO and monitoring hires suggest a more formal operating model. That may make compliance automation timely as they expand into London.",
+          "opener": "With roles covering SOC 2, ISO 27001 and FedRAMP, your team may be preparing for more demanding buyers. A structured readiness plan can keep evidence work from slowing product delivery.",
+          "signals": [
+            {
+              "type": "need_keywords",
+              "label": "5 roles mention SLO",
+              "firedAt": "2026-09-21",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/replit/7b4bc2fe-5860-4f56-8746-aabb852cf0e1",
+                  "title": "Software Engineer, Enterprise Platform",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/replit/fc946efb-f0f1-4f83-9ae1-055a11e7146b",
+                  "title": "Product Engineer, Product Platform",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/replit/61cfbcb7-cd1e-49ab-82a1-e93c3962e343",
+                  "title": "Staff Software Engineer, Enterprise Platform",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "reading_need_terms",
+              "label": "Job posts call for SOC 2, ISO 27001 and FedRAMP work",
+              "firedAt": "2026-09-21",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/replit/e903b65b-1f63-46a6-b27f-d1d4a0bfbf14",
+                  "title": "Security Operations Lead",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/replit/7b4bc2fe-5860-4f56-8746-aabb852cf0e1",
+                  "title": "Software Engineer, Enterprise Platform",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/replit/61cfbcb7-cd1e-49ab-82a1-e93c3962e343",
+                  "title": "Staff Software Engineer, Enterprise Platform",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "need_keywords",
+              "label": "2 roles mention monitoring and alerting",
+              "firedAt": "2026-09-21",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/replit/37f81c18-c742-4f7d-bf81-34c3f5142973",
+                  "title": "Software Engineer, Growth Infrastructure",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/replit/9936ea0d-071a-4b51-8154-fdde89ded616",
+                  "title": "Senior Site Reliability Engineer",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "need_keywords",
+              "label": "1 role mentions OpenTelemetry",
+              "firedAt": "2026-09-21",
+              "confidence": "low",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/replit/f508992f-5b26-4ab1-816d-d17f121d208b",
+                  "title": "Staff Site Reliability Engineer",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "company_announcement",
+              "label": "On LinkedIn, expanded into London and is hiring support staff",
+              "firedAt": "2026-09-18",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://www.linkedin.com/posts/repl-it_dear-london-were-here-london-has-always-activity-7506751889657556992-DMef",
+                  "title": "LinkedIn post",
+                  "seenAt": "2026-09-18"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 2,
+          "domain": "happyrobot.ai",
+          "name": "HappyRobot",
+          "score": 99,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "Their hiring spans security, compliance, and new GTM roles, while posts cite SOC 2, ISO 27001, and HIPAA work. That mix may signal enterprise readiness is becoming urgent.",
+          "opener": "As you build security and compliance coverage alongside new GTM hiring, a focused SOC 2 or ISO 27001 plan may help prepare for enterprise reviews without slowing product work.",
+          "signals": [
+            {
+              "type": "reading_need_terms",
+              "label": "Job posts call for SOC 2, ISO 27001, security questionnaire and HIPAA work",
+              "firedAt": "2026-09-21",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/happyrobot.ai/2edbbdc8-a6cc-4a92-baa4-cc4e332f854d",
+                  "title": "GRC Compliance Specialist",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/happyrobot.ai/039cf27f-591f-435a-84be-9b4b2df568f1",
+                  "title": "Cloud Security Engineer",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/happyrobot.ai/646f0c1e-f367-4c5c-a139-29cfb893cd66",
+                  "title": "SOC Analyst",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "2 open security roles",
+              "firedAt": "2026-09-21",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/happyrobot.ai/039cf27f-591f-435a-84be-9b4b2df568f1",
+                  "title": "Cloud Security Engineer",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/happyrobot.ai/646f0c1e-f367-4c5c-a139-29cfb893cd66",
+                  "title": "SOC Analyst",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "1 open compliance role",
+              "firedAt": "2026-09-21",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/happyrobot.ai/2edbbdc8-a6cc-4a92-baa4-cc4e332f854d",
+                  "title": "GRC Compliance Specialist",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "gtm_or_leadership_hire",
+              "label": "2 new GTM roles",
+              "firedAt": "2026-09-21",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/happyrobot.ai/66f36293-ebf3-43ce-a931-d21d12b527ff",
+                  "title": "Strategic Account Executive",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/happyrobot.ai/f65629ea-e4ab-475b-9bda-1f5b66b21c84",
+                  "title": "Performance Marketing",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "company_announcement",
+              "label": "On LinkedIn, opened a new London office and is hiring deployments staff",
+              "firedAt": "2026-09-05",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://www.linkedin.com/posts/happyrobot_the-rumors-are-true-our-london-office-is-activity-7501794641873129472-dvJJ",
+                  "title": "LinkedIn post",
+                  "seenAt": "2026-09-05"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 3,
           "domain": "cascading.ai",
           "name": "Casca",
-          "score": 100,
+          "score": 99,
           "band": "medium",
           "reviewed": false,
           "whyNow": "Their job posts call for SOC 2 and ISO 27001 work, while a first security role and guardrail-focused openings suggest they may be building a compliance foundation now.",
@@ -379,10 +578,10 @@
           ]
         },
         {
-          "rank": 2,
+          "rank": 4,
           "domain": "tennr.com",
           "name": "Tennr",
-          "score": 99,
+          "score": 98,
           "band": "medium",
           "reviewed": false,
           "whyNow": "Their hiring includes HIPAA work alongside new GTM and enterprise roles, which may mean compliance needs are growing as they pursue larger customers.",
@@ -478,10 +677,10 @@
           ]
         },
         {
-          "rank": 3,
+          "rank": 5,
           "domain": "blee.com",
           "name": "Blee",
-          "score": 99,
+          "score": 98,
           "band": "strong",
           "reviewed": false,
           "whyNow": "With $27M raised and hiring for security questionnaire work, they may be preparing for more enterprise scrutiny and a formal compliance program.",
@@ -516,10 +715,10 @@
           ]
         },
         {
-          "rank": 4,
+          "rank": 6,
           "domain": "exa.ai",
           "name": "Exa",
-          "score": 98,
+          "score": 97,
           "band": "medium",
           "reviewed": false,
           "whyNow": "Exa's open security role and job posts calling for SOC 2 and ISO 27001 work suggest they may be preparing for enterprise security reviews.",
@@ -582,10 +781,10 @@
           ]
         },
         {
-          "rank": 5,
+          "rank": 7,
           "domain": "deepgram.com",
           "name": "Deepgram",
-          "score": 97,
+          "score": 96,
           "band": "medium",
           "reviewed": false,
           "whyNow": "Their hiring plans include SOC 2, ISO 27001 and FedRAMP work, alongside enterprise roles and guardrail-focused positions, suggesting compliance needs may be growing now.",
@@ -653,10 +852,10 @@
           ]
         },
         {
-          "rank": 6,
+          "rank": 8,
           "domain": "h1.co",
           "name": "H1",
-          "score": 97,
+          "score": 96,
           "band": "medium",
           "reviewed": false,
           "whyNow": "They may be scaling enterprise sales, with new GTM and enterprise roles alongside observability hiring that often signals growing security and compliance needs.",
@@ -729,10 +928,10 @@
           ]
         },
         {
-          "rank": 7,
+          "rank": 9,
           "domain": "ambient.ai",
           "name": "Ambient.ai",
-          "score": 96,
+          "score": 95,
           "band": "medium",
           "reviewed": false,
           "whyNow": "Their first security role plus work on audits and customer security forms may signal that enterprise-readiness efforts are starting.",
@@ -806,10 +1005,10 @@
           ]
         },
         {
-          "rank": 8,
+          "rank": 10,
           "domain": "campfire.ai",
           "name": "Campfire",
-          "score": 96,
+          "score": 94,
           "band": "medium",
           "reviewed": false,
           "whyNow": "Recent hiring signals mention SOC 2, SLOs, reliability, and observability, suggesting they may be preparing for a more formal security program.",
@@ -876,174 +1075,6 @@
                 {
                   "url": "https://jobs.ashbyhq.com/campfire/24db306e-0265-4ece-b33d-6d4a61eec8e2",
                   "title": "Director, Engineering",
-                  "seenAt": "2026-09-21"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "rank": 9,
-          "domain": "ironcladapp.com",
-          "name": "Ironclad",
-          "score": 95,
-          "band": "medium",
-          "reviewed": false,
-          "whyNow": "Their job posts mention SOC 2 work while they add security and enterprise GTM roles, suggesting compliance may be becoming urgent as they pursue larger buyers.",
-          "opener": "With SOC 2 work appearing in your hiring plans alongside enterprise GTM hiring, I can share a lightweight readiness checklist to help your team prepare for buyer reviews without slowing product work.",
-          "signals": [
-            {
-              "type": "reading_need_terms",
-              "label": "Job posts call for SOC 2 work",
-              "firedAt": "2026-09-21",
-              "confidence": "high",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/f55e6b4f-6b18-44c4-b8e3-30814365c1c0",
-                  "title": "Staff IAM Engineer",
-                  "seenAt": "2026-09-21"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/b5d4466f-ffe3-4b31-9463-22a926206ece",
-                  "title": "Staff Application Security Engineer",
-                  "seenAt": "2026-09-21"
-                }
-              ]
-            },
-            {
-              "type": "reading_open_roles",
-              "label": "2 open security roles",
-              "firedAt": "2026-09-21",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/f55e6b4f-6b18-44c4-b8e3-30814365c1c0",
-                  "title": "Staff IAM Engineer",
-                  "seenAt": "2026-09-21"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/b5d4466f-ffe3-4b31-9463-22a926206ece",
-                  "title": "Staff Application Security Engineer",
-                  "seenAt": "2026-09-21"
-                }
-              ]
-            },
-            {
-              "type": "gtm_or_leadership_hire",
-              "label": "New GTM role: Senior Manager, GTM Enablement",
-              "firedAt": "2026-09-21",
-              "confidence": "high",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/64a71cb6-dc95-49b3-bcaf-11f7b6fbf8a7",
-                  "title": "Senior Manager, GTM Enablement",
-                  "seenAt": "2026-09-21"
-                }
-              ]
-            },
-            {
-              "type": "reading_open_roles",
-              "label": "1 open enterprise role",
-              "firedAt": "2026-09-21",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/ironcladhq/0911a8d8-dc51-49e5-95e1-f01246a59370",
-                  "title": "AVP, Enterprise Sales Leader",
-                  "seenAt": "2026-09-21"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "rank": 10,
-          "domain": "ziphq.com",
-          "name": "Zip",
-          "score": 95,
-          "band": "medium",
-          "reviewed": false,
-          "whyNow": "Their job posts mention SOC 2, ISO 27001, and security questionnaires while new GTM and enterprise roles suggest they may be preparing for more buyer scrutiny.",
-          "opener": "As you add security and enterprise-facing roles, your team may benefit from a lighter way to organize SOC 2 or ISO 27001 work and questionnaires before it pulls focus from product.",
-          "signals": [
-            {
-              "type": "reading_need_terms",
-              "label": "Job posts call for SOC 2, ISO 27001 and security questionnaire work",
-              "firedAt": "2026-09-21",
-              "confidence": "high",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/zip/44b493eb-225a-4cce-adb0-600400277df7",
-                  "title": "Head of InfoSec and IT Ops",
-                  "seenAt": "2026-09-21"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/zip/92c2b94a-3963-4c1e-8e5a-b83f548f8f0d",
-                  "title": "Solution Engineer (Pre-Sales)",
-                  "seenAt": "2026-09-21"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/zip/d28dc61e-b4fa-4517-b61e-a31bccefddba",
-                  "title": "Enterprise Solution Engineer (Pre-Sales)",
-                  "seenAt": "2026-09-21"
-                }
-              ]
-            },
-            {
-              "type": "reading_open_roles",
-              "label": "1 open security role",
-              "firedAt": "2026-09-21",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/zip/44b493eb-225a-4cce-adb0-600400277df7",
-                  "title": "Head of InfoSec and IT Ops",
-                  "seenAt": "2026-09-21"
-                }
-              ]
-            },
-            {
-              "type": "gtm_or_leadership_hire",
-              "label": "3 new GTM roles",
-              "firedAt": "2026-09-21",
-              "confidence": "high",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/zip/d2d24c27-e461-4777-8c49-af5fab25040c",
-                  "title": "Commercial Account Executive",
-                  "seenAt": "2026-09-21"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/zip/419ac7f6-4d9a-4b69-8c22-ff2c30b3cbc3",
-                  "title": "Lead Product Marketing Manager, Compete",
-                  "seenAt": "2026-09-21"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/zip/0453e252-64b8-44e6-be2b-cd8f6c74a5d6",
-                  "title": "Principal Business Value Consultant",
-                  "seenAt": "2026-09-21"
-                }
-              ]
-            },
-            {
-              "type": "reading_open_roles",
-              "label": "3 open enterprise roles",
-              "firedAt": "2026-09-21",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/zip/d28dc61e-b4fa-4517-b61e-a31bccefddba",
-                  "title": "Enterprise Solution Engineer (Pre-Sales)",
-                  "seenAt": "2026-09-21"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/zip/6da19b0e-6494-455c-8fae-d5c648aed469",
-                  "title": "Enterprise Account Executive",
-                  "seenAt": "2026-09-21"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/zip/b5a21cc6-7d36-444a-a1fb-cb3f56d5e38b",
-                  "title": "Enterprise Architect",
                   "seenAt": "2026-09-21"
                 }
               ]
@@ -1521,61 +1552,13 @@
         },
         {
           "rank": 6,
-          "domain": "akidolabs.com",
-          "name": "Akido Labs",
-          "score": 96,
-          "band": "strong",
-          "reviewed": false,
-          "whyNow": "Their roles mention HIPAA while the site runs Sentry, which may prompt a review of production visibility, coverage, and monitoring costs.",
-          "opener": "With several roles mentioning HIPAA and Sentry already in place, your team may benefit from a practical review of coverage, alert noise, and monitoring spend.",
-          "signals": [
-            {
-              "type": "need_keywords",
-              "label": "5 roles mention HIPAA",
-              "firedAt": "2026-09-21",
-              "confidence": "high",
-              "evidence": [
-                {
-                  "url": "https://job-boards.greenhouse.io/akidolabs/jobs/4710383006",
-                  "title": "Behavioral Health Care Manager / Program Manager - Enhanced Care Management",
-                  "seenAt": "2026-09-21"
-                },
-                {
-                  "url": "https://job-boards.greenhouse.io/akidolabs/jobs/4706404006",
-                  "title": "Clinical Systems Training & Support Specialist",
-                  "seenAt": "2026-09-21"
-                },
-                {
-                  "url": "https://job-boards.greenhouse.io/akidolabs/jobs/4713665006",
-                  "title": "Grievance Coordinator",
-                  "seenAt": "2026-09-21"
-                }
-              ]
-            },
-            {
-              "type": "reading_site_tools",
-              "label": "Site runs Sentry",
-              "firedAt": "2026-09-21",
-              "confidence": "high",
-              "evidence": [
-                {
-                  "url": "https://www.akidolabs.com/",
-                  "title": "Homepage source",
-                  "seenAt": "2026-09-21"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "rank": 7,
           "domain": "tennr.com",
           "name": "Tennr",
-          "score": 95,
+          "score": 96,
           "band": "medium",
           "reviewed": false,
-          "whyNow": "With observability work and SRE or platform hiring underway, they may be scaling production systems while HIPAA-related roles raise the need for dependable visibility.",
-          "opener": "As you add SRE and platform capacity, a practical approach to preserve production visibility while keeping monitoring costs controlled may help your team scale smoothly.",
+          "whyNow": "They may be scaling monitoring needs as hiring spans observability, SRE, platform, and engineering, while HIPAA-related roles raise the need for reliable production visibility.",
+          "opener": "With observability work and Kubernetes appearing in your open roles, your team may benefit from a practical way to keep production signals clear as coverage grows without letting monitoring costs spread.",
           "signals": [
             {
               "type": "need_keywords",
@@ -1658,14 +1641,162 @@
                   "seenAt": "2026-09-21"
                 }
               ]
+            },
+            {
+              "type": "reading_job_tools",
+              "label": "Job posts name Kubernetes",
+              "firedAt": "2026-09-21",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/tennr/c5928e76-7a96-45bb-989b-9f7207031a8b",
+                  "title": "Senior Infrastructure Engineer",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 7,
+          "domain": "akidolabs.com",
+          "name": "Akido Labs",
+          "score": 95,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "Their roles mention HIPAA while the site runs Sentry, which may prompt a review of production visibility, coverage, and monitoring costs.",
+          "opener": "With several roles mentioning HIPAA and Sentry already in place, your team may benefit from a practical review of coverage, alert noise, and monitoring spend.",
+          "signals": [
+            {
+              "type": "need_keywords",
+              "label": "5 roles mention HIPAA",
+              "firedAt": "2026-09-21",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://job-boards.greenhouse.io/akidolabs/jobs/4710383006",
+                  "title": "Behavioral Health Care Manager / Program Manager - Enhanced Care Management",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://job-boards.greenhouse.io/akidolabs/jobs/4706404006",
+                  "title": "Clinical Systems Training & Support Specialist",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://job-boards.greenhouse.io/akidolabs/jobs/4713665006",
+                  "title": "Grievance Coordinator",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "reading_site_tools",
+              "label": "Site runs Sentry",
+              "firedAt": "2026-09-21",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://www.akidolabs.com/",
+                  "title": "Homepage source",
+                  "seenAt": "2026-09-21"
+                }
+              ]
             }
           ]
         },
         {
           "rank": 8,
+          "domain": "vapi.ai",
+          "name": "Vapi",
+          "score": 95,
+          "band": "medium",
+          "reviewed": false,
+          "whyNow": "With an SRE role open and posts calling for OpenTelemetry, SLOs, and Kubernetes, they may be formalizing visibility as HIPAA and SOC 2 needs grow.",
+          "opener": "As your roles expand OpenTelemetry, SLOs, and Kubernetes coverage, a practical next step may be mapping key signals to alert tiers so visibility grows without monitoring spend sprawl.",
+          "signals": [
+            {
+              "type": "need_keywords",
+              "label": "2 roles mention HIPAA",
+              "firedAt": "2026-09-21",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/vapi/d1c91b8e-d43a-4efb-afb1-2d928294e560",
+                  "title": "Member of Technical Staff, DevSecOps",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/vapi/85f2aa22-98e7-4610-965d-4366bb9757fa",
+                  "title": "Customer Support Engineer",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "need_keywords",
+              "label": "2 roles mention SOC 2",
+              "firedAt": "2026-09-21",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/vapi/d1c91b8e-d43a-4efb-afb1-2d928294e560",
+                  "title": "Member of Technical Staff, DevSecOps",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/vapi/85f2aa22-98e7-4610-965d-4366bb9757fa",
+                  "title": "Customer Support Engineer",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "1 open SRE or platform role",
+              "firedAt": "2026-09-21",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/vapi/2d702840-a588-4273-8b98-49ed815c0c50",
+                  "title": "Member of Technical Staff, DevOps",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "reading_need_terms",
+              "label": "Job posts call for observability, OpenTelemetry and SLO work",
+              "firedAt": "2026-09-21",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/vapi/d270d613-30b8-4fdc-96e0-514993ca7a82",
+                  "title": "Member of Technical Staff, Backend",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "reading_job_tools",
+              "label": "Job posts name Kubernetes",
+              "firedAt": "2026-09-21",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/vapi/d270d613-30b8-4fdc-96e0-514993ca7a82",
+                  "title": "Member of Technical Staff, Backend",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 9,
           "domain": "nabis.com",
           "name": "Nabis",
-          "score": 95,
+          "score": 94,
           "band": "medium",
           "reviewed": false,
           "whyNow": "They may be formalizing reliability as they add an SRE or platform role, with job posts calling for observability and mentioning ISO 27001 and SOC 2.",
@@ -1739,14 +1870,14 @@
           ]
         },
         {
-          "rank": 9,
+          "rank": 10,
           "domain": "happyrobot.ai",
           "name": "HappyRobot",
-          "score": 94,
+          "score": 93,
           "band": "strong",
           "reviewed": false,
-          "whyNow": "Their observability hiring, one SRE role, and six engineering openings point to growing monitoring needs, while a recent $150M funding round may accelerate that expansion.",
-          "opener": "With observability work and an SRE role in the hiring mix, you may find a simple framework useful for keeping production visibility high while monitoring costs stay controlled as your team grows.",
+          "whyNow": "They are hiring for observability, SRE, and engineering roles while expanding after a $150M Series C, which may increase monitoring needs and costs.",
+          "opener": "With observability and Kubernetes roles opening as your team expands, you may benefit from a practical way to keep production visibility high without letting monitoring costs grow unchecked.",
           "signals": [
             {
               "type": "reading_need_terms",
@@ -1819,82 +1950,21 @@
                   "seenAt": "2026-09-21"
                 }
               ]
-            }
-          ]
-        },
-        {
-          "rank": 10,
-          "domain": "cascading.ai",
-          "name": "Casca",
-          "score": 93,
-          "band": "medium",
-          "reviewed": false,
-          "whyNow": "Casca is hiring for observability work and an SRE or platform role, while roles mention SOC 2 and guardrails, suggesting a need to strengthen visibility and controls as the team grows.",
-          "opener": "With observability work and an SRE or platform role open, your team may be scaling production needs. A practical way to keep visibility high while controlling monitoring spend could help.",
-          "signals": [
-            {
-              "type": "reading_need_terms",
-              "label": "Job posts call for observability work",
-              "firedAt": "2026-09-21",
-              "confidence": "high",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/casca/911d4c71-a3c6-4d48-9849-e80afdac5405",
-                  "title": "Senior Software Engineer",
-                  "seenAt": "2026-09-21"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/casca/83618a63-6e9f-43c7-baa7-70460f4db8a7",
-                  "title": "Senior Infrastructure Engineer",
-                  "seenAt": "2026-09-21"
-                }
-              ]
             },
             {
-              "type": "need_keywords",
-              "label": "2 roles mention SOC 2",
+              "type": "reading_job_tools",
+              "label": "Job posts name Kubernetes",
               "firedAt": "2026-09-21",
               "confidence": "medium",
               "evidence": [
                 {
-                  "url": "https://jobs.ashbyhq.com/casca/7b47e67a-8953-494f-a9df-90a763124c95",
-                  "title": "Head of Security & Compliance",
+                  "url": "https://jobs.ashbyhq.com/happyrobot.ai/5726534e-7958-4b4e-8e3c-553025d38cc2",
+                  "title": "Site Reliability Engineer",
                   "seenAt": "2026-09-21"
                 },
                 {
-                  "url": "https://jobs.ashbyhq.com/casca/2019ea63-f6a4-4d89-9e69-bdf765e0a959",
-                  "title": "Founding Security Engineer",
-                  "seenAt": "2026-09-21"
-                }
-              ]
-            },
-            {
-              "type": "need_keywords",
-              "label": "2 roles mention guardrails",
-              "firedAt": "2026-09-21",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/casca/7b47e67a-8953-494f-a9df-90a763124c95",
-                  "title": "Head of Security & Compliance",
-                  "seenAt": "2026-09-21"
-                },
-                {
-                  "url": "https://jobs.ashbyhq.com/casca/2019ea63-f6a4-4d89-9e69-bdf765e0a959",
-                  "title": "Founding Security Engineer",
-                  "seenAt": "2026-09-21"
-                }
-              ]
-            },
-            {
-              "type": "reading_open_roles",
-              "label": "1 open SRE or platform role",
-              "firedAt": "2026-09-21",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/casca/83618a63-6e9f-43c7-baa7-70460f4db8a7",
-                  "title": "Senior Infrastructure Engineer",
+                  "url": "https://jobs.ashbyhq.com/happyrobot.ai/039cf27f-591f-435a-84be-9b4b2df568f1",
+                  "title": "Cloud Security Engineer",
                   "seenAt": "2026-09-21"
                 }
               ]
@@ -1911,6 +1981,108 @@
       "companies": [
         {
           "rank": 1,
+          "domain": "deepgram.com",
+          "name": "Deepgram",
+          "score": 100,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "Their hiring for hallucination and guardrails work, alongside new local and pharma models, may mean more production AI paths now need measurable quality and regression checks.",
+          "opener": "With your team hiring for hallucination and guardrails work, a practical way to track prompt and agent changes may help turn production quality into evidence before releases.",
+          "signals": [
+            {
+              "type": "reading_need_terms",
+              "label": "Job posts call for hallucination and guardrails work",
+              "firedAt": "2026-09-21",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/deepgram/6f3d761e-4873-43af-a9b1-daeb147661f9",
+                  "title": "Senior Software Engineer - Model Evaluation & AI Systems",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/deepgram/c91de352-9f25-479e-8877-fbea9576a52c",
+                  "title": "Head of AI Enablement Engineering",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/deepgram/821b1ba2-02fe-47cb-907a-39214e0f2fe0",
+                  "title": "Staff Product Designer, Conversational AI",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "need_keywords",
+              "label": "2 roles mention guardrails",
+              "firedAt": "2026-09-21",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/deepgram/c91de352-9f25-479e-8877-fbea9576a52c",
+                  "title": "Head of AI Enablement Engineering",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/deepgram/821b1ba2-02fe-47cb-907a-39214e0f2fe0",
+                  "title": "Staff Product Designer, Conversational AI",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "company_announcement",
+              "label": "On LinkedIn, launched an India-hosted endpoint for local audio processing",
+              "firedAt": "2026-09-15",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://www.linkedin.com/posts/deepgram_for-indian-banks-payment-companies-and-activity-7505659505842507777-MTW8",
+                  "title": "LinkedIn post",
+                  "seenAt": "2026-09-15"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "6 open machine learning roles",
+              "firedAt": "2026-09-21",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/deepgram/9a030b32-d671-43e0-a221-4653bb73ba29",
+                  "title": "Research Engineer, Machine Learning Systems",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/deepgram/f424ef6a-c27f-4984-9e77-40a1ad16ae28",
+                  "title": "Platform Engineer - AI/ML Infrastructure (Kubernetes & Terraform)",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/deepgram/7ced4c1f-4126-44fe-9cf1-da427a9e4e3e",
+                  "title": "ML Ops Infrastructure Engineer",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "company_announcement",
+              "label": "On LinkedIn, launched Nova-3 Pharma speech-to-text model for pharmaceutical terminology",
+              "firedAt": "2026-09-17",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://www.linkedin.com/posts/deepgram_nova-3-pharma-activity-7506381765293371394-lm79",
+                  "title": "LinkedIn post",
+                  "seenAt": "2026-09-17"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 2,
           "domain": "vapi.ai",
           "name": "Vapi",
           "score": 100,
@@ -1989,10 +2161,10 @@
           ]
         },
         {
-          "rank": 2,
+          "rank": 3,
           "domain": "ironcladapp.com",
           "name": "Ironclad",
-          "score": 100,
+          "score": 99,
           "band": "strong",
           "reviewed": false,
           "whyNow": "Their new product launch and hiring for machine learning, alongside work on hallucinations and guardrails, suggest they may be moving AI into more measured production use.",
@@ -2050,10 +2222,10 @@
           ]
         },
         {
-          "rank": 3,
+          "rank": 4,
           "domain": "trmlabs.com",
           "name": "TRM Labs",
-          "score": 100,
+          "score": 99,
           "band": "strong",
           "reviewed": false,
           "whyNow": "They’re hiring for ML work tied to hallucinations while expanding real-time compliance monitoring for Arc, suggesting LLM quality and reliability may be moving into production needs.",
@@ -2111,10 +2283,10 @@
           ]
         },
         {
-          "rank": 4,
+          "rank": 5,
           "domain": "campfire.ai",
           "name": "Campfire",
-          "score": 99,
+          "score": 98,
           "band": "strong",
           "reviewed": false,
           "whyNow": "Their new ML hiring and recent agent, automation, and reporting upgrades may signal a shift toward measuring reliability as AI features move beyond prototypes.",
@@ -2188,10 +2360,81 @@
           ]
         },
         {
-          "rank": 5,
+          "rank": 6,
+          "domain": "confidotech.com",
+          "name": "Confido",
+          "score": 98,
+          "band": "strong",
+          "reviewed": false,
+          "whyNow": "They recently launched an AI trade-planning assistant while hiring for LLM evals, guardrails and agent reliability, suggesting a need to measure quality as the product matures.",
+          "opener": "With an AI assistant now supporting trade planning, your team may benefit from a production scorecard that shows whether prompt and agent changes improve quality before release.",
+          "signals": [
+            {
+              "type": "reading_need_terms",
+              "label": "Job posts call for LLM evals, hallucination, guardrails and agent reliability work",
+              "firedAt": "2026-09-21",
+              "confidence": "high",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/confido/3a930957-91a1-469e-b1b2-d11c6d5ba8b4",
+                  "title": "Senior Applied AI/ML Engineer",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/confido/c77fe2ec-51d1-47ea-b616-b4e477a13696",
+                  "title": "Senior ML Ops Engineer",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/confido/3a95d866-2e8f-432a-927d-8679386cefe2",
+                  "title": "Applied AI/ML Engineer",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "reading_open_roles",
+              "label": "3 open machine learning roles",
+              "firedAt": "2026-09-21",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://jobs.ashbyhq.com/confido/3a930957-91a1-469e-b1b2-d11c6d5ba8b4",
+                  "title": "Senior Applied AI/ML Engineer",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/confido/c77fe2ec-51d1-47ea-b616-b4e477a13696",
+                  "title": "Senior ML Ops Engineer",
+                  "seenAt": "2026-09-21"
+                },
+                {
+                  "url": "https://jobs.ashbyhq.com/confido/3a95d866-2e8f-432a-927d-8679386cefe2",
+                  "title": "Applied AI/ML Engineer",
+                  "seenAt": "2026-09-21"
+                }
+              ]
+            },
+            {
+              "type": "company_announcement",
+              "label": "On LinkedIn, launched Fido, an AI assistant for trade planning workflows",
+              "firedAt": "2026-08-26",
+              "confidence": "medium",
+              "evidence": [
+                {
+                  "url": "https://www.linkedin.com/posts/confidotech_were-declaring-war-on-clicks-the-confido-activity-7498422112290779136-K41x",
+                  "title": "LinkedIn post",
+                  "seenAt": "2026-08-26"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "rank": 7,
           "domain": "getbenepass.com",
           "name": "Benepass",
-          "score": 98,
+          "score": 97,
           "band": "strong",
           "reviewed": false,
           "whyNow": "They mention observability and guardrails in hiring while expanding support to 57 languages, suggesting a need to measure AI quality and prevent regressions at scale.",
@@ -2244,10 +2487,10 @@
           ]
         },
         {
-          "rank": 6,
+          "rank": 8,
           "domain": "slash.com",
           "name": "Slash",
-          "score": 98,
+          "score": 97,
           "band": "strong",
           "reviewed": false,
           "whyNow": "Their hiring calls for prompt regression and LLM observability, alongside an open machine learning role, suggesting their AI work may be moving toward production quality measurement.",
@@ -2308,10 +2551,10 @@
           ]
         },
         {
-          "rank": 7,
+          "rank": 9,
           "domain": "ziphq.com",
           "name": "Zip",
-          "score": 97,
+          "score": 96,
           "band": "strong",
           "reviewed": false,
           "whyNow": "They recently launched AI-powered procurement products while hiring for guardrails work, suggesting the team may be moving toward safer, measurable production use.",
@@ -2356,10 +2599,10 @@
           ]
         },
         {
-          "rank": 8,
+          "rank": 10,
           "domain": "rescale.com",
           "name": "Rescale",
-          "score": 97,
+          "score": 96,
           "band": "strong",
           "reviewed": false,
           "whyNow": "Their guardrails hiring and open ML role, alongside making a new dataset available in Rescale AI Physics, suggest active AI work where quality may need tighter measurement.",
@@ -2401,108 +2644,6 @@
                   "url": "https://www.linkedin.com/posts/rescale_aiphysics-digitalengineering-aerospaceengineering-activity-7503441836678651904-rIt2",
                   "title": "LinkedIn post",
                   "seenAt": "2026-09-09"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "rank": 9,
-          "domain": "humaans.io",
-          "name": "Humaans",
-          "score": 96,
-          "band": "strong",
-          "reviewed": false,
-          "whyNow": "Their more powerful AI Companion launch and guardrails-focused hiring suggest they may be moving toward measuring quality and controlling AI behavior in production.",
-          "opener": "With your AI Companion getting more capable and guardrails work in focus, your team may benefit from a simple way to trace behavior, test prompt changes, and catch regressions before release.",
-          "signals": [
-            {
-              "type": "reading_need_terms",
-              "label": "Job posts call for guardrails work",
-              "firedAt": "2026-09-21",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/humaans/68c20a52-7825-4866-bf8d-480c9b468b15",
-                  "title": "GTM Engineer",
-                  "seenAt": "2026-09-21"
-                }
-              ]
-            },
-            {
-              "type": "company_announcement",
-              "label": "On LinkedIn, launched a more powerful AI Companion with insights and charts",
-              "firedAt": "2026-09-10",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://www.linkedin.com/posts/humaans_ai-companion-is-here-now-20x-more-powerful-activity-7503774378686558208-QUn9",
-                  "title": "LinkedIn post",
-                  "seenAt": "2026-09-10"
-                }
-              ]
-            },
-            {
-              "type": "company_announcement",
-              "label": "On LinkedIn, bringing US payroll to Humaans across all 50 states",
-              "firedAt": "2026-08-25",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://www.linkedin.com/posts/humaans_were-bringing-us-payroll-to-humaans-this-activity-7497979088570286080-vZBk",
-                  "title": "LinkedIn post",
-                  "seenAt": "2026-08-25"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "rank": 10,
-          "domain": "usepylon.com",
-          "name": "Pylon",
-          "score": 96,
-          "band": "strong",
-          "reviewed": false,
-          "whyNow": "They are hiring for LLM observability while launching products and shipping agent chat and health-score updates, suggesting a need to measure quality as AI features move into active use.",
-          "opener": "With your recent agent chat and health-score updates, you may benefit from production evals that show whether prompt changes improve quality before they ship.",
-          "signals": [
-            {
-              "type": "reading_need_terms",
-              "label": "Job posts call for LLM observability work",
-              "firedAt": "2026-09-21",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://jobs.ashbyhq.com/pylon-labs/8d8264b7-8094-4a55-8991-7876796487ae",
-                  "title": "Software Engineer, AI",
-                  "seenAt": "2026-09-21"
-                }
-              ]
-            },
-            {
-              "type": "company_announcement",
-              "label": "On LinkedIn, announced a product launch",
-              "firedAt": "2026-09-18",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://www.linkedin.com/posts/usepylon_microsoft-teams-support-in-pylon-now-from-activity-7506743864372727808-j2zH",
-                  "title": "LinkedIn post",
-                  "seenAt": "2026-09-18"
-                }
-              ]
-            },
-            {
-              "type": "company_announcement",
-              "label": "On LinkedIn, shipped 113 updates including agent chat refresh and health score builder",
-              "firedAt": "2026-08-31",
-              "confidence": "medium",
-              "evidence": [
-                {
-                  "url": "https://www.linkedin.com/posts/usepylon_last-week-we-shipped-113-updates-this-activity-7500249093173071872-9WOy",
-                  "title": "LinkedIn post",
-                  "seenAt": "2026-08-31"
                 }
               ]
             }
