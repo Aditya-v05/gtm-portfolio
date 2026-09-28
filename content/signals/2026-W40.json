@@ -1,7 +1,7 @@
 {
   "version": 1,
   "week": "2026-W40",
-  "generatedAt": "2026-09-28T16:43:38.391Z",
+  "generatedAt": "2026-09-28T17:36:48.083Z",
   "engineVersion": "signal-engine@0.1.0",
   "scoringVersion": "2026-09-14.3",
   "sample": false,
@@ -260,9 +260,9 @@
   ],
   "signalOfTheWeek": {
     "nicheId": "soc2-compliance",
-    "domain": "replit.com",
-    "headline": "Replit: SOC 2 hiring and London growth hint at compliance software needs",
-    "body": "Their hiring now covers SOC 2, ISO 27001 and FedRAMP, while SLO and observability roles suggest growing operational demands. That combination may make a compliance program timely."
+    "domain": "escape.tech",
+    "headline": "Escape: new security page and hiring signals suggest SOC 2 software interest",
+    "body": "Their new security or trust page, alongside roles mentioning OpenTelemetry and observability, may signal they are formalizing controls as they grow."
   },
   "niches": [
     {
