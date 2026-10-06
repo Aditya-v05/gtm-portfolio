@@ -272,7 +272,7 @@ export default function Home() {
           <span className="ghost">Systems</span>
           <span className="n">№ 02</span>
           <h2>Selected Systems</h2>
-          <span className="c">twelve, indexed · click to unfold</span>
+          <span className="c">twelve, indexed · one you can install</span>
           <span className="shead__tb" aria-hidden="true"><i>SHEET 02 / 04</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
         </div>
         <hr className="rule" />
@@ -311,7 +311,7 @@ export default function Home() {
             <div className="metrics"><b>BYOK</b> your keys, no server <span className="sep">/</span> <b>MIT</b> open source <span className="sep">/</span> <b>free</b> to run</div>
             <div className="ev">
               <div className="dash dash--full cursor-target" data-zoom>
-                <video src="/sift-demo.mp4" poster="/sift-fit.png" autoPlay muted loop playsInline preload="metadata" />
+                <video src="/sift-demo.mp4" poster="/sift-fit.png" controls preload="none" playsInline />
               </div>
               <div className="ev__cap"><b>▸ evidence</b> - a real lookup: fit, why now, and the ranked contacts, in the shipped extension</div>
             </div>
