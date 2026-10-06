@@ -1721,3 +1721,9 @@ html, body{ overflow-x:clip; }
 @media (max-width:430px){
   nav .brand em{ display:none; }
 }
+
+/* Sift's evidence is a short screen capture; it sits in the same frame as the stills. */
+.dash video{ display:block; width:100%; height:auto; }
+/* The only system with a public repo, so the only one that links out. */
+.case .links{ margin-top:14px; font-size:13px; color:var(--dim); font-family:var(--font-m); }
+.case .links a{ color:var(--accent); }

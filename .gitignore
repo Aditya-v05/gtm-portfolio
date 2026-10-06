@@ -23,3 +23,6 @@ next-env.d.ts
 
 # env
 .env*.local
+
+# local scratch work, not part of the site
+.scratch

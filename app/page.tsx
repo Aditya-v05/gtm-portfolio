@@ -272,7 +272,7 @@ export default function Home() {
           <span className="ghost">Systems</span>
           <span className="n">№ 02</span>
           <h2>Selected Systems</h2>
-          <span className="c">eleven, indexed · click to unfold</span>
+          <span className="c">twelve, indexed · click to unfold</span>
           <span className="shead__tb" aria-hidden="true"><i>SHEET 02 / 04</i><i>SCALE 1:1</i><i>DRAWN A.V.</i><i>REV 2026.08</i></span>
         </div>
         <hr className="rule" />
@@ -282,10 +282,58 @@ export default function Home() {
         </div>
         <SystemsAccordion defaultOpen="01">
 
-        <SystemFold id="01" station="linker" title="Warmest Path" lede="Shared history in, the warm intro out." type="Relationship graph">
+        <SystemFold id="01" station="sieve" title="Sift" lede="Open a company's site; know if it fits and who to email." type="Chrome extension" status="shipped">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">01</span><span className="of">/ 11 · selected</span></div>
+            <div className="idwrap"><span className="id">01</span><span className="of">/ 12 · open source</span></div>
+            <div className="seg"><div className="h">Type</div><div className="v">Chrome extension<br />Manifest V3</div></div>
+            <div className="seg"><div className="h">Stack</div><div className="v"><div>WXT · React 19</div><div>TypeScript · Vitest</div><div>Apollo · treg</div><div>Jev (TypeSafe)</div></div></div>
+            <div className="st"><span className="d"></span> shipped · v0.3.1</div>
+          </div>
+          <div className="body">
+            <div className="tag">Sift</div>
+            <h3>Sift, the Fit Check in a Side Panel</h3>
+            <div className="lede">Open a company&apos;s site; know if it fits and who to email.</div>
+            <p>
+              Click the icon on any company&apos;s website and a side panel answers three questions:{" "}
+              <b>does it fit</b> your ICP, with every requirement marked met, near miss, unsure or not met;{" "}
+              <b>why now</b>, from hiring, headcount growth, funding and what their own site says; and{" "}
+              <b>who to email</b>, ranked, with the address one click away. It reads LinkedIn profiles from
+              the URL alone, keeps a ranked account list with CSV export, and finds lookalikes of your best
+              accounts.
+            </p>
+            <p>
+              <b>There is no backend.</b> The browser talks straight to Apollo and TypeSafe, so there is no
+              server, no account and no analytics, and your keys never leave local storage. Code derives
+              every signal from the data with explicit thresholds and the model only judges relevance, so
+              each line on the card carries its own source link.
+            </p>
+            <div className="metrics"><b>BYOK</b> your keys, no server <span className="sep">/</span> <b>MIT</b> open source <span className="sep">/</span> <b>free</b> to run</div>
+            <div className="ev">
+              <div className="dash dash--full cursor-target" data-zoom>
+                <video src="/sift-demo.mp4" poster="/sift-fit.png" autoPlay muted loop playsInline preload="metadata" />
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - a real lookup: fit, why now, and the ranked contacts, in the shipped extension</div>
+            </div>
+            <div className="ev">
+              <div className="dash dash--full cursor-target" data-zoom>
+                <img src="/sift-fit.png" alt="Sift's side panel scoring a company against the ICP, with each requirement marked" />
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - the fit card, with every requirement shown and its reason</div>
+            </div>
+            <p className="links">
+              <a className="cursor-target" href="https://github.com/Aditya-v05/sift">github.com/Aditya-v05/sift</a>
+              {" · "}
+              <a className="cursor-target" href="https://sift-through.vercel.app">sift-through.vercel.app</a>
+            </p>
+          </div>
+        </article>
+        </SystemFold>
+
+        <SystemFold id="02" station="linker" title="Warmest Path" lede="Shared history in, the warm intro out." type="Relationship graph">
+        <article className="case">
+          <div className="rail">
+            <div className="idwrap"><span className="id">02</span><span className="of">/ 12 · selected</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Relationship graph<br />Warm-intro search</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>TypeScript · SQLite</div><div>Apollo · HarvestAPI</div><div>Azure OpenAI</div><div>three.js</div></div></div>
             <div className="st"><span className="d"></span> shipped · 1 run</div>
@@ -336,10 +384,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="02" station="gripper" title="Diode" lede="The layer above the systems." type="Orchestration" status="live">
+        <SystemFold id="03" station="gripper" title="Diode" lede="The layer above the systems." type="Orchestration" status="live">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">02</span><span className="of">/ 11</span></div>
+            <div className="idwrap"><span className="id">03</span><span className="of">/ 12</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Orchestration agent<br />Control layer</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Hermes harness</div><div>Claude · MCP</div><div>Slack · Linear</div><div>Notion · Attio</div></div></div>
             <div className="st"><span className="d"></span> live</div>
@@ -368,10 +416,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="03" station="scanner" title="Raven" lede="Ten signals in, scored leads in the CRM out." type="Signal intelligence" status="live">
+        <SystemFold id="04" station="scanner" title="Raven" lede="Ten signals in, scored leads in the CRM out." type="Signal intelligence" status="live">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">03</span><span className="of">/ 11</span></div>
+            <div className="idwrap"><span className="id">04</span><span className="of">/ 12</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Signal intelligence<br />Lead generation</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Claude · OpenAI</div><div>Apify</div><div>Apollo × Clay</div><div>Attio</div></div></div>
             <div className="st"><span className="d"></span> live</div>
@@ -406,10 +454,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="04" station="outfeed" title="LinkedIn Campaign Autopilot" lede="Drop a doc, say go, and LinkedIn campaigns go live." type="Outbound agent" status="live">
+        <SystemFold id="05" station="outfeed" title="LinkedIn Campaign Autopilot" lede="Drop a doc, say go, and LinkedIn campaigns go live." type="Outbound agent" status="live">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">04</span><span className="of">/ 11</span></div>
+            <div className="idwrap"><span className="id">05</span><span className="of">/ 12</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Autonomous agent<br />Outbound delivery</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Claude Agent SDK</div><div>OpenCLAW</div><div>Aimfox API</div><div>MongoDB · Node</div></div></div>
             <div className="st"><span className="d"></span> live</div>
@@ -447,10 +495,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="05" station="probe" title="Customer-Overlap Detection Engine" lede="Does this prospect already use the product?" type="Headless automation">
+        <SystemFold id="06" station="probe" title="Customer-Overlap Detection Engine" lede="Does this prospect already use the product?" type="Headless automation">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">05</span><span className="of">/ 11</span></div>
+            <div className="idwrap"><span className="id">06</span><span className="of">/ 12</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Signal<br />Headless automation</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Puppeteer (stealth)</div><div>Evomi · 2captcha</div><div>Azure OpenAI</div><div>MongoDB · Express</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -479,10 +527,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="06" station="stamper" title="B2B / SaaS Classifier" lede="Noisy Apollo exports into a clean, targetable universe." type="LLM pipeline">
+        <SystemFold id="07" station="stamper" title="B2B / SaaS Classifier" lede="Noisy Apollo exports into a clean, targetable universe." type="LLM pipeline">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">06</span><span className="of">/ 11</span></div>
+            <div className="idwrap"><span className="id">07</span><span className="of">/ 12</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">LLM pipeline<br />Classification</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>TypeScript</div><div>Azure OpenAI</div><div>Cheerio · Evomi</div><div>CSV streams</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -509,10 +557,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="07" station="funnel" title="Apollo × LeadMagic Enrichment" lede="Verified emails in, duplicate outreach out." type="Enrichment">
+        <SystemFold id="08" station="funnel" title="Apollo × LeadMagic Enrichment" lede="Verified emails in, duplicate outreach out." type="Enrichment">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">07</span><span className="of">/ 11</span></div>
+            <div className="idwrap"><span className="id">08</span><span className="of">/ 12</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Enrichment<br />Email waterfall</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Node</div><div>Apollo API</div><div>LeadMagic API</div><div>MongoDB</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -547,10 +595,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="08" station="capture" title="Sales Navigator Capture Extension" lede="Export Sales Nav leads natively, no copy-paste." type="Extension">
+        <SystemFold id="09" station="capture" title="Sales Navigator Capture Extension" lede="Export Sales Nav leads natively, no copy-paste." type="Extension">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">08</span><span className="of">/ 11</span></div>
+            <div className="idwrap"><span className="id">09</span><span className="of">/ 12</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Browser extension<br />Manifest V3</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>JS (ES2020+)</div><div>Chrome MV3</div><div>service worker</div><div>page-world inject</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -585,10 +633,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="09" station="extractor" title="Customer Poacher" lede="One company URL in; its customers' buyers out." type="Discovery workflow">
+        <SystemFold id="10" station="extractor" title="Customer Poacher" lede="One company URL in; its customers' buyers out." type="Discovery workflow">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">09</span><span className="of">/ 11</span></div>
+            <div className="idwrap"><span className="id">10</span><span className="of">/ 12</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Workflow agent<br />CLI</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>TypeScript · Mastra</div><div>Azure AI (Claude)</div><div>Zyte · Serper</div><div>MongoDB</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -623,10 +671,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="10" station="sorter" title="Lead Bucketing Agent" lede="A flat lead list, segmented into outreach-ready niches." type="Segmentation">
+        <SystemFold id="11" station="sorter" title="Lead Bucketing Agent" lede="A flat lead list, segmented into outreach-ready niches." type="Segmentation">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">10</span><span className="of">/ 11</span></div>
+            <div className="idwrap"><span className="id">11</span><span className="of">/ 12</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Agent<br />Segmentation</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Claude Agent SDK</div><div>Apify Search</div><div>Zod · Node</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>
@@ -664,10 +712,10 @@ export default function Home() {
         </article>
         </SystemFold>
 
-        <SystemFold id="11" station="radar" title="Auth-Enumeration Recon Agent" lede="Probes auth flows the way a researcher would." type="Security recon">
+        <SystemFold id="12" station="radar" title="Auth-Enumeration Recon Agent" lede="Probes auth flows the way a researcher would." type="Security recon">
         <article className="case">
           <div className="rail">
-            <div className="idwrap"><span className="id">11</span><span className="of">/ 11</span></div>
+            <div className="idwrap"><span className="id">12</span><span className="of">/ 12</span></div>
             <div className="seg"><div className="h">Type</div><div className="v">Autonomous agent<br />Security recon</div></div>
             <div className="seg"><div className="h">Stack</div><div className="v"><div>Python (agent sdk)</div><div>TS · Mastra</div><div>Playwright · MCP</div><div>2captcha</div></div></div>
             <div className="st"><span className="d"></span> shipped</div>

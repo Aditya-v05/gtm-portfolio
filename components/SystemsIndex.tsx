@@ -25,6 +25,9 @@ const AccordionCtx = createContext<Ctx | null>(null);
 // station glyphs: each system is a station on the line, drawn in 2-3 strokes
 const G = { fill: "none", stroke: "currentColor", strokeWidth: 1.2 } as const;
 export const STATIONS = {
+  sieve: (
+    <svg viewBox="0 0 16 16" {...G}><path d="M2.5 4.5h11l-2.2 4.2H4.7L2.5 4.5Z" /><path d="M5.2 6.6h5.6" /><path d="M6.6 11.2v2.3M9.4 11.2v2.3" /></svg>
+  ),
   gripper: (
     <svg viewBox="0 0 16 16" {...G}><path d="M8 1v4M3 5h10M4 5v5l2 2M12 5v5l-2 2" /><circle cx="8" cy="13.5" r="1.4" /></svg>
   ),
