@@ -79,13 +79,43 @@ export default function Home() {
               layer doesn&apos;t exist until you build it.
             </p>
             <div className="creds">
-              <a className="stone" href="https://rellingsystems.com" target="_blank" rel="noreferrer">
-                <span className="stone__k">Most recently</span>
-                <span className="stone__t">ex-Founding GTM Engineer</span>
-                <span className="stone__s">
-                  Relling <span className="stone__yc">YC S25</span>
-                </span>
-              </a>
+              {/* experience, carved in stone: newest first */}
+              <div className="stone xp">
+                <div className="xp__top">
+                  <span className="stone__k">Experience</span>
+                  <a className="xp__open" href="#contact">
+                    <span className="xp__dot" aria-hidden="true" />
+                    Open to new roles
+                  </a>
+                </div>
+                <ol className="xp__list">
+                  <li>
+                    <span className="xp__when">Jun 2026 - Aug 2026</span>
+                    <span className="xp__what">
+                      <span className="xp__role">Founding GTM Engineer</span>
+                      <span className="xp__org">
+                        <a href="https://rellingsystems.com" target="_blank" rel="noreferrer">
+                          Relling
+                        </a>{" "}
+                        <span className="stone__yc">YC S25</span> · full-time · San Francisco Bay Area
+                      </span>
+                      <span className="xp__org">Started as GTM Engineer Intern, remote</span>
+                    </span>
+                  </li>
+                  <li>
+                    <span className="xp__when">Dec 2025 - Jun 2026</span>
+                    <span className="xp__what">
+                      <span className="xp__role">GTM Engineer</span>
+                      <span className="xp__org">
+                        <a href="https://gethuntd.com" target="_blank" rel="noreferrer">
+                          Huntd
+                        </a>{" "}
+                        · internship · Chennai, on-site
+                      </span>
+                    </span>
+                  </li>
+                </ol>
+              </div>
             </div>
             <Fountain />
             {/* one clay plaque across the whole page; the water falls through a slot in it */}
