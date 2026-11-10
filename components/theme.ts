@@ -8,8 +8,8 @@ export function currentTheme(): Theme {
   return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
 }
 
-// browser chrome colour per theme: day paper, and the dark room at night
-const CHROME = { light: "#f6f3ec", dark: "#1a140e" } as const;
+// browser chrome colour per theme: the ivory page by day, navy by night
+const CHROME = { light: "#f6f0e4", dark: "#121826" } as const;
 
 function apply(t: Theme) {
   document.documentElement.dataset.theme = t;

@@ -2,9 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { compileMDX } from "next-mdx-remote/rsc";
 import SiteNav from "@/components/SiteNav";
-import Sheet from "@/components/notebook/Sheet";
-import Taped from "@/components/notebook/Taped";
-import Hand from "@/components/notebook/Hand";
 import Link from "next/link";
 import { getAllSlugs, getPostBySlug, formatDate } from "@/lib/posts";
 
@@ -25,7 +22,7 @@ export async function generateMetadata({
   if (!post) return {};
 
   return {
-    title: `${post.title} - Aditya's idea dump`,
+    title: `${post.title} - Aditya Venkatesan`,
     alternates: { canonical: `/writing/${post.slug}` },
     description: post.summary,
     openGraph: {
@@ -57,10 +54,12 @@ export default async function WritingPost({
   return (
     <>
       <SiteNav variant="page" />
-      <main className="notebook notebook--page">
-        <Sheet paper={1} className="post" label={post.title}>
+      <main className="page page--sub">
+        {/* the archive court of the same city, above the writing */}
+        <div className="vignette vignette--page" data-district="sift" data-fade="120,120,60,0" aria-hidden="true" />
+        <article className="panel post">
           <Link className="post__back" href="/writing">
-            <Hand rush>back to writing</Hand>
+            <span aria-hidden="true">←</span> All writing
           </Link>
           <header className="post__head">
             <time className="post__date" dateTime={post.date}>
@@ -69,12 +68,13 @@ export default async function WritingPost({
             <h1 className="post__title">{post.title}</h1>
             {post.subtitle && <p className="post__sub">{post.subtitle}</p>}
           </header>
-          <Taped seed={`cover-${post.slug}`} className="post__cover">
+          <figure className="post__cover">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={post.cover} alt={post.title} />
-          </Taped>
+          </figure>
           <div className="prose">{content}</div>
-        </Sheet>
+        </article>
+        <div className="vista vista--end" aria-hidden="true" />
       </main>
     </>
   );

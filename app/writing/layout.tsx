@@ -1,6 +1,8 @@
 import EvidenceZoom from "@/components/EvidenceZoom";
+import NavHeightVar from "@/components/NavHeightVar";
+import World from "@/components/world/World";
 
-// Writing pages share the notebook's paper and nav, and can zoom taped photos.
+// Writing lives in the library district of the same city.
 export default function WritingLayout({
   children,
 }: {
@@ -8,6 +10,8 @@ export default function WritingLayout({
 }) {
   return (
     <>
+      <World />
+      <NavHeightVar />
       <EvidenceZoom />
       {children}
     </>

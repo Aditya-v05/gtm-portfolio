@@ -1,179 +1,181 @@
 import SiteNav from "@/components/SiteNav";
 import NavHeightVar from "@/components/NavHeightVar";
 import EvidenceZoom from "@/components/EvidenceZoom";
-import Cover from "@/components/notebook/Cover";
-import Sheet from "@/components/notebook/Sheet";
-import Entry from "@/components/notebook/Entry";
-import Taped from "@/components/notebook/Taped";
-import Hand from "@/components/notebook/Hand";
-import Doodle from "@/components/notebook/Doodle";
-import D20 from "@/components/notebook/D20";
-import { Underline, Circle, Arrow } from "@/components/notebook/marks";
+import World from "@/components/world/World";
+import DotName from "@/components/DotName";
+import GradientASCII from "@/components/GradientASCII";
+import Pipeline from "@/components/Pipeline";
+import Runnel from "@/components/Runnel";
 
 const CLIENTS = ["Brex", "Rho", "Peec AI", "Warp", "Hyperbound", "Qashio"];
 
-function CoverLabel() {
-  return (
-    <>
-      <div className="cover__label">
-        <h1 className="cover__title">
-          <Underline double seed="cover-title">
-            <Hand>Aditya&apos;s idea dump</Hand>
-          </Underline>
-        </h1>
-        <Hand rush className="cover__sub">
-          GTM engineer
-        </Hand>
-      </div>
-      <D20 className="cover__die" size={92} />
-      <Hand rush className="cover__hint">
-        scroll to open
-      </Hand>
-    </>
-  );
-}
-
+// The homepage has a rhythm. The world shows through windows: the hero, a
+// small vignette at the head of each project, the human, the ending. Between
+// them the page is plain ivory, where the work is, and a thin runnel of water
+// carries the aqueduct's water from one window down to the next.
 export default function Home() {
   return (
     <>
+      <World />
       <NavHeightVar />
       <EvidenceZoom />
       <SiteNav variant="home" />
 
-      <main className="notebook">
-        <Cover cover={<CoverLabel />}>
-          {/* the first inside page: who this is */}
-          <div id="about" className="hi">
-            <Hand as="h2" className="hi__title">
-              hi, i&apos;m Aditya
-            </Hand>
-            <p className="hi__line">
-              <Hand>I build GTM systems that</Hand>{" "}
-              <Underline seed="hi-run">
-                <Hand>run themselves.</Hand>
-              </Underline>
-            </p>
-            <p className="hi__body">
-              Mostly for the physical world: robotics, manufacturing and automation. That&apos;s a
-              market where the data layer doesn&apos;t exist until you build it, so I build it. Signal
-              intelligence, enrichment, classification and live outbound, each one running on its
-              own. Every system in here comes with a real artifact: a log, a verdict, an export.
-            </p>
-            <p className="hi__was">
-              <a href="https://rellingsystems.com" target="_blank" rel="noreferrer">
-                <Hand>ex-Founding GTM Engineer @ Relling, YC S25</Hand>
-              </a>
-            </p>
-            <p className="hi__with">
-              <Hand rush className="hi__with-k">
-                systems shipped for
-              </Hand>{" "}
-              {CLIENTS.map((c, i) => (
-                <span key={c} className="hi__client">
-                  <Hand>{c}</Hand>
-                  {i < CLIENTS.length - 1 ? <span className="hi__comma">,</span> : null}{" "}
-                </span>
-              ))}
-            </p>
-            {/* personal notes (books, games, music, a note to founders) go here later */}
+      <main className="page">
+        {/* 01 THE WORLD: the name, and the city below it. Nothing else. */}
+        <section className="hero" data-district="hero" data-fade="0,0,140,0" aria-label="Aditya Venkatesan">
+          <div className="hero__sky" aria-hidden="true">
+            <GradientASCII
+              colors={["#dce4f5", "#c5d3f0", "#9fb5e6", "#7a96d8"]}
+              shape="horizon"
+              characters=" .·:-=+"
+              cellSize={14}
+              density={0.45}
+              glyphOpacity={0.5}
+              gradientOpacity={0.18}
+              glow={0}
+              grain={0}
+              flicker={0.2}
+              flow={0.6}
+              speed={0.45}
+              lightMode
+              clickEffect="none"
+              fontFamily='"JetBrains Mono", ui-monospace, monospace'
+              dpr={2}
+              style={undefined}
+            />
           </div>
-        </Cover>
+          <div className="hero__in">
+            <h1 className="hero__name">
+              <DotName>Aditya Venkatesan</DotName>
+            </h1>
+          </div>
+        </section>
 
-        <Sheet id="work" paper={2} label="The good stuff">
-          <header className="sheet__head">
-            <Hand as="h2" className="sheet__title">
-              the good stuff
-            </Hand>
-            <Hand rush className="sheet__aside">
-              four things i&apos;d show a founder first
-            </Hand>
-          </header>
+        <Runnel height={120} bend={6} />
 
-          <Entry
-            id="sift"
-            margin={
-              <>
-                <span className="entry__no">i)</span>
-                <Circle seed="sift-circle">
-                  <Hand as="h3" className="entry__name">
-                    Sift
-                  </Hand>
-                </Circle>
-                <Hand rush className="entry__kind">
-                  chrome extension
-                </Hand>
-                <span className="entry__status">shipped · v0.3.1 · open source</span>
-              </>
-            }
-          >
-            <Hand as="p" className="entry__lede">
-              open a company&apos;s site, know if it fits and who to email.
-            </Hand>
-            <p>
-              Click the icon on any company&apos;s website and a side panel answers three questions.{" "}
-              <b>Does it fit</b> your ICP, with every requirement marked met, near miss, unsure or not
-              met. <b>Why now</b>, from hiring, headcount growth, funding and what their own site
-              says. And <b>who to email</b>, ranked, with the address one click away. It also reads
-              LinkedIn profiles from the URL alone, keeps a ranked account list you can export to CSV,
-              and finds lookalikes of your best accounts.
+        {/* 02 THE ENGINEER: what he builds, in four stages */}
+        <section id="about" className="band band--engineer">
+          <div className="band__in">
+            <p className="kicker">GTM Engineer · Physical AI</p>
+            <h2 className="statement">I build machines that find customers.</h2>
+            <p className="statement__sub">
+              Find demand, qualify it, discover a way in, and automate the rest. Each stage is a system
+              I&apos;ve shipped and run, mostly for robotics, manufacturing and automation, where the data
+              layer doesn&apos;t exist until you build it.
             </p>
-            <p>
-              There&apos;s <b>no backend</b>, on purpose. The browser talks straight to Apollo and
-              TypeSafe, so there&apos;s no server, no account and no analytics, and your keys never
-              leave local storage. Code works out every signal from the data with explicit
-              thresholds, and the model only judges relevance. That&apos;s why every line on the card
-              carries its own source link.
-            </p>
-
-            <ul className="notes">
-              <li>
-                <Underline seed="sift-byok">
-                  <Hand>BYOK</Hand>
-                </Underline>{" "}
-                <span>your keys, no server</span>
-              </li>
-              <li>
-                <Underline seed="sift-mit">
-                  <Hand>MIT</Hand>
-                </Underline>{" "}
-                <span>open source</span>
-              </li>
-              <li>
-                <Underline seed="sift-free">
-                  <Hand>free</Hand>
-                </Underline>{" "}
-                <span>to run</span>
-              </li>
-            </ul>
-
-            <div className="evidence">
-              <Doodle name="skeletron" width={170} className="evidence__doodle evidence__doodle--tl" rotate={-6} />
-              <Taped seed="sift-video" caption="a real lookup: fit, why now and the ranked contacts, in the shipped extension">
-                <video src="/sift-demo.mp4" poster="/sift-fit.png" controls preload="none" playsInline />
-              </Taped>
-              <Taped seed="sift-fit" caption="the fit card: every requirement shown, with its reason">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/sift-fit.png" alt="Sift's side panel scoring a company against the ICP, with each requirement marked" />
-              </Taped>
+            <Pipeline />
+            <div className="creds">
+              <a className="was" href="https://rellingsystems.com" target="_blank" rel="noreferrer">
+                ex-Founding GTM Engineer @ <b>Relling</b> <span className="yc">YC S25</span>
+              </a>
+              <p className="creds__clients">
+                <span className="label">Systems shipped for</span> {CLIENTS.join(" · ")}
+              </p>
             </div>
+          </div>
+        </section>
 
-            <div className="install">
-              <Hand rush className="install__note">
-                this one you can actually install
-              </Hand>
-              <Arrow width={90} height={40} seed="sift-install" bend={0.6} className="install__arrow" />
-              <span className="install__links">
-                <a href="https://github.com/Aditya-v05/sift">github.com/Aditya-v05/sift</a>
-                <a href="https://sift-through.vercel.app">sift-through.vercel.app</a>
-              </span>
-            </div>
+        <Runnel height={160} bend={-8} />
 
-            <p className="built-with">
-              <Hand rush>built with</Hand> WXT · React 19 · TypeScript · Vitest · Apollo · treg · Jev
-              (TypeSafe) · Manifest V3
+        {/* 03 THE WORK: each project as its own spread */}
+        <section id="work" className="band band--work">
+          <div className="band__in">
+            <header className="band__head">
+              <p className="kicker">The work</p>
+              <h2 className="band__title">Four systems, shown the way they actually look</h2>
+            </header>
+
+            <article id="sift" className="spread">
+              {/* the archive's fountain court, where the water comes in */}
+              <div className="vignette" data-district="sift" data-fade="120,120,70,0" aria-hidden="true" />
+              <header className="spread__head">
+                <p className="spread__no">Project 02 · ICP fit</p>
+                <h3 className="spread__name">Sift</h3>
+                <p className="spread__lede">An open-source browser extension that tells you if a company fits, why now, and who to email.</p>
+              </header>
+              <div className="spread__grid">
+                <div className="spread__text">
+                  <p>
+                    Click the icon on any company&apos;s website and a side panel answers three questions.{" "}
+                    <b>Does it fit</b> your ICP, with every requirement marked met, near miss, unsure or not
+                    met. <b>Why now</b>, from hiring, headcount growth, funding and what their own site says.
+                    And <b>who to email</b>, ranked, with the address one click away. It also reads LinkedIn
+                    profiles from the URL alone, keeps a ranked account list you can export to CSV, and finds
+                    lookalikes of your best accounts.
+                  </p>
+                  <p>
+                    <b>There is no backend.</b> The browser talks straight to Apollo and TypeSafe, so there
+                    is no server, no account and no analytics, and your keys never leave local storage. Code
+                    derives every signal from the data with explicit thresholds and the model only judges
+                    relevance, so each line on the card carries its own source link.
+                  </p>
+                  <ul className="metrics">
+                    <li><b>BYOK</b> your keys, no server</li>
+                    <li><b>MIT</b> open source</li>
+                    <li><b>Free</b> to run</li>
+                  </ul>
+                  <dl className="spread__meta">
+                    <div><dt>Type</dt><dd>Chrome extension, Manifest V3</dd></div>
+                    <div><dt>Stack</dt><dd>WXT · React 19 · TypeScript · Vitest · Apollo · treg · Jev (TypeSafe)</dd></div>
+                    <div><dt>Status</dt><dd><span className="live" aria-hidden="true" /> shipped · v0.3.1 · open source</dd></div>
+                  </dl>
+                </div>
+                <div className="spread__demo">
+                  <figure className="browser">
+                    <div className="browser__bar" aria-hidden="true">
+                      <span /><span /><span />
+                      <span className="browser__url">gorgias.com</span>
+                    </div>
+                    <div className="browser__body" data-zoom>
+                      <video src="/sift-demo.mp4" poster="/sift-fit.png" controls preload="none" playsInline />
+                    </div>
+                    <figcaption>A real lookup: fit, why now, and the ranked contacts, in the shipped extension.</figcaption>
+                  </figure>
+                  <figure className="shot shot--inset">
+                    <div className="shot__frame" data-zoom>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src="/sift-fit.png" alt="Sift's side panel scoring a company against the ICP, with each requirement marked" />
+                    </div>
+                    <figcaption>The fit card, with every requirement shown and its reason.</figcaption>
+                  </figure>
+                </div>
+              </div>
+              <div className="install">
+                <p className="install__k">This one you can install.</p>
+                <div className="install__links">
+                  <a className="btn" href="https://sift-through.vercel.app">Get Sift <span aria-hidden="true">→</span></a>
+                  <a className="btn btn--quiet" href="https://github.com/Aditya-v05/sift">github.com/Aditya-v05/sift</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <Runnel height={160} bend={8} />
+
+        {/* 04 THE HUMAN: the forum, the Colosseum, the Pantheon and the gods */}
+        <section className="scene scene--forum" data-district="forum" data-fade="0,0,90,0" aria-labelledby="outside">
+          <div className="scene__in">
+            <p className="kicker">Outside of work</p>
+            <h2 id="outside" className="scene__title">Books, games, music, and too many roguelike runs.</h2>
+          </div>
+        </section>
+
+        {/* 05 THE ENDING: the aqueduct again, from below, water still flowing */}
+        <section id="contact" className="scene scene--ending" data-district="ending" aria-labelledby="contact-title">
+          <div className="scene__in">
+            <h2 id="contact-title" className="scene__title scene__title--big">Have an interesting GTM problem?</h2>
+            <p className="contact">
+              <a className="contact__mail" href="mailto:adityaspark05@gmail.com">adityaspark05@gmail.com</a>
             </p>
-          </Entry>
-        </Sheet>
+            <p className="contact__links">
+              <a href="https://github.com/Aditya-v05">GitHub</a>
+              <a href="https://www.linkedin.com/in/aditya-venkatesan-26055531b/">LinkedIn</a>
+              <a href="/writing">Writing</a>
+            </p>
+          </div>
+        </section>
       </main>
     </>
   );

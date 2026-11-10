@@ -26,4 +26,3 @@ next-env.d.ts
 
 # local scratch work, not part of the site
 .scratch
-/assets-src

@@ -1,35 +1,22 @@
 import type { Metadata } from "next";
-import { Edu_SA_Hand, Zeyada, Newsreader, JetBrains_Mono } from "next/font/google";
+import { Newsreader, Inter, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import InkDefs from "@/components/notebook/InkDefs";
-import DrawObserver from "@/components/notebook/DrawObserver";
 import "./globals.css";
 
-// The notebook's two hands. Both are open-licence stand-ins that recreate the
-// look of the references (a neat blue ballpoint hand and a rushed scratchy
-// pen); the ballpoint streaks come from our own SVG filter in InkDefs. Swap a
-// hand here and every heading follows.
-const handNeat = Edu_SA_Hand({
-  subsets: ["latin"],
-  weight: "variable",
-  variable: "--hand-neat-src",
-});
-
-const handRush = Zeyada({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--hand-rush-src",
-});
-
-// the clean face, for anything longer than a sentence
-const text = Newsreader({
+// Editorial serif for display and reading, a quiet sans for labels, and
+// mono only inside terminal readouts.
+const serif = Newsreader({
   subsets: ["latin"],
   style: ["normal", "italic"],
   axes: ["opsz"],
-  variable: "--font-text-src",
+  variable: "--font-serif-src",
 });
 
-// only inside taped-in printouts (the terminal readouts)
+const sans = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans-src",
+});
+
 const mono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
@@ -45,17 +32,17 @@ const description =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Aditya's idea dump - GTM Engineer",
+  title: "Aditya Venkatesan - GTM Engineer",
   description,
   openGraph: {
-    title: "Aditya's idea dump - GTM Engineer",
+    title: "Aditya Venkatesan - GTM Engineer",
     description:
       "ex-Founding GTM Engineer @ Relling (YC S25). I build GTM systems that run themselves.",
     images: [{ url: "/og.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Aditya's idea dump - GTM Engineer",
+    title: "Aditya Venkatesan - GTM Engineer",
     description:
       "ex-Founding GTM Engineer @ Relling (YC S25). I build GTM systems that run themselves.",
     images: ["/og.png"],
@@ -65,7 +52,7 @@ export const metadata: Metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#f6f3ec",
+  themeColor: "#f6f0e4",
 };
 
 export default function RootLayout({
@@ -81,7 +68,7 @@ export default function RootLayout({
       lang="en"
       data-theme="light"
       suppressHydrationWarning
-      className={`${handNeat.variable} ${handRush.variable} ${text.variable} ${mono.variable}`}
+      className={`${serif.variable} ${sans.variable} ${mono.variable}`}
     >
       <head>
         <script
@@ -94,9 +81,7 @@ export default function RootLayout({
       {/* suppressHydrationWarning: some browser extensions inject attributes
           onto <body> before React hydrates. */}
       <body suppressHydrationWarning>
-        <InkDefs />
         {children}
-        <DrawObserver />
         <Analytics />
       </body>
     </html>
