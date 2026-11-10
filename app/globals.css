@@ -2962,3 +2962,10 @@ a.stone:active, .stone--chip:active { transform: translateY(2px); filter: none; 
 .clay__names { padding-right: 1rem; }
 .band--engineer { padding-bottom: 3rem; }
 .clay__in { padding-left: max(1.4rem, calc((100vw - var(--max)) / 2 - 24px)); }
+/* company names spread evenly across the whole plaque */
+.clay__in { padding-left: 2.2rem; padding-right: 2.2rem; }
+.clay__k { text-align: center; }
+.clay__names { padding: 0; flex-wrap: nowrap; }
+.clay__names li { flex: 1 1 auto; text-align: center; position: relative; white-space: nowrap; }
+.clay__names li:not(:last-child)::after { position: absolute; right: -4px; top: 50%; margin: -4px 0 0; }
+@media (max-width: 900px) { .clay__names { flex-wrap: wrap; } .clay__names li:not(:last-child)::after { display: none; } }
