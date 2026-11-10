@@ -3009,3 +3009,18 @@ body { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.
 @media (max-width: 860px) { .creds { max-width: none; } .xp__list li { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) { .xp__dot { animation: none; } }
 .xp .stone__yc { font-family: var(--display); font-size: 1rem; letter-spacing: 0.05em; margin-left: 0.2rem; background: #e07a3f; color: #fff9dc; }
+/* the plaque's detail lines use the pixel face too */
+.xp__org { font-family: var(--display); font-size: 1.2rem; letter-spacing: 0.04em; text-transform: uppercase; color: #6f6c63; text-shadow: 0 2px 0 #dedbd3; }
+.xp__org a { color: #55524a; }
+/* the badge: stepped corners, with its shadow drawn inside the shape */
+.xp__open, .xp__open:hover {
+  box-shadow: none; padding: 0.35rem 0.9rem 0.7rem;
+  background: linear-gradient(#1d4a30, #1d4a30) 0 100% / 100% 8px no-repeat, linear-gradient(#4a8a62, #4a8a62) 0 0 / 100% 4px no-repeat, #2f6a47;
+  clip-path: polygon(
+    8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px,
+    100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%,
+    8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px),
+    0 8px, 4px 8px, 4px 4px, 8px 4px);
+}
+.xp__open:hover { transform: translateY(2px); filter: brightness(1.12); }
+.xp__open:active { transform: translateY(6px); }
