@@ -2936,3 +2936,29 @@ a.stone:active, .stone--chip:active { transform: translateY(2px); filter: none; 
 @media (max-width: 1500px) { .clay__in { padding-left: 1.5rem; padding-right: 1.5rem; } }
 @media (max-width: 860px) { .clay__names { padding-right: 0; } }
 [data-theme="dark"] .clay { filter: brightness(0.7); }
+
+/* the clay plaque stops short of the screen at both ends, with stepped ends; the water goes round its right end */
+.clay {
+  --slot: -200px; --gap: clamp(76px, 7vw, 120px);
+  width: calc(100vw - 24px - var(--gap)); margin: 5.5rem 0 0 calc(50% - 50vw + 24px);
+  -webkit-mask-image: none; mask-image: none;
+  box-shadow: none;
+  background:
+    linear-gradient(#e0a878, #e0a878) 0 0 / 100% 4px no-repeat,
+    linear-gradient(#e0a878, #e0a878) 0 0 / 4px 100% no-repeat,
+    linear-gradient(#7a4426, #7a4426) 100% 0 / 4px 100% no-repeat,
+    repeating-linear-gradient(90deg, #9a5a36 0 8px, transparent 8px 24px) 12px 12px / calc(100% - 24px) 4px no-repeat,
+    repeating-linear-gradient(90deg, #9a5a36 0 8px, transparent 8px 24px) 12px calc(100% - 20px) / calc(100% - 24px) 4px no-repeat,
+    linear-gradient(#7a4426, #7a4426) 0 100% / 100% 8px no-repeat,
+    radial-gradient(#b06d45 1px, transparent 1.5px) 0 0 / 12px 12px,
+    #c4835a;
+  clip-path: polygon(
+    12px 0, calc(100% - 12px) 0, calc(100% - 12px) 4px, calc(100% - 8px) 4px, calc(100% - 8px) 8px, calc(100% - 4px) 8px, calc(100% - 4px) 12px, 100% 12px,
+    100% calc(100% - 12px), calc(100% - 4px) calc(100% - 12px), calc(100% - 4px) calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) calc(100% - 4px), calc(100% - 12px) calc(100% - 4px), calc(100% - 12px) 100%,
+    12px 100%, 12px calc(100% - 4px), 8px calc(100% - 4px), 8px calc(100% - 8px), 4px calc(100% - 8px), 4px calc(100% - 12px), 0 calc(100% - 12px),
+    0 12px, 4px 12px, 4px 8px, 8px 8px, 8px 4px, 12px 4px);
+}
+.clay__in { max-width: none; padding-left: calc(50vw - 50% - 24px + 1.4rem); }
+.clay__names { padding-right: 1rem; }
+.band--engineer { padding-bottom: 3rem; }
+.clay__in { padding-left: max(1.4rem, calc((100vw - var(--max)) / 2 - 24px)); }

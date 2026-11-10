@@ -70,13 +70,28 @@ export default function Stream() {
       agora = document.querySelector<HTMLElement>(".agora");
       const ar = (agora ?? work).getBoundingClientRect();
       const y1 = g(ar.top + sy + 6);
-      fall(ex, g(fr.bottom + sy) - 1, y1, false);
-      wallStart = cost;
-      cost += Math.max(0, ex - g(ar.left)) * CELL * 0.35;
-      // on its way down, the fall passes through a slot in the clay plaque
+      // where the water lands on the wall: under the statue, or the wall's right end
+      const xin = Math.min(ex, g(ar.right) - 14);
       const clay = document.querySelector<HTMLElement>(".clay");
-      if (clay) clay.style.setProperty("--slot", `${ex * CELL - clay.getBoundingClientRect().left}px`);
-      agora?.style.setProperty("--inlet", `${ex * CELL - ar.left + 12}px`);
+      if (clay) {
+        // the water goes round the clay plaque: a basin above it, a channel
+        // out past its right end, a fall down beside it, and a channel back
+        const cr = clay.getBoundingClientRect();
+        const yA = g(cr.top + sy) - 14, yB = g(cr.bottom + sy) + 8;
+        const xP = g(cr.right) + 9;
+        fall(ex, g(fr.bottom + sy) - 1, yA);
+        basin(ex + 1, yA);
+        run(ex + 8, xP - 6, yA + 2);
+        basin(xP, yA);
+        fall(xP, yA + 6, yB);
+        basin(xP, yB);
+        run(xP - 7, xin + 8, yB + 2);
+        basin(xin + 1, yB);
+        fall(xin, yB + 6, y1, false);
+      } else fall(ex, g(fr.bottom + sy) - 1, y1, false);
+      wallStart = cost;
+      cost += Math.max(0, xin - g(ar.left)) * CELL * 0.35;
+      agora?.style.setProperty("--inlet", `${xin * CELL - ar.left + 12}px`);
       // 3. out of the wall's left end, into the basin at the head of the stair
       const xL = g(Math.max(40, (vw - 1120) / 2 - 70));
       run(g(ar.left) + 2, xL + 7, y1 + 2);
