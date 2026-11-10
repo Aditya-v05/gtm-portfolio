@@ -2,12 +2,12 @@
 // nearest. Taken from the reference: cobalt and periwinkle blues on warm
 // ivory, peach stone, and a little olive and yellow-green for plants.
 
-export const DAY_BG = "#fdf6ee";
+export const DAY_BG = "#fbf1c4";
 export const NIGHT_BG = "#0f1630";
 
 export const DAY_PALETTE = [
-  "#fdf6ee", // ivory sky and page
-  "#ffffff", // white highlights
+  "#fbf1c4", // ivory sky and page
+  "#fff9dc", // white highlights
   "#f6ead9", // warm stone light
   "#ead6bd", // stone
   "#d6bea2", // stone shade

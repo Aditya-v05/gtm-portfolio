@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { PROJECTS, type Project } from "./projects";
 
 // The work as a deck of red-figure cards, one Olympian per system. Click a
@@ -65,15 +66,19 @@ export default function Deck({ art = [] }: { art?: string[] }) {
 
   const reduced = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // the transform that puts the big stage exactly over the small card
+  // The transform that puts the stage's front face exactly over the small
+  // card. The front face is card-shaped and as tall as the stage, so one
+  // uniform scale does it. Every keyframe uses the same three functions
+  // (translate, scale, rotateY) so the browser interpolates them cleanly.
   const fromCard = () => {
     const el = stage.current, src = origin.current;
-    if (!el || !src) return "none";
-    const a = src.getBoundingClientRect(), b = el.getBoundingClientRect();
-    const sx = a.width / b.width, sy = a.height / b.height;
-    const dx = a.left + a.width / 2 - (b.left + b.width / 2);
-    const dy = a.top + a.height / 2 - (b.top + b.height / 2);
-    return `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`;
+    if (!el || !src) return "translate(0px, 0px) scale(1)";
+    const a = src.getBoundingClientRect();
+    const h = el.offsetHeight;
+    const s = a.height / h;
+    const dx = a.left + a.width / 2 - window.innerWidth / 2;
+    const dy = a.top + a.height / 2 - window.innerHeight / 2;
+    return `translate(${dx}px, ${dy}px) scale(${s})`;
   };
 
   const show = (p: Project, btn: HTMLButtonElement) => {
@@ -92,15 +97,24 @@ export default function Deck({ art = [] }: { art?: string[] }) {
       : el.animate(
           [
             { transform: `${fromCard()} rotateY(0deg)` },
-            { transform: "translate(0, -2%) scale(1.02) rotateY(120deg)", offset: 0.6 },
-            { transform: "rotateY(180deg)" },
+            { transform: "translate(0px, -16px) scale(1.03) rotateY(110deg)", offset: 0.62 },
+            { transform: "translate(0px, 0px) scale(1) rotateY(180deg)" },
           ],
           { duration: 820, easing: "cubic-bezier(.65,0,.25,1)", fill: "forwards" }
         );
-    anim.onfinish = () => {
+    // finish on the animation's own event, with a timer as a safety net so a
+    // dropped frame can never leave the card stuck half open
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      anim.finish();
       setPhase("open");
       closeBtn.current?.focus();
     };
+    anim.onfinish = finish;
+    const timer = setTimeout(finish, 1000);
+    return () => clearTimeout(timer);
   }, [phase]);
 
   const close = useCallback(() => {
@@ -110,10 +124,13 @@ export default function Deck({ art = [] }: { art?: string[] }) {
     const anim = reduced()
       ? el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 180, fill: "forwards" })
       : el.animate(
-          [{ transform: "rotateY(180deg)" }, { transform: `${fromCard()} rotateY(0deg)` }],
+          [{ transform: "translate(0px, 0px) scale(1) rotateY(180deg)" }, { transform: `${fromCard()} rotateY(0deg)` }],
           { duration: 620, easing: "cubic-bezier(.65,0,.25,1)", fill: "forwards" }
         );
-    anim.onfinish = () => {
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
       if (origin.current) {
         origin.current.style.visibility = "";
         origin.current.focus();
@@ -122,6 +139,8 @@ export default function Deck({ art = [] }: { art?: string[] }) {
       setOpen(null);
       setPhase("idle");
     };
+    anim.onfinish = finish;
+    setTimeout(finish, 800);
   }, [phase]);
 
   useEffect(() => {
@@ -132,30 +151,42 @@ export default function Deck({ art = [] }: { art?: string[] }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [close]);
 
+  // a fanned hand: the four flagships in the middle, the rest either side
   const flagships = PROJECTS.filter((p) => p.flagship);
   const rest = PROJECTS.filter((p) => !p.flagship);
-
-  const card = (p: Project, big: boolean) => (
-    <li key={p.slug} className={`deck__item${big ? " deck__item--big" : ""}`}>
-      <button
-        className="card"
-        onClick={(e) => show(p, e.currentTarget)}
-        aria-haspopup="dialog"
-        aria-label={`${p.god}: ${p.title}. ${p.lede} Open the project.`}
-      >
-        <CardFace p={p} art={artSet} />
-      </button>
-      <span className="deck__title">{p.title}</span>
-      <span className="deck__lede">{p.lede}</span>
-    </li>
-  );
+  const hand = [...rest.slice(0, 4), ...flagships, ...rest.slice(4)];
+  const [hover, setHover] = useState<Project | null>(null);
+  const shown = hover ?? open ?? flagships[0];
 
   return (
     <>
-      <ul className="deck deck--major">{flagships.map((p) => card(p, true))}</ul>
-      <ul className="deck deck--minor">{rest.map((p) => card(p, false))}</ul>
+      <ul className="fan" onMouseLeave={() => setHover(null)}>
+        {hand.map((p, i) => (
+          <li
+            key={p.slug}
+            className={`fan__item${p.flagship ? " fan__item--major" : ""}`}
+            style={{ "--t": ((i - (hand.length - 1) / 2) / ((hand.length - 1) / 2)).toFixed(3) } as React.CSSProperties}
+          >
+            <button
+              className="card"
+              onClick={(e) => show(p, e.currentTarget)}
+              onMouseEnter={() => setHover(p)}
+              onFocus={() => setHover(p)}
+              aria-haspopup="dialog"
+              aria-label={`${p.god}: ${p.title}. ${p.lede} Open the project.`}
+            >
+              <CardFace p={p} art={artSet} />
+            </button>
+          </li>
+        ))}
+      </ul>
+      <p className="fan__caption" aria-live="polite">
+        <span className="fan__god">{shown.god}</span>
+        <span className="fan__title">{shown.title}</span>
+        <span className="fan__lede">{shown.lede}</span>
+      </p>
 
-      {open && (
+      {open && createPortal(
         <div className={`spin spin--${phase}`} onClick={(e) => e.target === e.currentTarget && close()}>
           <div ref={stage} className="spin__stage" role="dialog" aria-modal="true" aria-labelledby="spin-title">
             <div className="spin__front" aria-hidden="true">
@@ -182,7 +213,8 @@ export default function Deck({ art = [] }: { art?: string[] }) {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

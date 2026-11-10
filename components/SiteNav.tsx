@@ -1,10 +1,9 @@
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
 
-// Small, plain and always readable, links on the right like the reference.
-// On the homepage it starts transparent over the hero sky and gains a quiet
-// backing once the reader scrolls on (see NavHeightVar). variant "home" uses in-page anchors; "page" routes
-// back to the homepage first so the links work from /writing.
+// A notch hanging from the top of the screen, with pixel-stepped corners.
+// variant "home" uses in-page anchors; "page" routes back to the homepage
+// first so the links work from /writing.
 export default function SiteNav({
   variant = "home",
 }: {
@@ -12,18 +11,21 @@ export default function SiteNav({
 }) {
   const base = variant === "home" ? "" : "/";
   return (
-    <nav className={`nav${variant === "page" ? " nav--page" : ""}`}>
-      <div className="nav__in">
-        <Link className="nav__brand" href="/">
-          Aditya Venkatesan
+    <nav className="notch" aria-label="Main">
+      <div className="notch__in">
+        <Link className="notch__brand" href="/">
+          <span className="notch__mark" aria-hidden="true" />
+          Aditya
         </Link>
-        <div className="nav__links">
+        <div className="notch__links">
           <Link href={`${base}#work`}>Work</Link>
           <Link href={`${base}#about`}>About</Link>
           <Link href="/writing">Writing</Link>
-          <Link href={`${base}#contact`}>Contact</Link>
-          <ThemeToggle />
         </div>
+        <Link className="notch__cta" href={`${base}#contact`}>
+          Contact
+        </Link>
+        <ThemeToggle />
       </div>
     </nav>
   );

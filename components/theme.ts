@@ -9,7 +9,7 @@ export function currentTheme(): Theme {
 }
 
 // browser chrome colour per theme: the ivory page by day, navy by night
-const CHROME = { light: "#f6f0e4", dark: "#121826" } as const;
+const CHROME = { light: "#fbf1c4", dark: "#121826" } as const;
 
 function apply(t: Theme) {
   document.documentElement.dataset.theme = t;

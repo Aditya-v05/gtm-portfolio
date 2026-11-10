@@ -5,6 +5,8 @@ import World from "@/components/world/World";
 import PixelName from "@/components/PixelName";
 import GradientASCII from "@/components/GradientASCII";
 import Deck from "@/components/deck/Deck";
+import Fountain from "@/components/Fountain";
+import Stream from "@/components/Stream";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -29,6 +31,7 @@ export default function Home() {
   return (
     <>
       <World />
+      <Stream />
       <NavHeightVar />
       <EvidenceZoom />
       <SiteNav variant="home" />
@@ -75,13 +78,22 @@ export default function Home() {
               layer doesn&apos;t exist until you build it.
             </p>
             <div className="creds">
-              <a className="was" href="https://rellingsystems.com" target="_blank" rel="noreferrer">
-                ex-Founding GTM Engineer @ <b>Relling</b> <span className="yc">YC S25</span>
+              <a className="tablet tablet--main" href="https://rellingsystems.com" target="_blank" rel="noreferrer">
+                <span className="tablet__k">Most recently</span>
+                ex-Founding GTM Engineer, Relling <span className="tablet__yc">YC S25</span>
               </a>
-              <p className="creds__clients">
-                <span className="label">Systems shipped for</span> {CLIENTS.join(" · ")}
-              </p>
+              <div className="creds__for">
+                <span className="tablet__k">Systems shipped for</span>
+                <ul className="tablets">
+                  {CLIENTS.map((c) => (
+                    <li key={c} className="tablet">
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
+            <Fountain />
           </div>
         </section>
 
@@ -90,7 +102,7 @@ export default function Home() {
           <div className="band__in">
             <header className="band__head">
               <p className="kicker">The work</p>
-              <h2 className="band__title">Twelve systems. Twelve gods. Pick a card.</h2>
+              <h2 className="band__title">Twelve systems. Twelve gods. Draw a card.</h2>
               <p className="band__sub">
                 Each card is a system I built and ran. Turn one over to see what it does, how it works,
                 and the evidence.

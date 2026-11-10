@@ -31,7 +31,7 @@ const skyMat = () =>
     depthWrite: false,
     fog: false,
     uniforms: {
-      uSky: { value: C("#fdf6ee") },
+      uSky: { value: C("#fbf1c4") },
       uHaze: { value: C("#eef1fa") },
       uNight: { value: 0 },
     },
@@ -93,12 +93,24 @@ const seaMat = () =>
         float dist = length(cameraPosition.xz - vWorld.xz);
         vec3 col = mix(uNear, uFar, smoothstep(30.0, 420.0, dist));
         col = mix(col, uHaze, smoothstep(500.0, 1500.0, dist) * 0.7);
-        // wave lines: short dashes along x, drifting slowly
-        float rows = vWorld.z * 0.55;
+        // waves: rows of scalloped crests rolling toward the shore. Each
+        // row has its own phase and speed; a crest is a bright arc with a
+        // darker trough just behind it, broken up so rows never look ruled.
+        float rows = vWorld.z * 0.3 + uTime * 0.3;
         float row = floor(rows);
-        float dash = noise(vec2(vWorld.x * 0.08 + uTime * 0.25 + row * 7.0, row));
-        float line = step(0.72, dash) * step(fract(rows), 0.22) * smoothstep(900.0, 80.0, dist);
+        float f = fract(rows);
+        float ph = hash(vec2(row, 3.0)) * 6.283;
+        float x = vWorld.x * 0.32 + ph + uTime * (0.35 + hash(vec2(row, 9.0)) * 0.3);
+        float crest = abs(sin(x));
+        float arc = 0.3 + crest * 0.34;
+        float near = smoothstep(700.0, 60.0, dist);
+        float broken = step(0.42, noise(vec2(vWorld.x * 0.05 + row * 5.0, row)));
+        float line = step(abs(f - arc), 0.075) * broken * near;
+        float trough = step(abs(f - arc - 0.16), 0.06) * broken * near;
+        col = mix(col, uNear * 0.86, trough * 0.7);
         col = mix(col, uLine, line);
+        // sparkle on the crests
+        col = mix(col, vec3(1.0, 0.98, 0.86), line * step(0.93, hash(floor(vWorld.xz * 0.5) + floor(uTime * 3.0))) * (1.0 - uNight));
         gl_FragColor = vec4(col, 1.0);
       }`,
   });
@@ -392,11 +404,11 @@ export function buildCity(): City {
       const t = k / 14;
       pts.push(new THREE.Vector3(p.x + out.x * (1.8 + t * t * 3), seg.top + 1.2 - t * (seg.top + 1.2), p.z + out.z * (1.8 + t * t * 3)));
     }
-    const fall = new THREE.Mesh(ribbon(pts, 4.2, true), waterMat("#c5d3f0", "#ffffff", 1.9));
+    const fall = new THREE.Mesh(ribbon(pts, 4.2, true), waterMat("#c5d3f0", "#fff9dc", 1.9));
     waters.push(fall.material as THREE.ShaderMaterial);
     root.add(fall);
     // foam where it lands
-    const foam = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 0), lambert("#ffffff"), 14);
+    const foam = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 0), lambert("#fff9dc"), 14);
     const foamSeed = Array.from({ length: 14 }, () => ({ dx: (r() - 0.5) * 7, dz: (r() - 0.5) * 4, s: 0.6 + r() * 1.1, ph: r() * 6 }));
     foam.userData = { at: pts[pts.length - 1], foamSeed };
     root.add(foam);
@@ -498,7 +510,7 @@ export function buildCity(): City {
     boxes.push({ x, z, w, d, h: 3 + Math.floor(r() * 2) * 2.6, y: ground(x, z) - 0.6, rot: (r() - 0.5) * 0.3 });
   }
   const boxGeo = new THREE.BoxGeometry(1, 1, 1).translate(0, 0.5, 0);
-  const houses = new THREE.InstancedMesh(boxGeo, lambert("#ffffff"), boxes.length);
+  const houses = new THREE.InstancedMesh(boxGeo, lambert("#fff9dc"), boxes.length);
   const roofs = new THREE.InstancedMesh(gable(), lambert("#a9bdea"), boxes.length);
   const winGeo = new THREE.BoxGeometry(0.6, 0.9, 0.12);
   const winDay = C("#5574c2");
@@ -623,7 +635,7 @@ export function buildCity(): City {
     root.add(basin);
     addMarble(new THREE.CylinderGeometry(1.1, 1.6, 4, 8), S, py + 3, -10);
     for (let k = 0; k <= 8; k++) jetPts.push(new THREE.Vector3(S, py + 5 + k * 0.55, -10));
-    const jet = new THREE.Mesh(ribbon(jetPts, 0.9, true), waterMat("#c5d3f0", "#ffffff", 1.4));
+    const jet = new THREE.Mesh(ribbon(jetPts, 0.9, true), waterMat("#c5d3f0", "#fff9dc", 1.4));
     waters.push(jet.material as THREE.ShaderMaterial);
     root.add(jet);
     // the channel in and out of the court, a stone runnel with water in it
@@ -690,7 +702,7 @@ export function buildCity(): City {
       const t = k / 14;
       pts.push(new THREE.Vector3(HARBOUR_SPILL.x + 1.5 + t * t * 4, top + 1.2 - t * (top + 1.2), HARBOUR_SPILL.z));
     }
-    const sm = waterMat("#c5d3f0", "#ffffff", 1.9);
+    const sm = waterMat("#c5d3f0", "#fff9dc", 1.9);
     waters.push(sm);
     const spill = new THREE.Mesh(ribbon(pts, 3, true), sm);
     spill.rotation.y = 0;
@@ -707,10 +719,10 @@ export function buildCity(): City {
     // boats
     for (let i = 0; i < 6; i++) {
       const b = new THREE.Group();
-      const hull = new THREE.Mesh(new THREE.BoxGeometry(5, 1.2, 1.8).translate(0, 0.6, 0), lambert(i % 2 ? "#ffffff" : "#5574c2"));
+      const hull = new THREE.Mesh(new THREE.BoxGeometry(5, 1.2, 1.8).translate(0, 0.6, 0), lambert(i % 2 ? "#fff9dc" : "#5574c2"));
       const mast = new THREE.Mesh(new THREE.BoxGeometry(0.2, 5, 0.2).translate(0, 3.5, 0), lambert("#7b6650"));
       const sailShape = new THREE.Shape([new THREE.Vector2(0, 0), new THREE.Vector2(2.6, 0), new THREE.Vector2(0, 4)]);
-      const sail = new THREE.Mesh(new THREE.ShapeGeometry(sailShape), new THREE.MeshLambertMaterial({ color: C("#fdf6ee"), side: THREE.DoubleSide }));
+      const sail = new THREE.Mesh(new THREE.ShapeGeometry(sailShape), new THREE.MeshLambertMaterial({ color: C("#fbf1c4"), side: THREE.DoubleSide }));
       sail.position.set(0.15, 1.4, 0);
       b.add(hull, mast, sail);
       b.position.set(E + 30 + i * 15 + r() * 6, 0, -6 + r() * 26);
@@ -732,7 +744,7 @@ export function buildCity(): City {
   const cloudGeo = mergeGeometries([0, 1, 2, 3, 4].map((i) =>
     new THREE.IcosahedronGeometry(1, 1).scale(6 + (i % 3) * 2, 3.4 + (i % 2) * 1.6, 4).translate(i * 6 - 12, (i % 2) * 1.8 + (i === 2 ? 2.4 : 0), (i % 3) - 1).toNonIndexed()
   ));
-  const clouds = new THREE.InstancedMesh(cloudGeo, lambert("#ffffff"), 16);
+  const clouds = new THREE.InstancedMesh(cloudGeo, lambert("#fff9dc"), 16);
   clouds.frustumCulled = false;
   const cloudSeed = Array.from({ length: 16 }, () => ({ x: r() * 1500 - 300, y: 48 + r() * 40, z: -260 - r() * 220, s: 0.9 + r() * 1.2 }));
   root.add(clouds);
@@ -760,7 +772,7 @@ export function buildCity(): City {
   function setNight(n: boolean) {
     (sky.material as THREE.ShaderMaterial).uniforms.uNight.value = n ? 1 : 0;
     const su = (sky.material as THREE.ShaderMaterial).uniforms;
-    su.uSky.value.set(n ? "#0f1630" : "#fdf6ee");
+    su.uSky.value.set(n ? "#0f1630" : "#fbf1c4");
     const sm = (sea.material as THREE.ShaderMaterial).uniforms;
     sm.uNear.value.set(n ? "#212d58" : "#6f8ed4");
     sm.uFar.value.set(n ? "#2a3868" : "#a9bdea");

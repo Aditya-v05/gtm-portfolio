@@ -17,8 +17,8 @@
   --sans: var(--font-text-src), system-ui, -apple-system, sans-serif;
   --mono: var(--font-mono-src), ui-monospace, Menlo, monospace;
 
-  --page: #fdf6ee; /* warm ivory, the reference's sky */
-  --panel: #fffaf3;
+  --page: #fbf1c4; /* warm ivory, the reference's sky */
+  --panel: #fff8d8;
   --ink: #1f2b4d; /* deep cobalt ink */
   --ink-2: #44507a;
   --ink-3: #7c84a3;
@@ -29,7 +29,7 @@
   --rule: rgba(31, 43, 77, 0.12);
   --panel-edge: rgba(47, 79, 158, 0.12);
   --panel-shadow: 0 30px 80px -40px rgba(31, 43, 77, 0.35);
-  --nav-bg: rgba(253, 246, 238, 0.82);
+  --nav-bg: rgba(251, 241, 196, 0.82);
 
   --nav-h: 64px;
   --max: 1120px;
@@ -1159,7 +1159,7 @@ html[data-theme="dark"]:not([data-world="ready"]) [data-district] {
   position: absolute;
   inset: -3rem -6rem;
   z-index: -1;
-  background: radial-gradient(ellipse at 50% 50%, rgba(253, 246, 238, 0.92), rgba(253, 246, 238, 0) 70%);
+  background: radial-gradient(ellipse at 50% 50%, rgba(251, 241, 196, 0.92), rgba(251, 241, 196, 0) 70%);
   pointer-events: none;
 }
 .scene__title {
@@ -1285,9 +1285,9 @@ html[data-theme="dark"]:not([data-world="ready"]) [data-district] {
   --mute: #7c84a3;
   --line: rgba(31, 43, 77, 0.12);
   --line-2: rgba(31, 43, 77, 0.2);
-  --paper: #fffaf3;
-  --paper-2: #f6ecdf;
-  --paper-line: #e6dccf;
+  --paper: #fff8d8;
+  --paper-2: #f3e7b4;
+  --paper-line: #e4d69a;
   --paper-ink: #1f2b4d;
   --paper-dim: #7c84a3;
   --shadow-exhibit: 0 0 0 1px rgba(31, 43, 77, 0.1), 0 18px 40px -26px rgba(31, 43, 77, 0.45);
@@ -1743,6 +1743,331 @@ h1, h2, h3,
 @media (prefers-reduced-motion: reduce) {
   .card,
   .spin {
+    transition: none;
+  }
+}
+
+/* ================= round three ================= */
+
+/* ---- the water, behind the content ---- */
+.stream {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 0;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+/* ---- the notch: a pixel tab hanging from the top of the screen ---- */
+.notch {
+  --step: 4px;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 60;
+  transform: translateX(-50%);
+  background: #1b2b5a;
+  color: #fbf1c4;
+  /* pixel-stepped bottom corners */
+  clip-path: polygon(
+    0 0, 100% 0,
+    100% calc(100% - 12px), calc(100% - 4px) calc(100% - 12px),
+    calc(100% - 4px) calc(100% - 8px), calc(100% - 8px) calc(100% - 8px),
+    calc(100% - 8px) calc(100% - 4px), calc(100% - 12px) calc(100% - 4px),
+    calc(100% - 12px) 100%, 12px 100%,
+    12px calc(100% - 4px), 8px calc(100% - 4px),
+    8px calc(100% - 8px), 4px calc(100% - 8px),
+    4px calc(100% - 12px), 0 calc(100% - 12px)
+  );
+}
+.notch__in {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.55rem 1.1rem 0.7rem 1.3rem;
+  white-space: nowrap;
+}
+.notch__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--display);
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #fbf1c4;
+}
+/* a little pixel wave as the mark */
+.notch__mark {
+  width: 20px;
+  height: 20px;
+  background:
+    linear-gradient(#8aa5e0, #8aa5e0) 0 12px / 8px 4px no-repeat,
+    linear-gradient(#8aa5e0, #8aa5e0) 4px 8px / 8px 4px no-repeat,
+    linear-gradient(#8aa5e0, #8aa5e0) 12px 12px / 8px 4px no-repeat,
+    linear-gradient(#fbf1c4, #fbf1c4) 8px 4px / 4px 4px no-repeat,
+    #2f4a94;
+}
+.notch__links {
+  display: flex;
+  gap: 1.2rem;
+  font-family: var(--display);
+  font-weight: 300;
+  font-size: 1.05rem;
+  letter-spacing: 0.05em;
+}
+.notch__links a {
+  color: #c5d3f0;
+  text-decoration: none;
+}
+.notch__links a:hover {
+  color: #fbf1c4;
+}
+.notch__cta {
+  font-family: var(--display);
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #1b2b5a;
+  background: #fbf1c4;
+  padding: 0.3rem 0.8rem;
+  box-shadow: 0 4px 0 #c9ae8a;
+  transition: transform 0.1s steps(2), box-shadow 0.1s steps(2);
+}
+.notch__cta:hover {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 #c9ae8a;
+}
+.notch .daybtn {
+  border: 0;
+  padding: 0.2rem;
+  color: #c5d3f0;
+}
+.notch .daybtn__t {
+  display: none;
+}
+.hero {
+  height: 100svh;
+}
+.page--sub {
+  padding-top: 4.5rem;
+}
+
+/* the name: static */
+.pixelname__text {
+  opacity: 1 !important;
+}
+
+/* ---- the engineer band: statement left, the statue right ---- */
+.band--engineer .band__in {
+  position: relative;
+  min-height: 520px;
+}
+.band--engineer .statement,
+.band--engineer .statement__sub {
+  max-width: min(16ch, 62%);
+}
+.band--engineer .statement__sub {
+  max-width: min(54ch, 60%);
+}
+.fountain {
+  position: absolute;
+  right: 3%;
+  top: 0;
+  width: 240px;
+  height: 440px;
+  image-rendering: pixelated;
+}
+
+/* ---- credentials: stone tablets with pixel corners ---- */
+.creds {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1.6rem 2.4rem;
+  margin-top: 3rem;
+  max-width: 66%;
+}
+.tablet {
+  display: inline-block;
+  position: relative;
+  font-family: var(--display);
+  font-size: 1.15rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  background: #ead6bd;
+  padding: 0.5rem 0.9rem 0.6rem;
+  box-shadow:
+    0 4px 0 #c9ae8a,
+    inset 0 4px 0 #f6ead9;
+  clip-path: polygon(4px 0, calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px, 100% 100%, 0 100%, 0 4px, 4px 4px);
+  margin-bottom: 4px;
+}
+.tablet--main {
+  background: #1b2b5a;
+  color: #fbf1c4;
+  box-shadow:
+    0 4px 0 #0f1a3d,
+    inset 0 4px 0 #2f4a94;
+  font-size: 1.3rem;
+  padding: 0.7rem 1.1rem 0.8rem;
+}
+.tablet__k {
+  display: block;
+  font-family: var(--label);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+  color: var(--blue);
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+.tablet--main .tablet__k {
+  color: #8aa5e0;
+}
+.tablet__yc {
+  margin-left: 0.5rem;
+  padding: 0 0.4rem;
+  background: #e07a3f;
+  color: #fff9dc;
+  font-size: 0.95rem;
+}
+.tablets {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+/* ---- the deck as a fanned hand ---- */
+.fan {
+  list-style: none;
+  position: relative;
+  margin: 3rem auto 0;
+  padding: 0;
+  height: clamp(380px, 37vw, 500px);
+}
+.fan__item {
+  position: absolute;
+  left: calc(50% + var(--t) * 39%);
+  top: 44px;
+  width: clamp(120px, 13vw, 184px);
+  transform: translate(-50%, calc(var(--t) * var(--t) * 46px)) rotate(calc(var(--t) * 12deg));
+  transform-origin: 50% 120%;
+  transition: transform 0.28s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+.fan__item--major {
+  z-index: 2;
+}
+.fan__item:hover,
+.fan__item:focus-within {
+  z-index: 10;
+  transform: translate(-50%, -30px) rotate(0deg) scale(1.1);
+}
+.fan .card,
+.fan .card:hover,
+.fan .card:focus-visible {
+  transform: none;
+}
+.fan__caption {
+  margin: 1.2rem auto 0;
+  min-height: 5.5rem;
+  display: grid;
+  justify-items: center;
+  gap: 0.1rem;
+  text-align: center;
+}
+.fan__god {
+  font-family: var(--label);
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c8673a;
+}
+.fan__title {
+  font-family: var(--display);
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.fan__lede {
+  color: var(--ink-2);
+}
+
+/* ---- the spin-out, fixed: card-shaped front, sticky rail ---- */
+.spin__front {
+  inset: 0 auto 0 50%;
+  height: 100%;
+  aspect-ratio: 5 / 8;
+  margin-left: calc(min(88vh, 900px) * -0.3125);
+  overflow: visible;
+}
+.spin__rail {
+  position: sticky;
+  top: 0;
+  align-self: start;
+}
+.spin__back .rail .seg .v div {
+  white-space: normal;
+}
+
+@media (max-width: 860px) {
+  .fountain {
+    position: relative;
+    right: auto;
+    display: block;
+    margin: 2.5rem 0 0 auto;
+    width: 180px;
+    height: 330px;
+  }
+  .band--engineer .statement,
+  .band--engineer .statement__sub,
+  .creds {
+    max-width: none;
+  }
+  .notch__links {
+    gap: 0.8rem;
+    font-size: 0.95rem;
+  }
+  .notch__in {
+    gap: 0.8rem;
+    padding-left: 0.8rem;
+  }
+  .notch__brand {
+    font-size: 0;
+    gap: 0;
+  }
+  /* small screens: the hand becomes a row to swipe through */
+  .fan {
+    height: auto;
+    display: flex;
+    gap: 0.9rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 1rem 0.5rem 1.5rem;
+  }
+  .fan__item,
+  .fan__item:hover,
+  .fan__item:focus-within {
+    position: static;
+    flex: none;
+    width: 46vw;
+    transform: none;
+    scroll-snap-align: center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fan__item,
+  .notch__cta {
     transition: none;
   }
 }
