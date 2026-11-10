@@ -2977,3 +2977,44 @@ a.stone:active, .stone--chip:active { transform: translateY(2px); filter: none; 
 [data-theme="dark"] .agora .exh:hover { filter: drop-shadow(0 0 6px rgba(255, 226, 150, 0.95)) drop-shadow(0 0 34px rgba(255, 200, 110, 0.65)); }
 [data-theme="dark"] .agora .exh__note { filter: brightness(0.8); }
 [data-theme="dark"] .agora:not(.is-wet)::after { filter: brightness(0.45); }
+
+/* ================= omens: the hydra and the lightning ================= */
+.hydra { position: absolute; right: 9%; bottom: 13%; width: clamp(200px, 24vw, 340px); aspect-ratio: 420 / 380; overflow: hidden; pointer-events: none; z-index: 1; }
+.hydra__body {
+  position: absolute; left: 0; right: 0; top: 0; aspect-ratio: 420 / 415;
+  background: url(/art/hydra.png) 0 0 / 900% 100% no-repeat; image-rendering: pixelated;
+  animation: hydra-roar 2.4s steps(9) infinite;
+  transform: translateY(104%); transition: transform 5s cubic-bezier(0.3, 0, 0.3, 1);
+  filter: brightness(0.82) saturate(0.9);
+}
+.hydra.is-up .hydra__body { transform: translateY(0); }
+@keyframes hydra-roar { to { background-position: 112.5% 0; } }
+/* broken water where it comes up */
+.hydra__foam {
+  position: absolute; left: 4%; right: 4%; bottom: 0; height: 12px; opacity: 0; transition: opacity 1s 0.5s;
+  background: repeating-linear-gradient(90deg, #c9d2f0 0 12px, transparent 12px 20px, #8f9fd0 20px 28px, transparent 28px 44px);
+  animation: wallflow-x 1.2s steps(6) infinite;
+}
+.hydra.is-up .hydra__foam { opacity: 1; }
+@keyframes wallflow-x { to { background-position: 44px 0; } }
+
+.lightning { position: absolute; inset: 0; pointer-events: none; z-index: 0; animation: bolt 1.2s steps(1) both; }
+.lightning svg { width: 100%; height: 72%; overflow: visible; }
+.lightning path { fill: none; vector-effect: non-scaling-stroke; stroke-linejoin: miter; }
+.lightning__glow { stroke: #8aa5e0; stroke-width: 14px; opacity: 0.45; }
+.lightning__bolt { stroke: #fffbe6; stroke-width: 5px; }
+.lightning__fork { stroke: #fffbe6; stroke-width: 3px; }
+[data-theme="light"] .lightning__bolt, [data-theme="light"] .lightning__fork { stroke: #e3b21c; }
+[data-theme="light"] .lightning__glow { stroke: #fff3b0; opacity: 0.9; }
+@keyframes bolt { 0% { opacity: 1; } 12% { opacity: 0; } 20% { opacity: 1; } 45% { opacity: 0.7; } 60% { opacity: 0; } 100% { opacity: 0; } }
+/* the flash and the rumble */
+body.thunder::before { content: ""; position: fixed; inset: 0; z-index: 500; pointer-events: none; background: #fffbe6; animation: flash 0.9s steps(1) both; }
+body.thunder .page { animation: rumble 0.6s steps(8) 0.15s both; }
+@keyframes flash { 0% { opacity: 0.75; } 10% { opacity: 0; } 18% { opacity: 0.5; } 30% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes rumble { 0%, 100% { transform: none; } 15% { transform: translate(4px, -4px); } 30% { transform: translate(-4px, 4px); } 45% { transform: translate(4px, 4px); } 60% { transform: translate(-4px, 0); } 80% { transform: translate(0, 4px); } }
+@media (prefers-reduced-motion: reduce) { .hydra__body { animation: none; transition: none; } .hydra__foam { animation: none; } }
+
+/* ================= a faint texture of pixel columns behind the whole page ================= */
+body { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' fill='rgba(47,79,158,0.055)' shape-rendering='crispEdges'><rect x='36' y='24' width='48' height='8'/><rect x='32' y='32' width='12' height='12'/><rect x='76' y='32' width='12' height='12'/><rect x='40' y='32' width='40' height='8'/><rect x='42' y='44' width='4' height='120'/><rect x='50' y='44' width='4' height='120'/><rect x='58' y='44' width='4' height='120'/><rect x='66' y='44' width='4' height='120'/><rect x='74' y='44' width='4' height='120'/><rect x='38' y='164' width='44' height='8'/><rect x='32' y='172' width='56' height='8'/><rect x='202' y='280' width='4' height='40'/><rect x='210' y='264' width='4' height='56'/><rect x='218' y='272' width='4' height='48'/><rect x='226' y='292' width='4' height='28'/><rect x='234' y='284' width='4' height='36'/><rect x='198' y='320' width='44' height='8'/><rect x='192' y='328' width='56' height='8'/><rect x='296' y='150' width='48' height='8'/><rect x='292' y='158' width='12' height='12'/><rect x='336' y='158' width='12' height='12'/><rect x='300' y='158' width='40' height='8'/><rect x='302' y='170' width='4' height='80'/><rect x='310' y='170' width='4' height='80'/><rect x='318' y='170' width='4' height='80'/><rect x='326' y='170' width='4' height='80'/><rect x='334' y='170' width='4' height='80'/><rect x='298' y='250' width='44' height='8'/><rect x='292' y='258' width='56' height='8'/><rect x='120' y='330' width='16' height='4'/><rect x='128' y='326' width='8' height='4'/><rect x='250' y='60' width='12' height='4'/></svg>"); background-size: 400px 400px; }
+[data-theme="dark"] body { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' fill='rgba(159,181,230,0.05)' shape-rendering='crispEdges'><rect x='36' y='24' width='48' height='8'/><rect x='32' y='32' width='12' height='12'/><rect x='76' y='32' width='12' height='12'/><rect x='40' y='32' width='40' height='8'/><rect x='42' y='44' width='4' height='120'/><rect x='50' y='44' width='4' height='120'/><rect x='58' y='44' width='4' height='120'/><rect x='66' y='44' width='4' height='120'/><rect x='74' y='44' width='4' height='120'/><rect x='38' y='164' width='44' height='8'/><rect x='32' y='172' width='56' height='8'/><rect x='202' y='280' width='4' height='40'/><rect x='210' y='264' width='4' height='56'/><rect x='218' y='272' width='4' height='48'/><rect x='226' y='292' width='4' height='28'/><rect x='234' y='284' width='4' height='36'/><rect x='198' y='320' width='44' height='8'/><rect x='192' y='328' width='56' height='8'/><rect x='296' y='150' width='48' height='8'/><rect x='292' y='158' width='12' height='12'/><rect x='336' y='158' width='12' height='12'/><rect x='300' y='158' width='40' height='8'/><rect x='302' y='170' width='4' height='80'/><rect x='310' y='170' width='4' height='80'/><rect x='318' y='170' width='4' height='80'/><rect x='326' y='170' width='4' height='80'/><rect x='334' y='170' width='4' height='80'/><rect x='298' y='250' width='44' height='8'/><rect x='292' y='258' width='56' height='8'/><rect x='120' y='330' width='16' height='4'/><rect x='128' y='326' width='8' height='4'/><rect x='250' y='60' width='12' height='4'/></svg>"); }
+.hydra__foam { height: 8px; background: repeating-linear-gradient(90deg, #8f9fd0 0 16px, transparent 16px 24px, #c9d2f0 24px 32px, transparent 32px 52px); }

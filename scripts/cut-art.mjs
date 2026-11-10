@@ -52,6 +52,19 @@ for (const [src, out, x, y, w, h, seeds = []] of CUTS) {
         if (k >= w) stack.push(k - w);
         if (k < w * (h - 1)) stack.push(k + w);
       }
+      // trim the pale fringe the cream background leaves round dark-edged art:
+      // peel light pixels off the cut edge until the dark outline is reached
+      for (let pass = 0; pass < (seeds.length ? 0 : 3); pass++) {
+        const kill = [];
+        for (let k = 0; k < w * h; k++) {
+          if (p[k * 4 + 3] === 0) continue;
+          const lum = (p[k * 4] * 3 + p[k * 4 + 1] * 6 + p[k * 4 + 2]) / 10;
+          if (lum < 70) continue;
+          const px = k % w;
+          if ((px > 0 && p[(k - 1) * 4 + 3] === 0) || (px < w - 1 && p[(k + 1) * 4 + 3] === 0) || (k >= w && p[(k - w) * 4 + 3] === 0) || (k < w * (h - 1) && p[(k + w) * 4 + 3] === 0)) kill.push(k);
+        }
+        for (const k of kill) p[k * 4 + 3] = 0;
+      }
       g.putImageData(d, 0, 0);
       return c.toDataURL("image/png");
     },

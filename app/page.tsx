@@ -5,6 +5,7 @@ import World from "@/components/world/World";
 import PixelName from "@/components/PixelName";
 import GradientASCII from "@/components/GradientASCII";
 import ClientThreads from "@/components/ClientThreads";
+import { Hydra, Lightning } from "@/components/Omens";
 import Deck from "@/components/deck/Deck";
 import Fountain from "@/components/Fountain";
 import Stream from "@/components/Stream";
@@ -61,6 +62,7 @@ export default function Home() {
               style={undefined}
             />
           </div>
+          <Lightning />
           <div className="hero__in">
             <h1 className="hero__name">
               <PixelName>Aditya Venkatesan</PixelName>
@@ -138,6 +140,7 @@ export default function Home() {
               <a className="contact__mail" href="mailto:adityaspark05@gmail.com">adityaspark05@gmail.com</a>
             </p>
           </div>
+          <Hydra />
           {/* the stone quay at the water's edge */}
           <footer className="quay">
             <span>© 2026 Aditya Venkatesan</span>
