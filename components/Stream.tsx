@@ -38,7 +38,8 @@ export default function Stream() {
     const ctx = canvas.getContext("2d")!;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let pieces: Piece[] = [];
-    let total = 0, front = 0, W = 0, H = 0;
+    let total = 0, front = 0, W = 0, H = 0, wallStart = 0;
+    let agora: HTMLElement | null = null;
 
     const build = () => {
       const f = document.querySelector<HTMLElement>(".fountain");
@@ -62,15 +63,20 @@ export default function Stream() {
         add({ kind: "run", x0: Math.min(x0, x1), x1: Math.max(x0, x1), y, dir: x1 > x0 ? 1 : -1, len: Math.abs(x1 - x0) * CELL * 0.35 });
       const basin = (cx: number, y: number, w = 13, h = 7, wheel = false) => add({ kind: "basin", x: cx - (w >> 1), y, w, h, wheel, len: 60 });
 
-      // 2. out under the bowl, down into the first catch basin
+      // 2. out under the bowl and down onto the agora wall. The wall itself
+      //    carries the water along a channel in its top course (drawn by the
+      //    wall, in CSS) and lets it out at its left end.
       const ex = g(fr.left + FG.exit[0] * k) - 1;
-      const first = document.querySelector<HTMLElement>(".band--proof") ?? work;
-      const y1 = g(first.getBoundingClientRect().top + sy + 30);
-      fall(ex, g(fr.bottom + sy) - 1, y1);
-      basin(ex + 1, y1);
-      // 3. the carved channel, left to the head of the stair
+      agora = document.querySelector<HTMLElement>(".agora");
+      const ar = (agora ?? work).getBoundingClientRect();
+      const y1 = g(ar.top + sy + 6);
+      fall(ex, g(fr.bottom + sy) - 1, y1, false);
+      wallStart = cost;
+      cost += Math.max(0, ex - g(ar.left)) * CELL * 0.35;
+      agora?.style.setProperty("--inlet", `${ex * CELL - ar.left + 12}px`);
+      // 3. out of the wall's left end, into the basin at the head of the stair
       const xL = g(Math.max(40, (vw - 1120) / 2 - 70));
-      run(ex - 6, xL + 7, y1 + 2);
+      run(g(ar.left) + 2, xL + 7, y1 + 2);
       basin(xL, y1);
       // 4. the stair of pools beside the work
       const y2 = g(wr.bottom + sy - 70);
@@ -87,7 +93,7 @@ export default function Stream() {
         n++;
       }
       // 5. the last pool spills over and falls into the sea of the closing scene
-      fall(x + side * 5, y + 3, g(er.top + sy + er.height * 0.66), true, true);
+      fall(x + side * 5, y + 3, g(er.top + sy + er.height * 0.8), true, true);
       total = cost;
     };
 
@@ -115,6 +121,7 @@ export default function Stream() {
         if (top <= reach) target = p.kind === "fall" ? p.start + Math.min(1, (reach - p.y0) / Math.max(1, p.y1 - p.y0)) * p.len : p.start + p.len;
       }
       front = reduced ? Math.max(front, target) : Math.max(front, Math.min(target, front + dt * 1300));
+      agora?.classList.toggle("is-wet", front >= wallStart && wallStart > 0);
       // slow loops: channels step every 260ms, falls every 90ms, pools every 700ms
       const tRun = reduced ? 0 : Math.floor(now / 260);
       const tFall = reduced ? 0 : Math.floor(now / 90);

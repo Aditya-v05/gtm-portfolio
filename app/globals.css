@@ -2870,3 +2870,37 @@ a.stone:active, .stone--chip:active { transform: translateY(2px); filter: none; 
   .fountain__drop, .rest li, .notch__brand:hover .notch__mark { animation: none; }
   .fountain__drop { display: none; }
 }
+
+/* ================= the water runs through the agora wall ================= */
+/* a channel cut into the wall's top course, from its left end to the inlet */
+.agora::after {
+  content: ""; position: absolute; left: 0; top: 0; width: var(--inlet, 0px); height: 20px; z-index: 4;
+  background:
+    linear-gradient(#f3ead2, #f3ead2) 0 0 / 100% 4px no-repeat,
+    linear-gradient(#a8976f, #a8976f) 0 100% / 100% 4px no-repeat,
+    #cbb592;
+}
+.agora.is-wet::after {
+  background:
+    linear-gradient(#f3ead2, #f3ead2) 0 0 / 100% 4px no-repeat,
+    linear-gradient(#a8976f, #a8976f) 0 100% / 100% 4px no-repeat,
+    repeating-linear-gradient(90deg, #f2f6ff 0 8px, transparent 8px 44px, #f2f6ff 44px 48px, transparent 48px 120px) 0 4px / 120px 4px repeat-x,
+    repeating-linear-gradient(90deg, #a9c4f2 0 12px, transparent 12px 76px) 0 8px / 76px 4px repeat-x,
+    linear-gradient(#6f8ed4, #6f8ed4) 0 4px / 100% 8px no-repeat,
+    #4a63b0;
+  animation: wallflow 2.4s steps(30) infinite;
+}
+@keyframes wallflow {
+  to { background-position: 0 0, 0 100%, -120px 4px, -76px 8px, 0 4px, 0 0; }
+}
+/* foam where the fall lands in the channel */
+.agora.is-wet::before {
+  content: ""; position: absolute; left: calc(var(--inlet, 0px) - 28px); top: -4px; width: 24px; height: 8px; z-index: 5;
+  background: linear-gradient(90deg, #f2f6ff 0 8px, transparent 8px 12px, #f2f6ff 12px 24px);
+  animation: bob 0.4s steps(2) infinite;
+}
+@media (prefers-reduced-motion: reduce) { .agora.is-wet::after, .agora.is-wet::before { animation: none; } }
+
+/* focus rings are square pixel frames, never rounded */
+:focus-visible { outline: 4px solid #e3b21c; outline-offset: 4px; border-radius: 0; }
+.notch__cta:focus-visible { outline-offset: 0; }

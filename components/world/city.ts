@@ -119,7 +119,7 @@ const seaMat = () =>
   });
 
 // flowing water: light streaks sliding along a ribbon
-const waterMat = (base: string, light: string, speed = 1) =>
+const waterMat = (base: string, light: string, speed = 1, freq = 0.8) =>
   new THREE.ShaderMaterial({
     side: THREE.DoubleSide,
     uniforms: {
@@ -127,17 +127,18 @@ const waterMat = (base: string, light: string, speed = 1) =>
       uBase: { value: C(base) },
       uLight: { value: C(light) },
       uSpeed: { value: speed },
+      uFreq: { value: freq },
     },
     vertexShader: /* glsl */ `
       varying vec2 vUv;
       void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
     fragmentShader: /* glsl */ `
-      uniform float uTime, uSpeed;
+      uniform float uTime, uSpeed, uFreq;
       uniform vec3 uBase, uLight;
       varying vec2 vUv;
       float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
       void main() {
-        float s = vUv.x * 0.8 - uTime * 2.0 * uSpeed;
+        float s = vUv.x * uFreq - uTime * 2.0 * uSpeed;
         float lane = floor(vUv.y * 4.0);
         float streak = step(0.6, hash(vec2(floor(s + lane * 0.37), lane))) * step(fract(s + lane * 0.37), 0.6);
         vec3 col = mix(uBase, uLight, streak);
@@ -400,19 +401,20 @@ export function buildCity(): City {
   {
     const seg = AQUEDUCTS[WATERFALL_AT.segment];
     const steps = walk(seg.pts, 1);
-    const p = steps[Math.floor(steps.length * WATERFALL_AT.t)];
+    // centred on an arch opening, so it never runs down the face of a pier
+    const p = steps[Math.round((steps.length * WATERFALL_AT.t - 4.5) / 9) * 9 + 4];
     const out = new THREE.Vector3(-Math.sin(p.ang), 0, Math.cos(p.ang)); // toward the viewer's side
     const pts: THREE.Vector3[] = [];
     for (let k = 0; k <= 14; k++) {
       const t = k / 14;
       pts.push(new THREE.Vector3(p.x + out.x * (1.8 + t * t * 3), seg.top + 1.2 - t * (seg.top + 1.2), p.z + out.z * (1.8 + t * t * 3)));
     }
-    const fall = new THREE.Mesh(ribbon(pts, 4.2, true), waterMat("#c5d3f0", "#fff9dc", 1.9));
+    const fall = new THREE.Mesh(ribbon(pts, 2.2, true), waterMat("#a9bdea", "#fff9dc", 2.2, 2.6));
     waters.push(fall.material as THREE.ShaderMaterial);
     root.add(fall);
     // foam where it lands
-    const foam = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1, 0), lambert("#fff9dc"), 14);
-    const foamSeed = Array.from({ length: 14 }, () => ({ dx: (r() - 0.5) * 7, dz: (r() - 0.5) * 4, s: 0.6 + r() * 1.1, ph: r() * 6 }));
+    const foam = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 0.25, 1), new THREE.MeshBasicMaterial({ color: C("#fff9dc") }), 14);
+    const foamSeed = Array.from({ length: 14 }, () => ({ dx: (r() - 0.5) * 6, dz: (r() - 0.5) * 3, s: 0.4 + r() * 0.7, ph: r() * 6 }));
     foam.userData = { at: pts[pts.length - 1], foamSeed };
     root.add(foam);
     foamMesh = foam;
@@ -712,7 +714,7 @@ export function buildCity(): City {
     root.add(spill);
     // the quay: a row of houses with pitched roofs and windows that light at night
     const roofMat = lambert("#a9bdea");
-    for (let i = 0; i < 9; i++) {
+    for (let i = 2; i < 9; i++) {
       const x = E + 22 + i * 12, z = -36 - r() * 10;
       const w = 6 + r() * 3, hgt = 4 + Math.floor(r() * 3) * 2;
       const base = ground(x, -34) - 0.4;
@@ -780,7 +782,7 @@ export function buildCity(): City {
       b.userData.ph = r() * 6;
       // one boat sits close, looking out over the harbour
       if (i === 0) {
-        b.position.set(E + 62, 0, 30);
+        b.position.set(E + 86, 0, 30);
         b.rotation.y = 0.35;
         b.scale.setScalar(2);
       }
@@ -857,7 +859,7 @@ export function buildCity(): City {
       const { at, foamSeed } = foamMesh.userData as { at: THREE.Vector3; foamSeed: { dx: number; dz: number; s: number; ph: number }[] };
       foamSeed.forEach((f, i) => {
         const b = 0.5 + 0.5 * Math.sin(tq * 3 + f.ph);
-        m4.compose(v3.set(at.x + f.dx, 0.4 + b * 0.6, at.z + f.dz), q.identity(), sc.setScalar(f.s * (0.8 + b * 0.4)));
+        m4.compose(v3.set(at.x + f.dx * (0.7 + b * 0.5), 0.15, at.z + f.dz), q.identity(), sc.setScalar(f.s * (0.8 + b * 0.4)));
         foamMesh!.setMatrixAt(i, m4);
       });
       foamMesh.instanceMatrix.needsUpdate = true;
