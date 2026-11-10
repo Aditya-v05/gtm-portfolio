@@ -1,10 +1,9 @@
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
 
-// variant "home": in-page section anchors (#work). variant "page": route back
-// to the homepage first (/#work) so the links work from /blog pages.
-// Internal routes use next/link for client-side navigation (no full reload,
-// which otherwise replays the boot intro and flashes a black screen).
+// Small, plain and always readable: the notebook can be messy, the way
+// around it cannot. variant "home" uses in-page anchors; "page" routes back
+// to the homepage first so the links work from /writing.
 export default function SiteNav({
   variant = "home",
 }: {
@@ -12,43 +11,16 @@ export default function SiteNav({
 }) {
   const base = variant === "home" ? "" : "/";
   return (
-    <nav>
-      <div className="in">
-        <div className="brand">
-          {variant === "home" ? (
-            <>
-              Aditya <em>Venkatesan</em>
-              <span className="tail">gtm engineer</span>
-            </>
-          ) : (
-            <Link className="cursor-target" href="/">
-              Aditya <em>Venkatesan</em>
-              <span className="tail">gtm engineer</span>
-            </Link>
-          )}
-        </div>
-        <div className="links">
-          <Link className="cursor-target" href={`${base}#work`}>
-            Work
-          </Link>
-          <Link className="cursor-target" href={`${base}#market`}>
-            Market
-          </Link>
-          <Link className="cursor-target" href={`${base}#stack`}>
-            Stack
-          </Link>
-          <Link className="nav__paper cursor-target" href="/signals">
-            Paper Trail
-          </Link>
-          <Link className="cursor-target" href="/blog">
-            Blog
-          </Link>
-          <a className="cursor-target" href="https://github.com/Aditya-v05">
-            GitHub
-          </a>
-          <Link className="cursor-target" href={`${base}#contact`}>
-            Contact
-          </Link>
+    <nav className="nav">
+      <div className="nav__in">
+        <Link className="nav__brand" href="/">
+          Aditya<span className="nav__tail">gtm engineer</span>
+        </Link>
+        <div className="nav__links">
+          <Link href={`${base}#work`}>Work</Link>
+          <Link href={`${base}#about`}>About</Link>
+          <Link href="/writing">Writing</Link>
+          <Link href={`${base}#contact`}>Contact</Link>
           <ThemeToggle />
         </div>
       </div>

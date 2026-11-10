@@ -1,0 +1,66 @@
+{
+  "skeletron": {
+    "w": 563,
+    "h": 332
+  },
+  "cat-box": {
+    "w": 236,
+    "h": 271
+  },
+  "mushroom-head": {
+    "w": 180,
+    "h": 193
+  },
+  "eye-veins": {
+    "w": 220,
+    "h": 220
+  },
+  "grin-monster": {
+    "w": 276,
+    "h": 239
+  },
+  "cat-dragon": {
+    "w": 271,
+    "h": 301
+  },
+  "bill-cipher": {
+    "w": 199,
+    "h": 169
+  },
+  "one-up": {
+    "w": 238,
+    "h": 125
+  },
+  "box-robot": {
+    "w": 146,
+    "h": 157
+  },
+  "bat": {
+    "w": 134,
+    "h": 68
+  },
+  "eye-of-cthulhu": {
+    "w": 393,
+    "h": 192
+  },
+  "eater-of-worlds": {
+    "w": 427,
+    "h": 205
+  },
+  "shark": {
+    "w": 360,
+    "h": 156
+  },
+  "lemon-head": {
+    "w": 220,
+    "h": 198
+  },
+  "crown-guy": {
+    "w": 141,
+    "h": 190
+  },
+  "plantera-hooks": {
+    "w": 354,
+    "h": 204
+  }
+}

@@ -8,7 +8,7 @@ export type PostFrontmatter = {
   title: string;
   date: string; // ISO YYYY-MM-DD
   summary: string;
-  cover: string; // absolute path under /public, e.g. /blog/hello.png
+  cover: string; // absolute path under /public, e.g. /writing/hello.png
   subtitle?: string; // optional dek, rendered under the title
 };
 
