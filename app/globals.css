@@ -3037,3 +3037,18 @@ body { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.
 .notch__cta:hover { transform: translateY(2px); filter: brightness(1.06); }
 .notch__cta:active { transform: translateY(4px); box-shadow: none; }
 .notch__cta:focus-visible { outline: none; background-color: #e3b21c; background-image: linear-gradient(#b8860f, #b8860f), linear-gradient(#fff3b0, #fff3b0); }
+.hero__role { margin-top: 0.2rem; }
+/* a project's links sit right under its title, not at the bottom of the sheet */
+.sheet .spin__body { display: flex; flex-direction: column; }
+.sheet .spin__body > .links { order: -1; margin: 0 0 1.4rem !important; display: flex; flex-wrap: wrap; gap: 0.7rem; font-size: 0 !important; }
+.sheet .spin__body > .links a {
+  font-family: var(--display); font-size: 1.25rem; letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none;
+  color: #fbf1c4; background: linear-gradient(#0f1a3d, #0f1a3d) 0 100% / 100% 8px no-repeat, #1b2b5a; padding: 0.3rem 0.8rem 0.65rem;
+  clip-path: polygon(4px 0, calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px), 0 4px, 4px 4px);
+  transition: transform 0.1s steps(2);
+}
+.sheet .spin__body > .links a:hover { transform: translateY(2px); }
+.sheet .spin__body > .links a:active { transform: translateY(4px); }
+.sheet .spin__body > p:first-of-type { margin-top: 0 !important; }
+.sheet .spin__body > .links { max-width: none !important; line-height: 1 !important; flex-direction: row; }
+.sheet .spin__body > .links a { white-space: nowrap; line-height: 1.2; }
