@@ -168,7 +168,7 @@ function archSpan(w: number, h: number, depth: number, pier = 1.3, crown = 3): T
   s.lineTo(w / 2, h);
   s.lineTo(-w / 2, h);
   s.lineTo(-w / 2, 0);
-  const g = new THREE.ExtrudeGeometry(s, { depth, bevelEnabled: false, curveSegments: 6 });
+  const g = new THREE.ExtrudeGeometry(s, { depth, bevelEnabled: false, curveSegments: 14 });
   g.translate(0, 0, -depth / 2);
   return g;
 }

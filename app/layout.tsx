@@ -1,20 +1,29 @@
 import type { Metadata } from "next";
-import { Newsreader, Inter, JetBrains_Mono } from "next/font/google";
+import { Londrina_Solid, Amatic_SC, Nunito, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-// Editorial serif for display and reading, a quiet sans for labels, and
-// mono only inside terminal readouts.
-const serif = Newsreader({
+// The type the user chose: open-licence stand-ins for their references.
+// Londrina Solid recreates Lore (imperfect hand-lettered capitals) for the
+// name and headings; Amatic SC recreates Juniper Bay (condensed marker caps)
+// for labels; Nunito is the calm, rounded reading face; mono only inside
+// terminal readouts.
+const display = Londrina_Solid({
   subsets: ["latin"],
-  style: ["normal", "italic"],
-  axes: ["opsz"],
-  variable: "--font-serif-src",
+  weight: ["300", "400", "900"],
+  variable: "--font-display-src",
 });
 
-const sans = Inter({
+const label = Amatic_SC({
   subsets: ["latin"],
-  variable: "--font-sans-src",
+  weight: ["400", "700"],
+  variable: "--font-label-src",
+});
+
+const text = Nunito({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-text-src",
 });
 
 const mono = JetBrains_Mono({
@@ -68,7 +77,7 @@ export default function RootLayout({
       lang="en"
       data-theme="light"
       suppressHydrationWarning
-      className={`${serif.variable} ${sans.variable} ${mono.variable}`}
+      className={`${display.variable} ${label.variable} ${text.variable} ${mono.variable}`}
     >
       <head>
         <script

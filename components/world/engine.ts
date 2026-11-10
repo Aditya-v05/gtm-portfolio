@@ -117,7 +117,8 @@ const postMat = () =>
           else if (d < db) { db = d; b = uPal[k]; }
         }
         float ratio = da / max(da + db, 1e-6);
-        vec3 col = bayer4(cell) < ratio * 1.15 ? b : a;
+        // dither only where two colours are genuinely close, so flats stay flat
+        vec3 col = (ratio > 0.32 && bayer4(cell) < ratio * 0.9) ? b : a;
         vec2 local = fract(gl_FragCoord.xy / uCell) - 0.5;
         float aa = 1.0 / uCell;
         float m = uDot >= 0.5 ? 1.0 : 1.0 - smoothstep(uDot - aa, uDot + aa, length(local));
@@ -181,7 +182,7 @@ export function createWorld(
 
   // one pixel per `cellCss` CSS pixels
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  let cellCss = window.innerWidth < 720 ? 2.6 : 3.4;
+  let cellCss = window.innerWidth < 720 ? 1.6 : 2;
   let lw = 1, lh = 1, vw = 1, vh = 1;
   let dirty = true;
   function resize() {
@@ -295,8 +296,8 @@ export function createWorld(
     const ms = performance.now() - now;
     acc += ms;
     if (++frames === 90) {
-      if (acc / frames > 14 && cellCss < 7) {
-        cellCss += 0.8;
+      if (acc / frames > 16 && cellCss < 4) {
+        cellCss += 0.5;
         resize();
       }
       frames = 0;

@@ -1,0 +1,679 @@
+import WarmPathGraph from "@/components/WarmPathGraph";
+
+// Every system, carried over word for word from the original site. Each is
+// one card in the deck: an Olympian whose domain matches what the system does.
+// The body is shown when the card spins out.
+
+// Pre-formatted terminal blocks: whitespace and newlines are significant
+// (rendered with white-space:pre-wrap), so they are injected as raw HTML to
+// preserve exact spacing and the colored <span> markup.
+const term01 = `<span class="ac">user ›</span> create a LinkedIn campaign for this  <span class="dm">[+ klaviyo-outreach.docx]</span>
+
+<span class="dm">🔒 workspace confirm:</span> account=<span class="wt">&lt;workspace&gt;</span>  campaign=<span class="wt">Klaviyo-PMM-leads</span>  leads=<span class="wt">39</span>  proceed? <span class="ac">yes</span>
+
+<span class="tl">[phase 1]</span> extracting copy → building templates
+<span class="tl">[phase 1]</span> <span class="ok">✅</span> klaviyo_normal      <span class="dm">{{FIRST_NAME}}, {{CURRENT_COMPANY}}</span>
+<span class="tl">[phase 1]</span> <span class="ok">✅</span> klaviyo_ken_emma    <span class="dm">{{FIRST_NAME}}, {{CURRENT_COMPANY}}</span>
+<span class="tl">[phase 1]</span> <span class="ok">✅</span> klaviyo_deja_mary   <span class="dm">{{FIRST_NAME}}, {{CURRENT_COMPANY}}</span>
+<span class="tl">[phase 1]</span> querying MongoDB salesnav → <span class="wt">39 leads</span> w/ LinkedIn URLs
+<span class="tl">[phase 1]</span> <span class="ok">✅</span> csv: normal=35 · ken_emma=2 · deja_mary=2   <span class="dm">⏱ 1m32s</span>
+
+<span class="ac">user ›</span> approved
+
+<span class="tl">[phase 2]</span> <span class="wt">Klaviyo-Normal-10-02-2026</span>
+  [1/10] create campaign <span class="ok">✅</span>   [4/10] audience resolved <span class="ok">✅</span> 35 profiles
+  [7/10] preview <span class="dm">"{{FIRST_NAME}} - {{TITLE}}" → "Hi {{FIRST_NAME}}, noticed {{COMPANY}}'s…"</span> <span class="ok">✅</span>
+  [10/10] activate <span class="ok">✅</span> <span class="ac">ACTIVE</span>
+<span class="tl">[phase 2]</span> <span class="ok">✅</span> 3 campaigns · 39 leads <span class="ac">LIVE</span>  <span class="dm">⏱ 4m12s</span>`;
+
+const term02 = `<span class="dm">[init]</span> driving each prospect through signup → reading "already registered" signal
+
+<span class="dm">[w1]</span> m****@acme.com        <span class="dm">→</span> <span class="ok">registered ✓</span>  1.9s  | hits 1/200
+<span class="dm">[w2]</span> s****@globex.io       <span class="dm">→</span> <span class="dm">new prospect</span>  2.3s  | hits 1/200
+<span class="dm">[w3]</span> d****@initech.com     <span class="dm">→</span> <span class="ok">registered ✓</span>  2.1s  | hits 2/200
+<span class="dm">[w4]</span> r****@umbrella.co     <span class="dm">→</span> <span class="dm">new prospect</span>  1.8s  | hits 2/200
+<span class="dm">[w1]</span> k****@hooli.com       <span class="dm">→</span> <span class="ok">registered ✓</span>  2.4s  | hits 3/200
+<span class="dm">[w2]</span> j****@stark.io        <span class="dm">→</span> <span class="dm">new prospect</span>  2.0s  | hits 3/200
+<span class="wt">─ summary:</span> <span class="ok">14 / 200 already customers</span> → excluded from outbound  <span class="dm">⏱ 3m02s</span>`;
+
+const term03 = `<span class="dm">$</span> <span class="pr">npm start</span> -- --input companies.csv --output ./out
+
+<span class="wt">=== SaaS B2B Classifier Pipeline ===</span>
+<span class="tl">[CONFIG]</span> azure: gpt-5-mini · batch:50 · max-concurrent:10
+<span class="tl">[CSV]</span> parsed → valid companies w/ websites: <span class="wt">13,700</span>  (skipped 1,249)
+<span class="tl">[PROGRESS]</span> loaded: batch 15/274 · resuming <span class="wt">16/274</span> · Apollo <span class="ok">OK</span>
+<span class="tl">[CLASSIFIER]</span> <span class="ok">SUCCESS</span> "Trinseo": b2b=true, b2b_saas=false, confidence=high
+<span class="tl">[CLASSIFIER]</span> <span class="ok">SUCCESS</span> "IREKS Group": b2b=true, b2b_saas=false, confidence=high
+<span class="tl">[OUTPUT]</span> wrote 800 rows → <span class="pr">./out/final.csv</span>`;
+
+const term08 = `<span class="tl">[AUTH]</span> phase 1b: scraping login page <span class="dm">→</span> https://app-auth.<span class="dm">&lt;target&gt;</span>.com/login
+<span class="tl">[SCRAPER]</span> <span class="ok">done</span>: "Customer Case Study" (8013 chars, 3232ms)
+<span class="tl">[AGENT]</span> baseline fake email <span class="dm">→</span> fakeuser_…@nonexistent-testdomain.com
+<span class="tl">[AGENT]</span> analyze_page <span class="dm">→</span> interact_with_page <span class="dm">→</span> parse_har_diff
+<span class="tl">[AGENT]</span> real emails bypass CAPTCHA via server-side redirect <span class="dm">(differential)</span>
+
+<span class="wt">── report.md ─────────────────────────</span>
+verdict:  <span class="er">ENUMERABLE</span>      method: <span class="tl">api_response_diff</span>
+pages tested: 3 · non-SSO findings: 3 · confidence: high`;
+
+// Warmest Path batch run. Stage counts, the config version and the top lead are from
+// the real 4,426-target run; the org is withheld and names are blurred
+// placeholders, never real names under a CSS blur.
+const termGraph = `<span class="dm">$</span> <span class="pr">warmest-path batch</span> --targets accounts.csv --org <span class="dm">&lt;withheld&gt;</span>
+
+<span class="tl">[resolve]</span>  org page · domain · roster indexed with full career histories
+<span class="tl">[targets]</span>  <span class="wt">4,426</span> loaded · emails present, <span class="ok">never read</span>
+<span class="tl">[score]</span>    pure core · no network · no LLM · config <span class="wt">2026-07-30.1</span>
+<span class="tl">[score]</span>    <span class="ok">4,426 / 4,426</span> scored  <span class="dm">⏱ 41s from cache</span>
+<span class="tl">[rank]</span>     <span class="wt">85 leads</span> · 36 champions · 34 accounts
+           <span class="ok">6 very strong</span> · 10 strong · 14 medium · <span class="dm">55 weak</span>
+<span class="tl">[stage 2]</span>  893 unreached → team-sliced bridges → <span class="ok">9 found</span>
+
+<span class="wt">─ top lead</span>  <span class="ok">0.72</span>  <span class="blr">Qmvre Tolsk</span> → <span class="blr">Dnare Wlupht</span>  <span class="dm">(Exec Director @ EY)</span>
+           shared <span class="wt">EY Business Consulting</span> · ~120 people · 26 months overlap`;
+
+const reveal = {
+  distance: 40,
+  duration: 0.8,
+  ease: "power3.out",
+  threshold: 0.12,
+  initialOpacity: 0,
+};
+
+export type Project = {
+  id: string;
+  slug: string;
+  god: string;
+  epithet: string;
+  title: string;
+  lede: string;
+  type: string;
+  status: "live" | "shipped";
+  flagship: boolean;
+  rail: React.ReactNode;
+  body: React.ReactNode;
+};
+
+export const PROJECTS: Project[] = [
+  {
+    id: "01",
+    slug: "sift",
+    god: "Athena",
+    epithet: "Wisdom, and the judgement to know what fits",
+    title: 'Sift',
+    lede: "Open a company's site; know if it fits and who to email.",
+    type: 'Chrome extension',
+    status: "shipped",
+    flagship: true,
+    rail: (
+      <>
+            <div className="idwrap"><span className="id">01</span><span className="of">/ 12 · open source</span></div>
+            <div className="seg"><div className="h">Type</div><div className="v">Chrome extension<br />Manifest V3</div></div>
+            <div className="seg"><div className="h">Stack</div><div className="v"><div>WXT · React 19</div><div>TypeScript · Vitest</div><div>Apollo · treg</div><div>Jev (TypeSafe)</div></div></div>
+            <div className="st"><span className="d"></span> shipped · v0.3.1</div>
+      </>
+    ),
+    body: (
+      <>
+            <div className="tag">Sift</div>
+            <h3>Sift, the Fit Check in a Side Panel</h3>
+            <div className="lede">Open a company&apos;s site; know if it fits and who to email.</div>
+            <p>
+              Click the icon on any company&apos;s website and a side panel answers three questions:{" "}
+              <b>does it fit</b> your ICP, with every requirement marked met, near miss, unsure or not met;{" "}
+              <b>why now</b>, from hiring, headcount growth, funding and what their own site says; and{" "}
+              <b>who to email</b>, ranked, with the address one click away. It reads LinkedIn profiles from
+              the URL alone, keeps a ranked account list with CSV export, and finds lookalikes of your best
+              accounts.
+            </p>
+            <p>
+              <b>There is no backend.</b> The browser talks straight to Apollo and TypeSafe, so there is no
+              server, no account and no analytics, and your keys never leave local storage. Code derives
+              every signal from the data with explicit thresholds and the model only judges relevance, so
+              each line on the card carries its own source link.
+            </p>
+            <div className="metrics"><b>BYOK</b> your keys, no server <span className="sep">/</span> <b>MIT</b> open source <span className="sep">/</span> <b>free</b> to run</div>
+            <div className="ev">
+              <div className="dash dash--full" data-zoom>
+                <video src="/sift-demo.mp4" poster="/sift-fit.png" controls preload="none" playsInline />
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - a real lookup: fit, why now, and the ranked contacts, in the shipped extension</div>
+            </div>
+            <div className="ev">
+              <div className="dash dash--full" data-zoom>
+                <img src="/sift-fit.png" alt="Sift's side panel scoring a company against the ICP, with each requirement marked" />
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - the fit card, with every requirement shown and its reason</div>
+            </div>
+            <p className="links">
+              <a  href="https://github.com/Aditya-v05/sift">github.com/Aditya-v05/sift</a>
+              {" · "}
+              <a  href="https://sift-through.vercel.app">sift-through.vercel.app</a>
+            </p>
+      </>
+    ),
+  },
+  {
+    id: "02",
+    slug: "warmest-path",
+    god: "Hermes",
+    epithet: "God of roads, crossings and introductions",
+    title: 'Warmest Path',
+    lede: 'Shared history in, the warm intro out.',
+    type: 'Relationship graph',
+    status: "shipped",
+    flagship: true,
+    rail: (
+      <>
+            <div className="idwrap"><span className="id">02</span><span className="of">/ 12 · selected</span></div>
+            <div className="seg"><div className="h">Type</div><div className="v">Relationship graph<br />Warm-intro search</div></div>
+            <div className="seg"><div className="h">Stack</div><div className="v"><div>TypeScript · SQLite</div><div>Apollo · HarvestAPI</div><div>Azure OpenAI</div><div>three.js</div></div></div>
+            <div className="st"><span className="d"></span> shipped · 1 run</div>
+      </>
+    ),
+    body: (
+      <>
+            <div className="tag">Warmest Path</div>
+            <h3>Warmest Path, the Intro Finder</h3>
+            <div className="lede">Shared history in, the warm intro out.</div>
+            <p>
+              A LinkedIn connection is not a relationship. <b>Shared history is</b>: the same team in the
+              same years, the same cohort, the same small company. Given a list of target accounts,
+              it pulls our roster and every target&apos;s career history, finds where two careers
+              actually overlapped, and <b>prices each overlap by how small the group was</b> - two of ~120
+              in EY&apos;s consulting unit, not two of 406,000 at EY. Paths run up to three hops, the last
+              one inside the target&apos;s own company, and <b>every path ships with its proof</b>. Scoring
+              is a pure function: no network, no LLM, 993 tests.
+            </p>
+            <div className="metrics"><b>4,426</b> targets scored <span className="sep">/</span> <b>85</b> leads + 9 via a bridge <span className="sep">/</span> 41s rescore from cache</div>
+            <div className="ev">
+              <WarmPathGraph />
+              <div className="ev__cap"><b>▸ shape</b> - the run as a graph: our roster left, target accounts right, the unreached as dust (recreated layout, real accounts)</div>
+            </div>
+            <div className="ev">
+              <div className="data data--ledger" data-zoom>
+                <div className="data__bar"><span className="fn">warmest-path · leads.csv</span><span className="rc">85 rows · 6 very strong</span></div>
+                <table className="dt dt--paths">
+                  <thead><tr><th>score</th><th>band</th><th>path</th><th>shared history</th><th>group size</th><th>time together</th></tr></thead>
+                  <tbody>
+                    <tr><td><b>0.72</b></td><td><span className="pill pill--v">very strong</span></td><td><span className="blr">Qmvre Tolsk</span> → <span className="blr">Dnare Wlupht</span> <span className="mut">· Exec Director @ EY</span></td><td data-k="shared history">EY Business Consulting</td><td data-k="group size">~120 people</td><td data-k="time together">26 mo</td></tr>
+                    <tr><td><b>0.71</b></td><td><span className="pill pill--v">very strong</span></td><td><span className="blr">Hrost Venalk</span> → <span className="blr">Pwiden Oskar</span> <span className="mut">· VP Software @ Goldman Sachs</span></td><td data-k="shared history">Intralinks engineering</td><td data-k="group size">~140 people</td><td data-k="time together">9 mo</td></tr>
+                    <tr><td><b>0.69</b></td><td><span className="pill pill--v">very strong</span></td><td><span className="blr">Lumer Tadvik</span> → <span className="blr">Csorn Bethal</span> <span className="mut">· Technical Architect @ State Street</span></td><td data-k="shared history">Nuance engineering</td><td data-k="group size">~608 people</td><td data-k="time together">63 mo</td></tr>
+                    <tr><td><b>0.57</b></td><td><span className="pill pill--a">strong</span></td><td><span className="blr">Fenwa Ristol</span> → <span className="blr">Grund Makelo</span> <span className="mut">· AVP Engineering @ Citi</span></td><td data-k="shared history">Chewy engineering</td><td data-k="group size">~1,636 people</td><td data-k="time together">25 mo</td></tr>
+                    <tr><td><b>0.49</b></td><td><span className="pill pill--a">strong</span></td><td><span className="blr">Ostra Kilven</span> → <span className="blr">Wemdal Truys</span> <span className="mut">· Director of Engineering @ Cityblock Health</span></td><td data-k="shared history">CloudHealth Technologies</td><td data-k="group size">~16 people</td><td data-k="time together">8 mo</td></tr>
+                    <tr><td><b>0.34</b></td><td><span className="pill pill--l">medium</span></td><td><span className="blr">Rendo Walc</span> → <span className="blr">Bratem Soyl</span> → <span className="blr">Dany Yeoc</span> <span className="mut">· Sales Engineering @ Motorola Solutions</span></td><td data-k="shared history">Sophos, then Motorola engineering</td><td data-k="group size">~5, then ~7,350 people</td><td data-k="time together">11 mo</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - top paths from the real run. <b>Group size</b> is how many people were in that team or company while the two overlapped: two of ~16 almost certainly worked together, two of ~1,636 may never have met, so the smaller the group the higher the score. Names blurred, titles generalised; the last path runs through a bridge inside the target&apos;s company</div>
+            </div>
+            <div className="ev">
+              <div className="term" data-zoom>
+                <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">warmest-path batch · accounts.csv</span></div>
+                <div className="term__body" dangerouslySetInnerHTML={{ __html: termGraph }} />
+              </div>
+              <div className="ev__cap"><b>▸ shape</b> - recreated log; the stage counts are from the real 4,426-target run, the org is withheld</div>
+            </div>
+      </>
+    ),
+  },
+  {
+    id: "03",
+    slug: "diode",
+    god: "Zeus",
+    epithet: "Above the rest, directing all of it",
+    title: 'Diode',
+    lede: 'The layer above the systems.',
+    type: 'Orchestration',
+    status: "live",
+    flagship: true,
+    rail: (
+      <>
+            <div className="idwrap"><span className="id">03</span><span className="of">/ 12</span></div>
+            <div className="seg"><div className="h">Type</div><div className="v">Orchestration agent<br />Control layer</div></div>
+            <div className="seg"><div className="h">Stack</div><div className="v"><div>Hermes harness</div><div>Claude · MCP</div><div>Slack · Linear</div><div>Notion · Attio</div></div></div>
+            <div className="st"><span className="d"></span> live</div>
+      </>
+    ),
+    body: (
+      <>
+            <div className="tag">Relling · Diode</div>
+            <h3>Diode, the Orchestration Agent</h3>
+            <div className="lede">The layer above the systems.</div>
+            <p>
+              Every system below this one used to be something a person had to run. <b>Diode is the
+              top-layer agent</b>, built on the Hermes harness, that unifies Relling&apos;s outbound
+              automations and data sources into <b>one converged control surface</b> - discovery,
+              enrichment, classification, and delivery run as a single system, not eight scripts. It
+              lives in Slack, operates the tools directly (Raven sweeps, Attio, Linear, Notion, email,
+              calendars, code), and remembers how the team works - so the whole GTM motion is one
+              message away.
+            </p>
+            <div className="metrics"><b>1</b> control surface <span className="sep">/</span> every system below it <span className="sep">/</span> ask once → the right system runs</div>
+            <div className="ev">
+              <div className="dash dash--full" data-zoom>
+                <img src="/diode-slack.png" alt="Diode explaining itself in a Slack thread" />
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - Diode, asked to explain itself in Slack (recreated thread, real avatars)</div>
+            </div>
+      </>
+    ),
+  },
+  {
+    id: "04",
+    slug: "raven",
+    god: "Apollo",
+    epithet: "Whose ravens brought him word of everything",
+    title: 'Raven',
+    lede: 'Ten signals in, scored leads in the CRM out.',
+    type: 'Signal intelligence',
+    status: "live",
+    flagship: true,
+    rail: (
+      <>
+            <div className="idwrap"><span className="id">04</span><span className="of">/ 12</span></div>
+            <div className="seg"><div className="h">Type</div><div className="v">Signal intelligence<br />Lead generation</div></div>
+            <div className="seg"><div className="h">Stack</div><div className="v"><div>Claude · OpenAI</div><div>Apify</div><div>Apollo × Clay</div><div>Attio</div></div></div>
+            <div className="st"><span className="d"></span> live</div>
+      </>
+    ),
+    body: (
+      <>
+            <div className="tag">Relling · Raven</div>
+            <h3>Raven, the Signal Desk</h3>
+            <div className="lede">Ten signals in, scored leads in the CRM out.</div>
+            <p>
+              The internal intelligence engine at Relling. Raven converges <b>10 live signals</b> -
+              LinkedIn activity, job postings, hiring velocity, funding, tech-stack shifts - into
+              scored, outreach-ready leads. A <b>two-pass engine</b> qualifies posts against a
+              playbook, scores their engagers 0-100 for ICP fit, and writes the reasoning down:
+              <b> every score ships with a fit reason</b>. Leads auto-enrich through an Apollo × Clay
+              waterfall and sync straight into Attio, so every record in the CRM is traceable back to
+              the signals that surfaced it.
+            </p>
+            <div className="metrics"><b>10</b> signals converged <span className="sep">/</span> <b>1,094</b> movements · 30d <span className="sep">/</span> signal → scored → CRM</div>
+            <div className="ev">
+              <div className="dash dash--full" data-zoom>
+                <img src="/raven-command.jpg" alt="Raven command center dashboard" />
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - Raven&apos;s command center: 124 signals watched, 9 active leads, last sweep 7 hours ago (tracked company names redacted)</div>
+            </div>
+            <div className="ev">
+              <div className="dash dash--full" data-zoom>
+                <img src="/raven-leads.jpg" alt="Raven leads view with scored lead and fit reason" />
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - a 100-score lead with its written fit reason, synced to Attio (identity and identifying company details redacted)</div>
+            </div>
+      </>
+    ),
+  },
+  {
+    id: "05",
+    slug: "linkedin-campaign-autopilot",
+    god: "Hephaestus",
+    epithet: "Maker of the bronze automatons",
+    title: 'LinkedIn Campaign Autopilot',
+    lede: 'Drop a doc, say go, and LinkedIn campaigns go live.',
+    type: 'Outbound agent',
+    status: "live",
+    flagship: false,
+    rail: (
+      <>
+            <div className="idwrap"><span className="id">05</span><span className="of">/ 12</span></div>
+            <div className="seg"><div className="h">Type</div><div className="v">Autonomous agent<br />Outbound delivery</div></div>
+            <div className="seg"><div className="h">Stack</div><div className="v"><div>Claude Agent SDK</div><div>OpenCLAW</div><div>Aimfox API</div><div>MongoDB · Node</div></div></div>
+            <div className="st"><span className="d"></span> live</div>
+      </>
+    ),
+    body: (
+      <>
+            <div className="tag">Partha</div>
+            <h3>LinkedIn Campaign Autopilot</h3>
+            <div className="lede">Drop a doc, say &ldquo;go,&rdquo; and LinkedIn campaigns go live.</div>
+            <p>
+              An OpenCLAW agent (Claude Agent SDK) that <b>recreates the Aimfox API</b> to run LinkedIn outreach end to
+              end. <b>Phase 1</b> extracts copy from a <code>.docx</code>, builds templated messages, and pulls matching
+              leads from MongoDB. <b>Human approval gate.</b> <b>Phase 2</b> runs a 10-step pipeline per campaign -
+              create → target → resolve audience → match template → preview → schedule → <b>activate</b> - across separate
+              workspaces per account, with a daily cron health-check.
+            </p>
+            <div className="metrics"><b>~100</b> campaigns live <span className="sep">/</span> doc → live in <b>~6 min</b> <span className="sep">/</span> 2-phase + approval gate</div>
+            <div className="ev">
+              <div className="term" data-zoom>
+                <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">partha · run klaviyo-outreach.docx</span></div>
+                <div className="term__body" dangerouslySetInnerHTML={{ __html: term01 }} />
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - representative end-to-end run: doc in, 3 campaigns live</div>
+            </div>
+            <div className="ev">
+              <div className="dash" data-zoom>
+                <img src="/aimfox.png" alt="Aimfox campaigns dashboard" />
+                <span className="redact" style={{ left: "31.5%", top: "39.5%", width: "11.5%", height: "7.3%" }}></span>
+                <span className="redact" style={{ left: "31.5%", top: "53.7%", width: "11.5%", height: "7.3%" }}></span>
+                <span className="redact" style={{ left: "31.5%", top: "67.9%", width: "11.5%", height: "7.3%" }}></span>
+                <span className="redact" style={{ left: "31.5%", top: "81.9%", width: "11.5%", height: "7.3%" }}></span>
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - the live Aimfox workspace: campaigns activated by Partha, 100% complete (account redacted)</div>
+            </div>
+      </>
+    ),
+  },
+  {
+    id: "06",
+    slug: "customer-overlap-detection-engine",
+    god: "Aphrodite",
+    epithet: "Who knows who already loves you",
+    title: 'Customer-Overlap Detection Engine',
+    lede: 'Does this prospect already use the product?',
+    type: 'Headless automation',
+    status: "shipped",
+    flagship: false,
+    rail: (
+      <>
+            <div className="idwrap"><span className="id">06</span><span className="of">/ 12</span></div>
+            <div className="seg"><div className="h">Type</div><div className="v">Signal<br />Headless automation</div></div>
+            <div className="seg"><div className="h">Stack</div><div className="v"><div>Puppeteer (stealth)</div><div>Evomi · 2captcha</div><div>Azure OpenAI</div><div>MongoDB · Express</div></div></div>
+            <div className="st"><span className="d"></span> shipped</div>
+      </>
+    ),
+    body: (
+      <>
+            <div className="tag">Customer Overlap</div>
+            <h3>Customer-Overlap Detection Engine</h3>
+            <div className="lede">&ldquo;Does this prospect already use the product?&rdquo; - at the email level.</div>
+            <p>
+              Outbound burns budget on companies that already use a tool. I built a <b>reusable headless-automation
+              engine</b> that drives a target&apos;s own signup flow and reads the &ldquo;email already registered / SSO
+              redirect&rdquo; signal - then <b>productized it across 10+ SaaS targets</b> (Klaviyo, TaxJar, Harness,
+              SimilarWeb, BuiltWith, GitLab, Dynatrace, Bluefish, Second Nature, etc.). Stealth browsers, residential proxies,
+              AI &amp; 2captcha CAPTCHA solving, MongoDB job queues, and a <b>parallel worker pool</b> behind Express
+              batch APIs with polling and 3× retries.
+            </p>
+            <div className="metrics"><b>10+</b> production checkers <span className="sep">/</span> parallel worker pool <span className="sep">/</span> CAPTCHA-solving + retry</div>
+            <div className="ev">
+              <div className="term" data-zoom>
+                <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">overlap-engine/batch.log - target: Klaviyo · 4 workers</span></div>
+                <div className="term__body" dangerouslySetInnerHTML={{ __html: term02 }} />
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - live batch: 4 workers detecting existing customers across 200 prospects (emails masked)</div>
+            </div>
+      </>
+    ),
+  },
+  {
+    id: "07",
+    slug: "b2b-saas-classifier",
+    god: "Demeter",
+    epithet: "Who separates the wheat from the chaff",
+    title: "B2B / SaaS Classifier",
+    lede: 'Noisy Apollo exports into a clean, targetable universe.',
+    type: 'LLM pipeline',
+    status: "shipped",
+    flagship: false,
+    rail: (
+      <>
+            <div className="idwrap"><span className="id">07</span><span className="of">/ 12</span></div>
+            <div className="seg"><div className="h">Type</div><div className="v">LLM pipeline<br />Classification</div></div>
+            <div className="seg"><div className="h">Stack</div><div className="v"><div>TypeScript</div><div>Azure OpenAI</div><div>Cheerio · Evomi</div><div>CSV streams</div></div></div>
+            <div className="st"><span className="d"></span> shipped</div>
+      </>
+    ),
+    body: (
+      <>
+            <div className="tag">Classifier</div>
+            <h3>B2B / SaaS Classifier</h3>
+            <div className="lede">Turning noisy Apollo exports into a clean, targetable universe.</div>
+            <p>
+              Raw exports are full of agencies, holding companies and B2C noise. I built a pipeline that <b>scrapes each
+              company&apos;s website, reads it with an LLM, and classifies it</b> as B2B / SaaS or not - with a scrape
+              cache, automatic failure re-queue, resumable batch progress, and verified audit CSVs so every verdict is
+              traceable.
+            </p>
+            <div className="metrics"><b>13,700</b> companies / run <span className="sep">/</span> resumable · auto-retry <span className="sep">/</span> 280K+ rows processed</div>
+            <div className="ev">
+              <div className="term" data-zoom>
+                <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">run-classifier.log</span></div>
+                <div className="term__body" dangerouslySetInnerHTML={{ __html: term03 }} />
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - real run log: 13,700 companies parsed, resumed at batch 16 of 274</div>
+            </div>
+      </>
+    ),
+  },
+  {
+    id: "08",
+    slug: "apollo-leadmagic-enrichment",
+    god: "Dionysus",
+    epithet: "Whose cup is always full",
+    title: 'Apollo × LeadMagic Enrichment',
+    lede: 'Verified emails in, duplicate outreach out.',
+    type: 'Enrichment',
+    status: "shipped",
+    flagship: false,
+    rail: (
+      <>
+            <div className="idwrap"><span className="id">08</span><span className="of">/ 12</span></div>
+            <div className="seg"><div className="h">Type</div><div className="v">Enrichment<br />Email waterfall</div></div>
+            <div className="seg"><div className="h">Stack</div><div className="v"><div>Node</div><div>Apollo API</div><div>LeadMagic API</div><div>MongoDB</div></div></div>
+            <div className="st"><span className="d"></span> shipped</div>
+      </>
+    ),
+    body: (
+      <>
+            <div className="tag">Enrichment</div>
+            <h3>Apollo × LeadMagic Enrichment Pipeline</h3>
+            <div className="lede">Verified emails in, duplicate outreach out.</div>
+            <p>
+              An interactive pipeline that builds clean outbound lists from Apollo search: a <b>multi-provider email
+              waterfall</b> (Apollo People-Match → LeadMagic fallback), domain-to-search-list conversion, rate-limited
+              paginated calls, and <b>MongoDB de-duplication against prior sources</b> so a known contact is never
+              messaged twice. Every row carries its provenance - see the <code>email_source</code> column.
+            </p>
+            <div className="metrics"><b>dual-provider</b> fallback <span className="sep">/</span> <b>70K+</b> contacts exported <span className="sep">/</span> ~5.7K LOC</div>
+            <div className="ev">
+              <div className="data" data-zoom>
+                <div className="data__bar"><span className="fn">enriched_search_2026-04-23.csv</span><span className="rc">2,501 rows · 14 cols</span></div>
+                <table className="dt">
+                  <thead><tr><th>name</th><th>email</th><th>status</th><th>email_source</th><th>title</th><th>company</th></tr></thead>
+                  <tbody>
+                    <tr><td>Josh Beren</td><td>jberen@cisco.com</td><td><span className="pill pill--v">verified</span></td><td><span className="pill pill--a">apollo_original</span></td><td>Dir, Technical Sales Prod.</td><td>Cisco</td></tr>
+                    <tr><td>Kathleen Tilly</td><td>ktilly@salesforce.com</td><td><span className="pill pill--v">verified</span></td><td><span className="pill pill--l">leadmagic</span></td><td>Sr Dir, Revenue Enablement</td><td>Salesforce</td></tr>
+                    <tr><td>Florian Haerle</td><td><span className="mut">- not found -</span></td><td><span className="pill pill--v">verified</span></td><td><span className="pill pill--n">not_found</span></td><td>Head of Digital Enablement</td><td>Boehringer Ing.</td></tr>
+                    <tr><td>Sophie Whelton</td><td>swhelton@salesforce.com</td><td><span className="pill pill--v">verified</span></td><td><span className="pill pill--l">leadmagic</span></td><td>Productivity Mgr, UKI</td><td>Salesforce</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - real, verifiable export: the email_source column shows the Apollo→LeadMagic waterfall</div>
+            </div>
+      </>
+    ),
+  },
+  {
+    id: "09",
+    slug: "sales-navigator-capture-extension",
+    god: "Poseidon",
+    epithet: "Who brings in the nets",
+    title: 'Sales Navigator Capture Extension',
+    lede: 'Export Sales Nav leads natively, no copy-paste.',
+    type: 'Extension',
+    status: "shipped",
+    flagship: false,
+    rail: (
+      <>
+            <div className="idwrap"><span className="id">09</span><span className="of">/ 12</span></div>
+            <div className="seg"><div className="h">Type</div><div className="v">Browser extension<br />Manifest V3</div></div>
+            <div className="seg"><div className="h">Stack</div><div className="v"><div>JS (ES2020+)</div><div>Chrome MV3</div><div>service worker</div><div>page-world inject</div></div></div>
+            <div className="st"><span className="d"></span> shipped</div>
+      </>
+    ),
+    body: (
+      <>
+            <div className="tag">Extension</div>
+            <h3>Sales Navigator Capture Extension</h3>
+            <div className="lede">Export Sales Nav leads natively - no copy-paste, no API keys.</div>
+            <p>
+              A Manifest V3 Chrome extension that <b>intercepts Sales Navigator&apos;s own API responses</b> in the page
+              (patching <code>fetch</code>/<code>XHR</code> from the page world), passively captures and de-duplicates
+              leads by <code>profileId</code>, auto-paginates, and exports to CSV / JSON or pushes to a webhook. Runs
+              entirely on the user&apos;s session - no build step.
+            </p>
+            <div className="metrics"><b>17K+</b> contacts captured <span className="sep">/</span> dedup by profileId <span className="sep">/</span> CSV · JSON · webhook</div>
+            <div className="ev">
+              <div className="shot">
+                <div className="shot__f" data-zoom>
+                  <div className="ch"><span className="d"></span><span className="t">Sales Nav Scraper · popup</span></div>
+                  <img src="/fig-salesnav.png" alt="Sales Nav Scraper popup" />
+                </div>
+                <div className="shot__n">
+                  The capture panel mid-run: leads accrue passively as you browse, with live counts for <b>leads
+                  captured</b> and <b>pages auto-paginated</b>. One-click <b>CSV / JSON export</b>, an optional
+                  <b>webhook</b> to push leads into a pipeline, and tunable pagination delay + jitter to pace requests.
+                  <span className="k">// the actual extension UI, rendered from src/popup/</span>
+                </div>
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - the shipped extension&apos;s popup, real UI (not a mockup)</div>
+            </div>
+      </>
+    ),
+  },
+  {
+    id: "10",
+    slug: "customer-poacher",
+    god: "Ares",
+    epithet: "Who takes ground from rivals",
+    title: 'Customer Poacher',
+    lede: "One company URL in; its customers' buyers out.",
+    type: 'Discovery workflow',
+    status: "shipped",
+    flagship: false,
+    rail: (
+      <>
+            <div className="idwrap"><span className="id">10</span><span className="of">/ 12</span></div>
+            <div className="seg"><div className="h">Type</div><div className="v">Workflow agent<br />CLI</div></div>
+            <div className="seg"><div className="h">Stack</div><div className="v"><div>TypeScript · Mastra</div><div>Azure AI (Claude)</div><div>Zyte · Serper</div><div>MongoDB</div></div></div>
+            <div className="st"><span className="d"></span> shipped</div>
+      </>
+    ),
+    body: (
+      <>
+            <div className="tag">Competitor-Customer Discovery</div>
+            <h3>Customer Poacher</h3>
+            <div className="lede">Point it at a company; surface its customers&apos; decision-makers.</div>
+            <p>
+              A terminal-run <b>Mastra workflow</b> that turns one company URL into a list of <i>their</i> customers&apos;
+              buyers: <b>crawl the sitemap → AI-filter case-study URLs → scrape via Zyte → extract named people → resolve
+              LinkedIn profiles via Serper → export CSV.</b> Run it on a competitor and you get a poaching list - real
+              exports exist for 130+ companies (gong.io, seismic, dynatrace, connectwise…).
+            </p>
+            <div className="metrics"><b>130+</b> companies mined <span className="sep">/</span> sitemap → AI → LinkedIn <span className="sep">/</span> CSV exports</div>
+            <div className="ev">
+              <div className="data" data-zoom>
+                <div className="data__bar"><span className="fn">out/gong-io-customer-linkedin-profiles.csv</span><span className="rc">→ LinkedIn profiles</span></div>
+                <table className="dt">
+                  <thead><tr><th>name</th><th>company</th><th>job title</th><th>linkedin</th><th>source</th></tr></thead>
+                  <tbody>
+                    <tr><td>Alison Silver</td><td>Brex</td><td>Director, Client Sales</td><td>/in/alison-silver-4a81…</td><td>gong.io</td></tr>
+                    <tr><td>Courtney Tucci</td><td>Mirakl</td><td>Director of Sales Enablement</td><td>/in/courtneytucci</td><td>gong.io</td></tr>
+                    <tr><td>Kevin Jordan</td><td>Anthropic</td><td>GTM Enablement Lead</td><td>/in/kevindjordan</td><td>gong.io</td></tr>
+                    <tr><td>Vineet Ratan</td><td>Rippling</td><td>Team Lead, Implementation</td><td><span className="mut">resolving…</span></td><td>gong.io</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - real CSV output: a company&apos;s customers, resolved to LinkedIn profiles</div>
+            </div>
+      </>
+    ),
+  },
+  {
+    id: "11",
+    slug: "lead-bucketing-agent",
+    god: "Hera",
+    epithet: "Who keeps every house in order",
+    title: 'Lead Bucketing Agent',
+    lede: 'A flat lead list, segmented into outreach-ready niches.',
+    type: 'Segmentation',
+    status: "shipped",
+    flagship: false,
+    rail: (
+      <>
+            <div className="idwrap"><span className="id">11</span><span className="of">/ 12</span></div>
+            <div className="seg"><div className="h">Type</div><div className="v">Agent<br />Segmentation</div></div>
+            <div className="seg"><div className="h">Stack</div><div className="v"><div>Claude Agent SDK</div><div>Apify Search</div><div>Zod · Node</div></div></div>
+            <div className="st"><span className="d"></span> shipped</div>
+      </>
+    ),
+    body: (
+      <>
+            <div className="tag">Segmentation</div>
+            <h3>Lead Bucketing Agent</h3>
+            <div className="lede">Auto-segmenting a flat lead list into outreach-ready niches.</div>
+            <p>
+              A <b>Claude Agent SDK</b> agent that researches each lead with live Google search and classifies it into a
+              niche - a <b>two-phase pass</b> (broad → deep) that took a <b>1,255-row lead list down to 116 unique
+              companies across 8 broad and 109 granular niches</b>, emitting a written report and bucketed CSVs so generic
+              blasts become segment-specific campaigns.
+            </p>
+            <div className="metrics"><b>1,255</b> leads → 116 cos <span className="sep">/</span> 109 granular niches <span className="sep">/</span> <b>3K+</b> companies segmented</div>
+            <div className="ev">
+              <div className="report" data-zoom>
+                <div className="report__top">
+                  <div className="s"><div className="v">116</div><div className="l">companies classified</div></div>
+                  <div className="s"><div className="v">8</div><div className="l">broad niches</div></div>
+                  <div className="s"><div className="v">109</div><div className="l">deep niches</div></div>
+                </div>
+                <div className="report__b">
+                  <div className="h">broad niche distribution - niche_report.md</div>
+                  <div className="nrow"><span className="nm">Information Tech &amp; Services</span><span className="bar"><i style={{ width: "100%" }}></i></span><span className="pc">56.0%</span></div>
+                  <div className="nrow"><span className="nm">Computer &amp; Network Security</span><span className="bar"><i style={{ width: "38.6%" }}></i></span><span className="pc">21.6%</span></div>
+                  <div className="nrow"><span className="nm">Marketing &amp; Advertising</span><span className="bar"><i style={{ width: "15.4%" }}></i></span><span className="pc">8.6%</span></div>
+                  <div className="nrow"><span className="nm">Financial Services</span><span className="bar"><i style={{ width: "9.3%" }}></i></span><span className="pc">5.2%</span></div>
+                  <div className="nrow"><span className="nm">Nonprofit Management</span><span className="bar"><i style={{ width: "7.7%" }}></i></span><span className="pc">4.3%</span></div>
+                </div>
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - generated report: the agent&apos;s own niche breakdown of the lead list</div>
+            </div>
+      </>
+    ),
+  },
+  {
+    id: "12",
+    slug: "auth-enumeration-recon-agent",
+    god: "Artemis",
+    epithet: "The huntress who scouts ahead",
+    title: 'Auth-Enumeration Recon Agent',
+    lede: 'Probes auth flows the way a researcher would.',
+    type: 'Security recon',
+    status: "shipped",
+    flagship: false,
+    rail: (
+      <>
+            <div className="idwrap"><span className="id">12</span><span className="of">/ 12</span></div>
+            <div className="seg"><div className="h">Type</div><div className="v">Autonomous agent<br />Security recon</div></div>
+            <div className="seg"><div className="h">Stack</div><div className="v"><div>Python (agent sdk)</div><div>TS · Mastra</div><div>Playwright · MCP</div><div>2captcha</div></div></div>
+            <div className="st"><span className="d"></span> shipped</div>
+      </>
+    ),
+    body: (
+      <>
+            <div className="tag">Security Recon</div>
+            <h3>Auth-Enumeration Recon Agent</h3>
+            <div className="lede">An agent that probes auth flows the way a researcher would.</div>
+            <p>
+              A two-phase autonomous agent for detecting account-enumeration leaks. <b>Phase 1</b> (TS / Mastra) discovers
+              auth pages and mines customer identities from case-study pages; <b>Phase 2</b> (Python /
+              <code>claude_agent_sdk</code>) drives a browser through login, signup, SSO and API flows, <b>diffs responses
+              and HAR traffic</b> to spot enumeration, solves CAPTCHAs, and persists novel patterns across a long agent
+              loop with 10 MCP tools. Confirmed findings across 30+ real companies.
+            </p>
+            <div className="metrics"><b>10</b> MCP tools <span className="sep">/</span> HAR-diff analysis <span className="sep">/</span> findings on 30+ companies</div>
+            <div className="ev">
+              <div className="term" data-zoom>
+                <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">agent.log → report.md</span></div>
+                <div className="term__body" dangerouslySetInnerHTML={{ __html: term08 }} />
+              </div>
+              <div className="ev__cap"><b>▸ evidence</b> - real agent run → verdict (target anonymized, identities redacted)</div>
+            </div>
+      </>
+    ),
+  },
+];
