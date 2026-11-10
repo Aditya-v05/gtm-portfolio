@@ -2970,3 +2970,10 @@ a.stone:active, .stone--chip:active { transform: translateY(2px); filter: none; 
 .clay__names li:not(:last-child)::after { position: absolute; right: -4px; top: 50%; margin: -4px 0 0; }
 @media (max-width: 900px) { .clay__names { flex-wrap: wrap; } .clay__names li:not(:last-child)::after { display: none; } }
 .clay__k { font-size: 1.7rem; letter-spacing: 0.16em; color: #5a2f18; -webkit-text-stroke: 0.6px #5a2f18; }
+/* night: the wall goes dark, the letters stay lit and glow like lantern-lit paper */
+[data-theme="dark"] .agora { filter: none; box-shadow: inset 0 0 0 4000px rgba(10, 14, 36, 0.58); }
+[data-theme="dark"] .agora .ivy { filter: brightness(0.55); }
+[data-theme="dark"] .agora .exh { filter: drop-shadow(0 0 4px rgba(255, 220, 140, 0.75)) drop-shadow(0 0 22px rgba(255, 200, 110, 0.45)); }
+[data-theme="dark"] .agora .exh:hover { filter: drop-shadow(0 0 6px rgba(255, 226, 150, 0.95)) drop-shadow(0 0 34px rgba(255, 200, 110, 0.65)); }
+[data-theme="dark"] .agora .exh__note { filter: brightness(0.8); }
+[data-theme="dark"] .agora:not(.is-wet)::after { filter: brightness(0.45); }
