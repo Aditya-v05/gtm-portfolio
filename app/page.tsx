@@ -6,6 +6,7 @@ import PixelName from "@/components/PixelName";
 import GradientASCII from "@/components/GradientASCII";
 import Deck from "@/components/deck/Deck";
 import Fountain from "@/components/Fountain";
+import Plaque from "@/components/Plaque";
 import Stream from "@/components/Stream";
 import fs from "node:fs";
 import path from "node:path";
@@ -22,7 +23,15 @@ function cardArt(): string[] {
   }
 }
 
-const CLIENTS = ["Brex", "Rho", "Peec AI", "Warp", "Hyperbound", "Qashio"];
+// each company gets an Olympian's bust on its plaque
+const CLIENTS: [string, string][] = [
+  ["Brex", "crown"],
+  ["Rho", "laurel"],
+  ["Peec AI", "helmet"],
+  ["Warp", "wings"],
+  ["Hyperbound", "beard"],
+  ["Qashio", "trident"],
+];
 
 // The homepage has a rhythm: the world (the hero), the engineer (what he
 // builds), the work (a deck of red-figure cards, one Olympian per system),
@@ -85,10 +94,8 @@ export default function Home() {
               <div className="creds__for">
                 <span className="tablet__k">Systems shipped for</span>
                 <ul className="tablets">
-                  {CLIENTS.map((c) => (
-                    <li key={c} className="tablet">
-                      {c}
-                    </li>
+                  {CLIENTS.map(([c, attr]) => (
+                    <Plaque key={c} name={c} attr={attr} />
                   ))}
                 </ul>
               </div>

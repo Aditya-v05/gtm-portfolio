@@ -2071,3 +2071,207 @@ h1, h2, h3,
     transition: none;
   }
 }
+
+/* ================= round four: pixel tarot grid, a flat project sheet ================= */
+.tarot {
+  list-style: none;
+  margin: 3rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 2.4rem 1.4rem;
+}
+.tarot__item {
+  display: grid;
+  gap: 0.15rem;
+  text-align: center;
+  align-content: start;
+}
+.tarot__title {
+  margin-top: 0.7rem;
+  font-family: var(--display);
+  font-size: 1.05rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.tarot__type {
+  font-family: var(--label);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+}
+/* the card: an arch-topped pixel frame */
+.tarot .card,
+.spin__ghost.card {
+  --frame: #2a1f3d;
+  --gold: #f0b429;
+  aspect-ratio: 5 / 8;
+  perspective: none;
+  transition: transform 0.12s steps(3);
+}
+.tarot .card:hover,
+.tarot .card:focus-visible {
+  transform: translateY(-8px);
+}
+.card__face {
+  grid-template-rows: auto 1fr auto;
+  padding: 7% 7% 6%;
+  border-radius: 46% 46% 4px 4px / 28% 28% 4px 4px;
+  background: var(--frame);
+  box-shadow:
+    inset 0 0 0 3px var(--frame),
+    inset 0 0 0 5px var(--gold),
+    0 6px 0 rgba(42, 31, 61, 0.28);
+}
+.card__no {
+  justify-self: center;
+  font-family: var(--display);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--frame);
+  background: var(--gold);
+  padding: 0 0.45rem;
+  margin-bottom: 4%;
+}
+.card__art {
+  border-radius: 44% 44% 0 0 / 30% 30% 0 0;
+  background: #fbf1c4;
+}
+.card__px,
+.card__art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+  display: block;
+}
+.card__plate {
+  margin-top: 5%;
+  background: #fbf1c4;
+  border-radius: 0;
+  box-shadow: inset 0 0 0 2px var(--frame), inset 0 0 0 3px var(--gold);
+  padding: 0.3rem 0.2rem;
+}
+.card__god,
+.deck__item:not(.deck__item--big) .card__god {
+  font-size: clamp(0.62rem, 1vw, 0.9rem);
+  color: var(--frame);
+}
+
+/* the overlay: a ghost card that travels, and a flat sheet */
+.spin {
+  perspective: none;
+}
+.spin__ghost {
+  position: fixed;
+  z-index: 2;
+  visibility: hidden;
+  pointer-events: none;
+  will-change: transform;
+}
+.sheet.spin__back {
+  position: relative;
+  inset: auto;
+  width: min(1060px, 94vw);
+  height: min(86vh, 900px);
+  transform: none;
+  backface-visibility: visible;
+  border: 4px solid #2a1f3d;
+  outline: 3px solid #f0b429;
+  outline-offset: -8px;
+  border-radius: 6px;
+  box-shadow: 0 12px 0 rgba(26, 20, 16, 0.35);
+  overflow: hidden;
+  background: var(--panel);
+}
+.sheet .spin__scroll {
+  padding: clamp(1.8rem, 4vw, 3.4rem);
+}
+.sheet .spin__close {
+  border-radius: 0;
+  background: #2a1f3d;
+  color: #f0b429;
+  top: 1.2rem;
+  right: 1.2rem;
+}
+.sheet .spin__god {
+  color: #c8673a;
+}
+.sheet .spin__title {
+  font-size: clamp(2rem, 4.4vw, 3.6rem);
+  padding-right: 3rem;
+}
+/* nothing inside the sheet may be wider than the sheet */
+.sheet .spin__body img,
+.sheet .spin__body video,
+.sheet .spin__body svg {
+  max-width: 100%;
+  height: auto;
+}
+.sheet .spin__body .data {
+  overflow-x: auto;
+}
+.sheet .spin__body .shot {
+  flex-wrap: wrap;
+}
+[data-theme="dark"] .spin__back {
+  --accent: #9fb5e6;
+  --accent-2: #9fb5e6;
+  --accent-rgb: 159, 181, 230;
+  --accent-ghost: rgba(159, 181, 230, 0.12);
+  --dim: #c3c8e0;
+  --mute: #8f97ba;
+  --line: rgba(234, 230, 244, 0.14);
+  --line-2: rgba(234, 230, 244, 0.22);
+}
+[data-theme="dark"] .spin__back .shot__n {
+  color: #c3c8e0;
+}
+[data-theme="dark"] .spin__back .shot__n b {
+  color: #eae6f4;
+}
+@media (max-width: 960px) {
+  .tarot {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .tarot {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.6rem 0.8rem;
+  }
+  .tarot__type {
+    display: none;
+  }
+}
+
+/* ---- company plaques: pixel boxes with a marble bust ---- */
+.tablets {
+  gap: 0.9rem;
+}
+.plaque {
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  width: 104px;
+  padding: 0.6rem 0.4rem 0.5rem;
+  background: #1b2b5a;
+  box-shadow: inset 0 0 0 4px #1b2b5a, inset 0 0 0 6px #f0b429, 0 6px 0 #0f1a3d;
+  clip-path: polygon(4px 0, calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px), 0 4px, 4px 4px);
+  margin-bottom: 6px;
+}
+.plaque__bust {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+}
+.plaque__name {
+  font-family: var(--display);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fbf1c4;
+  white-space: nowrap;
+}

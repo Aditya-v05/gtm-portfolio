@@ -4,17 +4,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { PROJECTS, type Project } from "./projects";
 
-// The work as a deck of red-figure cards, one Olympian per system. Click a
-// card and it spins out of the deck to the middle of the screen, turning
-// over as it grows, to show the project on its back. Escape, the close
-// button or a click outside folds it back into its place.
+// The work as twelve pixel tarot cards, one Olympian per system, in a tidy
+// grid. Click a card: it lifts to the middle of the screen and turns on its
+// edge, and the project sheet turns in from that edge. Escape, the close
+// button or a click outside turns it back.
 //
 // Card art lives at /cards/<god>.webp; the page passes in which exist. Until
-// a god's art exists, the card shows its frame, name plate and an emblem.
+// a god's art exists, the card draws its own pixel scene.
 
-function Emblem({ god }: { god: string }) {
-  // a simple attribute per god, drawn in terracotta, for cards without art yet
-  const p: Record<string, string> = {
+const EMBLEMS: Record<string, string> = {
     Zeus: "M52 8 L34 52 H50 L40 92 L68 40 H52 L62 8 Z",
     Athena: "M50 10 C30 10 22 30 22 44 C22 62 36 74 50 90 C64 74 78 62 78 44 C78 30 70 10 50 10 Z M38 40 a6 6 0 1 0 0.1 0 M62 40 a6 6 0 1 0 0.1 0",
     Apollo: "M30 20 C30 60 70 60 70 20 M30 20 V80 M70 20 V80 M42 30 V74 M50 32 V76 M58 30 V74",
@@ -27,28 +25,83 @@ function Emblem({ god }: { god: string }) {
     Ares: "M24 50 H76 M34 30 L66 70 M66 30 L34 70 M50 14 C34 14 26 28 26 40 H74 C74 28 66 14 50 14",
     Hera: "M28 70 L36 30 L50 52 L64 30 L72 70 Z M26 78 H74",
     Artemis: "M30 14 C70 30 70 70 30 86 M30 14 V86 M20 50 H86 M78 44 L86 50 L78 56",
-  };
-  return (
-    <svg className="card__emblem" viewBox="0 0 100 100" aria-hidden="true">
-      <path d={p[god] ?? "M30 50 H70"} />
-    </svg>
-  );
+};
+const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+// each card's sky: [top, bottom, emblem]
+const SKIES: [string, string, string][] = [
+  ["#fbf1c4", "#f0b429", "#2a1f3d"],
+  ["#f6d4c0", "#c8673a", "#2a1f3d"],
+  ["#c5d3f0", "#2f4f9e", "#fbf1c4"],
+  ["#fbf1c4", "#7fd0d8", "#1b2b5a"],
+];
+const hash = (a: number, b: number) => {
+  let h = (a * 374761393 + b * 668265263) | 0;
+  h = (h ^ (h >>> 13)) * 1274126177;
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+};
+
+/** a small pixel scene: dithered sky, a sun or stars, the god's emblem, ground */
+function PixelArt({ god, n }: { god: string; n: number }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const cv = ref.current;
+    if (!cv) return;
+    const W = 40, H = 52;
+    const c = cv.getContext("2d")!;
+    const [top, bot, ink] = SKIES[n % SKIES.length];
+    // sky: two flat tones with an ordered-dither seam
+    for (let y = 0; y < H; y++)
+      for (let x = 0; x < W; x++) {
+        const t = y / H;
+        const edge = t > 0.38 && t < 0.62 ? ((x + y) % 2 === 0 ? t > 0.5 : t > 0.56) : t > 0.5;
+        c.fillStyle = edge ? bot : top;
+        c.fillRect(x, y, 1, 1);
+      }
+    // stars
+    c.fillStyle = ink;
+    for (let i = 0; i < 9; i++) c.fillRect(Math.floor(hash(i, n) * W), Math.floor(hash(n, i + 7) * H * 0.4), 1, 1);
+    // ground
+    c.fillStyle = ink;
+    c.fillRect(0, H - 5, W, 5);
+    c.fillStyle = bot;
+    for (let x = 0; x < W; x += 2) c.fillRect(x + (n % 2), H - 4, 1, 1);
+    // the emblem, rasterised small so it comes out as chunky pixels
+    const s = document.createElement("canvas");
+    s.width = W;
+    s.height = H;
+    const o = s.getContext("2d")!;
+    o.translate(4, 8);
+    o.scale(0.32, 0.32);
+    o.lineWidth = 9;
+    o.lineCap = "square";
+    o.strokeStyle = "#000";
+    o.stroke(new Path2D(EMBLEMS[god] ?? "M30 50 H70"));
+    const d = o.getImageData(0, 0, W, H).data;
+    for (let y = 0; y < H; y++)
+      for (let x = 0; x < W; x++)
+        if (d[(y * W + x) * 4 + 3] > 120) {
+          c.fillStyle = ink;
+          c.fillRect(x, y, 1, 1);
+        }
+  }, [god, n]);
+  return <canvas ref={ref} className="card__px" width={40} height={52} aria-hidden="true" />;
 }
 
-function CardFace({ p, art }: { p: Project; art: Set<string> }) {
+function CardFace({ p, n, art }: { p: Project; n: number; art: Set<string> }) {
   const slug = p.god.toLowerCase();
   return (
     <span className="card__face">
-      <span className="card__band" aria-hidden="true" />
+      <span className="card__no" aria-hidden="true">
+        {ROMAN[n]}
+      </span>
       <span className="card__art">
         {art.has(slug) ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={`/cards/${slug}.webp`} alt="" />
         ) : (
-          <Emblem god={p.god} />
+          <PixelArt god={p.god} n={n} />
         )}
       </span>
-      <span className="card__band" aria-hidden="true" />
       <span className="card__plate">
         <span className="card__god">{p.god}</span>
       </span>
@@ -58,77 +111,73 @@ function CardFace({ p, art }: { p: Project; art: Set<string> }) {
 
 export default function Deck({ art = [] }: { art?: string[] }) {
   const artSet = new Set(art);
-  const [open, setOpen] = useState<Project | null>(null);
+  const [open, setOpen] = useState<{ p: Project; n: number } | null>(null);
   const [phase, setPhase] = useState<"idle" | "opening" | "open" | "closing">("idle");
-  const stage = useRef<HTMLDivElement>(null);
+  const ghost = useRef<HTMLDivElement>(null);
+  const sheet = useRef<HTMLDivElement>(null);
   const origin = useRef<HTMLButtonElement | null>(null);
   const closeBtn = useRef<HTMLButtonElement>(null);
-
   const reduced = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // The transform that puts the stage's front face exactly over the small
-  // card. The front face is card-shaped and as tall as the stage, so one
-  // uniform scale does it. Every keyframe uses the same three functions
-  // (translate, scale, rotateY) so the browser interpolates them cleanly.
-  const fromCard = () => {
-    const el = stage.current, src = origin.current;
-    if (!el || !src) return "translate(0px, 0px) scale(1)";
-    const a = src.getBoundingClientRect();
-    const h = el.offsetHeight;
-    const s = a.height / h;
-    const dx = a.left + a.width / 2 - window.innerWidth / 2;
-    const dy = a.top + a.height / 2 - window.innerHeight / 2;
-    return `translate(${dx}px, ${dy}px) scale(${s})`;
-  };
-
-  const show = (p: Project, btn: HTMLButtonElement) => {
+  const show = (p: Project, n: number, btn: HTMLButtonElement) => {
     origin.current = btn;
-    setOpen(p);
+    setOpen({ p, n });
     setPhase("opening");
   };
 
+  // where the ghost card has to go to sit in the middle of the screen, edge-on
+  const toCentre = () => {
+    const r = origin.current!.getBoundingClientRect();
+    const dx = window.innerWidth / 2 - (r.left + r.width / 2);
+    const dy = window.innerHeight / 2 - (r.top + r.height / 2);
+    const s = Math.min(2.2, (window.innerHeight * 0.7) / r.height);
+    return `perspective(1400px) translate(${dx}px, ${dy}px) scale(${s}) rotateY(90deg)`;
+  };
+  const AT_REST = "perspective(1400px) translate(0px, 0px) scale(1) rotateY(0deg)";
+  const SHEET_EDGE = "perspective(1400px) rotateY(-90deg) scale(0.92)";
+  const SHEET_FLAT = "perspective(1400px) rotateY(0deg) scale(1)";
+
   useEffect(() => {
-    if (phase !== "opening" || !stage.current) return;
+    if (phase !== "opening" || !ghost.current || !sheet.current || !origin.current) return;
     document.body.style.overflow = "hidden";
-    const el = stage.current;
-    if (origin.current) origin.current.style.visibility = "hidden";
-    const anim = reduced()
-      ? el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, fill: "forwards" })
-      : el.animate(
-          [
-            { transform: `${fromCard()} rotateY(0deg)` },
-            { transform: "translate(0px, -16px) scale(1.03) rotateY(110deg)", offset: 0.62 },
-            { transform: "translate(0px, 0px) scale(1) rotateY(180deg)" },
-          ],
-          { duration: 820, easing: "cubic-bezier(.65,0,.25,1)", fill: "forwards" }
-        );
-    // finish on the animation's own event, with a timer as a safety net so a
-    // dropped frame can never leave the card stuck half open
+    const g = ghost.current, sh = sheet.current, src = origin.current;
+    const r = src.getBoundingClientRect();
+    Object.assign(g.style, { left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px`, visibility: "visible" });
+    src.style.visibility = "hidden";
+    sh.style.visibility = "hidden";
     let done = false;
-    const finish = () => {
+    const settle = () => {
       if (done) return;
       done = true;
-      anim.finish();
+      g.style.visibility = "hidden";
+      sh.style.visibility = "visible";
+      // drop every transform once open, so text is crisp and nothing is 3D
+      sh.getAnimations().forEach((a) => a.cancel());
       setPhase("open");
       closeBtn.current?.focus();
     };
-    anim.onfinish = finish;
-    const timer = setTimeout(finish, 1000);
+    if (reduced()) {
+      settle();
+      return;
+    }
+    const a = g.animate([{ transform: AT_REST }, { transform: toCentre() }], { duration: 300, easing: "cubic-bezier(.5,0,.9,.6)", fill: "forwards" });
+    a.onfinish = () => {
+      g.style.visibility = "hidden";
+      sh.style.visibility = "visible";
+      const b = sh.animate([{ transform: SHEET_EDGE }, { transform: SHEET_FLAT }], { duration: 340, easing: "cubic-bezier(.1,.6,.3,1)" });
+      b.onfinish = settle;
+    };
+    const timer = setTimeout(settle, 1100);
     return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase]);
 
   const close = useCallback(() => {
-    if (phase !== "open" || !stage.current) return;
+    if (phase !== "open" || !ghost.current || !sheet.current) return;
     setPhase("closing");
-    const el = stage.current;
-    const anim = reduced()
-      ? el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 180, fill: "forwards" })
-      : el.animate(
-          [{ transform: "translate(0px, 0px) scale(1) rotateY(180deg)" }, { transform: `${fromCard()} rotateY(0deg)` }],
-          { duration: 620, easing: "cubic-bezier(.65,0,.25,1)", fill: "forwards" }
-        );
+    const g = ghost.current, sh = sheet.current;
     let done = false;
-    const finish = () => {
+    const settle = () => {
       if (done) return;
       done = true;
       if (origin.current) {
@@ -139,8 +188,20 @@ export default function Deck({ art = [] }: { art?: string[] }) {
       setOpen(null);
       setPhase("idle");
     };
-    anim.onfinish = finish;
-    setTimeout(finish, 800);
+    if (reduced()) {
+      settle();
+      return;
+    }
+    const a = sh.animate([{ transform: SHEET_FLAT }, { transform: SHEET_EDGE }], { duration: 220, easing: "ease-in", fill: "forwards" });
+    a.onfinish = () => {
+      sh.style.visibility = "hidden";
+      g.style.visibility = "visible";
+      g.getAnimations().forEach((x) => x.cancel());
+      const b = g.animate([{ transform: toCentre() }, { transform: AT_REST }], { duration: 300, easing: "cubic-bezier(.1,.6,.3,1)" });
+      b.onfinish = settle;
+    };
+    setTimeout(settle, 900);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase]);
 
   useEffect(() => {
@@ -151,71 +212,54 @@ export default function Deck({ art = [] }: { art?: string[] }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [close]);
 
-  // a fanned hand: the four flagships in the middle, the rest either side
-  const flagships = PROJECTS.filter((p) => p.flagship);
-  const rest = PROJECTS.filter((p) => !p.flagship);
-  const hand = [...rest.slice(0, 4), ...flagships, ...rest.slice(4)];
-  const [hover, setHover] = useState<Project | null>(null);
-  const shown = hover ?? open ?? flagships[0];
-
   return (
     <>
-      <ul className="fan" onMouseLeave={() => setHover(null)}>
-        {hand.map((p, i) => (
-          <li
-            key={p.slug}
-            className={`fan__item${p.flagship ? " fan__item--major" : ""}`}
-            style={{ "--t": ((i - (hand.length - 1) / 2) / ((hand.length - 1) / 2)).toFixed(3) } as React.CSSProperties}
-          >
+      <ul className="tarot">
+        {PROJECTS.map((p, n) => (
+          <li key={p.slug} className="tarot__item">
             <button
               className="card"
-              onClick={(e) => show(p, e.currentTarget)}
-              onMouseEnter={() => setHover(p)}
-              onFocus={() => setHover(p)}
+              onClick={(e) => show(p, n, e.currentTarget)}
               aria-haspopup="dialog"
               aria-label={`${p.god}: ${p.title}. ${p.lede} Open the project.`}
             >
-              <CardFace p={p} art={artSet} />
+              <CardFace p={p} n={n} art={artSet} />
             </button>
+            <span className="tarot__title">{p.title}</span>
+            <span className="tarot__type">{p.type}</span>
           </li>
         ))}
       </ul>
-      <p className="fan__caption" aria-live="polite">
-        <span className="fan__god">{shown.god}</span>
-        <span className="fan__title">{shown.title}</span>
-        <span className="fan__lede">{shown.lede}</span>
-      </p>
 
-      {open && createPortal(
-        <div className={`spin spin--${phase}`} onClick={(e) => e.target === e.currentTarget && close()}>
-          <div ref={stage} className="spin__stage" role="dialog" aria-modal="true" aria-labelledby="spin-title">
-            <div className="spin__front" aria-hidden="true">
-              <CardFace p={open} art={artSet} />
+      {open &&
+        createPortal(
+          <div className={`spin spin--${phase}`} onClick={(e) => e.target === e.currentTarget && close()}>
+            <div ref={ghost} className="spin__ghost card" aria-hidden="true">
+              <CardFace p={open.p} n={open.n} art={artSet} />
             </div>
-            <div className="spin__back">
+            <div ref={sheet} className="sheet spin__back" role="dialog" aria-modal="true" aria-labelledby="spin-title">
               <button ref={closeBtn} className="spin__close" onClick={close} aria-label="Close and return the card">
                 ×
               </button>
               <div className="spin__scroll">
                 <header className="spin__head">
                   <p className="spin__god">
-                    {open.god} <span>· {open.epithet}</span>
+                    {ROMAN[open.n]} · {open.p.god} <span>· {open.p.epithet}</span>
                   </p>
                   <h3 id="spin-title" className="spin__title">
-                    {open.title}
+                    {open.p.title}
                   </h3>
-                  <p className="spin__lede">{open.lede}</p>
+                  <p className="spin__lede">{open.p.lede}</p>
                 </header>
                 <div className="spin__grid">
-                  <aside className="spin__rail rail">{open.rail}</aside>
-                  <div className="spin__body body">{open.body}</div>
+                  <aside className="spin__rail rail">{open.p.rail}</aside>
+                  <div className="spin__body body">{open.p.body}</div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>,
-        document.body
-      )}
+          </div>,
+          document.body
+        )}
     </>
   );
 }

@@ -50,7 +50,9 @@ export default function Stream() {
       const run = (x0: number, x1: number, y: number) => {
         const d = x1 > x0 ? 1 : -1;
         let first = true;
-        for (let x = g(x0); d > 0 ? x <= g(x1) : x >= g(x1); x += d) {
+        // run two cells past each end, so it meets the 3-wide falls squarely
+        const a = d > 0 ? g(x0) : g(x0) + 2, b = d > 0 ? g(x1) + 2 : g(x1);
+        for (let x = a; d > 0 ? x <= b : x >= b; x += d) {
           cells.push({ x, y: g(y), kind: "run", dir: d, cost: (cost += CELL * 0.3), land: first });
           first = false;
         }
@@ -80,7 +82,7 @@ export default function Stream() {
             // across the page, clear of the closing words, then the last fall into the sea
       const xE = vw > 900 ? vw * 0.9 : vw - 30;
       run(x, xE, y2);
-      fall(xE, y2, er.top + sy + er.height * 0.82);
+      fall(xE, y2, er.top + sy + er.height * 0.95);
       cells[cells.length - 1].land = true;
       total = cost;
     };
