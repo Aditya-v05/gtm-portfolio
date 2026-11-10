@@ -54,7 +54,9 @@ const skyMat = () =>
         float m = max(dot(vDir, moonDir), 0.0);
         col = mix(col, vec3(0.92, 0.89, 0.8), smoothstep(0.9988, 0.9991, m) * uNight);
         // stars: single pixels, sparse, a few of them brighter
-        float st = hash(floor(gl_FragCoord.xy));
+        vec3 hq = fract(vec3(floor(gl_FragCoord.xy).xyx) * 0.1031);
+        hq += dot(hq, hq.yzx + 33.33);
+        float st = fract((hq.x + hq.y) * hq.z);
         col += (step(0.9972, st) * 0.45 + step(0.9993, st) * 0.4) * smoothstep(0.05, 0.25, h) * uNight;
         // alpha 0.6 marks open sky for the outline pass in engine.ts
         gl_FragColor = vec4(col, 0.6);
@@ -708,15 +710,45 @@ export function buildCity(): City {
     const spill = new THREE.Mesh(ribbon(pts, 3, true), sm);
     spill.rotation.y = 0;
     root.add(spill);
-    // quay houses and a lighthouse at the end of the mole
+    // the quay: a row of houses with pitched roofs and windows that light at night
+    const roofMat = lambert("#a9bdea");
     for (let i = 0; i < 9; i++) {
-      const x = E + 22 + i * 12, z = -36 - r() * 14;
-      const hgt = 4 + r() * 6;
-      addMarble(new THREE.BoxGeometry(8, hgt, 7), x, ground(x, -34) + hgt / 2 - 0.4, z);
+      const x = E + 22 + i * 12, z = -36 - r() * 10;
+      const w = 6 + r() * 3, hgt = 4 + Math.floor(r() * 3) * 2;
+      const base = ground(x, -34) - 0.4;
+      addMarble(new THREE.BoxGeometry(w, hgt, 7), x, base + hgt / 2, z);
+      const roof = new THREE.Mesh(gable(), roofMat);
+      roof.scale.set(w + 0.6, 1.8 + r(), 7.6);
+      roof.position.set(x, base + hgt, z);
+      root.add(roof);
+      for (let fl = 0; fl < hgt / 2 - 1; fl++)
+        for (const dx of [-w * 0.24, w * 0.24]) {
+          if (r() < 0.25) continue;
+          const win = new THREE.Mesh(winGeo, winLitMat);
+          win.scale.setScalar(1.5);
+          win.position.set(x + dx, base + 2 + fl * 2, z + 3.56);
+          root.add(win);
+        }
     }
-    addMarble(new THREE.BoxGeometry(70, 2, 6), E + 80, 1, 18);
-    addMarble(new THREE.CylinderGeometry(2.2, 3, 16, 8), E + 118, 9, 18);
-    addMarble(new THREE.CylinderGeometry(2.6, 2.6, 2.4, 8), E + 118, 18, 18);
+    // the lighthouse, out on a rock beyond the harbour mouth
+    {
+      const lx = E + 128, lz = -64;
+      addMarble(new THREE.CylinderGeometry(7, 10, 3, 9), lx, 0.8, lz);
+      addMarble(new THREE.CylinderGeometry(2.2, 3.4, 18, 10), lx, 11, lz);
+      const band = lambert("#3f5cab");
+      for (const [y, rad] of [[7, 3.05], [13, 2.65]] as const) {
+        const st = new THREE.Mesh(new THREE.CylinderGeometry(rad - 0.12, rad + 0.12, 2.6, 10), band);
+        st.position.set(lx, y, lz);
+        root.add(st);
+      }
+      addMarble(new THREE.CylinderGeometry(3.2, 3.2, 0.6, 10), lx, 20.3, lz); // gallery
+      const lamp = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 2.6, 8), new THREE.MeshBasicMaterial({ color: C("#ffd37a") }));
+      lamp.position.set(lx, 21.9, lz);
+      root.add(lamp);
+      const cap = new THREE.Mesh(new THREE.ConeGeometry(2.4, 2.4, 8), band);
+      cap.position.set(lx, 24.4, lz);
+      root.add(cap);
+    }
     // boats
     for (let i = 0; i < 6; i++) {
       const b = new THREE.Group();

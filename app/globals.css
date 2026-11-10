@@ -2651,3 +2651,50 @@ h1, h2, h3,
 .fountain__pour path { stroke: #ffffff; stroke-width: 6; }
 .fountain__pour path:nth-child(2) { stroke: #4a63b0; }
 .band--proof { padding-top: 5rem; }
+
+/* ================= the agora wall ================= */
+.agora {
+  position: relative; zoom: 1; padding: 74px 44px 70px; margin: 0 -1rem;
+  /* courses of cut stone, in 4px steps */
+  background:
+    linear-gradient(#f3ead2, #f3ead2) 0 0 / 100% 12px no-repeat,
+    linear-gradient(#b7a67f, #b7a67f) 0 12px / 100% 4px no-repeat,
+    linear-gradient(#b7a67f, #b7a67f) 0 100% / 100% 16px no-repeat,
+    repeating-linear-gradient(0deg, transparent 0 60px, #c4b38c 60px 64px),
+    repeating-linear-gradient(90deg, transparent 0 156px, #c4b38c 156px 160px) 0 0 / 100% 128px,
+    repeating-linear-gradient(90deg, transparent 0 156px, #c4b38c 156px 160px) 80px 64px / 100% 128px,
+    #e2d4b0;
+  background-blend-mode: normal;
+  box-shadow: 0 8px 0 #9c8b66;
+}
+/* only alternate courses carry each set of joints */
+.agora { background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat-x, repeat-x, repeat; }
+.agora .threads__grid { grid-template-columns: 1.05fr 1.25fr 0.95fr; gap: 0 34px; align-items: start; zoom: 1.12; }
+.agora .exh { position: relative; }
+.agora .exh--a { transform: rotate(-2.2deg); margin-top: 46px; }
+.agora .exh--b { transform: rotate(1.1deg); margin-top: 0; }
+.agora .exh--c { transform: rotate(-0.8deg) translateX(-8px); margin-top: 92px; }
+/* each letter is held by an iron nail */
+.agora .exh::before {
+  content: ""; position: absolute; top: -6px; left: 50%; width: 12px; height: 12px; z-index: 2; margin-left: -6px;
+  background: #4a4338; box-shadow: inset 4px 4px 0 #8d8273, 4px 4px 0 rgba(60, 45, 20, 0.35);
+}
+.agora .exh--a::before { left: 22%; }
+.agora .exh--c::before { left: 70%; }
+.agora .slack { border-radius: 0; box-shadow: 6px 8px 0 rgba(90, 70, 30, 0.28); }
+.agora .exh__note {
+  display: inline-flex; margin: 16px 0 0 10px; padding: 0.3rem 0.7rem 0.4rem; font-family: var(--display); font-style: normal; font-size: 1.15rem; letter-spacing: 0.04em; text-transform: uppercase;
+  color: #6a5a36; background: #d3c39c; box-shadow: inset 0 4px 0 #b7a67f, inset 0 -4px 0 #efe4c6; text-shadow: 0 2px 0 #efe4c6;
+}
+.agora .exh__note svg { display: none; }
+.ivy { position: absolute; top: 12px; width: 270px; height: 210px; image-rendering: pixelated; pointer-events: none; z-index: 3; }
+.ivy--l { left: -6px; }
+.ivy--r { right: -6px; transform: scaleX(-1); }
+.ivy--m { left: 58%; width: 180px; height: 140px; opacity: 0.95; }
+[data-theme="dark"] .agora { filter: brightness(0.62) saturate(0.8); }
+@media (max-width: 900px) {
+  .agora { padding: 60px 16px 50px; margin: 0; }
+  .agora .threads__grid { grid-template-columns: minmax(0, 1fr); gap: 34px; zoom: 1; }
+  .agora .exh--a, .agora .exh--b, .agora .exh--c { margin-top: 0; }
+  .ivy--m { display: none; }
+}

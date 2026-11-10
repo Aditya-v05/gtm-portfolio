@@ -1,9 +1,17 @@
 // Real client conversations, recreated from Slack with names shortened and
 // private details masked: Warp, Hyperbound and Peec AI reacting to delivered
 // work. Carried over from the original site, word for word.
+//
+// They hang on the wall of the agora, the Greek marketplace: a stone wall
+// with ivy, each letter pinned in its own place and at its own angle.
+import Ivy from "./Ivy";
+
 export default function ClientThreads() {
   return (
-    <div className="threads">
+    <div className="threads agora">
+      <Ivy seed={3} className="ivy--l" />
+      <Ivy seed={7} className="ivy--r" />
+      <Ivy seed={11} className="ivy--m" />
           <div className="threads__grid">
             <div className="exh exh--a">
             <div className="slack">

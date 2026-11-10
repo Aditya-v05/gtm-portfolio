@@ -142,7 +142,8 @@ function station(name: DistrictName): Station {
       return { pos: new THREE.Vector3(x + 4, 13, 150), look: new THREE.Vector3(x + 10, 15, -20), fov: 40 };
     case "ending":
       // open harbour: a boat in the foreground, the quay and lighthouse beyond
-      return { pos: new THREE.Vector3(x + 74, 5, 78), look: new THREE.Vector3(x + 80, 9, -20), fov: 44 };
+      // the same height and upward tilt as the hero, so the sea and its waves read the same
+      return { pos: new THREE.Vector3(x + 70, 8, 112), look: new THREE.Vector3(x + 84, 30, -58), fov: 44 };
     default:
       return { pos: new THREE.Vector3(x - 10, ground(x - 10, 60) + 16, 60), look: new THREE.Vector3(x, 10, -12), fov: 42 };
   }
