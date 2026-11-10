@@ -2969,3 +2969,4 @@ a.stone:active, .stone--chip:active { transform: translateY(2px); filter: none; 
 .clay__names li { flex: 1 1 auto; text-align: center; position: relative; white-space: nowrap; }
 .clay__names li:not(:last-child)::after { position: absolute; right: -4px; top: 50%; margin: -4px 0 0; }
 @media (max-width: 900px) { .clay__names { flex-wrap: wrap; } .clay__names li:not(:last-child)::after { display: none; } }
+.clay__k { font-size: 1.7rem; letter-spacing: 0.16em; color: #5a2f18; -webkit-text-stroke: 0.6px #5a2f18; }
