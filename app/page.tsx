@@ -6,7 +6,6 @@ import PixelName from "@/components/PixelName";
 import GradientASCII from "@/components/GradientASCII";
 import Deck from "@/components/deck/Deck";
 import Fountain from "@/components/Fountain";
-import Plaque from "@/components/Plaque";
 import Stream from "@/components/Stream";
 import fs from "node:fs";
 import path from "node:path";
@@ -23,15 +22,7 @@ function cardArt(): string[] {
   }
 }
 
-// each company gets a statue on its plaque
-const CLIENTS: [string, number][] = [
-  ["Brex", 3],
-  ["Rho", 1],
-  ["Peec AI", 4],
-  ["Warp", 2],
-  ["Hyperbound", 3],
-  ["Qashio", 1],
-];
+const CLIENTS = ["Brex", "Rho", "Peec AI", "Warp", "Hyperbound", "Qashio"];
 
 // The homepage has a rhythm: the world (the hero), the engineer (what he
 // builds), the work (a deck of red-figure cards, one Olympian per system),
@@ -73,13 +64,13 @@ export default function Home() {
             <h1 className="hero__name">
               <PixelName>Aditya Venkatesan</PixelName>
             </h1>
+            <p className="hero__role">GTM Engineer</p>
           </div>
         </section>
 
         {/* 02 THE ENGINEER: what he builds */}
         <section id="about" className="band band--engineer">
           <div className="band__in">
-            <p className="kicker">GTM Engineer · Physical AI</p>
             <h2 className="statement">I build machines that find customers.</h2>
             <p className="statement__sub">
               Find demand, qualify it, discover a way in, and automate the rest. Each stage is a system
@@ -93,9 +84,14 @@ export default function Home() {
               </a>
               <div className="creds__for">
                 <span className="tablet__k">Systems shipped for</span>
-                <ul className="tablets">
-                  {CLIENTS.map(([c, n]) => (
-                    <Plaque key={c} name={c} statue={n} />
+                <ul className="coins">
+                  {CLIENTS.map((c) => (
+                    <li key={c} className="coin">
+                      <span className="coin__face" aria-hidden="true">
+                        {c[0]}
+                      </span>
+                      <span className="coin__name">{c}</span>
+                    </li>
                   ))}
                 </ul>
               </div>

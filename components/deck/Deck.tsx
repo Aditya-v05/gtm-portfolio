@@ -4,8 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { PROJECTS, type Project } from "./projects";
 
-// The work as twelve pixel tarot cards, one Olympian per system, in a tidy
-// grid. Click a card: it lifts to the middle of the screen and turns on its
+// The work as twelve pixel tarot cards, one Olympian per system. The four
+// flagships are dealt face up; the other eight wait in a deck that deals
+// them all out at once when clicked. Click a card: it lifts to the middle of the screen and turns on its
 // edge, and the project sheet turns in from that edge. Escape, the close
 // button or a click outside turns it back.
 //
@@ -112,6 +113,7 @@ function CardFace({ p, n, art }: { p: Project; n: number; art: Set<string> }) {
 export default function Deck({ art = [] }: { art?: string[] }) {
   const artSet = new Set(art);
   const [open, setOpen] = useState<{ p: Project; n: number } | null>(null);
+  const [spread, setSpread] = useState(false);
   const [phase, setPhase] = useState<"idle" | "opening" | "open" | "closing">("idle");
   const ghost = useRef<HTMLDivElement>(null);
   const sheet = useRef<HTMLDivElement>(null);
@@ -212,23 +214,40 @@ export default function Deck({ art = [] }: { art?: string[] }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [close]);
 
+  const rest = PROJECTS.filter((p) => !p.flagship);
+  const item = (p: Project, n: number, i = 0) => (
+    <li key={p.slug} className="tarot__item" style={{ "--i": i } as React.CSSProperties}>
+      <button
+        className="card"
+        onClick={(e) => show(p, n, e.currentTarget)}
+        aria-haspopup="dialog"
+        aria-label={`${p.god}: ${p.title}. ${p.lede} Open the project.`}
+      >
+        <CardFace p={p} n={n} art={artSet} />
+      </button>
+      <span className="tarot__title">{p.title}</span>
+      <span className="tarot__type">{p.type}</span>
+    </li>
+  );
+
   return (
     <>
-      <ul className="tarot">
-        {PROJECTS.map((p, n) => (
-          <li key={p.slug} className="tarot__item">
-            <button
-              className="card"
-              onClick={(e) => show(p, n, e.currentTarget)}
-              aria-haspopup="dialog"
-              aria-label={`${p.god}: ${p.title}. ${p.lede} Open the project.`}
-            >
-              <CardFace p={p} n={n} art={artSet} />
-            </button>
-            <span className="tarot__title">{p.title}</span>
-            <span className="tarot__type">{p.type}</span>
-          </li>
-        ))}
+      <ul className="tarot tarot--major">
+        {PROJECTS.map((p, n) => (p.flagship ? item(p, n) : null))}
+        <li className="tarot__item tarot__item--deck">
+          <button className="pile" onClick={() => setSpread((v) => !v)} aria-expanded={spread} aria-controls="the-rest">
+            <span className="pile__card" aria-hidden="true" />
+            <span className="pile__card" aria-hidden="true" />
+            <span className="pile__card pile__card--top" aria-hidden="true">
+              <span className="pile__count">{rest.length}</span>
+            </span>
+          </button>
+          <span className="tarot__title">{spread ? "Gather the deck" : "The rest of the deck"}</span>
+          <span className="tarot__type">{spread ? "fold them away" : `${rest.length} more systems`}</span>
+        </li>
+      </ul>
+      <ul id="the-rest" className={`tarot tarot--minor${spread ? " is-spread" : ""}`} hidden={!spread}>
+        {PROJECTS.map((p, n) => (p.flagship ? null : item(p, n, rest.indexOf(p))))}
       </ul>
 
       {open &&
