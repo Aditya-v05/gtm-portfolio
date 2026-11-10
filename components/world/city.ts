@@ -728,6 +728,12 @@ export function buildCity(): City {
       b.position.set(E + 30 + i * 15 + r() * 6, 0, -6 + r() * 26);
       b.rotation.y = r() * 0.6 - 0.3;
       b.userData.ph = r() * 6;
+      // one boat sits close, looking out over the harbour
+      if (i === 0) {
+        b.position.set(E + 66, 0, 26);
+        b.rotation.y = 0.5;
+        b.scale.setScalar(1.3);
+      }
       boats.push(b);
       root.add(b);
     }

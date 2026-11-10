@@ -42,26 +42,7 @@ export default function Deck({ art = [] }: { art?: string[] }) {
   const sheet = useRef<HTMLDivElement>(null);
   const origin = useRef<HTMLButtonElement | null>(null);
   const closeBtn = useRef<HTMLButtonElement>(null);
-  const pile = useRef<HTMLButtonElement>(null);
-  const restRef = useRef<HTMLUListElement>(null);
 
-  // the other cards live in the deck: when it opens, each one is dealt out
-  // from the deck's own position to its place
-  useEffect(() => {
-    if (!spread || !pile.current || !restRef.current) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const from = pile.current.getBoundingClientRect();
-    restRef.current.querySelectorAll<HTMLElement>(".tarot__item").forEach((el, i) => {
-      const r = el.getBoundingClientRect();
-      el.animate(
-        [
-          { transform: `translate(${from.left - r.left}px, ${from.top - r.top}px) scale(${from.width / r.width})`, opacity: 0.6 },
-          { transform: "translate(0px, 0px) scale(1)", opacity: 1 },
-        ],
-        { duration: 420, delay: i * 60, easing: "cubic-bezier(.2,.7,.2,1)", fill: "backwards" }
-      );
-    });
-  }, [spread]);
   const reduced = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const show = (p: Project, n: number, btn: HTMLButtonElement) => {
@@ -88,7 +69,8 @@ export default function Deck({ art = [] }: { art?: string[] }) {
     const g = ghost.current, sh = sheet.current, src = origin.current;
     const r = src.getBoundingClientRect();
     Object.assign(g.style, { left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px`, visibility: "visible" });
-    src.style.visibility = "hidden";
+    const plain = src.classList.contains("rest__row");
+    if (!plain) src.style.visibility = "hidden";
     sh.style.visibility = "hidden";
     let done = false;
     const settle = () => {
@@ -104,6 +86,13 @@ export default function Deck({ art = [] }: { art?: string[] }) {
     if (reduced()) {
       settle();
       return;
+    }
+    if (plain) {
+      g.style.visibility = "hidden";
+      sh.style.visibility = "visible";
+      sh.animate([{ transform: SHEET_EDGE }, { transform: SHEET_FLAT }], { duration: 300, easing: "cubic-bezier(.1,.6,.3,1)" }).onfinish = settle;
+      const t = setTimeout(settle, 700);
+      return () => clearTimeout(t);
     }
     const a = g.animate([{ transform: AT_REST }, { transform: toCentre() }], { duration: 300, easing: "cubic-bezier(.5,0,.9,.6)", fill: "forwards" });
     a.onfinish = () => {
@@ -140,6 +129,7 @@ export default function Deck({ art = [] }: { art?: string[] }) {
     const a = sh.animate([{ transform: SHEET_FLAT }, { transform: SHEET_EDGE }], { duration: 220, easing: "ease-in", fill: "forwards" });
     a.onfinish = () => {
       sh.style.visibility = "hidden";
+      if (origin.current?.classList.contains("rest__row")) return settle();
       g.style.visibility = "visible";
       g.getAnimations().forEach((x) => x.cancel());
       const b = g.animate([{ transform: toCentre() }, { transform: AT_REST }], { duration: 300, easing: "cubic-bezier(.1,.6,.3,1)" });
@@ -178,7 +168,7 @@ export default function Deck({ art = [] }: { art?: string[] }) {
       <ul className="tarot tarot--major">
         {PROJECTS.map((p, n) => (p.flagship ? item(p, n) : null))}
         <li className="tarot__item tarot__item--deck">
-          <button ref={pile} className="pile" onClick={() => setSpread((v) => !v)} aria-expanded={spread} aria-controls="the-rest">
+          <button className="pile" onClick={() => setSpread((v) => !v)} aria-expanded={spread} aria-controls="the-rest">
             {/* eslint-disable @next/next/no-img-element */}
             <img className="pile__card" src="/cards/back.png" alt="" />
             <img className="pile__card" src="/cards/back.png" alt="" />
@@ -189,9 +179,21 @@ export default function Deck({ art = [] }: { art?: string[] }) {
           <span className="tarot__type">{spread ? "close the deck" : "open the deck"}</span>
         </li>
       </ul>
-      <ul ref={restRef} id="the-rest" className={`tarot tarot--minor${spread ? " is-spread" : ""}`} hidden={!spread}>
-        {PROJECTS.map((p, n) => (p.flagship ? null : item(p, n, rest.indexOf(p))))}
-      </ul>
+      {spread && (
+        <ul id="the-rest" className="rest">
+          {PROJECTS.map((p, n) =>
+            p.flagship ? null : (
+              <li key={p.slug}>
+                <button className="rest__row" onClick={(e) => show(p, n, e.currentTarget)} aria-haspopup="dialog">
+                  <span className="rest__title">{p.title}</span>
+                  <span className="rest__lede">{p.lede}</span>
+                  <span className="rest__type">{p.type}</span>
+                </button>
+              </li>
+            )
+          )}
+        </ul>
+      )}
 
       {open &&
         createPortal(

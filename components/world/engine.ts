@@ -141,7 +141,8 @@ function station(name: DistrictName): Station {
     case "forum":
       return { pos: new THREE.Vector3(x + 4, 13, 150), look: new THREE.Vector3(x + 10, 15, -20), fov: 40 };
     case "ending":
-      return { pos: new THREE.Vector3(x - 50, 9, 92), look: new THREE.Vector3(x + 10, 31, -10), fov: 44 };
+      // open harbour: a boat in the foreground, the quay and lighthouse beyond
+      return { pos: new THREE.Vector3(x + 74, 5, 78), look: new THREE.Vector3(x + 80, 9, -20), fov: 44 };
     default:
       return { pos: new THREE.Vector3(x - 10, ground(x - 10, 60) + 16, 60), look: new THREE.Vector3(x, 10, -12), fov: 42 };
   }

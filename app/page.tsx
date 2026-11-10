@@ -4,7 +4,6 @@ import EvidenceZoom from "@/components/EvidenceZoom";
 import World from "@/components/world/World";
 import PixelName from "@/components/PixelName";
 import GradientASCII from "@/components/GradientASCII";
-import DottedLine from "@/components/DottedLine";
 import Deck from "@/components/deck/Deck";
 import Fountain from "@/components/Fountain";
 import Stream from "@/components/Stream";
@@ -88,13 +87,10 @@ export default function Home() {
               </a>
               <div className="creds__for">
                 <span className="tablet__k">Systems shipped for</span>
-                <ul className="coins">
+                <ul className="chips">
                   {CLIENTS.map((c) => (
-                    <li key={c} className="coin">
-                      <span className="coin__face" aria-hidden="true">
-                        {c[0]}
-                      </span>
-                      <span className="coin__name">{c}</span>
+                    <li key={c} className="stone stone--chip">
+                      {c}
                     </li>
                   ))}
                 </ul>
@@ -122,9 +118,7 @@ export default function Home() {
         {/* 05 THE ENDING: the aqueduct again, from below, water still flowing */}
         <section id="contact" className="scene scene--ending" data-district="ending" aria-labelledby="contact-title">
           <div className="scene__in">
-            <h2 id="contact-title" className="ask">
-              <DottedLine>Got an interesting GTM problem?</DottedLine>
-            </h2>
+            <h2 id="contact-title" className="ask">Got an interesting GTM problem?</h2>
             <p className="ask__sub">I&apos;d love to hear about it.</p>
             <p className="contact">
               <a className="contact__mail" href="mailto:adityaspark05@gmail.com">adityaspark05@gmail.com</a>

@@ -6,13 +6,13 @@ import { readFileSync, writeFileSync } from "node:fs";
 
 // [source, output, x, y, w, h]
 const CUTS = [
-  ["art-src/god-cards.png", "public/cards/zeus.png", 66, 38, 334, 440],
-  ["art-src/god-cards.png", "public/cards/hera.png", 436, 38, 334, 440],
-  ["art-src/god-cards.png", "public/cards/poseidon.png", 805, 38, 334, 440],
-  ["art-src/god-cards.png", "public/cards/athena.png", 66, 514, 334, 474],
-  ["art-src/god-cards.png", "public/cards/apollo.png", 436, 514, 334, 474],
-  ["art-src/god-cards.png", "public/cards/artemis.png", 805, 514, 334, 474],
-  ["art-src/god-cards.png", "public/cards/back.png", 1180, 288, 308, 440],
+  ["art-src/god-cards.png", "public/cards/zeus.png", 66, 22, 334, 460],
+  ["art-src/god-cards.png", "public/cards/hera.png", 436, 22, 334, 460],
+  ["art-src/god-cards.png", "public/cards/poseidon.png", 805, 22, 334, 460],
+  ["art-src/god-cards.png", "public/cards/athena.png", 66, 498, 334, 494],
+  ["art-src/god-cards.png", "public/cards/apollo.png", 436, 498, 334, 494],
+  ["art-src/god-cards.png", "public/cards/artemis.png", 805, 498, 334, 494],
+  ["art-src/god-cards.png", "public/cards/back.png", 1176, 282, 316, 452],
   ["art-src/water-statue.png", "public/art/water-statue.png", 140, 180, 730, 945, [[218, 517], [150, 470], [250, 600]]],
 ];
 

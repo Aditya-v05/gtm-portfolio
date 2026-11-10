@@ -85,9 +85,8 @@ export default function Stream() {
         side = side === 1 ? -1 : 1;
         n++;
       }
-      // 5. the last pool spills onto the great aqueduct of the closing scene,
-      //    which carries the water out and pours it into the harbour
-      fall(x + side * 5, y + 3, g(er.top + sy + er.height * 0.37));
+      // 5. the last pool spills over and falls into the sea of the closing scene
+      fall(x + side * 5, y + 3, g(er.top + sy + er.height * 0.66), true, true);
       total = cost;
     };
 

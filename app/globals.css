@@ -2571,3 +2571,29 @@ h1, h2, h3,
 
 .tarot .card__img, .spin__ghost .card__img { aspect-ratio: 334 / 457; object-fit: fill; }
 .tarot__type { font-size: 0.9rem; letter-spacing: 0.1em; }
+
+/* ================= round seven ================= */
+.tarot .card__img, .spin__ghost .card__img { aspect-ratio: 334 / 477; }
+.pile { aspect-ratio: 316 / 452; }
+
+/* the rest of the work: a plain list, shown when the deck is opened */
+.rest { list-style: none; margin: 2.6rem 0 0; padding: 0; border-top: 2px solid var(--rule); }
+.rest__row {
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.6fr) auto; gap: 0.4rem 2rem; align-items: baseline;
+  width: 100%; padding: 1rem 0.4rem; text-align: left; font: inherit; color: inherit;
+  background: none; border: 0; border-bottom: 2px solid var(--rule); cursor: pointer;
+}
+.rest__row:hover { background: rgba(47, 79, 158, 0.07); }
+.rest__title { font-family: var(--display); font-size: 1.7rem; line-height: 1; text-transform: uppercase; color: var(--ink); }
+.rest__lede { color: var(--ink-2); font-size: 1.05rem; }
+.rest__type { font-family: var(--display); font-size: 1.2rem; text-transform: uppercase; color: var(--ink-3); }
+
+/* companies, etched in stone too */
+.chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.8rem; }
+.stone--chip { display: block; padding: 0.55rem 1rem 0.7rem; font-family: var(--display); font-size: 1.6rem; line-height: 1; letter-spacing: 0.05em; text-transform: uppercase; }
+
+/* the closing words, in the site's own type */
+.ask { margin: 0; font-family: var(--label); font-weight: 400; font-size: clamp(1.4rem, 3vw, 2.4rem); letter-spacing: 0.1em; line-height: 1.3; color: var(--blue); text-transform: none; }
+.ask__sub { font-family: var(--display); font-style: normal; font-size: 1.6rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.contact__mail { font-family: var(--display); font-size: 1.9rem; letter-spacing: 0.04em; }
+@media (max-width: 760px) { .rest__row { grid-template-columns: minmax(0, 1fr); } }
