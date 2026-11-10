@@ -4,6 +4,7 @@ import EvidenceZoom from "@/components/EvidenceZoom";
 import World from "@/components/world/World";
 import PixelName from "@/components/PixelName";
 import GradientASCII from "@/components/GradientASCII";
+import DottedLine from "@/components/DottedLine";
 import Deck from "@/components/deck/Deck";
 import Fountain from "@/components/Fountain";
 import Stream from "@/components/Stream";
@@ -15,8 +16,8 @@ function cardArt(): string[] {
   try {
     return fs
       .readdirSync(path.join(process.cwd(), "public", "cards"))
-      .filter((f) => f.endsWith(".webp"))
-      .map((f) => f.replace(/\.webp$/, ""));
+      .filter((f) => f.endsWith(".png") && f !== "back.png")
+      .map((f) => f.replace(/\.png$/, ""));
   } catch {
     return [];
   }
@@ -78,9 +79,12 @@ export default function Home() {
               layer doesn&apos;t exist until you build it.
             </p>
             <div className="creds">
-              <a className="tablet tablet--main" href="https://rellingsystems.com" target="_blank" rel="noreferrer">
-                <span className="tablet__k">Most recently</span>
-                ex-Founding GTM Engineer, Relling <span className="tablet__yc">YC S25</span>
+              <a className="stone" href="https://rellingsystems.com" target="_blank" rel="noreferrer">
+                <span className="stone__k">Most recently</span>
+                <span className="stone__t">ex-Founding GTM Engineer</span>
+                <span className="stone__s">
+                  Relling <span className="stone__yc">YC S25</span>
+                </span>
               </a>
               <div className="creds__for">
                 <span className="tablet__k">Systems shipped for</span>
@@ -105,10 +109,10 @@ export default function Home() {
           <div className="band__in">
             <header className="band__head">
               <p className="kicker">The work</p>
-              <h2 className="band__title">Twelve systems. Twelve gods. Draw a card.</h2>
+              <h2 className="band__title">Selected work</h2>
               <p className="band__sub">
-                Each card is a system I built and ran. Turn one over to see what it does, how it works,
-                and the evidence.
+                Four systems I&apos;d show first. Click a card for the details. The other eight are in the
+                deck.
               </p>
             </header>
             <Deck art={cardArt()} />
@@ -118,16 +122,23 @@ export default function Home() {
         {/* 05 THE ENDING: the aqueduct again, from below, water still flowing */}
         <section id="contact" className="scene scene--ending" data-district="ending" aria-labelledby="contact-title">
           <div className="scene__in">
-            <h2 id="contact-title" className="scene__title scene__title--big">Have an interesting GTM problem?</h2>
+            <h2 id="contact-title" className="ask">
+              <DottedLine>Got an interesting GTM problem?</DottedLine>
+            </h2>
+            <p className="ask__sub">I&apos;d love to hear about it.</p>
             <p className="contact">
               <a className="contact__mail" href="mailto:adityaspark05@gmail.com">adityaspark05@gmail.com</a>
             </p>
-            <p className="contact__links">
+          </div>
+          {/* the stone quay at the water's edge */}
+          <footer className="quay">
+            <span>© 2026 Aditya Venkatesan</span>
+            <span className="quay__links">
               <a href="https://github.com/Aditya-v05">GitHub</a>
               <a href="https://www.linkedin.com/in/aditya-venkatesan-26055531b/">LinkedIn</a>
               <a href="/writing">Writing</a>
-            </p>
-          </div>
+            </span>
+          </footer>
         </section>
       </main>
     </>

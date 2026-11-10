@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Nunito, JetBrains_Mono } from "next/font/google";
+import { Nunito, Newsreader, JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
@@ -10,6 +10,9 @@ import "./globals.css";
 // reading face; mono only inside terminal readouts.
 const display = localFont({ src: "./fonts/Ithaca.ttf", variable: "--font-display-src" });
 const label = localFont({ src: "./fonts/Spartacus.ttf", variable: "--font-label-src" });
+
+// serif, only for the dotted closing question
+const serif = Newsreader({ subsets: ["latin"], variable: "--font-serif-src" });
 
 const text = Nunito({
   subsets: ["latin"],
@@ -68,7 +71,7 @@ export default function RootLayout({
       lang="en"
       data-theme="light"
       suppressHydrationWarning
-      className={`${display.variable} ${label.variable} ${text.variable} ${mono.variable}`}
+      className={`${display.variable} ${serif.variable} ${label.variable} ${text.variable} ${mono.variable}`}
     >
       <head>
         <script

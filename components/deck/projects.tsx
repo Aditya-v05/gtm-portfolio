@@ -156,8 +156,8 @@ export const PROJECTS: Project[] = [
   {
     id: "02",
     slug: "warmest-path",
-    god: "Hermes",
-    epithet: "God of roads, crossings and introductions",
+    god: "Artemis",
+    epithet: "The huntress who never loses a trail",
     title: 'Warmest Path',
     lede: 'Shared history in, the warm intro out.',
     type: 'Relationship graph',
@@ -638,8 +638,8 @@ export const PROJECTS: Project[] = [
   {
     id: "12",
     slug: "auth-enumeration-recon-agent",
-    god: "Artemis",
-    epithet: "The huntress who scouts ahead",
+    god: "Hermes",
+    epithet: "Who slips past every gate",
     title: 'Auth-Enumeration Recon Agent',
     lede: 'Probes auth flows the way a researcher would.',
     type: 'Security recon',

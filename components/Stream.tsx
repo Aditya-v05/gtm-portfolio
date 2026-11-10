@@ -4,10 +4,10 @@ import { useEffect, useRef } from "react";
 import { FOUNTAIN_GRID as FG } from "./Fountain";
 
 // The water system. It is one body of water that changes form as it travels:
-// it pours from the statue's amphora, drops into a stone catch basin, runs
-// along a carved channel, steps down a stair of small pools (one of them
-// turning a wheel), crosses the page in a second channel, and leaves by a
-// spout into the sea.
+// it leaves the statue's basin, drops into a stone catch basin, runs along a
+// carved channel, steps down a stair of small pools (one of them turning a
+// wheel), and finally spills onto the aqueduct of the closing scene, which
+// carries it out to the harbour.
 //
 // The water always sits inside stonework: every channel is a trough with a
 // lip, an inner wall and a shadow under it, and every bend is a basin where
@@ -62,13 +62,10 @@ export default function Stream() {
         add({ kind: "run", x0: Math.min(x0, x1), x1: Math.max(x0, x1), y, dir: x1 > x0 ? 1 : -1, len: Math.abs(x1 - x0) * CELL * 0.35 });
       const basin = (cx: number, y: number, w = 13, h = 7, wheel = false) => add({ kind: "basin", x: cx - (w >> 1), y, w, h, wheel, len: 60 });
 
-      // 1. the pour, from the amphora's mouth into the statue's own bowl
-      const mx = g(fr.left + FG.mouth[0] * k) - 1;
-      fall(mx, g(fr.top + sy + FG.mouth[1] * k), g(fr.top + sy + FG.basinY * k), false);
       // 2. out under the bowl, down into the first catch basin
       const ex = g(fr.left + FG.exit[0] * k) - 1;
       const y1 = g(wr.top + sy + 30);
-      fall(ex, g(fr.bottom + sy), y1);
+      fall(ex, g(fr.bottom + sy) - 1, y1);
       basin(ex + 1, y1);
       // 3. the carved channel, left to the head of the stair
       const xL = g(Math.max(40, (vw - 1120) / 2 - 70));
@@ -88,15 +85,9 @@ export default function Stream() {
         side = side === 1 ? -1 : 1;
         n++;
       }
-      fall(x + side * 5, y + 3, y2);
-      x = x + side * 5;
-      basin(x + 1, y2);
-      // 5. the lower channel across the page, to the outlet
-      const xE = g(vw > 900 ? vw * 0.9 : vw - 34);
-      run(x + 8, xE - 6, y2 + 2);
-      basin(xE, y2, 11, 7);
-      // 6. the spout, and the last fall into the sea
-      fall(xE, y2 + 6, g(er.top + sy + er.height * 0.95), true, true);
+      // 5. the last pool spills onto the great aqueduct of the closing scene,
+      //    which carries the water out and pours it into the harbour
+      fall(x + side * 5, y + 3, g(er.top + sy + er.height * 0.37));
       total = cost;
     };
 

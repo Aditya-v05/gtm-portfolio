@@ -2499,3 +2499,75 @@ h1, h2, h3,
 @media (prefers-reduced-motion: reduce) {
   .tarot--minor.is-spread .tarot__item { animation: none; }
 }
+
+/* ================= round six ================= */
+/* labels were too small */
+.kicker, .label, .tablet__k, .tarot__type, .stone__k { font-size: 1.3rem; letter-spacing: 0.12em; }
+.band__sub { font-size: 1.15rem; }
+
+/* cards are the artwork itself */
+.tarot .card, .spin__ghost.card { aspect-ratio: auto; }
+.card__img { display: block; width: 100%; height: auto; }
+.card__blank { position: relative; display: block; }
+.card__blankname {
+  position: absolute; left: 14%; right: 14%; bottom: 9%;
+  font-family: var(--display); font-size: clamp(0.8rem, 1.3vw, 1.3rem); letter-spacing: 0.06em; text-transform: uppercase;
+  text-align: center; color: #2a1c14; background: #f3b684; box-shadow: 0 0 0 3px #2a1c14, 0 0 0 5px #c8673a; padding: 0.1rem 0;
+}
+.tarot__item { align-content: start; }
+.tarot--major { align-items: start; }
+.pile { aspect-ratio: 308 / 440; }
+.pile__card { inset: 0; width: 100%; height: 100%; background: none; box-shadow: none; clip-path: none; }
+.tarot--minor.is-spread .tarot__item { animation: none; }
+
+/* the water statue */
+.fountain { width: 300px; height: auto; right: 2%; top: -10px; image-rendering: auto; }
+
+/* an achievement etched in grey stone */
+.stone {
+  display: grid; gap: 0.15rem; text-decoration: none;
+  padding: 1.1rem 1.6rem 1.2rem;
+  color: #55524a;
+  background:
+    linear-gradient(#d6d3ca, #d6d3ca) 0 0 / 100% 4px no-repeat,
+    linear-gradient(#8d8a82, #8d8a82) 0 100% / 100% 8px no-repeat,
+    radial-gradient(#a9a69d 1px, transparent 1.5px) 0 0 / 12px 12px,
+    #bdbab1;
+  clip-path: polygon(
+    8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px,
+    100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%,
+    8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px),
+    0 8px, 4px 8px, 4px 4px, 8px 4px);
+  text-shadow: 0 2px 0 #dedbd3; /* the light catching the lower edge of each cut */
+}
+.stone__k { font-family: var(--label); color: #6f6c63; }
+.stone__t { font-family: var(--display); font-size: 2.1rem; line-height: 1; text-transform: uppercase; letter-spacing: 0.03em; }
+.stone__s { font-family: var(--display); font-size: 1.5rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.stone__yc { margin-left: 0.5rem; padding: 0 0.4rem; background: #55524a; color: #d6d3ca; text-shadow: none; font-size: 1.1rem; }
+
+/* the closing question, in dotted serif */
+.ask { margin: 0; }
+.dotted { display: block; width: min(86vw, 820px); height: auto; margin: 0 auto; overflow: visible; }
+.dotted text {
+  font-family: var(--font-serif-src), Georgia, serif;
+  fill: none; stroke: var(--blue); stroke-width: 2px; stroke-linecap: round; stroke-dasharray: 0.01 4.2; vector-effect: non-scaling-stroke;
+}
+.ask__sub { margin: 0.6rem 0 0; font-size: 1.2rem; font-style: italic; color: var(--ink-2); }
+.contact__mail { font-size: 1.25rem; }
+.scene--ending { padding-top: clamp(6rem, 15vh, 9rem); }
+.quay {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.4rem 2rem;
+  padding: 0.9rem 2rem 0.8rem;
+  font-family: var(--display); font-size: 1.15rem; letter-spacing: 0.05em; text-transform: uppercase;
+  color: #55524a;
+  background: linear-gradient(#e2dfd6, #e2dfd6) 0 0 / 100% 4px no-repeat, repeating-linear-gradient(90deg, transparent 0 92px, #a9a69d 92px 96px), #c9c6bd;
+  box-shadow: 0 -4px 0 #8d8a82;
+}
+.quay__links { display: flex; gap: 1.6rem; }
+.quay a { color: inherit; text-decoration: none; }
+.quay a:hover { color: #1b2b5a; }
+@media (max-width: 860px) { .fountain { width: 220px; } }
+
+.tarot .card__img, .spin__ghost .card__img { aspect-ratio: 334 / 457; object-fit: fill; }
+.tarot__type { font-size: 0.9rem; letter-spacing: 0.1em; }

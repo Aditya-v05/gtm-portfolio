@@ -13,99 +13,22 @@ import { PROJECTS, type Project } from "./projects";
 // Card art lives at /cards/<god>.webp; the page passes in which exist. Until
 // a god's art exists, the card draws its own pixel scene.
 
-const EMBLEMS: Record<string, string> = {
-    Zeus: "M52 8 L34 52 H50 L40 92 L68 40 H52 L62 8 Z",
-    Athena: "M50 10 C30 10 22 30 22 44 C22 62 36 74 50 90 C64 74 78 62 78 44 C78 30 70 10 50 10 Z M38 40 a6 6 0 1 0 0.1 0 M62 40 a6 6 0 1 0 0.1 0",
-    Apollo: "M30 20 C30 60 70 60 70 20 M30 20 V80 M70 20 V80 M42 30 V74 M50 32 V76 M58 30 V74",
-    Hermes: "M50 10 V90 M36 22 C20 22 20 40 36 40 M64 22 C80 22 80 40 64 40 M40 56 C30 66 70 66 60 76",
-    Hephaestus: "M26 30 H74 V44 H26 Z M44 44 V88 H56 V44",
-    Aphrodite: "M50 30 C40 10 14 20 22 44 C30 66 50 80 50 86 C50 80 70 66 78 44 C86 20 60 10 50 30 Z",
-    Demeter: "M50 90 V20 M50 30 C40 24 36 30 38 38 M50 30 C60 24 64 30 62 38 M50 46 C40 40 36 46 38 54 M50 46 C60 40 64 46 62 54 M50 62 C40 56 36 62 38 70 M50 62 C60 56 64 62 62 70",
-    Dionysus: "M30 20 H70 C70 46 60 56 50 56 C40 56 30 46 30 20 Z M50 56 V80 M36 84 H64",
-    Poseidon: "M50 90 V24 M34 20 V40 C34 48 66 48 66 40 V20 M50 14 V24 M34 20 l-4 8 M66 20 l4 8",
-    Ares: "M24 50 H76 M34 30 L66 70 M66 30 L34 70 M50 14 C34 14 26 28 26 40 H74 C74 28 66 14 50 14",
-    Hera: "M28 70 L36 30 L50 52 L64 30 L72 70 Z M26 78 H74",
-    Artemis: "M30 14 C70 30 70 70 30 86 M30 14 V86 M20 50 H86 M78 44 L86 50 L78 56",
-};
 const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
-// each card's sky: [top, bottom, emblem]
-const SKIES: [string, string, string][] = [
-  ["#fbf1c4", "#f0b429", "#2a1f3d"],
-  ["#f6d4c0", "#c8673a", "#2a1f3d"],
-  ["#c5d3f0", "#2f4f9e", "#fbf1c4"],
-  ["#fbf1c4", "#7fd0d8", "#1b2b5a"],
-];
-const hash = (a: number, b: number) => {
-  let h = (a * 374761393 + b * 668265263) | 0;
-  h = (h ^ (h >>> 13)) * 1274126177;
-  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
-};
 
-/** a small pixel scene: dithered sky, a sun or stars, the god's emblem, ground */
-function PixelArt({ god, n }: { god: string; n: number }) {
-  const ref = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const cv = ref.current;
-    if (!cv) return;
-    const W = 40, H = 52;
-    const c = cv.getContext("2d")!;
-    const [top, bot, ink] = SKIES[n % SKIES.length];
-    // sky: two flat tones with an ordered-dither seam
-    for (let y = 0; y < H; y++)
-      for (let x = 0; x < W; x++) {
-        const t = y / H;
-        const edge = t > 0.38 && t < 0.62 ? ((x + y) % 2 === 0 ? t > 0.5 : t > 0.56) : t > 0.5;
-        c.fillStyle = edge ? bot : top;
-        c.fillRect(x, y, 1, 1);
-      }
-    // stars
-    c.fillStyle = ink;
-    for (let i = 0; i < 9; i++) c.fillRect(Math.floor(hash(i, n) * W), Math.floor(hash(n, i + 7) * H * 0.4), 1, 1);
-    // ground
-    c.fillStyle = ink;
-    c.fillRect(0, H - 5, W, 5);
-    c.fillStyle = bot;
-    for (let x = 0; x < W; x += 2) c.fillRect(x + (n % 2), H - 4, 1, 1);
-    // the emblem, rasterised small so it comes out as chunky pixels
-    const s = document.createElement("canvas");
-    s.width = W;
-    s.height = H;
-    const o = s.getContext("2d")!;
-    o.translate(4, 8);
-    o.scale(0.32, 0.32);
-    o.lineWidth = 9;
-    o.lineCap = "square";
-    o.strokeStyle = "#000";
-    o.stroke(new Path2D(EMBLEMS[god] ?? "M30 50 H70"));
-    const d = o.getImageData(0, 0, W, H).data;
-    for (let y = 0; y < H; y++)
-      for (let x = 0; x < W; x++)
-        if (d[(y * W + x) * 4 + 3] > 120) {
-          c.fillStyle = ink;
-          c.fillRect(x, y, 1, 1);
-        }
-  }, [god, n]);
-  return <canvas ref={ref} className="card__px" width={40} height={52} aria-hidden="true" />;
-}
-
-function CardFace({ p, n, art }: { p: Project; n: number; art: Set<string> }) {
+// A card is the user's own red-figure artwork (public/cards/<god>.png, cut
+// by scripts/cut-art.mjs). Gods without artwork yet show the card back with
+// their name on a plate.
+function CardFace({ p, art }: { p: Project; n?: number; art: Set<string> }) {
   const slug = p.god.toLowerCase();
+  if (art.has(slug)) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img className="card__img" src={`/cards/${slug}.png`} alt="" />;
+  }
   return (
-    <span className="card__face">
-      <span className="card__no" aria-hidden="true">
-        {ROMAN[n]}
-      </span>
-      <span className="card__art">
-        {art.has(slug) ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={`/cards/${slug}.webp`} alt="" />
-        ) : (
-          <PixelArt god={p.god} n={n} />
-        )}
-      </span>
-      <span className="card__plate">
-        <span className="card__god">{p.god}</span>
-      </span>
+    <span className="card__blank">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img className="card__img" src="/cards/back.png" alt="" />
+      <span className="card__blankname">{p.god}</span>
     </span>
   );
 }
@@ -119,6 +42,26 @@ export default function Deck({ art = [] }: { art?: string[] }) {
   const sheet = useRef<HTMLDivElement>(null);
   const origin = useRef<HTMLButtonElement | null>(null);
   const closeBtn = useRef<HTMLButtonElement>(null);
+  const pile = useRef<HTMLButtonElement>(null);
+  const restRef = useRef<HTMLUListElement>(null);
+
+  // the other cards live in the deck: when it opens, each one is dealt out
+  // from the deck's own position to its place
+  useEffect(() => {
+    if (!spread || !pile.current || !restRef.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const from = pile.current.getBoundingClientRect();
+    restRef.current.querySelectorAll<HTMLElement>(".tarot__item").forEach((el, i) => {
+      const r = el.getBoundingClientRect();
+      el.animate(
+        [
+          { transform: `translate(${from.left - r.left}px, ${from.top - r.top}px) scale(${from.width / r.width})`, opacity: 0.6 },
+          { transform: "translate(0px, 0px) scale(1)", opacity: 1 },
+        ],
+        { duration: 420, delay: i * 60, easing: "cubic-bezier(.2,.7,.2,1)", fill: "backwards" }
+      );
+    });
+  }, [spread]);
   const reduced = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const show = (p: Project, n: number, btn: HTMLButtonElement) => {
@@ -235,18 +178,18 @@ export default function Deck({ art = [] }: { art?: string[] }) {
       <ul className="tarot tarot--major">
         {PROJECTS.map((p, n) => (p.flagship ? item(p, n) : null))}
         <li className="tarot__item tarot__item--deck">
-          <button className="pile" onClick={() => setSpread((v) => !v)} aria-expanded={spread} aria-controls="the-rest">
-            <span className="pile__card" aria-hidden="true" />
-            <span className="pile__card" aria-hidden="true" />
-            <span className="pile__card pile__card--top" aria-hidden="true">
-              <span className="pile__count">{rest.length}</span>
-            </span>
+          <button ref={pile} className="pile" onClick={() => setSpread((v) => !v)} aria-expanded={spread} aria-controls="the-rest">
+            {/* eslint-disable @next/next/no-img-element */}
+            <img className="pile__card" src="/cards/back.png" alt="" />
+            <img className="pile__card" src="/cards/back.png" alt="" />
+            <img className="pile__card pile__card--top" src="/cards/back.png" alt="" />
+            {/* eslint-enable @next/next/no-img-element */}
           </button>
-          <span className="tarot__title">{spread ? "Gather the deck" : "The rest of the deck"}</span>
-          <span className="tarot__type">{spread ? "fold them away" : `${rest.length} more systems`}</span>
+          <span className="tarot__title">{spread ? "Put them back" : `${rest.length} more`}</span>
+          <span className="tarot__type">{spread ? "close the deck" : "open the deck"}</span>
         </li>
       </ul>
-      <ul id="the-rest" className={`tarot tarot--minor${spread ? " is-spread" : ""}`} hidden={!spread}>
+      <ul ref={restRef} id="the-rest" className={`tarot tarot--minor${spread ? " is-spread" : ""}`} hidden={!spread}>
         {PROJECTS.map((p, n) => (p.flagship ? null : item(p, n, rest.indexOf(p))))}
       </ul>
 
