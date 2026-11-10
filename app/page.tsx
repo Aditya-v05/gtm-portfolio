@@ -86,18 +86,19 @@ export default function Home() {
                   Relling <span className="stone__yc">YC S25</span>
                 </span>
               </a>
-              <div className="creds__for">
-                <span className="tablet__k">Systems shipped for</span>
-                <ul className="chips">
+            </div>
+            <Fountain />
+            {/* one clay plaque across the whole page; the water falls through a slot in it */}
+            <div className="clay">
+              <div className="clay__in">
+                <span className="clay__k">Systems shipped for</span>
+                <ul className="clay__names">
                   {CLIENTS.map((c) => (
-                    <li key={c} className="stone stone--chip">
-                      {c}
-                    </li>
+                    <li key={c}>{c}</li>
                   ))}
                 </ul>
               </div>
             </div>
-            <Fountain />
           </div>
         </section>
 

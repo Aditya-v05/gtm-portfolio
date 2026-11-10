@@ -2904,3 +2904,35 @@ a.stone:active, .stone--chip:active { transform: translateY(2px); filter: none; 
 /* focus rings are square pixel frames, never rounded */
 :focus-visible { outline: 4px solid #e3b21c; outline-offset: 4px; border-radius: 0; }
 .notch__cta:focus-visible { outline-offset: 0; }
+
+/* ================= the clay plaque: page-wide, with a slot the water falls through ================= */
+.clay {
+  --slot: 70%;
+  position: relative; width: 100vw; margin: 3.5rem calc(50% - 50vw) 0; color: #5a2f18;
+  background:
+    /* the cut edges of the slot */
+    linear-gradient(#7a4426, #7a4426) calc(var(--slot) - 12px) 0 / 4px 100% no-repeat,
+    linear-gradient(#e0a878, #e0a878) calc(var(--slot) + 20px) 0 / 4px 100% no-repeat,
+    /* top light, a meander-like row of studs, bottom shade */
+    linear-gradient(#e0a878, #e0a878) 0 0 / 100% 4px no-repeat,
+    repeating-linear-gradient(90deg, #9a5a36 0 8px, transparent 8px 24px) 0 12px / 100% 4px no-repeat,
+    repeating-linear-gradient(90deg, #9a5a36 0 8px, transparent 8px 24px) 12px calc(100% - 20px) / 100% 4px no-repeat,
+    linear-gradient(#7a4426, #7a4426) 0 100% / 100% 8px no-repeat,
+    radial-gradient(#b06d45 1px, transparent 1.5px) 0 0 / 12px 12px,
+    #c4835a;
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(var(--slot) - 8px), transparent calc(var(--slot) - 8px), transparent calc(var(--slot) + 20px), #000 calc(var(--slot) + 20px));
+  mask-image: linear-gradient(90deg, #000 calc(var(--slot) - 8px), transparent calc(var(--slot) - 8px), transparent calc(var(--slot) + 20px), #000 calc(var(--slot) + 20px));
+}
+.clay__in { max-width: var(--max); margin: 0 auto; padding: 2.1rem 0 2.3rem; display: grid; gap: 0.7rem; }
+.clay__k { font-family: var(--label); font-size: 1.15rem; letter-spacing: 0.14em; color: #7a4426; text-shadow: 0 2px 0 #dca272; }
+.clay__names { list-style: none; margin: 0; padding: 0 320px 0 0; display: flex; flex-wrap: wrap; gap: 0.4rem 0; }
+.clay__names li {
+  font-family: var(--display); font-size: clamp(1.7rem, 2.5vw, 2.5rem); line-height: 1.1; letter-spacing: 0.05em; text-transform: uppercase;
+  text-shadow: 0 2px 0 #dca272; transition: transform 0.1s steps(2), color 0.1s;
+}
+.clay__names li:not(:last-child)::after { content: ""; display: inline-block; width: 8px; height: 8px; margin: 0 1.1rem 0.25em; background: #7a4426; box-shadow: 0 2px 0 #dca272; }
+.clay__names li:hover { transform: translateY(-4px); color: #1b2b5a; }
+.band--engineer { padding-bottom: 0; }
+@media (max-width: 1500px) { .clay__in { padding-left: 1.5rem; padding-right: 1.5rem; } }
+@media (max-width: 860px) { .clay__names { padding-right: 0; } }
+[data-theme="dark"] .clay { filter: brightness(0.7); }

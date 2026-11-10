@@ -73,26 +73,45 @@ export default function Stream() {
       fall(ex, g(fr.bottom + sy) - 1, y1, false);
       wallStart = cost;
       cost += Math.max(0, ex - g(ar.left)) * CELL * 0.35;
+      // on its way down, the fall passes through a slot in the clay plaque
+      const clay = document.querySelector<HTMLElement>(".clay");
+      if (clay) clay.style.setProperty("--slot", `${ex * CELL - clay.getBoundingClientRect().left}px`);
       agora?.style.setProperty("--inlet", `${ex * CELL - ar.left + 12}px`);
       // 3. out of the wall's left end, into the basin at the head of the stair
       const xL = g(Math.max(40, (vw - 1120) / 2 - 70));
       run(g(ar.left) + 2, xL + 7, y1 + 2);
       basin(xL, y1);
-      // 4. the stair of pools beside the work
-      const y2 = g(wr.bottom + sy - 70);
+      // 4. a stair of pools down the left, beside the client wall
       const step = 46; // cells between pools
       let x = xL, y = y1, side: 1 | -1 = 1, n = 0;
-      while (y + step * 1.6 < y2) {
-        // spill over the lip on one side, fall to the next pool
-        const fx = x + side * 5;
-        fall(fx, y + 3, y + step);
-        y += step;
-        x = fx + side * 3;
-        basin(x, y, 13, 7, n === 1);
-        side = side === 1 ? -1 : 1;
-        n++;
-      }
-      // 5. the last pool spills over and falls into the sea of the closing scene
+      const stair = (yEnd: number) => {
+        while (y + step * 1.6 < yEnd) {
+          // spill over the lip on one side, fall to the next pool
+          const fx = x + side * 5;
+          fall(fx, y + 3, y + step);
+          y += step;
+          x = fx + side * 3;
+          basin(x, y, 13, 7, n === 1);
+          side = side === 1 ? -1 : 1;
+          n++;
+        }
+      };
+      const yW = g(wr.top + sy + 24);
+      stair(yW);
+      // 5. at the head of the work the water changes sides: a last drop into a
+      //    basin, then a channel right across the page
+      fall(x + side * 5, y + 3, yW);
+      x += side * 5;
+      basin(x + 1, yW);
+      const xR = W - xL - 2;
+      run(x + 8, xR - 6, yW + 2);
+      basin(xR, yW);
+      x = xR;
+      y = yW;
+      side = W - xR > 20 ? 1 : -1; // step outward, away from the cards, when there is room
+      // 6. a second stair down the right, beside the cards
+      stair(g(wr.bottom + sy - 70));
+      // 7. the last pool spills over and falls into the sea of the closing scene
       fall(x + side * 5, y + 3, g(er.top + sy + er.height * 0.8), true, true);
       total = cost;
     };
