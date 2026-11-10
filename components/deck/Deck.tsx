@@ -20,15 +20,16 @@ const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"
 // their name on a plate.
 function CardFace({ p, art }: { p: Project; n?: number; art: Set<string> }) {
   const slug = p.god.toLowerCase();
-  if (art.has(slug)) {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img className="card__img" src={`/cards/${slug}.png`} alt="" />;
-  }
+  // the name plate is redrawn over the artwork's own, carrying the project's
+  // name; the type shrinks to fit longer names
+  const size = Math.min(12.5, 112 / p.title.length);
   return (
     <span className="card__blank">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="card__img" src="/cards/back.png" alt="" />
-      <span className="card__blankname">{p.god}</span>
+      <img className="card__img" src={art.has(slug) ? `/cards/${slug}.png` : "/cards/back.png"} alt="" />
+      <span className="card__plate2" style={{ fontSize: `${size}cqw` }}>
+        {p.title}
+      </span>
     </span>
   );
 }
@@ -154,11 +155,11 @@ export default function Deck({ art = [] }: { art?: string[] }) {
         className="card"
         onClick={(e) => show(p, n, e.currentTarget)}
         aria-haspopup="dialog"
-        aria-label={`${p.god}: ${p.title}. ${p.lede} Open the project.`}
+        aria-label={`${p.title}. ${p.lede} Open the project.`}
       >
         <CardFace p={p} n={n} art={artSet} />
       </button>
-      <span className="tarot__title">{p.title}</span>
+      <span className="tarot__lede">{p.lede}</span>
       <span className="tarot__type">{p.type}</span>
     </li>
   );
