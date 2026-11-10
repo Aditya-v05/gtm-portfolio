@@ -2796,3 +2796,77 @@ h1, h2, h3,
     0 8px, 4px 8px, 4px 4px, 8px 4px);
   font-size: 1.3rem;
 }
+
+/* ================= round eleven: the bar fits the last screen, splash, micro-interactions ================= */
+.scene--ending { min-height: 100svh; height: 100svh; }
+
+/* the splash in the bowl */
+.fountain__drop { fill: #f2f6ff; stroke: #6f8ed4; stroke-width: 2; animation: splash 0.72s steps(6) infinite; }
+.fountain__drop:nth-of-type(odd) { fill: #a9c4f2; }
+@keyframes splash {
+  0% { transform: translate(0, 0); opacity: 1; }
+  55% { transform: translate(calc(var(--dx) * 0.8), var(--dy)); opacity: 1; }
+  100% { transform: translate(var(--dx), calc(var(--dy) * 0.3)); opacity: 0; }
+}
+
+/* every press pushes down a pixel step; every hover answers */
+a, button { -webkit-tap-highlight-color: transparent; }
+.notch__links a { position: relative; transition: transform 0.1s steps(2); }
+.notch__links a::after { content: ""; position: absolute; left: 0; right: 100%; bottom: -4px; height: 4px; background: #e3b21c; transition: right 0.16s steps(4); }
+.notch__links a:hover::after { right: 0; }
+.notch__links a:active { transform: translateY(4px); }
+.notch__brand:hover .notch__mark { animation: bob 0.5s steps(4) infinite; }
+.notch__cta:active { transform: translateY(4px); box-shadow: 0 0 0 #c9ae8a; }
+.notch .daybtn svg { transition: transform 0.3s steps(6); }
+.notch .daybtn:hover svg { transform: rotate(90deg); }
+.notch .daybtn:active { transform: scale(0.8); }
+@keyframes bob { 50% { transform: translateY(-4px); } }
+
+.tarot .card { transition: transform 0.14s steps(3), filter 0.14s steps(3); }
+.tarot .card:hover { transform: translateY(-12px); filter: drop-shadow(0 12px 0 rgba(42, 28, 20, 0.25)); }
+.tarot .card:active { transform: translateY(-4px) scale(0.97); filter: none; }
+.tarot__item:hover .tarot__title { color: #c8673a; }
+.pile:hover .pile__card:nth-child(1) { transform: translate(20px, 12px) rotate(4deg); }
+.pile:hover .pile__card:nth-child(2) { transform: translate(-10px, 6px) rotate(-3deg); }
+.pile:active .pile__card--top { transform: translateY(6px); }
+.pile__card { transition: transform 0.16s steps(4); }
+
+.rest__row { position: relative; transition: padding-left 0.14s steps(3), background 0.1s steps(2); }
+.rest__row::before { content: ">"; position: absolute; left: 0.3rem; font-family: var(--display); font-size: 1.6rem; color: #c8673a; opacity: 0; transition: opacity 0.1s steps(2); }
+.rest__row:hover { padding-left: 1.8rem; }
+.rest__row:hover::before { opacity: 1; }
+.rest__row:active { background: rgba(47, 79, 158, 0.16); transform: translateY(2px); }
+.rest li { animation: rowin 0.24s steps(4) both; }
+.rest li:nth-child(n) { animation-delay: calc((var(--n, 0)) * 1ms); }
+.rest li:nth-child(1) { animation-delay: 0ms; } .rest li:nth-child(2) { animation-delay: 40ms; } .rest li:nth-child(3) { animation-delay: 80ms; } .rest li:nth-child(4) { animation-delay: 120ms; }
+.rest li:nth-child(5) { animation-delay: 160ms; } .rest li:nth-child(6) { animation-delay: 200ms; } .rest li:nth-child(7) { animation-delay: 240ms; } .rest li:nth-child(8) { animation-delay: 280ms; }
+@keyframes rowin { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: none; } }
+
+.stone { transition: transform 0.1s steps(2), filter 0.1s steps(2); }
+a.stone:hover, .stone--chip:hover { transform: translateY(-4px); filter: drop-shadow(0 4px 0 #8d8a82); }
+a.stone:active, .stone--chip:active { transform: translateY(2px); filter: none; }
+.stone--chip { cursor: default; }
+
+.agora .exh { transition: transform 0.14s steps(3); }
+.agora .exh:hover { transform: translateY(-6px); }
+.agora .exh--c:hover { transform: translate(-8px, -6px); }
+.agora .slreact { transition: transform 0.1s steps(2); }
+.agora .exh:hover .slreact { transform: scale(1.25); }
+
+.contact__mail { display: inline-block; transition: transform 0.1s steps(2), color 0.1s; }
+.contact__mail:hover { transform: translateY(-4px); color: #c8673a; }
+.contact__mail:active { transform: translateY(2px); }
+.quay a { position: relative; display: inline-block; transition: transform 0.1s steps(2); }
+.quay a:hover { transform: translateY(-4px); }
+.quay a:active { transform: translateY(2px); }
+.spin__close { transition: transform 0.14s steps(3); }
+.spin__close:hover { transform: rotate(90deg); }
+.spin__close:active { transform: scale(0.8); }
+.fountain { transition: transform 0.14s steps(3); }
+.fountain:hover .fountain__pour path { animation-duration: 0.45s; }
+.fountain:hover .fountain__drop { animation-duration: 0.4s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fountain__drop, .rest li, .notch__brand:hover .notch__mark { animation: none; }
+  .fountain__drop { display: none; }
+}

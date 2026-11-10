@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito, Newsreader, JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
+import ClickBurst from "@/components/ClickBurst";
 import "./globals.css";
 
 // The user's own fonts. Ithaca (SIL Open Font Licence) is the pixel display
@@ -85,6 +86,7 @@ export default function RootLayout({
           onto <body> before React hydrates. */}
       <body suppressHydrationWarning>
         {children}
+        <ClickBurst />
         <Analytics />
       </body>
     </html>

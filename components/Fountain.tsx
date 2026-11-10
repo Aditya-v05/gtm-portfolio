@@ -12,6 +12,12 @@ const POUR = [
   "M170 404 C 160 460, 150 540, 152 640",
 ];
 
+// splash droplets: [start x, drift x, rise, delay]
+const SPLASH: [number, number, number, number][] = [
+  [128, -46, -58, 0], [136, -22, -78, 0.12], [144, 18, -82, 0.05], [150, 44, -60, 0.2],
+  [132, -62, -30, 0.3], [146, 60, -34, 0.38], [140, -8, -96, 0.46], [138, 30, -46, 0.55],
+];
+
 export default function Fountain() {
   return (
     <div className="fountain">
@@ -22,6 +28,18 @@ export default function Fountain() {
           <path key={i} d={d} style={{ animationDelay: `${-i * 0.37}s` }} />
         ))}
         <path className="fountain__drip" d="M146 935 V945" />
+        {/* the splash where the pour lands in the bowl */}
+        {SPLASH.map(([x, dx, dy, delay], i) => (
+          <rect
+            key={i}
+            className="fountain__drop"
+            x={x}
+            y={644}
+            width={8}
+            height={8}
+            style={{ "--dx": `${dx}px`, "--dy": `${dy}px`, animationDelay: `${delay}s` } as React.CSSProperties}
+          />
+        ))}
       </svg>
     </div>
   );
