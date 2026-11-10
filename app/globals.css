@@ -2275,3 +2275,78 @@ h1, h2, h3,
   color: #fbf1c4;
   white-space: nowrap;
 }
+
+/* ================= the user's fonts and statues ================= */
+.kicker,
+.label,
+.tablet__k,
+.tarot__type,
+.spin__god,
+.fan__god {
+  font-family: var(--label);
+  font-weight: 400;
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+}
+.pixelname__text,
+.notch__brand,
+.card__god,
+.card__no {
+  font-family: var(--label);
+  font-weight: 400;
+}
+.pixelname__text {
+  font-size: clamp(2.2rem, 6.6vw, 6rem);
+  letter-spacing: 0.06em;
+}
+.notch__brand {
+  font-size: 0.95rem;
+}
+h1, h2, h3,
+.statement,
+.band__title,
+.scene__title,
+.tarot__title,
+.spin__title,
+.notch__links,
+.notch__cta,
+.tablet,
+.plaque__name {
+  font-family: var(--display);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+.statement {
+  font-size: clamp(3.4rem, 8.6vw, 7.4rem);
+  line-height: 0.86;
+}
+.band__title, .scene__title { font-size: clamp(2.6rem, 5.4vw, 4.4rem); line-height: 0.9; }
+.scene__title--big { font-size: clamp(3rem, 7vw, 5.6rem); }
+.notch__links { font-size: 1.3rem; }
+.notch__cta { font-size: 1.25rem; }
+.tarot__title { font-size: 1.35rem; }
+.tablet { font-size: 1.5rem; }
+.spin__title { font-size: clamp(2.6rem, 5.4vw, 4.6rem) !important; line-height: 0.9; }
+.card__god { font-size: clamp(0.5rem, 0.78vw, 0.72rem) !important; letter-spacing: 0.1em; }
+.spin__god { font-size: 0.9rem; }
+
+.plaque {
+  width: 118px;
+  padding: 0.5rem 0.4rem;
+  background: #9fc8dc;
+  box-shadow: inset 0 0 0 4px #1b2b5a, inset 0 0 0 6px #f0b429, 0 6px 0 #0f1a3d;
+}
+.plaque__statue {
+  width: 96px;
+  height: 96px;
+  image-rendering: pixelated;
+}
+.plaque__name {
+  font-size: 1.2rem;
+  color: #1b2b5a;
+  background: #fbf1c4;
+  padding: 0 0.4rem;
+  box-shadow: 0 0 0 2px #1b2b5a;
+}
+.kicker, .label, .tablet__k, .tarot__type { font-size: 0.95rem; }
+.card__god { font-size: clamp(0.6rem, 0.95vw, 0.86rem) !important; }

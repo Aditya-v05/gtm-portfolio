@@ -1,24 +1,15 @@
 import type { Metadata } from "next";
-import { Londrina_Solid, Amatic_SC, Nunito, JetBrains_Mono } from "next/font/google";
+import { Nunito, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-// The type the user chose: open-licence stand-ins for their references.
-// Londrina Solid recreates Lore (imperfect hand-lettered capitals) for the
-// name and headings; Amatic SC recreates Juniper Bay (condensed marker caps)
-// for labels; Nunito is the calm, rounded reading face; mono only inside
-// terminal readouts.
-const display = Londrina_Solid({
-  subsets: ["latin"],
-  weight: ["300", "400", "900"],
-  variable: "--font-display-src",
-});
-
-const label = Amatic_SC({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-label-src",
-});
+// The user's own fonts. Ithaca (SIL Open Font Licence) is the pixel display
+// face for headings. Spartacus (freeware, non-commercial) is the Greek
+// inscription face for the name, labels and card plates. Nunito is the calm
+// reading face; mono only inside terminal readouts.
+const display = localFont({ src: "./fonts/Ithaca.ttf", variable: "--font-display-src" });
+const label = localFont({ src: "./fonts/Spartacus.ttf", variable: "--font-label-src" });
 
 const text = Nunito({
   subsets: ["latin"],

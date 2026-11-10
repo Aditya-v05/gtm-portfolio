@@ -23,14 +23,14 @@ function cardArt(): string[] {
   }
 }
 
-// each company gets an Olympian's bust on its plaque
-const CLIENTS: [string, string][] = [
-  ["Brex", "crown"],
-  ["Rho", "laurel"],
-  ["Peec AI", "helmet"],
-  ["Warp", "wings"],
-  ["Hyperbound", "beard"],
-  ["Qashio", "trident"],
+// each company gets a statue on its plaque
+const CLIENTS: [string, number][] = [
+  ["Brex", 3],
+  ["Rho", 1],
+  ["Peec AI", 4],
+  ["Warp", 2],
+  ["Hyperbound", 3],
+  ["Qashio", 1],
 ];
 
 // The homepage has a rhythm: the world (the hero), the engineer (what he
@@ -94,8 +94,8 @@ export default function Home() {
               <div className="creds__for">
                 <span className="tablet__k">Systems shipped for</span>
                 <ul className="tablets">
-                  {CLIENTS.map(([c, attr]) => (
-                    <Plaque key={c} name={c} attr={attr} />
+                  {CLIENTS.map(([c, n]) => (
+                    <Plaque key={c} name={c} statue={n} />
                   ))}
                 </ul>
               </div>
