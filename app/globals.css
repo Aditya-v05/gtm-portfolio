@@ -3024,3 +3024,16 @@ body { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.
 }
 .xp__open:hover { transform: translateY(2px); filter: brightness(1.12); }
 .xp__open:active { transform: translateY(6px); }
+/* the nav's Contact button: stepped corners, shadow drawn inside the shape */
+.notch__cta, .notch__cta:hover {
+  box-shadow: none; padding: 0.3rem 0.85rem 0.6rem;
+  background: linear-gradient(#c9ae8a, #c9ae8a) 0 100% / 100% 8px no-repeat, linear-gradient(#fffbe6, #fffbe6) 0 0 / 100% 4px no-repeat, #fbf1c4;
+  clip-path: polygon(
+    8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px,
+    100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%,
+    8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px),
+    0 8px, 4px 8px, 4px 4px, 8px 4px);
+}
+.notch__cta:hover { transform: translateY(2px); filter: brightness(1.06); }
+.notch__cta:active { transform: translateY(4px); box-shadow: none; }
+.notch__cta:focus-visible { outline: none; background-color: #e3b21c; background-image: linear-gradient(#b8860f, #b8860f), linear-gradient(#fff3b0, #fff3b0); }
