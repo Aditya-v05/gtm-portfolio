@@ -4,6 +4,7 @@ import EvidenceZoom from "@/components/EvidenceZoom";
 import World from "@/components/world/World";
 import PixelName from "@/components/PixelName";
 import GradientASCII from "@/components/GradientASCII";
+import ClientThreads from "@/components/ClientThreads";
 import Deck from "@/components/deck/Deck";
 import Fountain from "@/components/Fountain";
 import Stream from "@/components/Stream";
@@ -97,6 +98,18 @@ export default function Home() {
               </div>
             </div>
             <Fountain />
+          </div>
+        </section>
+
+        {/* PROOF: what clients said when the work landed */}
+        <section className="band band--proof">
+          <div className="band__in">
+            <header className="band__head">
+              <p className="kicker">In their words</p>
+              <h2 className="band__title">What clients said</h2>
+              <p className="band__sub">Three threads from shared Slack channels, recreated with private details masked.</p>
+            </header>
+            <ClientThreads />
           </div>
         </section>
 

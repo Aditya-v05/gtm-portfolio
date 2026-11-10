@@ -64,7 +64,8 @@ export default function Stream() {
 
       // 2. out under the bowl, down into the first catch basin
       const ex = g(fr.left + FG.exit[0] * k) - 1;
-      const y1 = g(wr.top + sy + 30);
+      const first = document.querySelector<HTMLElement>(".band--proof") ?? work;
+      const y1 = g(first.getBoundingClientRect().top + sy + 30);
       fall(ex, g(fr.bottom + sy) - 1, y1);
       basin(ex + 1, y1);
       // 3. the carved channel, left to the head of the stair

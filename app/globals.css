@@ -2597,3 +2597,57 @@ h1, h2, h3,
 .ask__sub { font-family: var(--display); font-style: normal; font-size: 1.6rem; text-transform: uppercase; letter-spacing: 0.04em; }
 .contact__mail { font-family: var(--display); font-size: 1.9rem; letter-spacing: 0.04em; }
 @media (max-width: 760px) { .rest__row { grid-template-columns: minmax(0, 1fr); } }
+
+/* ================= round eight ================= */
+/* the project sheet: keep everything inside the double border */
+.sheet.spin__back { padding: 12px; outline-offset: -9px; }
+.sheet .spin__scroll { height: 100%; }
+
+/* the statue, with flowing water over its painted pour */
+.fountain { position: absolute; }
+.fountain img { display: block; width: 100%; height: auto; }
+.fountain__pour { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.fountain__pour path {
+  fill: none; stroke: #f4f7ff; stroke-width: 7; stroke-linecap: butt;
+  stroke-dasharray: 16 30 8 44; animation: pour 0.9s linear infinite;
+}
+.fountain__pour path:nth-child(2) { stroke: #8aa5e0; stroke-dasharray: 22 40 10 26; }
+.fountain__drip { stroke-width: 12 !important; }
+@keyframes pour { to { stroke-dashoffset: -98; } }
+
+@media (prefers-reduced-motion: reduce) { .fountain__pour path { animation: none; } }
+
+/* ================= client threads (Slack, in its own visual language) ================= */
+.band--proof { padding-top: 2rem; }
+.threads { --font-m: var(--mono); --font-b: var(--sans); --font-d: var(--sans); --accent: #2f4f9e; --accent-2: #44507a; --shadow-exhibit: 0 0 0 1px rgba(31, 43, 77, 0.12), 0 18px 40px -26px rgba(31, 43, 77, 0.5); zoom: 1.2; font-family: var(--sans); }
+.threads__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px 22px; align-items: start; }
+.threads .exh__note { display: flex; align-items: flex-start; gap: 8px; margin: 12px 4px 0; font-style: italic; font-size: 14px; line-height: 1.4; color: var(--accent-2); }
+.threads .exh__note svg { width: 30px; height: 21px; flex: none; color: var(--accent); opacity: 0.7; margin-top: 2px; }
+.threads .exh__note svg{ width:30px; height:21px; flex:none; color:var(--accent); opacity:.7; margin-top:2px; }
+.threads .exh--b .exh__note{ margin-left:18px; }
+.threads .exh--c .exh__note{ margin-left:8px; }
+.threads .slack{ border-radius:10px; background:#fff; overflow:hidden; box-shadow:var(--shadow-exhibit); }
+.threads .slack__bar{ display:flex; align-items:center; gap:7px; padding:8px 14px; border-bottom:1px solid #EDEDED; background:#F7F6F7; }
+.threads .slack__bar .chan{ font-weight:700; font-size:11.5px; color:#1d1c1d; }
+.threads .slack__bar .chan .lk{ color:#8a8a8a; font-weight:400; }
+.threads .slack__bar .ext{ margin-left:auto; font-family:var(--font-m); font-size:8px; color:#aba79f; white-space:nowrap; }
+.threads .slmsg{ display:grid; grid-template-columns:30px 1fr; gap:9px; padding:8px 14px; }
+.threads .slmsg + .slmsg{ padding-top:2px; }
+.threads .slav{ width:30px; height:30px; border-radius:7px; color:#fff; font-weight:700; font-size:11px; display:flex; align-items:center; justify-content:center; flex:none; font-family:var(--font-b); }
+.threads .slhead{ display:flex; align-items:baseline; gap:7px; }
+.threads .slname{ font-weight:700; font-size:12px; color:#1d1c1d; }
+.threads .sltime{ font-size:9.5px; color:#9a9a9a; }
+.threads .sltext{ font-size:12px; color:#1d1c1d; line-height:1.45; margin-top:1px; }
+.threads .sltext b{ font-weight:700; }
+.threads .slred{ display:inline-block; background:#23211f; border-radius:3px; height:11px; line-height:11px; vertical-align:-1px; }
+.threads .slfiles{ display:flex; gap:7px; margin-top:7px; flex-wrap:wrap; }
+.threads .slfile{ display:flex; align-items:center; gap:7px; border:1px solid #E4E4E4; border-radius:8px; padding:5px 9px; }
+.threads .slfile .ic{ width:22px; height:22px; border-radius:5px; background:#1A7F5A; color:#fff; font-weight:700; font-size:8.5px; display:flex; align-items:center; justify-content:center; }
+.threads .slfile .fn{ font-size:10px; font-weight:600; color:#1d1c1d; line-height:1.2; }
+.threads .slfile .ft{ font-size:8px; color:#9a9a9a; }
+.threads .slreact{ display:inline-flex; align-items:center; gap:5px; margin-top:6px; border:1px solid #cfe6f4; background:#e8f3fb; border-radius:11px; padding:1px 8px; font-size:10px; color:#3a3a3a; }
+@media (max-width: 900px) { .threads__grid { grid-template-columns: minmax(0, 1fr); } }
+
+.fountain__pour path { stroke: #ffffff; stroke-width: 6; }
+.fountain__pour path:nth-child(2) { stroke: #4a63b0; }
+.band--proof { padding-top: 5rem; }

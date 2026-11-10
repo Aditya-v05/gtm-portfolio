@@ -53,8 +53,9 @@ const skyMat = () =>
         vec3 moonDir = normalize(vec3(0.55, 0.32, -1.0));
         float m = max(dot(vDir, moonDir), 0.0);
         col = mix(col, vec3(0.92, 0.89, 0.8), smoothstep(0.9988, 0.9991, m) * uNight);
-        vec2 g = floor(vDir.xz / max(vDir.y, 0.08) * 80.0);
-        col += step(0.996, hash(g)) * smoothstep(0.06, 0.3, h) * uNight * 0.55;
+        // stars: single pixels, sparse, a few of them brighter
+        float st = hash(floor(gl_FragCoord.xy));
+        col += (step(0.9972, st) * 0.45 + step(0.9993, st) * 0.4) * smoothstep(0.05, 0.25, h) * uNight;
         // alpha 0.6 marks open sky for the outline pass in engine.ts
         gl_FragColor = vec4(col, 0.6);
       }`,
@@ -719,20 +720,37 @@ export function buildCity(): City {
     // boats
     for (let i = 0; i < 6; i++) {
       const b = new THREE.Group();
-      const hull = new THREE.Mesh(new THREE.BoxGeometry(5, 1.2, 1.8).translate(0, 0.6, 0), lambert(i % 2 ? "#fff9dc" : "#5574c2"));
-      const mast = new THREE.Mesh(new THREE.BoxGeometry(0.2, 5, 0.2).translate(0, 3.5, 0), lambert("#7b6650"));
-      const sailShape = new THREE.Shape([new THREE.Vector2(0, 0), new THREE.Vector2(2.6, 0), new THREE.Vector2(0, 4)]);
-      const sail = new THREE.Mesh(new THREE.ShapeGeometry(sailShape), new THREE.MeshLambertMaterial({ color: C("#fbf1c4"), side: THREE.DoubleSide }));
-      sail.position.set(0.15, 1.4, 0);
-      b.add(hull, mast, sail);
+      // a small sailing boat: a hull with a raked bow and a raised stern, a
+      // rail stripe, a mast, a mainsail and a jib
+      const side = new THREE.Shape();
+      side.moveTo(-2.9, 1.5);
+      side.lineTo(-2.3, 0.15);
+      side.lineTo(-1.6, -0.25);
+      side.lineTo(1.6, -0.25);
+      side.lineTo(2.6, 0.4);
+      side.lineTo(3.7, 1.45);
+      side.lineTo(2.4, 1.05);
+      side.lineTo(-2.2, 1.05);
+      side.closePath();
+      const hullCol = i % 2 ? "#fff9dc" : "#2f4a94";
+      const hull = new THREE.Mesh(new THREE.ExtrudeGeometry(side, { depth: 1.7, bevelEnabled: false }).translate(0, 0, -0.85), lambert(hullCol));
+      const rail = new THREE.Mesh(new THREE.BoxGeometry(4.7, 0.22, 1.8).translate(0.1, 1.0, 0), lambert(i % 2 ? "#2f4a94" : "#e3b21c"));
+      const mast = new THREE.Mesh(new THREE.BoxGeometry(0.18, 6.4, 0.18).translate(0.2, 4.2, 0), lambert("#7b6650"));
+      const cloth = new THREE.MeshBasicMaterial({ color: C("#fff9dc"), side: THREE.DoubleSide });
+      const main = new THREE.Mesh(new THREE.ShapeGeometry(new THREE.Shape([new THREE.Vector2(0, 0), new THREE.Vector2(-2.7, 0.15), new THREE.Vector2(0, 5.2)])), cloth);
+      main.position.set(0.05, 1.7, 0);
+      const jib = new THREE.Mesh(new THREE.ShapeGeometry(new THREE.Shape([new THREE.Vector2(0, 0), new THREE.Vector2(2.9, 0), new THREE.Vector2(0, 4.6)])), cloth);
+      jib.position.set(0.4, 1.55, 0);
+      const flag = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.4, 0.06).translate(0.7, 7.2, 0), lambert("#c8673a"));
+      b.add(hull, rail, mast, main, jib, flag);
       b.position.set(E + 30 + i * 15 + r() * 6, 0, -6 + r() * 26);
       b.rotation.y = r() * 0.6 - 0.3;
       b.userData.ph = r() * 6;
       // one boat sits close, looking out over the harbour
       if (i === 0) {
-        b.position.set(E + 66, 0, 26);
-        b.rotation.y = 0.5;
-        b.scale.setScalar(1.3);
+        b.position.set(E + 62, 0, 30);
+        b.rotation.y = 0.35;
+        b.scale.setScalar(2);
       }
       boats.push(b);
       root.add(b);
