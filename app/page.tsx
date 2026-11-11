@@ -11,9 +11,8 @@ import Fountain from "@/components/Fountain";
 import Stream from "@/components/Stream";
 import fs from "node:fs";
 import path from "node:path";
-import { SOCIALS } from "@/lib/socials";
 import Loader from "@/components/Loader";
-import Sea from "@/components/sea/Sea";
+import Footer from "@/components/Footer";
 
 // which gods already have card art in public/cards
 function cardArt(): string[] {
@@ -28,11 +27,6 @@ function cardArt(): string[] {
 }
 
 // footer links, each with a small pixel icon drawn on a 12px grid
-const LINKS: [string, string, string][] = [
-  ...SOCIALS,
-  ["Writing", "/writing", "M2 1h7v1h1v9H3v-1H2zM4 3v1h4V3zM4 5v1h4V5zM4 7v1h3V7z"],
-];
-
 const CLIENTS = ["Brex", "Rho", "Peec AI", "Warp", "Hyperbound", "Qashio"];
 
 // The homepage has a rhythm: the world (the hero), the engineer (what he
@@ -48,7 +42,7 @@ export default function Home() {
       <EvidenceZoom />
       <SiteNav variant="home" />
 
-      <main className="page">
+      <main id="top" className="page">
         {/* 01 THE WORLD: the name, and the city below it. Nothing else. */}
         <section className="hero" data-district="hero" data-fade="0,0,140,0" aria-label="Aditya Venkatesan">
           <div className="hero__sky" aria-hidden="true">
@@ -173,30 +167,8 @@ export default function Home() {
         </section>
 
         {/* 05 THE ENDING: the aqueduct again, from below, water still flowing */}
-        <section id="contact" className="scene scene--ending" aria-labelledby="contact-title">
-          <Sea />
-          <div className="scene__in">
-            <h2 id="contact-title" className="ask">Got an interesting GTM problem?</h2>
-            <p className="ask__sub">I&apos;d love to hear about it.</p>
-            <p className="contact">
-              <a className="contact__mail" href="mailto:adityaspark05@gmail.com">adityaspark05@gmail.com</a>
-            </p>
-          </div>
-          {/* the stone quay at the water's edge */}
-          <footer className="quay">
-            <span>© 2026 Aditya Venkatesan</span>
-            <span className="quay__links">
-              {LINKS.map(([name, href, d]) => (
-                <a key={name} href={href} {...(href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}>
-                  <svg viewBox="0 0 12 12" shapeRendering="crispEdges" aria-hidden="true">
-                    <path d={d} />
-                  </svg>
-                  {name}
-                </a>
-              ))}
-            </span>
-          </footer>
-        </section>
+        {/* 04 THE ENDING: a whole page of sea */}
+        <Footer />
       </main>
     </>
   );

@@ -2,23 +2,27 @@
 
 import { useEffect, useRef } from "react";
 import { SEA_FRAG } from "./shader";
+import { seaHorizon } from "@/lib/horizon";
 
-// The closing scene's sea: a small WebGL canvas behind the contact text, drawn at one art pixel per four
-// screen pixels and scaled up hard. It only runs while it is on screen, steps at twelve frames a second like
-// the rest of the pixel world, and every so often the kraken comes for the boat. With reduced motion it is a
-// single still frame; without WebGL the section keeps its plain background.
+// The closing scene's sea: a WebGL canvas across the whole section, clear above the horizon so the page and the
+// big name show through, drawn at one art pixel per four screen pixels and scaled up hard. It only runs while it
+// is on screen and steps at twelve frames a second like the rest of the pixel world. A few seconds after it comes
+// into view the kraken takes the boat, and again every minute or two; clicking the boat calls it at once. With
+// reduced motion it is a single still frame; without WebGL the section keeps its plain background.
 
-const PX = 4; // screen pixels per art pixel; finer on narrow screens, so the boat and the kraken still fit
 const FPS = 12;
 const ATTACK = 14; // seconds the kraken takes
+const OUT = 46; // how far out the boat sits, in metres; the camera is 96 metres back from the origin, 11 up
+const CAM = { y: -96, z: 11, f: 1.778 };
 
 export default function Sea() {
   const ref = useRef<HTMLCanvasElement>(null);
+  const boatBtn = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) return;
-    const gl = canvas.getContext("webgl", { antialias: false, alpha: false, powerPreference: "low-power" });
+    const canvas = ref.current, btn = boatBtn.current, section = canvas?.parentElement;
+    if (!canvas || !btn || !section) return;
+    const gl = canvas.getContext("webgl", { antialias: false, alpha: true, premultipliedAlpha: true, powerPreference: "low-power" });
     if (!gl) return;
     const sh = (type: number, src: string) => {
       const s = gl.createShader(type)!;
@@ -41,17 +45,18 @@ export default function Sea() {
     gl.enableVertexAttribArray(a);
     gl.vertexAttribPointer(a, 2, gl.FLOAT, false, 0, 0);
     const u = (n: string) => gl.getUniformLocation(pr, n);
-    const uR = u("R"), uT = u("T"), uK = u("KR"), uP = u("PITCH"), uB = u("BX"), uN = u("NIGHT");
+    const uR = u("R"), uT = u("T"), uK = u("KR"), uP = u("PITCH"), uBX = u("BX"), uBY = u("BY"), uN = u("NIGHT");
+    gl.clearColor(0, 0, 0, 0);
     canvas.dataset.ready = "1";
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const q = new URLSearchParams(location.search);
-    // every visit starts somewhere else in the water's life; ?sea=<seconds>&kraken=<0..1> pins a frame for checking
+    // every visit starts somewhere else in the water's life; ?sea=<seconds>&kraken=<0..1> pins one still frame for checking
     const start = q.has("sea") ? Number(q.get("sea")) : Math.random() * 5000;
     const pinned = q.has("sea");
 
     const size = () => {
-      const px = canvas.clientWidth < 700 ? 2.5 : PX;
+      const px = canvas.clientWidth < 700 ? 2.5 : 4; // screen pixels per art pixel; finer on narrow screens, so everything still fits
       const w = Math.max(40, Math.round(canvas.clientWidth / px)), h = Math.max(40, Math.round(canvas.clientHeight / px));
       if (canvas.width !== w || canvas.height !== h) {
         canvas.width = w;
@@ -59,39 +64,50 @@ export default function Sea() {
       }
       gl.viewport(0, 0, w, h);
       gl.uniform2f(uR, w, h);
-      gl.uniform1f(uP, 0.03); // the horizon a little below the middle, under the contact text
-      // keep the boat in view on narrow screens: it sits 88 metres out, so this is how wide the view is there
-      const half = (88 * (w / h)) / 2 / 1.778;
-      // on a wide screen it sits right of centre; on a narrow one left of centre, to leave room for what comes up beside it
-      gl.uniform1f(uB, w / h < 1 ? -half * 0.45 : Math.min(30, half * 0.42));
+      // tilt the camera so the horizon lands where the layout wants it
+      const horizon = seaHorizon(section), pitch = (horizon / section.offsetHeight - 0.5) / CAM.f;
+      section.style.setProperty("--horizon", `${horizon}px`);
+      gl.uniform1f(uP, pitch);
+      // the boat: right of centre on a wide screen, left of centre on a narrow one to leave room for what comes up beside it
+      const half = ((OUT - CAM.y) * (w / h)) / 2 / CAM.f, bx = w / h < 1 ? -half * 0.45 : Math.min(34, half * 0.34);
+      gl.uniform1f(uBX, bx);
+      gl.uniform1f(uBY, OUT);
+      // and an unseen button over it. Same projection as the shader: forward is (0, 1, pitch), up is (0, -pitch, 1).
+      const n = Math.hypot(1, pitch), by = OUT - CAM.y, bz = -CAM.z, dz = (by + bz * pitch) / n, up = (-by * pitch + bz) / n;
+      const ax = (bx / dz) * CAM.f * h + w / 2, ay = h / 2 - (up / dz) * CAM.f * h;
+      btn.style.left = `${ax * px - 36}px`;
+      btn.style.top = `${ay * px - 76}px`;
     };
 
-    let clock = 0, attackAt = -1, nextAttack = 16 + Math.random() * 22, last = -1, raf = 0, visible = false;
+    let clock = 0, attackAt = -1, nextAttack = 5 + Math.random() * 4, last = -1, raf = 0, visible = false;
     const draw = (t: number, kr: number) => {
       gl.uniform1f(uT, t);
       gl.uniform1f(uK, kr);
       gl.uniform1f(uN, document.documentElement.dataset.theme === "dark" ? 1 : 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     };
-    const still = () => draw(start, q.has("kraken") ? Number(q.get("kraken")) : -1);
+    const still = () => draw(start + clock, q.has("kraken") ? Number(q.get("kraken")) : attackAt < 0 ? -1 : (clock - attackAt) / ATTACK);
     const tick = (ms: number) => {
       raf = requestAnimationFrame(tick);
       const f = Math.floor((ms / 1000) * FPS);
       if (f === last) return;
-      // the sea's own clock only runs while it is being watched
-      clock += last < 0 ? 0 : Math.min(0.25, (f - last) / FPS);
+      clock += last < 0 ? 0 : Math.min(0.25, (f - last) / FPS); // the sea's own clock only runs while it is being watched
       last = f;
       if (attackAt >= 0 && clock - attackAt > ATTACK) attackAt = -1;
       if (attackAt < 0 && clock > nextAttack) {
         attackAt = clock;
-        nextAttack = clock + ATTACK + 45 + Math.random() * 60;
+        nextAttack = clock + ATTACK + 50 + Math.random() * 60;
       }
-      draw(start + clock, attackAt < 0 ? -1 : (clock - attackAt) / ATTACK);
+      still();
     };
     const run = () => {
       cancelAnimationFrame(raf);
       last = -1;
       if (visible && !reduced && !pinned && !document.hidden) raf = requestAnimationFrame(tick);
+    };
+    const wake = () => {
+      if (attackAt < 0 && !reduced && !pinned) attackAt = clock;
     };
 
     size();
@@ -100,25 +116,30 @@ export default function Sea() {
       size();
       still();
     });
-    ro.observe(canvas);
+    ro.observe(section);
     const io = new IntersectionObserver(([e]) => {
       visible = e.isIntersecting;
       run();
     });
     io.observe(canvas);
-    const onTheme = () => {
-      if (!visible || reduced || pinned) still();
-    };
+    const onTheme = () => still();
     window.addEventListener("themechange", onTheme);
     document.addEventListener("visibilitychange", run);
+    btn.addEventListener("click", wake);
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
       io.disconnect();
       window.removeEventListener("themechange", onTheme);
       document.removeEventListener("visibilitychange", run);
+      btn.removeEventListener("click", wake);
     };
   }, []);
 
-  return <canvas ref={ref} className="sea" aria-hidden="true" />;
+  return (
+    <>
+      <canvas ref={ref} className="sea" aria-hidden="true" />
+      <button ref={boatBtn} className="sea__boat" aria-label="Wake the kraken" tabIndex={-1} />
+    </>
+  );
 }

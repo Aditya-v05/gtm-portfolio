@@ -1,12 +1,13 @@
 // The sea of the closing scene, as one fragment shader. It is drawn fresh every frame at a low resolution and
 // scaled up with hard pixels: travelling wave trains on big random swells, foam, glitter, a boat that rides
-// them, and now and then a kraken. Nothing is recorded, so it never repeats.
+// them, and now and then a kraken. The sky is left transparent. Nothing is recorded, so it never repeats.
 export const SEA_FRAG = /* glsl */ `precision highp float;
 uniform vec2 R;        // size of the picture in art pixels
 uniform float T;       // seconds
 uniform float KR;      // the kraken: -1 away, else 0..1 through its attack
 uniform float PITCH;   // camera tilt: positive looks up, which lowers the horizon in the frame
 uniform float BX;      // how far right of centre the boat sits, in metres
+uniform float BY;      // how far out the boat sits, in metres
 uniform float NIGHT;   // 0 day, 1 night
 const float GL = 1.0;
 float hash(vec2 p) { p = fract(p * vec2(0.1031, 0.1030)); p += dot(p, p.yx + 33.33); return fract((p.x + p.y) * p.x); }
@@ -95,7 +96,7 @@ vec3 proj(vec3 w) {
 }
 const vec3 INK = vec3(0.122, 0.169, 0.302), CREAM = vec3(1.0, 0.973, 0.847), PALE = vec3(0.863, 0.894, 0.961);
 const vec3 CLAY = vec3(0.776, 0.384, 0.235), CLAYL = vec3(0.898, 0.557, 0.380), CLAYD = vec3(0.580, 0.251, 0.149), CLAYE = vec3(0.337, 0.133, 0.094);
-#define BOAT vec2(BX, -8.0)
+#define BOAT vec2(BX, BY)
 // The kraken, from KR running 0..1:
 //   0.00 the water churns   0.08 the head and three arms come up   0.24 the arms rear back
 //   0.30 they slam down across the hull and round the mast   0.36 it thrashes the boat, and the mast snaps
@@ -161,7 +162,7 @@ vec4 kraken(vec2 frag, float tWater) {
   if (KR < 0.0) return vec4(0.0);
   vec3 P = proj(vec3(BOAT, H(BOAT))); if (tWater < P.z - 3.0) return vec4(0.0);
   vec2 O = floor(P.xy) + vec2(0.0, -3.0), fp = floor(frag), c = fp - O;          // O: the boat's waterline
-  if (c.y < 0.0 || abs(c.x) > 74.0 || c.y > 84.0) return vec4(0.0);
+  if (c.y < 0.0 || abs(c.x) > 70.0 || c.y > 78.0) return vec4(0.0);
   float sink = kSink(); vec2 sh = kShake();
   // spray, in front of everything: churn, the slam, the thrashing, the plunge, and the boat coming back
   float sp = spray(c, 24.0, 4.0, 0.4 * smoothstep(0.0, 0.06, KR) * (1.0 - smoothstep(0.58, 0.8, KR)));
@@ -186,36 +187,27 @@ vec4 kraken(vec2 frag, float tWater) {
            smoothstep(0.29, 0.335, KR), smoothstep(0.13, 0.24, KR) * up, sink, seg);
   if (d <= 0.0) return flesh(d, seg);
   vec4 bt = boat(frag, tWater); if (bt.a > 0.0) return bt;
-  // The head, behind the boat and leaning over it: a swollen mantle on a thicker trunk, heavy brows drawn down
-  // over pale slit eyes, lit from the upper left so its underside and far side go dark.
-  float hr = smoothstep(0.08, 0.22, KR) * (1.0 - smoothstep(0.52, 0.62, KR)), th = kThrash();
-  vec2 h = c - vec2(34.0 - 4.0 * th + floor(1.5 * sin(T * 2.3)), 0.0) - sh * 0.6;
-  float full = floor(h.y + (1.0 - hr) * 40.0), lx = floor(h.x + full * 0.30);     // leans toward the boat as it rises
-  float e1 = length(vec2(lx, full - 24.0) / vec2(20.0, 15.0)), e2 = length(vec2(lx, full - 8.0) / vec2(15.0, 14.0));
-  if (hr > 0.02 && min(e1, e2) < 1.0) {
-    if (e1 > 0.915 && e2 > 0.89) return vec4(CLAYE, 1.0);
-    for (int k = 0; k < 2; k++) {
-      float sgn = k == 0 ? -1.0 : 1.0; vec2 d = vec2(lx - (k == 0 ? -9.0 : 1.0), full - 10.0);
-      float brow = floor(3.0 + sgn * d.x * 0.55 + 0.5);                          // each brow slopes down toward the middle
-      if (abs(d.x) <= 5.0 && d.y >= brow && d.y <= brow + 2.0) return vec4(CLAYE, 1.0);
-      if (abs(d.x) <= 3.0 && abs(d.y) <= 1.0 && d.y < brow) return vec4(d.y == 0.0 && abs(d.x) <= 2.0 ? INK : CREAM, 1.0);   // a slit pupil in a pale eye
-      if (abs(d.x) <= 5.0 && d.y >= -3.0 && d.y < brow) return vec4(CLAYD, 1.0);  // the socket, in the brow's shadow
-    }
-    if (abs(lx + 4.0) <= 1.0 && full >= 13.0 && full <= 17.0 && mod(full, 2.0) < 1.0) return vec4(CLAYD, 1.0);   // a furrow between the brows
-    float lit = (-lx * 0.55 + (full - 16.0) * 0.6) / 20.0;
-    if (full < 3.0) return vec4(CLAYD, 1.0);
-    if (hash(floor(vec2(lx, full) * 0.5) + 3.0) > 0.88 && lit > -0.2) return vec4(CLAYL, 1.0);            // mottling
-    return vec4(lit > 0.42 ? CLAYL : (lit > -0.22 ? CLAY : CLAYD), 1.0);
+  // the head, behind the boat: a great dome with heavy brows and pale eyes
+  float hr = smoothstep(0.08, 0.22, KR) * (1.0 - smoothstep(0.52, 0.62, KR));
+  vec2 h = c - vec2(27.0 + floor(1.5 * sin(T * 2.3)), 0.0) - sh * 0.5; float ry = 24.0 * hr + 0.001;
+  float e = length(h / vec2(16.0, ry));
+  if (hr > 0.02 && e < 1.0) {
+    float hy = h.y - (ry - 24.0);                                 // height on the full head, whatever part is out of the water
+    if (e > 1.0 - 1.4 / 16.0) return vec4(CLAYE, 1.0);
+    if (abs(abs(h.x + 1.0) - 6.0) <= 2.5 && hy >= 10.0 && hy <= 12.0) return vec4((abs(abs(h.x + 1.0) - 6.0) < 1.0 && hy < 12.0) ? CLAYE : CREAM, 1.0);   // eyes
+    if (abs(abs(h.x + 1.0) - 6.0) <= 3.5 && hy == floor(13.0 + (3.5 - abs(abs(h.x + 1.0) - 6.0)) * 0.5 * sign(abs(h.x + 1.0) - 6.0) * -1.0 + 0.5)) return vec4(CLAYE, 1.0);   // brows, angled in
+    float lit = dot(normalize(vec2(h.x / 16.0, h.y / 24.0 )), normalize(vec2(-0.6, 0.8))) * e;
+    if (hash(floor(h * 0.5) + 3.0) > 0.86 && e < 0.85) return vec4(CLAYL, 1.0);                           // mottling
+    return vec4(lit > 0.45 ? CLAYL : (lit > -0.25 ? CLAY : CLAYD), 1.0);
   }
   return vec4(0.0);
 }
 void main() {
   vec2 frag = gl_FragCoord.xy; vec3 rd = ray(frag);
-  vec3 sky = NIGHT > 0.5 ? vec3(0.059, 0.086, 0.188) : vec3(0.984, 0.945, 0.769);   // the page colour, so the sea has no top edge
   float t = hit(rd);
   if (t < 0.0) {
     vec4 c = kraken(frag, 1e6); if (c.a == 0.0) c = boat(frag, 1e6);
-    gl_FragColor = vec4(mix(sky, c.rgb, c.a), 1.0); return;
+    gl_FragColor = vec4(c.rgb * c.a, c.a); return;        // the sky is left clear: the page shows through
   }
   vec3 p = RO + rd * t;
   // is this pixel the top of a swell, with sky or much farther water right above it?

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { FOUNTAIN_GRID as FG } from "./Fountain";
+import { seaHorizon } from "@/lib/horizon";
 
 // The water system. It is one body of water that changes form as it travels:
 // it leaves the statue's basin, drops into a stone catch basin, runs along a
@@ -127,7 +128,8 @@ export default function Stream() {
       // 6. a second stair down the right, beside the cards
       stair(g(wr.bottom + sy - 70));
       // 7. the last pool spills over and falls into the sea of the closing scene
-      fall(x + side * 5, y + 3, g(er.top + sy + er.height * 0.8), true, true);
+      // it lands just below the horizon, where the sea in front hides the foot of the fall
+      fall(x + side * 5, y + 3, g(er.top + sy + seaHorizon(end) + 26), true, true);
       total = cost;
     };
 
