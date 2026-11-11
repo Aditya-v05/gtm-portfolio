@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Nunito, Newsreader, JetBrains_Mono } from "next/font/google";
+import { Nunito, Newsreader, JetBrains_Mono, Pixelify_Sans } from "next/font/google";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import ClickBurst from "@/components/ClickBurst";
@@ -14,6 +14,9 @@ const label = localFont({ src: "./fonts/Spartacus.ttf", variable: "--font-label-
 
 // serif, only for the dotted closing question
 const serif = Newsreader({ subsets: ["latin"], variable: "--font-serif-src" });
+
+// a readable pixel face, for the About plaque
+const pixel = Pixelify_Sans({ subsets: ["latin"], variable: "--font-pixel-src" });
 
 const text = Nunito({
   subsets: ["latin"],
@@ -72,7 +75,7 @@ export default function RootLayout({
       lang="en"
       data-theme="light"
       suppressHydrationWarning
-      className={`${display.variable} ${serif.variable} ${label.variable} ${text.variable} ${mono.variable}`}
+      className={`${display.variable} ${pixel.variable} ${serif.variable} ${label.variable} ${text.variable} ${mono.variable}`}
     >
       <head>
         <script

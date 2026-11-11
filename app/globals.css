@@ -3125,3 +3125,9 @@ body { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.
 [data-theme="dark"] .figure img { filter: drop-shadow(4px 4px 0 #0a0f24) drop-shadow(calc(8px + var(--sx)) 10px 0 rgba(0, 0, 0, 0.35)); }
 @media (max-width: 900px) { .about { grid-template-columns: minmax(0, 1fr); justify-items: center; } .figure { margin: 0 0 1rem; order: -1; } .figure img { height: 260px; } }
 @media (prefers-reduced-motion: reduce) { .figure img { transition: none; } .figure img.is-swapped { animation: none; } }
+
+/* the About plaque reads in a pixel face, like the rest of the world */
+.biostone p { font-family: var(--font-pixel-src), var(--sans); font-size: 1.12rem; line-height: 1.5; letter-spacing: 0.01em; }
+.biostone .biostone__lead { font-size: 1.32rem; line-height: 1.4; }
+.biostone .biostone__k { font-family: var(--label); font-size: 0.85rem; }
+.biostone .biostone__k { font-size: 1.05rem; line-height: 1.2; }
