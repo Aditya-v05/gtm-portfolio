@@ -11,6 +11,7 @@ import Fountain from "@/components/Fountain";
 import Stream from "@/components/Stream";
 import fs from "node:fs";
 import path from "node:path";
+import { SOCIALS } from "@/lib/socials";
 
 // which gods already have card art in public/cards
 function cardArt(): string[] {
@@ -25,10 +26,8 @@ function cardArt(): string[] {
 }
 
 // footer links, each with a small pixel icon drawn on a 12px grid
-const SOCIALS: [string, string, string][] = [
-  ["GitHub", "https://github.com/Aditya-v05", "M2 1h2v1h4V1h2v2h1v5h-1v1H9v2H8V9H7v2H5V9H4v2H3V9H2V8H1V3h1zM3 5v2h2V5zM7 5v2h2V5z"],
-  ["LinkedIn", "https://www.linkedin.com/in/aditya-venkatesan-26055531b/", "M0 0h12v12H0zM2 2v2h2V2zM2 5v5h2V5zM5 5v5h2V7h1v3h2V6H9V5z"],
-  ["X", "https://x.com/tsypsyqsy", "M1 1h3l2 3 3-3h2L7 5l4 6H8L6 8l-3 3H1l4-4z"],
+const LINKS: [string, string, string][] = [
+  ...SOCIALS,
   ["Writing", "/writing", "M2 1h7v1h1v9H3v-1H2zM4 3v1h4V3zM4 5v1h4V5zM4 7v1h3V7z"],
 ];
 
@@ -183,7 +182,7 @@ export default function Home() {
           <footer className="quay">
             <span>© 2026 Aditya Venkatesan</span>
             <span className="quay__links">
-              {SOCIALS.map(([name, href, d]) => (
+              {LINKS.map(([name, href, d]) => (
                 <a key={name} href={href} {...(href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}>
                   <svg viewBox="0 0 12 12" shapeRendering="crispEdges" aria-hidden="true">
                     <path d={d} />

@@ -3242,3 +3242,9 @@ a:focus-visible, button:focus-visible { filter: brightness(1.12); translate: 0 -
 .biostone .biostone__lead { color: #33230f; }
 /* the first letter, inked large in red ochre, as scribes did */
 [data-theme="dark"] .biostone { filter: brightness(0.86) drop-shadow(6px 8px 0 rgba(0, 0, 0, 0.35)); }
+
+/* About scroll: where to find him, inked along the bottom */
+.biostone__links { list-style: none; display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; margin: 1.2rem 0 0; padding: 1rem 0 0; border-top: 2px dashed rgba(90, 58, 26, 0.35); }
+.biostone__links a { display: inline-flex; align-items: center; gap: 0.45rem; font-family: var(--display); font-size: 1.3rem; letter-spacing: 0.04em; text-transform: uppercase; color: #6f2f14; text-decoration: none; transition: transform 0.15s, color 0.15s; }
+.biostone__links a:hover, .biostone__links a:focus-visible { color: #33230f; transform: translateY(-2px); }
+.biostone__links svg { width: 16px; height: 16px; fill: currentColor; fill-rule: evenodd; }

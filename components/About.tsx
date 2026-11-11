@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { SOCIALS } from "@/lib/socials";
 
 // About: the biography on a stone plaque, and a small Aditya waving from a
 // Greek terrace. The scene has depth, like the portrait in the user's
@@ -50,6 +51,18 @@ export default function About() {
             listening to hip-hop, or convincing myself that another three-hour research rabbit hole is
             completely necessary.
           </p>
+          <ul className="biostone__links" aria-label="Find me elsewhere">
+            {SOCIALS.map(([name, href, d]) => (
+              <li key={name}>
+                <a href={href} target="_blank" rel="noreferrer">
+                  <svg viewBox="0 0 12 12" shapeRendering="crispEdges" aria-hidden="true">
+                    <path d={d} />
+                  </svg>
+                  {name}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div ref={scene} className="scene3">
