@@ -914,62 +914,111 @@ export function buildCity(): City {
   hangs.count = hangN;
   root.add(houses, roofs, winLit, winDark, cypress, shrubs, ivy, hangs);
 
-  /* the whale: now and then it breaches out in the bay, hangs for a moment, and goes back in with a splash */
-  const whale = new THREE.Group();
-  const whaleFlex = { bow: { value: 0 }, tail: { value: 0 } };
-  {
-    // a spindle for the body, nose toward +x: turned from a profile, then laid on its side
-    const profile = [[0, -10], [0.45, -9.2], [0.7, -7.5], [1.2, -5], [2.1, -1.5], [2.9, 2.5], [3.1, 5.5], [2.8, 8], [1.7, 9.5], [0, 10]].map(([rad, y]) => new THREE.Vector2(rad, y));
-    const spindle = () => new THREE.LatheGeometry(profile, 10).rotateZ(-Math.PI / 2);
-    const part = (g: THREE.BufferGeometry) => g.toNonIndexed();
-    const dark = mergeGeometries([
-      part(spindle().scale(1, 0.92, 1)),
-      part(new THREE.BoxGeometry(4.4, 0.4, 3.0).rotateY(0.55).translate(-11.2, 0, 1.9)), // tail flukes
-      part(new THREE.BoxGeometry(4.4, 0.4, 3.0).rotateY(-0.55).translate(-11.2, 0, -1.9)),
-      part(new THREE.BoxGeometry(4.8, 0.35, 1.5).rotateY(-1.05).rotateX(0.95).translate(2.6, -2.6, 3.2)), // flippers, swept back and hanging down
-      part(new THREE.BoxGeometry(4.8, 0.35, 1.5).rotateY(1.05).rotateX(-0.95).translate(2.6, -2.6, -3.2)),
-      part(new THREE.BoxGeometry(1.6, 1.0, 0.35).translate(-3.5, 2.6, 0)), // the small fin on its back
-    ]);
-    // the body is not a stiff log: it bows along its length as it leaps, and the tail beats
-    const flex = (m: THREE.MeshLambertMaterial) => {
-      m.onBeforeCompile = (shader) => {
-        shader.uniforms.uBow = whaleFlex.bow;
-        shader.uniforms.uTail = whaleFlex.tail;
-        shader.vertexShader = "uniform float uBow, uTail;\n" + shader.vertexShader.replace(
-          "#include <begin_vertex>",
-          `#include <begin_vertex>
-           transformed.y += uBow * 0.02 * position.x * position.x;
-           float tl = min(position.x + 3.0, 0.0);
-           transformed.y += uTail * 0.05 * tl * tl;`
-        );
-      };
-      return m;
+  /* the whale: now and then it breaches out in the bay, hangs for a moment, and falls back with a splash.
+     It is a 2D pixel sprite, painted fresh for every step of the leap onto a small canvas and stood upright in
+     the water facing the hero camera, so the waves in front of it still hide its lower half. */
+  const WS = { w: 200, h: 112, water: 84, len: 64 }; // the sprite sheet in pixels, the row the sea sits at, the whale's length
+  const whaleCanvas = typeof document !== "undefined" ? document.createElement("canvas") : null;
+  if (whaleCanvas) { whaleCanvas.width = WS.w; whaleCanvas.height = WS.h; }
+  const whaleCtx = whaleCanvas?.getContext("2d") ?? null;
+  const whaleTex = new THREE.CanvasTexture(whaleCanvas ?? undefined);
+  whaleTex.magFilter = whaleTex.minFilter = THREE.NearestFilter;
+  whaleTex.generateMipmaps = false;
+  whaleTex.colorSpace = THREE.SRGBColorSpace;
+  const whale = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: whaleTex, alphaTest: 0.5, side: THREE.DoubleSide, fog: false }));
+  whale.visible = false;
+  whale.frustumCulled = false;
+  root.add(whale);
+  const HERO_EYE = { x: -70, z: 118 };
+  const INK = [27, 43, 90], BACK = [47, 74, 148], BACK_L = [85, 116, 194], BELLY = [220, 228, 245], GROOVE = [169, 189, 234], FOAM = [255, 249, 220], MIST = [197, 211, 240];
+  const rnd = (i: number) => { const v = Math.sin(i * 12.9898) * 43758.5453; return v - Math.floor(v); };
+  // paint one moment of the leap. u runs 0..1 through the air; age is seconds since it began (the splash outlasts the whale)
+  function paintWhale(u: number, age: number, leap: number) {
+    if (!whaleCtx) return;
+    const { w: W, h: H, water: WL, len: L } = WS;
+    const img = whaleCtx.createImageData(W, H), d = img.data;
+    const put = (x: number, y: number, c: number[]) => {
+      x = Math.round(x); y = Math.round(y);
+      if (x < 0 || y < 0 || x >= W || y >= H) return;
+      const i = (y * W + x) * 4; d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; d[i + 3] = 255;
     };
-    whale.add(new THREE.Mesh(dark, flex(lambert("#2f4a94"))));
-    // a pale belly: the same spindle, a little smaller and lower, so it only shows from underneath
-    whale.add(new THREE.Mesh(part(spindle().scale(0.95, 0.8, 0.9).translate(0.3, -0.8, 0)), flex(lambert("#dce4f5"))));
-    whale.scale.setScalar(1.9);
-    whale.rotation.order = "YZX";
-    whale.visible = false;
-    root.add(whale);
-  }
-  const SPRAY = 140;
-  const spray = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: C("#fff9dc") }), SPRAY);
-  spray.frustumCulled = false;
-  const drops = Array.from({ length: SPRAY }, () => ({ born: -99, life: 1, x: 0, z: 0, vx: 0, vy: 0, vz: 0, s: 1 }));
-  let dropAt = 0;
-  // throw n drops up from a point on the water: most low and wide, a few high
-  const burst = (now: number, x: number, z: number, n: number, power: number) => {
-    for (let i = 0; i < n; i++) {
-      const d = drops[dropAt++ % SPRAY], a = Math.random() * Math.PI * 2, out = (0.5 + Math.random() * 2.2) * power, up = Math.random();
-      Object.assign(d, { born: now, life: 0.8 + Math.random() * 0.9, x, z, vx: Math.cos(a) * out * 3, vz: Math.sin(a) * out * 3, vy: (4 + up * up * 15) * power, s: 1.0 + Math.random() * 1.3 });
+    const x0 = 48, span = W - 96, peak = 46, sunk = 14;
+    if (u < 1) {
+      // where it is, which way its nose points, how it bows, and how far it has rolled onto its back
+      const cx = x0 + span * u, cy = 4 * peak * u * (1 - u) - sunk;                       // cy is height above the water
+      const th = Math.atan2(4 * peak * (1 - 2 * u), span) * (u < 0.5 ? 1.2 : 0.85);
+      const co = Math.cos(th), si = Math.sin(th);
+      const bow = 0.5 * Math.cos(u * Math.PI) - 0.75 * Math.sin(u * Math.PI);
+      const roll = Math.min(1, Math.max(0, (u - 0.28) / 0.34)), rs = roll * roll * (3 - 2 * roll);
+      const half = (s: number) => {                                                        // half its thickness along the body, tail (-0.5) to nose (0.5)
+        const k = [[-0.5, 1.2], [-0.4, 2.2], [-0.2, 5.2], [0.05, 8.6], [0.28, 9.4], [0.42, 7.6], [0.5, 3.4]];
+        for (let i = 1; i < k.length; i++) if (s <= k[i][0]) { const f = (s - k[i - 1][0]) / (k[i][0] - k[i - 1][0]); return k[i - 1][1] + (k[i][1] - k[i - 1][1]) * f; }
+        return 3;
+      };
+      // a point on the whale: s along the body, n pixels toward its back; returned in sheet pixels
+      const at = (s: number, n: number): [number, number] => {
+        const lx = s * L, ly = n + bow * 13 * (4 * s * s - 0.35);
+        return [cx + lx * co - ly * si, WL - (cy + lx * si + ly * co)];
+      };
+      const tailBeat = Math.sin(age * 11) * 2.2;
+      // tail flukes: two blades opening out behind the tail stock
+      for (let k = 0; k < 13; k++) for (const side of [-1, 1]) for (let t = 0; t < 4; t++) {
+        const [fx, fy] = at(-0.5 - k * 0.011, side * (k * 0.95 + t * 0.6) + tailBeat * (k / 13));
+        put(fx, fy, k > 10 || t === 0 ? INK : BACK);
+      }
+      // the body, drawn as slices across the spine
+      for (let s = -0.5; s <= 0.5; s += 0.5 / L) {
+        const hh = half(s), beat = s < -0.2 ? tailBeat * ((-0.2 - s) / 0.3) ** 2 : 0;
+        const belly = hh * (2 * (0.42 + 0.58 * rs)) - hh;                                  // everything below this is belly; it grows as the whale rolls over
+        for (let n = -hh; n <= hh; n += 0.5) {
+          let c = n < belly ? BELLY : n > hh - 2.2 ? BACK_L : BACK;
+          if (n < belly && s > -0.08 && s < 0.44 && Math.round(n) % 3 === 0 && n < belly - 1) c = GROOVE;  // the long throat grooves
+          if (Math.abs(n) > hh - 0.8 || s < -0.5 + 1 / L || s > 0.5 - 1 / L) c = INK;
+          const [bx, by] = at(s, n + beat);
+          put(bx, by, c);
+        }
+      }
+      // mouth line and eye
+      for (let s = 0.2; s < 0.5; s += 0.5 / L) { const [mx, my] = at(s, -half(s) * 0.25 - (s - 0.2) * 4); put(mx, my, INK); }
+      { const [ex, ey] = at(0.2, -1.5); put(ex, ey, FOAM); put(ex + 1, ey, INK); }
+      // the long flipper, swinging out from under the chest and up as it rolls
+      const fa = -2.25 + rs * 2.9 + Math.sin(age * 5) * 0.2;
+      for (let k = 0; k < 24; k++) for (let t = -1.5; t <= 1.5; t += 0.5) {
+        const wdt = 1.6 * (1 - k / 30);
+        if (Math.abs(t) > wdt) continue;
+        const [px, py] = at(0.14 + (Math.cos(fa) * k - Math.sin(fa) * t) / L, -half(0.14) * (1 - rs * 1.6) + Math.sin(fa) * k + Math.cos(fa) * t);
+        put(px, py, Math.abs(t) > wdt - 0.6 || k > 22 ? INK : rs > 0.5 ? BELLY : BACK);
+      }
     }
-  };
+    // nothing of the whale shows below the waterline
+    for (let i = (WL + 1) * W * 4; i < d.length; i += 4) d[i + 3] = 0;
+    // spray: a burst where it comes out, a bigger one where it lands, each a fan of drops that rise and fall
+    const fan = (t: number, x: number, n: number, power: number, seed: number) => {
+      if (t < 0 || t > 1.5) return;
+      for (let i = 0; i < n; i++) {
+        const a = (rnd(seed + i) - 0.5) * 2.4, sp = (0.35 + rnd(seed + i * 3 + 1)) * power, life = 0.6 + rnd(seed + i * 7 + 2) * 0.9;
+        if (t > life) continue;
+        const px = x + Math.sin(a) * sp * 34 * t, py = WL - (Math.cos(a) * sp * 62 * t - 70 * t * t);
+        if (py > WL) continue;
+        const c = rnd(seed + i * 5) > 0.35 ? FOAM : MIST;
+        put(px, py, c); put(px + 1, py, c); if (rnd(seed + i * 11) > 0.4) { put(px, py - 1, c); put(px + 1, py - 1, c); }
+      }
+      // white water boiling at the surface, spreading out and thinning
+      const wide = 10 + 34 * Math.min(1, t * 1.4) * power;
+      for (let i = 0; i < 170 * power; i++) {
+        const fx = x + (rnd(seed + 900 + i) - 0.5) * 2 * wide, fy = WL - rnd(seed + 1300 + i + Math.floor(t * 12)) * 9 * (1 - t / 1.5);
+        if (rnd(seed + 1700 + i) > t / 1.5) { put(fx, fy, i % 4 ? FOAM : MIST); put(fx + 1, fy, i % 4 ? FOAM : MIST); }
+      }
+    };
+    fan(age - 0.09 * leap, x0 + span * 0.09, 70, 0.9, 3);
+    fan(age - 0.9 * leap, x0 + span * 0.92, 170, 1.45, 77);
+    whaleCtx.putImageData(img, 0, 0);
+    whaleTex.needsUpdate = true;
+  }
   // ?whale in the address makes it breach over and over, for checking
   const whaleLoop = typeof location !== "undefined" && /[?&]whale\b/.test(location.search);
-  const breach = { on: false, t0: 0, next: whaleLoop ? 1.2 : 7 + Math.random() * 6, x: 0, z: 0, a: 0, out: false, back: false };
-  const LEAP = 3.6, REACH = 24; // seconds in the air, and how far it travels
-  root.add(spray);
+  const breach = { on: false, t0: 0, next: whaleLoop ? 1.2 : 7 + Math.random() * 6 };
+  const LEAP = 3.3; // seconds in the air
 
   /* clouds: soft white puffs, drifting. They keep to the band of sky between the name and the aqueduct, so none crosses the words */
   const cloudGeo = mergeGeometries([0, 1, 2, 3, 4].map((i) =>
@@ -1044,38 +1093,28 @@ export function buildCity(): City {
       b.position.y = Math.round(Math.sin(tq * 1.2 + b.userData.ph) * 2) * 0.18;
       b.rotation.z = Math.sin(tq * 0.9 + b.userData.ph) * 0.04;
     }
-    // the whale: an arc out of the water and back, nose first, stepping with the sea
+    // the whale: pick a spot in the bay, stand the sprite there facing the hero camera, and repaint it each step
     if (!breach.on && t12 > breach.next) {
-      // somewhere in the open bay in front of the town, heading across the view one way or the other
-      Object.assign(breach, { on: true, t0: t12, x: 15 + Math.random() * 55, z: 30 + Math.random() * 34, a: (Math.random() < 0.5 ? 0 : Math.PI) + (Math.random() - 0.5) * 0.7, out: false, back: false });
+      breach.on = true;
+      breach.t0 = t12;
+      const x = -4 + Math.random() * 34, z = 28 + Math.random() * 34, dist = Math.hypot(x - HERO_EYE.x, z - HERO_EYE.z);
+      // one sprite pixel to one pixel of the scene: the hero is drawn at a quarter of the screen's resolution
+      const rows = (typeof window !== "undefined" ? window.innerHeight : 900) / 4, px = (2 * dist * Math.tan((22 * Math.PI) / 180)) / rows;
+      whale.scale.set(WS.w * px * (Math.random() < 0.5 ? 1 : -1), WS.h * px, 1);
+      whale.position.set(x, 1.1 + (WS.water - WS.h / 2) * px, z);
+      whale.rotation.y = Math.atan2(HERO_EYE.x - x, HERO_EYE.z - z);
     }
     if (breach.on) {
-      const u = (t12 - breach.t0) / LEAP, dx = Math.cos(breach.a), dz = -Math.sin(breach.a);
-      const at = (k: number) => [breach.x + dx * (k - 0.5) * REACH, breach.z + dz * (k - 0.5) * REACH] as const;
-      if (u >= 1) {
+      const age = t12 - breach.t0;
+      if (age > LEAP + 1.6) {
         breach.on = false;
         whale.visible = false;
-        breach.next = t12 + (whaleLoop ? 1.5 : 28 + Math.random() * 34);
+        breach.next = t12 + (whaleLoop ? 1.2 : 28 + Math.random() * 34);
       } else {
-        const [wx, wz] = at(u);
+        paintWhale(age / LEAP, age, LEAP);
         whale.visible = true;
-        // It comes out steep, rolls over in the air, and falls back on its side rather than diving in neatly.
-        whale.position.set(wx, 1 + 112 * u * (1 - u) - 12, wz);
-        const roll = 2.4 * u * u * (3 - 2 * u), nose = Math.atan2(112 * (1 - 2 * u), REACH) * (u < 0.5 ? 0.9 : 0.55);
-        whale.rotation.set(roll, breach.a, nose);
-        whaleFlex.bow.value = 0.55 * Math.cos(u * Math.PI) - 0.7 * Math.sin(u * Math.PI);   // bowed back as it launches, arched over at the top
-        whaleFlex.tail.value = Math.sin(t12 * 11) * 0.9;
-        if (!breach.out && u > 0.1) { breach.out = true; burst(t12, ...at(0.14), 40, 1.2); }
-        if (!breach.back && u > 0.84) { breach.back = true; burst(t12, ...at(0.88), SPRAY - 40, 1.9); }
       }
     }
-    drops.forEach((d, i) => {
-      const age = t12 - d.born;
-      if (age < 0 || age > d.life) m4.compose(v3.set(0, -50, 0), q.identity(), sc.setScalar(0));
-      else m4.compose(v3.set(d.x + d.vx * age, Math.max(0.6, 1 + d.vy * age - 16 * age * age), d.z + d.vz * age), q.identity(), sc.setScalar(d.s * (1 - age / d.life * 0.6)));
-      spray.setMatrixAt(i, m4);
-    });
-    spray.instanceMatrix.needsUpdate = true;
     // clouds drift east, wrapping around the viewer
     cloudSeed.forEach((c, i) => {
       const span = 1500;
