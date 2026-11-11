@@ -3131,3 +3131,52 @@ body { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.
 .biostone .biostone__lead { font-size: 1.32rem; line-height: 1.4; }
 .biostone .biostone__k { font-family: var(--label); font-size: 0.85rem; }
 .biostone .biostone__k { font-size: 1.05rem; line-height: 1.2; }
+
+/* no focus boxes anywhere: keyboard focus shows as a quiet lift instead */
+:focus, :focus-visible { outline: none !important; }
+a:focus-visible, button:focus-visible { filter: brightness(1.12); translate: 0 -2px; }
+
+/* the About plaque reads in a classical book face */
+.biostone p { font-family: var(--font-book-src), Georgia, serif; font-size: 1.24rem; line-height: 1.5; letter-spacing: 0; }
+.biostone .biostone__lead { font-size: 1.5rem; line-height: 1.35; }
+.biostone .biostone__k { font-family: var(--label); font-size: 1.05rem; }
+
+/* ================= the niche: Aditya standing out of a wall of cut stone ================= */
+.about { align-items: center; }
+.niche { --nx: 0; --ny: 0; position: relative; width: 340px; height: 470px; margin: 0 3rem 0 0; perspective: 900px; }
+/* the wall: courses of stone blocks with stepped corners; it drifts against the pointer */
+.niche__wall { position: absolute; inset: 40px 0 0 0;
+  translate: calc(var(--nx) * -6px) calc(var(--ny) * -4px); transition: translate 0.25s steps(5);
+  background:
+    repeating-linear-gradient(90deg, #f3ead2 0 12px, #cdbd96 12px 16px) 0 0 / 100% 8px no-repeat,
+    linear-gradient(#f3ead2, #f3ead2) 0 8px / 100% 8px no-repeat,
+    linear-gradient(#a8976f, #a8976f) 0 16px / 100% 4px no-repeat,
+    linear-gradient(#b7a67f, #b7a67f) 0 100% / 100% 12px no-repeat,
+    repeating-linear-gradient(0deg, transparent 0 44px, #c4b38c 44px 48px) 0 20px,
+    repeating-linear-gradient(90deg, transparent 0 80px, #c4b38c 80px 84px) 0 20px / 100% 96px,
+    repeating-linear-gradient(90deg, transparent 0 80px, #c4b38c 80px 84px) 42px 68px / 100% 96px,
+    #e2d4b0;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat-x, repeat-x, repeat;
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px), 0 8px, 4px 8px, 4px 4px, 8px 4px); }
+/* the arched recess, in shade, lit on its right reveal */
+.niche__arch { position: absolute; left: 50%; bottom: 40px; width: 200px; height: 330px; margin-left: -100px;
+  background: linear-gradient(90deg, #7d6f52 0 12px, transparent 12px), linear-gradient(#7d6f52 0 12px, transparent 12px), #9c8c68;
+  clip-path: polygon(0 100%, 0 30%, 4% 30%, 4% 21%, 10% 21%, 10% 13%, 18% 13%, 18% 7%, 30% 7%, 30% 2.5%, 42% 2.5%, 42% 0, 58% 0, 58% 2.5%, 70% 2.5%, 70% 7%, 82% 7%, 82% 13%, 90% 13%, 90% 21%, 96% 21%, 96% 30%, 100% 30%, 100% 100%); }
+/* the step he stands on */
+.niche__step { position: absolute; left: 50%; bottom: 12px; width: 250px; height: 28px; margin-left: -125px;
+  background: linear-gradient(#fffbe6, #fffbe6) 0 0 / 100% 4px no-repeat, linear-gradient(#b7a67f, #b7a67f) 0 100% / 100% 8px no-repeat, #efe4c6; box-shadow: 0 0 0 4px #8f7f5c; }
+/* he stands in front of it and leans toward the pointer */
+.niche__me { position: absolute; left: 50%; bottom: 26px; height: 440px; width: auto; margin-left: -92px; transform-origin: 50% 100%; user-select: none; -webkit-user-drag: none;
+  transform: translate(calc(var(--nx) * 12px), calc(var(--ny) * 6px)) rotateY(calc(var(--nx) * 14deg)) rotateX(calc(var(--ny) * -5deg)); transition: transform 0.25s steps(5);
+  filter: drop-shadow(4px 4px 0 #1b2b5a) drop-shadow(calc(10px - var(--nx) * 12px) 12px 0 rgba(60, 45, 20, 0.3)); }
+.niche__shadow { position: absolute; left: 50%; bottom: 30px; width: 150px; height: 12px; margin-left: -75px; background: rgba(60, 45, 20, 0.32); translate: calc(var(--nx) * -10px) 0; transition: translate 0.25s steps(5);
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, 100% 4px, 100% 8px, calc(100% - 8px) 8px, calc(100% - 8px) 12px, 8px 12px, 8px 8px, 0 8px, 0 4px, 8px 4px); }
+[data-theme="dark"] .niche__wall { filter: brightness(0.6) saturate(0.85); }
+[data-theme="dark"] .niche__me { filter: drop-shadow(4px 4px 0 #0a0f24) drop-shadow(calc(10px - var(--nx) * 12px) 12px 0 rgba(0, 0, 0, 0.4)); }
+@media (max-width: 900px) { .niche { order: -1; margin: 0 0 1.5rem; width: 280px; height: 390px; } .niche__me { height: 360px; margin-left: -75px; } .niche__arch { width: 170px; height: 270px; margin-left: -85px; } .niche__step { width: 210px; margin-left: -105px; } }
+@media (prefers-reduced-motion: reduce) { .niche__wall, .niche__me, .niche__shadow { transition: none; } }
+
+/* footer links with pixel icons */
+.quay__links a { display: inline-flex; align-items: center; gap: 0.45rem; }
+.quay__links svg { width: 18px; height: 18px; fill: currentColor; fill-rule: evenodd; filter: drop-shadow(0 2px 0 #dedbd3); }
+.quay a:focus-visible { translate: 0 -4px; }
