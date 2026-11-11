@@ -4,13 +4,16 @@ import { useEffect, useRef, useState } from "react";
 
 // The loading screen: a sheet of pixel water falls down the whole screen
 // while the 3D city loads, and nothing else shows. When the city is ready the
-// water falls away in columns, each letting go at its own moment, and what is
-// left behind is the name, exactly where the hero has it. Then the page
-// dissolves in behind it and the name never moves.
+// water falls away in columns, each letting go at its own moment, but it
+// stays inside the letters of the name: the name is left standing, made of
+// the same running water, exactly where the hero has it. Then the water in
+// the letters settles to the name's own blue and the page dissolves in
+// behind it. The name never moves.
 //
 // It is in the server markup and animated in CSS, so it runs before any
-// script does. It plays once per visit; add ?loader to the address to watch
-// it again, held a little longer.
+// script does. The falling streaks move by transform only, so they stay
+// smooth while the city is being built. It plays once per visit; add ?loader
+// to the address to watch it again, held a little longer.
 
 // each column lets go at its own time and falls at its own pace; seeded, so
 // the server and the browser agree
@@ -21,9 +24,9 @@ const DROPS = (() => {
   return Array.from({ length: COLS }, () => ({ d: Math.round(rnd() * rnd() * 520), t: Math.round(380 + rnd() * 260) }));
 })();
 
-const Name = () => (
+const Name = ({ wet = false }: { wet?: boolean }) => (
   // the same boxes as the hero, so the name lands in the same place
-  <div className="hero loader__hero" aria-hidden="true">
+  <div className={`hero loader__hero${wet ? " loader__wet" : ""}`} aria-hidden="true">
     <div className="hero__in">
       <div className="hero__name">
         <span className="pixelname__text">Aditya Venkatesan</span>
@@ -53,6 +56,9 @@ export default function Loader() {
     if (real && copies[0]) {
       const a = real.getBoundingClientRect(), b = copies[0].getBoundingClientRect();
       if (a.left !== b.left || a.top !== b.top) copies.forEach((c) => (c.style.transform = `translate(${a.left - b.left}px, ${a.top - b.top}px)`));
+      // line the water in the letters up with the water on the screen
+      el.style.setProperty("--bx", `${-Math.round(a.left)}px`);
+      el.style.setProperty("--by", `${-Math.round(a.top)}px`);
     }
 
     const leave = () => {
@@ -72,8 +78,8 @@ export default function Loader() {
           return later(leave, 400);
         }
         el.classList.add("is-drain"); // the columns let go, all gone by about 1.1s
-        later(() => el.classList.add("is-out"), 1200); // the name alone for a beat, then the page
-        later(leave, 1560);
+        later(() => el.classList.add("is-out"), 1250); // the name stands in water for a beat, then the page
+        later(leave, 1700);
       }, Math.max(0, (demo ? 2400 : 650) - performance.now()));
     };
 
@@ -92,9 +98,13 @@ export default function Loader() {
     <div ref={root} className="loader" role="status" aria-label="Loading">
       <div className="loader__bg" />
       <Name />
+      <Name wet />
       <div className="loader__water">
         {DROPS.map((c, i) => (
-          <i key={i} style={{ "--i": i, "--d": `${c.d}ms`, "--t": `${c.t}ms` } as React.CSSProperties} />
+          <i key={i} style={{ "--i": i, "--d": `${c.d}ms`, "--t": `${c.t}ms` } as React.CSSProperties}>
+            <b />
+            <b />
+          </i>
         ))}
       </div>
     </div>
