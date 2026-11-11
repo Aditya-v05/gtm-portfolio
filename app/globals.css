@@ -3322,3 +3322,15 @@ html:not(.js) .loader, html.no-loader .loader { display: none; }
 /* the copyright sits at the very bottom, on the water */
 .foot__c { position: absolute; left: 0; right: 0; bottom: 1.1rem; z-index: 2; margin: 0; text-align: center; font-family: var(--label); font-size: 0.74rem; letter-spacing: 0.22em; text-transform: uppercase; color: #fff8d8; text-shadow: 0 2px 0 rgba(27, 43, 90, 0.55); pointer-events: none; }
 @media (max-width: 820px) { .foot { padding-bottom: 48svh; } .foot__links { gap: 0.6rem 1.3rem; } .foot__links a { font-size: 1.15rem; } }
+
+/* ---- the project sheet's scroll bar: a pixel bar of its own, the same resting and hovered ---- */
+.spin__back, .spin__back * { scrollbar-width: auto; scrollbar-color: auto; }
+.spin__back ::-webkit-scrollbar, .spin__back::-webkit-scrollbar { width: 14px; height: 14px; }
+.spin__back ::-webkit-scrollbar-track, .spin__back::-webkit-scrollbar-track { background: #0f1630; box-shadow: inset 2px 0 0 #1b2b5a; }
+.spin__back ::-webkit-scrollbar-thumb, .spin__back::-webkit-scrollbar-thumb {
+  background: linear-gradient(#fbf1c4, #fbf1c4) 4px 4px / calc(100% - 8px) calc(100% - 8px) no-repeat, #c9ae8a;
+  border: 2px solid #0f1630; border-radius: 0;
+}
+.spin__back ::-webkit-scrollbar-thumb:hover, .spin__back::-webkit-scrollbar-thumb:hover { background: linear-gradient(#fff8d8, #fff8d8) 4px 4px / calc(100% - 8px) calc(100% - 8px) no-repeat, #e2c9a2; }
+.spin__back ::-webkit-scrollbar-corner, .spin__back::-webkit-scrollbar-corner { background: #0f1630; }
+.spin__back ::-webkit-scrollbar-button, .spin__back::-webkit-scrollbar-button { display: none; }
