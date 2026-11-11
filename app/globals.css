@@ -3135,3 +3135,17 @@ body { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.
   /* on phones the statue follows the words; it must never sit on top of them */
   .fountain { position: relative; right: auto; top: auto; display: block; width: 200px; margin: 2rem 0 0 auto; }
 }
+
+/* ================= the study, rendered from Blender ================= */
+.study-wrap { max-width: 750px; height: calc(708px * var(--s)); margin: -1rem -4rem 0 -9rem; }
+.study { width: 750px; height: 708px; }
+.study__canvas { width: 750px; height: 708px; }
+.study__tablet { width: 104px; padding: 12px 0 0 8px; transform: skewY(-26.565deg); color: #2f4a94; font-size: 0.8rem; gap: 6px; }
+.about__text { padding-top: 2.5rem; }
+/* small carved labels in the text column, so the words belong to the same place */
+.about__tag { display: inline-block; padding: 0.2rem 0.7rem 0.4rem; margin: 0 0 1.1rem !important; font-family: var(--label); font-size: 0.8rem !important; letter-spacing: 0.14em; color: #55524a !important; line-height: 1.2 !important; }
+.about__status { display: inline-grid; gap: 0.1rem; padding: 0.5rem 0.9rem 0.7rem; margin: 0.6rem 0 0 !important; font-family: var(--display); font-size: 1.35rem !important; line-height: 1 !important; text-transform: uppercase; color: #55524a !important; }
+.about__status span { font-family: var(--label); font-size: 0.7rem; letter-spacing: 0.14em; color: #6f6c63; }
+.about__tag:hover, .about__status:hover { transform: none; filter: none; }
+[data-theme="dark"] .study__canvas { filter: brightness(0.74) saturate(0.9); }
+@media (max-width: 1000px) { .study-wrap { margin: 1rem 0 0; } .about__text { padding-top: 0; } }
