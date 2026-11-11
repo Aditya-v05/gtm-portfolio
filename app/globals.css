@@ -3180,3 +3180,20 @@ a:focus-visible, button:focus-visible { filter: brightness(1.12); translate: 0 -
 .quay__links a { display: inline-flex; align-items: center; gap: 0.45rem; }
 .quay__links svg { width: 18px; height: 18px; fill: currentColor; fill-rule: evenodd; filter: drop-shadow(0 2px 0 #dedbd3); }
 .quay a:focus-visible { translate: 0 -4px; }
+
+/* ================= mini-me on the terrace, with depth ================= */
+.scene3 { --nx: 0; --ny: 0; position: relative; width: 380px; height: 475px; margin: 0 3rem 0 0; perspective: 1000px; }
+/* the backdrop sits in a frame with stepped corners and slides against the pointer */
+.scene3__frame { position: absolute; inset: 0; overflow: hidden; box-shadow: 0 0 0 4px #1b2b5a;
+  clip-path: polygon(8px -4px, calc(100% - 8px) -4px, calc(100% - 8px) 0, calc(100% - 4px) 0, calc(100% - 4px) 4px, calc(100% + 4px) 4px, calc(100% + 4px) calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%, calc(100% - 8px) 100%, calc(100% - 8px) calc(100% + 4px), 8px calc(100% + 4px), 8px 100%, 4px 100%, 4px calc(100% - 4px), -4px calc(100% - 4px), -4px 4px, 4px 4px, 4px 0, 8px 0); }
+.scene3__back { position: absolute; left: -6%; top: -6%; width: 112%; height: 112%; object-fit: cover; user-select: none;
+  transform: translate(calc(var(--nx) * -14px), calc(var(--ny) * -9px)); will-change: transform; }
+/* he stands on the terrace floor, in front of the frame, and can lean out past its edges */
+.scene3__me { position: absolute; left: 50%; bottom: 84px; height: 330px; width: auto; margin-left: -70px; transform-origin: 50% 100%; user-select: none; -webkit-user-drag: none; will-change: transform;
+  transform: translate(calc(var(--nx) * 26px), calc(var(--ny) * 10px)) rotateY(calc(var(--nx) * 20deg)) rotateX(calc(var(--ny) * -7deg)) scale(calc(1 + var(--ny) * 0.02));
+  filter: drop-shadow(3px 3px 0 #1b2b5a) drop-shadow(calc(8px - var(--nx) * 16px) 10px 0 rgba(27, 43, 90, 0.28)); }
+.scene3__shadow { position: absolute; left: 50%; bottom: 80px; width: 120px; height: 12px; margin-left: -60px; background: rgba(63, 60, 110, 0.4);
+  transform: translate(calc(var(--nx) * 8px), 0);
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, 100% 4px, 100% 8px, calc(100% - 8px) 8px, calc(100% - 8px) 12px, 8px 12px, 8px 8px, 0 8px, 0 4px, 8px 4px); }
+[data-theme="dark"] .scene3__back { filter: brightness(0.62) saturate(0.9); }
+@media (max-width: 900px) { .scene3 { order: -1; margin: 0 0 1.5rem; width: 300px; height: 375px; } .scene3__me { height: 260px; bottom: 66px; margin-left: -55px; } .scene3__shadow { bottom: 62px; } }

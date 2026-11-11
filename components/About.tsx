@@ -2,26 +2,36 @@
 
 import { useEffect, useRef } from "react";
 
-// About: the biography on a stone plaque, and a small Aditya waving from an
-// arched niche in a wall of cut stone. He stands in front of the niche, not
-// inside its frame: his hair and hand overlap the stonework, and as the
-// pointer moves he leans toward it while the wall shifts the other way, so
-// he seems to stand out from the page.
+// About: the biography on a stone plaque, and a small Aditya waving from a
+// Greek terrace. The scene has depth, like the portrait in the user's
+// reference recording: as the pointer moves he turns and slides toward it,
+// the terrace behind him slides the other way, and his shadow shifts. The
+// motion is eased every frame, so it glides and settles.
 export default function About() {
-  const niche = useRef<HTMLDivElement>(null);
+  const scene = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const el = niche.current;
+    const el = scene.current;
     if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches || !window.matchMedia("(hover: hover)").matches) return;
+    let tx = 0, ty = 0, x = 0, y = 0, raf = 0;
     const move = (e: PointerEvent) => {
       const r = el.getBoundingClientRect();
-      if (r.bottom < 0 || r.top > innerHeight) return;
-      const nx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (innerWidth / 2)));
-      const ny = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (innerHeight / 2)));
-      el.style.setProperty("--nx", nx.toFixed(3));
-      el.style.setProperty("--ny", ny.toFixed(3));
+      tx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (innerWidth * 0.45)));
+      ty = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (innerHeight * 0.6)));
+    };
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
+      if (Math.abs(tx - x) < 0.0005 && Math.abs(ty - y) < 0.0005) return;
+      x += (tx - x) * 0.09;
+      y += (ty - y) * 0.09;
+      el.style.setProperty("--nx", x.toFixed(4));
+      el.style.setProperty("--ny", y.toFixed(4));
     };
     window.addEventListener("pointermove", move, { passive: true });
-    return () => window.removeEventListener("pointermove", move);
+    raf = requestAnimationFrame(tick);
+    return () => {
+      window.removeEventListener("pointermove", move);
+      cancelAnimationFrame(raf);
+    };
   }, []);
 
   return (
@@ -42,14 +52,14 @@ export default function About() {
           </p>
         </div>
 
-        <div ref={niche} className="niche">
-          <div className="niche__wall" aria-hidden="true">
-            <span className="niche__arch" />
-            <span className="niche__step" />
+        <div ref={scene} className="scene3">
+          <div className="scene3__frame" aria-hidden="true">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="scene3__back" src="/art/terrace.png" alt="" draggable={false} />
           </div>
-          <span className="niche__shadow" aria-hidden="true" />
+          <span className="scene3__shadow" aria-hidden="true" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="niche__me" src="/horse/wave.png" alt="A small pixel-art Aditya, waving" width={223} height={532} draggable={false} />
+          <img className="scene3__me" src="/horse/wave.png" alt="A small pixel-art Aditya, waving" width={223} height={532} draggable={false} />
         </div>
       </div>
     </section>
