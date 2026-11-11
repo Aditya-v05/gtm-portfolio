@@ -89,7 +89,7 @@ export const AQUEDUCTS: Aqueduct[] = [
 ];
 
 /** where the hero aqueduct breaks and spills into the sea */
-export const WATERFALL_AT = { segment: 0, t: 0.48 };
+export const WATERFALL_AT = { segment: 0, t: 0.62 };
 
 /** where the ending aqueduct pours out into the harbour */
 export const HARBOUR_SPILL = { x: DISTRICTS.ending + 4, z: -6 };

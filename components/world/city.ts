@@ -63,57 +63,158 @@ const skyMat = () =>
       }`,
   });
 
-// the sea: pale toward the horizon, deeper close by, with drifting
-// horizontal wave lines like the reference
+// The sea. It is the same water as the closing scene: trains of long parallel crests travelling toward the
+// viewer, arriving in sets, on slow swells whose size is itself random from place to place. Near the camera it
+// is a real surface (a fine grid pushed up and down by the big waves, so they pass round the piers); far off it
+// is flat. The small waves only shade it. Colours come out as six flat tones with a thin dithered seam.
+// Sea space is (x, -z) of the world, so the swell runs toward the viewer.
+const SEA_WAVES = /* glsl */ `
+  uniform float uTime;
+  float shash(vec2 p) { p = fract(p * vec2(0.1031, 0.1030)); p += dot(p, p.yx + 33.33); return fract((p.x + p.y) * p.x); }
+  float svn(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+    return mix(mix(shash(i), shash(i + vec2(1, 0)), f.x), mix(shash(i + vec2(0, 1)), shash(i + vec2(1, 1)), f.x), f.y); }
+  float train(vec2 p, vec2 d, float L, float ph, float pk) {
+    float k = 6.2832 / L, w = sqrt(9.8 * k) * 0.62;
+    return pow(0.5 + 0.5 * sin(k * dot(p, d) - w * uTime + ph), pk);
+  }
+  const vec2 D0 = vec2(0.287, -0.958);
+  vec2 srot(vec2 v, float a) { float c = cos(a), s = sin(a); return vec2(v.x * c - v.y * s, v.x * s + v.y * c); }
+  float sets(vec2 p) { return 0.35 + 1.05 * svn((p - D0 * uTime * 3.0) / 130.0 + 7.3); }
+  float bend(vec2 p) { return 2.6 * svn(p / 85.0 + vec2(0.013, -0.02) * uTime + 2.1) + 1.1 * svn(p / 31.0 + vec2(-0.02, 0.011) * uTime + 9.4); }
+  // the waves big enough to move the surface
+  float Hbig(vec2 p) {
+    float b = bend(p), e = sets(p);
+    float h = 0.92 * e * (2.0 * train(p, D0, 62.0, b, 1.8) - 1.0);
+    h += 0.5 * e * (2.0 * train(p, srot(D0, 0.16), 39.0, b * 0.8 + 1.7, 1.6) - 1.0);
+    h += 0.27 * (2.0 * train(p, srot(D0, -0.21), 25.0, b * 0.6 + 4.1, 1.4) - 1.0);
+    float big = 0.12 + 1.5 * pow(svn(p / 230.0 + vec2(-0.012, 0.007) * uTime + 21.3), 1.6);
+    float mid = 0.2 + 1.3 * svn(p / 140.0 + vec2(0.009, -0.014) * uTime + 4.9);
+    h += 1.0 * big * (2.0 * svn(p / 66.0 + vec2(-0.045, 0.012) * uTime + 3.7) - 1.0);
+    h += 0.55 * mid * (2.0 * svn(p / 37.0 + vec2(-0.075, -0.02) * uTime + 11.1) - 1.0);
+    return clamp(h, -2.5, 3.0);
+  }
+  // and with the chop on top, for shading
+  float Hall(vec2 p) {
+    return Hbig(p) + 0.18 * (2.0 * train(p, srot(D0, 0.30), 15.5, 2.9, 1.0) - 1.0)
+      + 0.1 * (2.0 * train(p, srot(D0, -0.11), 9.3, 0.4, 1.0) - 1.0) + 0.05 * (2.0 * train(p, srot(D0, 0.42), 5.6, 5.2, 1.0) - 1.0);
+  }`;
+const SEA_DAY = ["#3f5cab", "#5574c2", "#6f8ed4", "#8aa5e0", "#c5d3f0", "#fff9dc"];
+const SEA_NIGHT = ["#162044", "#212d58", "#2a3868", "#34457a", "#4b62a2", "#e9e4cf"];
 const seaMat = () =>
   new THREE.ShaderMaterial({
     fog: false,
     uniforms: {
       uTime: { value: 0 },
-      uNear: { value: C("#6f8ed4") },
-      uFar: { value: C("#a9bdea") },
       uHaze: { value: C("#eef1fa") },
-      uLine: { value: C("#dce4f5") },
       uNight: { value: 0 },
+      uHole: { value: new THREE.Vector4(0, 0, 0, 0) }, // x0, z0, x1, z1 the flat sea leaves open for the fine grid
+      uRamp: { value: SEA_DAY.map(C) },
     },
     vertexShader: /* glsl */ `
-      varying vec3 vWorld;
+      attribute float aAmp;     // 1 in open water, falling to 0 at the shore and at the grid's edge
+      varying vec3 vWorld; varying float vAmp;
+      ${SEA_WAVES}
       void main() {
         vec4 w = modelMatrix * vec4(position, 1.0);
+        vAmp = aAmp;
+        w.y += aAmp * Hbig(vec2(w.x, -w.z));
         vWorld = w.xyz;
         gl_Position = projectionMatrix * viewMatrix * w;
       }`,
     fragmentShader: /* glsl */ `
-      uniform float uTime, uNight;
-      uniform vec3 uNear, uFar, uHaze, uLine;
-      varying vec3 vWorld;
-      float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-      float noise(vec2 p){
-        vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
-        return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y);
+      uniform float uNight; uniform vec3 uHaze; uniform vec4 uHole;
+      varying vec3 vWorld; varying float vAmp;
+      ${SEA_WAVES}
+      float foam(vec2 p) {
+        float b = bend(p), e = sets(p);
+        float k = 6.2832 / 62.0, ph = k * dot(p, D0) - sqrt(9.8 * k) * 0.62 * uTime + b;
+        float d = mod(ph - 1.5708 + 3.14159, 6.2832) - 3.14159;
+        float br = svn(vec2(dot(p, vec2(-D0.y, D0.x)) / 5.0, floor(ph / 6.2832 + 0.25) * 3.7 + uTime * 0.07));
+        float strong = smoothstep(0.80, 1.05, e), body = smoothstep(0.42, 0.62, br);
+        if (strong > 0.5 && abs(d) < 0.045 * body) return 2.0;
+        if (strong > 0.5 && d < 0.0 && d > -0.15 * body * br) return 1.0;
+        return 0.0;
       }
+      uniform vec3 uRamp[6];    // the six tones, darkest to foam
+      vec3 pal(float i) { int k = int(i + 0.5); for (int j = 0; j < 6; j++) if (j == k) return uRamp[j]; return uRamp[5]; }
+      float bayer(vec2 p) { vec2 q = mod(floor(p), 4.0); float i = q.x + q.y * 4.0; float v = 5.0;
+        if (i < 0.5) v = 0.0; else if (i < 1.5) v = 8.0; else if (i < 2.5) v = 2.0; else if (i < 3.5) v = 10.0; else if (i < 4.5) v = 12.0; else if (i < 5.5) v = 4.0; else if (i < 6.5) v = 14.0; else if (i < 7.5) v = 6.0;
+        else if (i < 8.5) v = 3.0; else if (i < 9.5) v = 11.0; else if (i < 10.5) v = 1.0; else if (i < 11.5) v = 9.0; else if (i < 12.5) v = 15.0; else if (i < 13.5) v = 7.0; else if (i < 14.5) v = 13.0;
+        return (v + 0.5) / 16.0; }
       void main() {
-        float dist = length(cameraPosition.xz - vWorld.xz);
-        vec3 col = mix(uNear, uFar, smoothstep(30.0, 420.0, dist));
-        col = mix(col, uHaze, smoothstep(500.0, 1500.0, dist) * 0.7);
-        // waves: rows of scalloped crests rolling toward the shore. Each
-        // row has its own phase and speed; a crest is a bright arc with a
-        // darker trough just behind it, broken up so rows never look ruled.
-        float rows = vWorld.z * 0.3 + uTime * 0.3;
-        float row = floor(rows);
-        float f = fract(rows);
-        float ph = hash(vec2(row, 3.0)) * 6.283;
-        float x = vWorld.x * 0.32 + ph + uTime * (0.35 + hash(vec2(row, 9.0)) * 0.3);
-        float crest = abs(sin(x));
-        float arc = 0.3 + crest * 0.34;
-        float near = smoothstep(700.0, 60.0, dist);
-        float broken = step(0.42, noise(vec2(vWorld.x * 0.05 + row * 5.0, row)));
-        float line = step(abs(f - arc), 0.075) * broken * near;
-        float trough = step(abs(f - arc - 0.16), 0.06) * broken * near;
-        col = mix(col, uNear * 0.86, trough * 0.7);
-        col = mix(col, uLine, line);
-        // sparkle on the crests
-        col = mix(col, vec3(1.0, 0.98, 0.86), line * step(0.93, hash(floor(vWorld.xz * 0.5) + floor(uTime * 3.0))) * (1.0 - uNight));
+        // the flat far sea stands aside where the fine grid is
+        if (vAmp < 0.0 && vWorld.x > uHole.x && vWorld.z > uHole.y && vWorld.x < uHole.z && vWorld.z < uHole.w) discard;
+        float amp = max(vAmp, 0.0);
+        vec2 p = vec2(vWorld.x, -vWorld.z);
+        float dist = length(cameraPosition - vWorld), e = 0.25 + dist * 0.006;
+        vec3 n = normalize(vec3((Hall(p - vec2(e, 0)) - Hall(p + vec2(e, 0))) * amp, (Hall(p - vec2(0, e)) - Hall(p + vec2(0, e))) * amp, 2.0 * e));
+        vec3 L = normalize(vec3(-0.42, 0.62, 0.50));
+        float away = smoothstep(60.0, 760.0, dist);
+        float tone = 2.6 + (dot(n, L) - L.z) * mix(9.5, 5.0, away) + away * (uNight > 0.5 ? -1.6 : 1.1);
+        float fo = (dist < 420.0 && dist > 30.0 && amp > 0.6) ? foam(p) : 0.0;
+        if (fo > 1.5) tone = 5.0; else if (fo > 0.5) tone = max(tone, 4.0);
+        // glitter where a facet throws the sun at the eye
+        vec3 v = cameraPosition - vWorld; vec3 rd = -normalize(vec3(v.x, -v.z, v.y));
+        float sp = pow(max(dot(reflect(rd, n), normalize(vec3(0.30, 1.0, 0.26))), 0.0), 140.0);
+        if (amp > 0.3 && sp * (0.6 + 0.8 * shash(floor(p * vec2(0.5, 1.4)) + floor(uTime * 5.0))) > 0.66) tone = 5.0;
+        tone = clamp(tone, 0.0, 5.0);
+        float a = floor(tone), fr = tone - a;
+        vec3 col = pal(min(5.0, a + (fr > 0.5 + (bayer(gl_FragCoord.xy) - 0.5) * 0.28 ? 1.0 : 0.0)));
+        col = mix(col, uHaze, smoothstep(500.0, 1500.0, length(cameraPosition.xz - vWorld.xz)) * 0.7);
+        gl_FragColor = vec4(col, 1.0);
+      }`,
+  });
+
+// the grid of fine water round the hero: open sea moves fully, the shore and the grid's own edge stay level
+const SEA_GRID = { x0: -430, x1: 560, z0: -470, z1: 175, step: 3 };
+function seaGrid(calm: { x: number; z: number; r: number }[]): THREE.BufferGeometry {
+  const { x0, x1, z0, z1, step } = SEA_GRID;
+  const nx = Math.round((x1 - x0) / step) + 1, nz = Math.round((z1 - z0) / step) + 1;
+  const pos = new Float32Array(nx * nz * 3), amp = new Float32Array(nx * nz), idx = new Uint32Array((nx - 1) * (nz - 1) * 6);
+  const ss = (a: number, b: number, v: number) => { const t = Math.min(1, Math.max(0, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
+  for (let j = 0, k = 0; j < nz; j++)
+    for (let i = 0; i < nx; i++, k++) {
+      const x = x0 + i * step, z = z0 + j * step;
+      pos[k * 3] = x; pos[k * 3 + 1] = 0; pos[k * 3 + 2] = z;
+      const edge = Math.min(x - x0, x1 - x, z - z0, z1 - z);
+      let a = ss(0, 70, edge) * ss(-1.2, -2.9, ground(x, z)); // the sea floor is at -3; anything shallower is near land
+      for (const c of calm) a *= 0.3 + 0.7 * ss(c.r * 0.4, c.r, Math.hypot(x - c.x, z - c.z));
+      amp[k] = a;
+    }
+  for (let j = 0, k = 0; j < nz - 1; j++)
+    for (let i = 0; i < nx - 1; i++) {
+      const a = j * nx + i, b = a + 1, c = a + nx, d = c + 1;
+      idx[k++] = a; idx[k++] = c; idx[k++] = b; idx[k++] = b; idx[k++] = c; idx[k++] = d;
+    }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  g.setAttribute("aAmp", new THREE.BufferAttribute(amp, 1));
+  g.setIndex(new THREE.BufferAttribute(idx, 1));
+  return g;
+}
+
+// the waterfall: a curtain in seven lanes, darker at its edges, with pale streaks dropping down each lane at
+// its own pace, a bright lip where it leaves the channel and white water where it lands
+const fallMat = (len: number) =>
+  new THREE.ShaderMaterial({
+    side: THREE.DoubleSide,
+    uniforms: { uTime: { value: 0 }, uBase: { value: C("#8aa5e0") }, uLight: { value: C("#eef1fa") }, uFoam: { value: C("#fff9dc") }, uLen: { value: len } },
+    vertexShader: /* glsl */ `
+      varying vec2 vUv;
+      void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+    fragmentShader: /* glsl */ `
+      uniform float uTime, uLen; uniform vec3 uBase, uLight, uFoam;
+      varying vec2 vUv;
+      float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+      void main() {
+        float lane = floor(vUv.y * 7.0), d = vUv.x;
+        vec3 deep = uBase * 0.82, col = (lane < 0.5 || lane > 5.5) ? deep : uBase;
+        float s = d * 0.28 - uTime * (1.6 + hash(vec2(lane, 1.0)) * 0.9), cell = floor(s), f = fract(s);
+        float h = hash(vec2(cell, lane + 7.0));
+        if (h > 0.45 && f < 0.25 + 0.5 * hash(vec2(cell, lane))) col = uLight;        // a falling streak
+        else if (h < 0.16 && f < 0.5) col = deep;                                    // a darker gap between them
+        if (d < 1.4) col = uLight;                                                   // the lip
+        if (d > uLen - 3.5 && hash(vec2(floor(vUv.y * 9.0), floor(d * 1.5 - uTime * 6.0))) > 0.35 + (uLen - d) * 0.12) col = uFoam;   // white water at the foot
         gl_FragColor = vec4(col, 1.0);
       }`,
   });
@@ -312,6 +413,8 @@ export function buildCity(): City {
   sky.frustumCulled = false;
   root.add(sky);
   const sea = new THREE.Mesh(new THREE.PlaneGeometry(8000, 5000), seaMat());
+  sea.geometry.setAttribute("aAmp", new THREE.BufferAttribute(new Float32Array(sea.geometry.attributes.position.count).fill(-1), 1));
+  (sea.material as THREE.ShaderMaterial).uniforms.uHole.value.set(SEA_GRID.x0 + 2, SEA_GRID.z0 + 2, SEA_GRID.x1 - 2, SEA_GRID.z1 - 2);
   sea.rotation.x = -Math.PI / 2;
   sea.position.set(400, 0, -1500);
   root.add(sea);
@@ -409,12 +512,18 @@ export function buildCity(): City {
       const t = k / 14;
       pts.push(new THREE.Vector3(p.x + out.x * (1.8 + t * t * 3), seg.top + 1.2 - t * (seg.top + 1.2), p.z + out.z * (1.8 + t * t * 3)));
     }
-    const fall = new THREE.Mesh(ribbon(pts, 2.2, true), waterMat("#a9bdea", "#fff9dc", 2.2, 2.6));
+    let fallLen = 0;
+    for (let k = 1; k < pts.length; k++) fallLen += pts[k].distanceTo(pts[k - 1]);
+    const fall = new THREE.Mesh(ribbon(pts, 3.6, true), fallMat(fallLen));
     waters.push(fall.material as THREE.ShaderMaterial);
     root.add(fall);
+    // the fine water round the hero, calmer where the fall lands so the foam sits on it
+    const fine = new THREE.Mesh(seaGrid([{ x: pts[pts.length - 1].x, z: pts[pts.length - 1].z, r: 16 }]), sea.material);
+    fine.frustumCulled = false;
+    root.add(fine);
     // foam where it lands
-    const foam = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 0.25, 1), new THREE.MeshBasicMaterial({ color: C("#fff9dc") }), 14);
-    const foamSeed = Array.from({ length: 14 }, () => ({ dx: (r() - 0.5) * 6, dz: (r() - 0.5) * 3, s: 0.4 + r() * 0.7, ph: r() * 6 }));
+    const foam = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 0.25, 1), new THREE.MeshBasicMaterial({ color: C("#fff9dc") }), 22);
+    const foamSeed = Array.from({ length: 22 }, () => ({ dx: (r() - 0.5) * 9, dz: (r() - 0.5) * 4, s: 0.4 + r() * 0.8, ph: r() * 6 }));
     foam.userData = { at: pts[pts.length - 1], foamSeed };
     root.add(foam);
     foamMesh = foam;
@@ -831,10 +940,8 @@ export function buildCity(): City {
     (sky.material as THREE.ShaderMaterial).uniforms.uNight.value = n ? 1 : 0;
     const su = (sky.material as THREE.ShaderMaterial).uniforms;
     su.uSky.value.set(n ? "#0f1630" : "#fbf1c4");
-    const sm = (sea.material as THREE.ShaderMaterial).uniforms;
-    sm.uNear.value.set(n ? "#212d58" : "#6f8ed4");
-    sm.uFar.value.set(n ? "#2a3868" : "#a9bdea");
-    sm.uLine.value.set(n ? "#4b62a2" : "#dce4f5");
+    (sea.material as THREE.ShaderMaterial).uniforms.uNight.value = n ? 1 : 0;
+    (sea.material as THREE.ShaderMaterial).uniforms.uRamp.value = (n ? SEA_NIGHT : SEA_DAY).map(C);
     winLitMat.color.set(n ? "#ffd37a" : winDay);
     winDarkMat.color.set(n ? "#162044" : winDay);
     stoneMat.color.copy(n ? stoneNight : stoneDay);
@@ -859,7 +966,7 @@ export function buildCity(): City {
       const { at, foamSeed } = foamMesh.userData as { at: THREE.Vector3; foamSeed: { dx: number; dz: number; s: number; ph: number }[] };
       foamSeed.forEach((f, i) => {
         const b = 0.5 + 0.5 * Math.sin(tq * 3 + f.ph);
-        m4.compose(v3.set(at.x + f.dx * (0.7 + b * 0.5), 0.15, at.z + f.dz), q.identity(), sc.setScalar(f.s * (0.8 + b * 0.4)));
+        m4.compose(v3.set(at.x + f.dx * (0.7 + b * 0.5), 0.9, at.z + f.dz), q.identity(), sc.setScalar(f.s * (0.8 + b * 0.4)));
         foamMesh!.setMatrixAt(i, m4);
       });
       foamMesh.instanceMatrix.needsUpdate = true;
