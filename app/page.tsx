@@ -70,6 +70,8 @@ export default function Home() {
           </div>
         </section>
 
+        <About />
+
         {/* 02 THE ENGINEER: what he builds */}
         <section className="band band--engineer">
           <div className="band__in">
@@ -159,8 +161,6 @@ export default function Home() {
             <Deck art={cardArt()} />
           </div>
         </section>
-
-        <About />
 
         {/* 05 THE ENDING: the aqueduct again, from below, water still flowing */}
         <section id="contact" className="scene scene--ending" data-district="ending" aria-labelledby="contact-title">

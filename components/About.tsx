@@ -1,21 +1,8 @@
-"use client";
+import Courtyard from "./Courtyard";
 
-import { useState } from "react";
-import Ivy from "./Ivy";
-
-// About: a small classical courtyard. Words on the left; on the right a
-// stone-backed display with the user's pixel bust in an arched niche, an
-// engraved pedestal, and a few things from his room scattered round it.
-// The bust blinks now and then, and the d20 can be rolled.
+// About: who he is on the left, in plain words; what it is like inside his
+// head on the right, as a small courtyard to poke around in.
 export default function About() {
-  const [roll, setRoll] = useState<number | null>(null);
-  const [spin, setSpin] = useState(0);
-  const throwDie = () => {
-    setSpin((n) => n + 1);
-    setRoll(null);
-    setTimeout(() => setRoll(1 + Math.floor(Math.random() * 20)), 480);
-  };
-  /* eslint-disable @next/next/no-img-element */
   return (
     <section id="about" className="band band--about">
       <div className="band__in about">
@@ -39,33 +26,7 @@ export default function About() {
           </p>
         </div>
 
-        <div className="shrine">
-          <Ivy seed={5} className="shrine__ivy" />
-          <div className="shrine__niche">
-            <div className="bust">
-              <img src="/art/bust.png" alt="A pixel-art marble bust of Aditya, smiling, with curly hair and glasses" width={1000} height={1400} />
-              <span className="bust__lid bust__lid--l" aria-hidden="true" />
-              <span className="bust__lid bust__lid--r" aria-hidden="true" />
-            </div>
-          </div>
-          <p className="stone shrine__plaque">
-            <span className="shrine__name">Aditya, first of his name</span>
-            <span className="shrine__motto">He came. He saw. He followed up.</span>
-          </p>
-
-          <img className="thing thing--note" src="/art/note.png" alt="" />
-          <img className="thing thing--watcher" src="/art/watcher.png" alt="" />
-          <img className="thing thing--dragon" src="/art/dragon.png" alt="" />
-          <img className="thing thing--phones" src="/art/headphones.png" alt="" />
-          <button className="thing thing--d20" onClick={throwDie} aria-label="Roll the d20">
-            <img key={spin} className={spin ? "is-rolling" : ""} src="/art/d20.png" alt="" />
-            {roll !== null && (
-              <span className={`thing__roll${roll === 20 ? " is-crit" : ""}`} aria-live="polite">
-                {roll === 20 ? "20! crit" : roll === 1 ? "1. ouch" : roll}
-              </span>
-            )}
-          </button>
-        </div>
+        <Courtyard />
       </div>
     </section>
   );
