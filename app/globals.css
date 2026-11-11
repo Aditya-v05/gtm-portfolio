@@ -3312,7 +3312,11 @@ html:not(.js) .loader, html.no-loader .loader { display: none; }
 /* the text is centred as it always was; only its links take the pointer, so the name behind can still be reached */
 .foot__in { z-index: 2; pointer-events: none; }
 .foot__in a { pointer-events: auto; }
-.foot__links { list-style: none; margin: 1.5rem 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.7rem 1.9rem; }
+/* the four lines sit close together, as one block */
+.foot .ask { line-height: 1.15; }
+.foot .ask__sub { margin-top: 0.35rem; line-height: 1.2; }
+.foot .contact { margin-top: 0.9rem; line-height: 1.2; }
+.foot__links { list-style: none; margin: 0.8rem 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.7rem 1.9rem; }
 .foot__links a { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--display); font-size: 1.3rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-2); text-decoration: none; transition: transform 0.1s steps(2), color 0.1s; }
 .foot__links a:hover, .foot__links a:focus-visible { transform: translateY(-4px); color: #c8673a; }
 .foot__links a:active { transform: translateY(2px); }
