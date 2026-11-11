@@ -7,9 +7,10 @@ export function seaHorizon(section: HTMLElement): number {
   const above = section.querySelector<HTMLElement>("[data-above-sea]");
   const name = section.querySelector<HTMLElement>(".foot__name");
   const bottom = above ? above.offsetTop + above.offsetHeight : h * 0.5;
-  // how much of the name is above the water at rest, plus how far a letter lifts when pointed at: the text
-  // has to clear a fully raised letter, not just a resting one
+  // A letter at rest has 46% of its box above the water, and lifts by --rise more when pointed at. The drawn
+  // letter starts about 19% down its box, so that much of the box may pass behind the text unseen. What is left
+  // is how tall a fully raised letter stands, and the text has to clear that.
   const rise = parseFloat(getComputedStyle(section).getPropertyValue("--rise")) || 0;
-  const showing = name ? name.offsetHeight * (0.46 + rise) : h * 0.08;
+  const showing = name ? name.offsetHeight * (0.46 + rise - 0.19) + 20 : h * 0.08;
   return Math.round(Math.max(h * 0.42, Math.min(h * 0.82, bottom + showing)));
 }

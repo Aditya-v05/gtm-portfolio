@@ -23,7 +23,7 @@ export default function Footer() {
       const water = sec.top + parseFloat(e.currentTarget.style.getPropertyValue("--horizon") || "0");
       const on = spans.some((s) => {
         const r = s.getBoundingClientRect();
-        return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top + r.height * 0.07 && e.clientY <= water + 4;
+        return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top + r.height * 0.17 && e.clientY <= water + 4;
       });
       if (on) x = e.clientX;
     }
