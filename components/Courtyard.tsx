@@ -29,7 +29,7 @@ export default function Courtyard() {
   const die = useRef<HTMLButtonElement>(null);
   const [say, setSay] = useState<{ who: string; text: string } | null>(null);
   const [bustN, setBustN] = useState(0);
-  const [dieAt, setDieAt] = useState({ x: A.die[0], y: A.die[1] });
+  const [dieAt, setDieAt] = useState({ x: 36, y: 70 });
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState<{ x: number; y: number; peeled: boolean }>({ x: 0, y: 0, peeled: false });
   const [held, setHeld] = useState(false);
@@ -80,7 +80,8 @@ export default function Courtyard() {
   const rollDie = () => {
     const el = die.current;
     if (busy || !el) return;
-    const to = { x: 32 + Math.random() * 26, y: 46 + Math.random() * 30 };
+    // kept to the part of the rug clear of the column and the books
+    const to = { x: 30 + Math.random() * 14, y: 60 + Math.random() * 18 };
     const a = floor(dieAt.x, dieAt.y), b = floor(to.x, to.y);
     const n = 1 + Math.floor(Math.random() * 20);
     setSay(null);
