@@ -4,8 +4,7 @@ import { useEffect, useRef } from "react";
 import { SEA_FRAG } from "./shader";
 import { seaHorizon } from "@/lib/horizon";
 
-// The closing scene's sea: a WebGL canvas across the whole section, clear above the horizon so the page and the
-// big name show through, drawn at one art pixel per four screen pixels and scaled up hard. It only runs while it
+// The closing scene's sea: a WebGL canvas across the whole section, clear above the horizon so the page shows through, drawn at one art pixel per four screen pixels and scaled up hard. It only runs while it
 // is on screen and steps at twelve frames a second like the rest of the pixel world. A few seconds after it comes
 // into view the kraken takes the boat, and again every minute or two; five quick clicks on the sea or the boat
 // call it at once. With
@@ -13,7 +12,7 @@ import { seaHorizon } from "@/lib/horizon";
 
 const FPS = 12;
 const ATTACK = 14; // seconds the kraken takes
-const OUT = 46; // how far out the boat sits, in metres; the camera is 96 metres back from the origin, 11 up
+const OUT = 12; // how far out the boat sits, in metres; the camera is 96 metres back from the origin, 11 up
 const CAM = { y: -96, z: 11, f: 1.778 };
 
 export default function Sea() {
