@@ -2,18 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// The loading screen: a small stone aqueduct whose channel fills with water
-// while the 3D city loads. When the city is ready the water reaches the end,
-// spills into a basin, and the screen dissolves in pixel steps.
+// The loading screen: the name sits exactly where the hero has it, as empty
+// carved stone letters. Water runs through the letters from the left while
+// the 3D city loads, turning them the blue they are on the site. When the
+// last letter is full the water spills off the end and falls down the page,
+// the screen behind the name dissolves, and the hero is already there: the
+// name never moves.
 //
-// It is in the server markup, so it shows before any script runs. If the city
-// is ready almost at once it leaves before the aqueduct has even faded in, so
-// a fast load never sees a loader. It shows once per visit; add ?loader to
-// the address to watch it again, held open for a few seconds.
-
-const PIERS = [0, 1, 2, 3, 4, 5].map((i) => 6 + 16 * i);
-const SPANS = [0, 1, 2, 3, 4].map((i) => 12 + 16 * i);
-const GLINTS = Array.from({ length: 8 }, (_, i) => -14 + 16 * i);
+// It is in the server markup, so it shows before any script runs. It plays
+// once per visit; add ?loader to the address to watch it again, slowed down.
 
 export default function Loader() {
   const root = useRef<HTMLDivElement>(null);
@@ -23,12 +20,22 @@ export default function Loader() {
     const el = root.current;
     if (!el) return;
     const html = document.documentElement;
-    if (html.classList.contains("no-loader")) return setGone(true);
+    if (html.classList.contains("no-loader") || window.scrollY > 40) return setGone(true);
     const demo = /[?&]loader\b/.test(location.search);
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const name = el.querySelector<HTMLElement>(".pixelname__text")!;
+    const fall = el.querySelector<HTMLElement>(".loader__fall")!;
     const timers: ReturnType<typeof setTimeout>[] = [];
     const later = (fn: () => void, ms: number) => timers.push(setTimeout(fn, ms));
-    let finished = false;
+    let raf = 0;
+
+    // sit exactly on the real name, and take its colour
+    const real = document.querySelector<HTMLElement>(".page .pixelname__text");
+    if (real) {
+      const a = real.getBoundingClientRect(), b = name.getBoundingClientRect();
+      if (a.left !== b.left || a.top !== b.top) name.style.transform = `translate(${a.left - b.left}px, ${a.top - b.top}px)`;
+      el.style.setProperty("--fill", getComputedStyle(real).color);
+    }
 
     const leave = () => {
       try {
@@ -37,41 +44,63 @@ export default function Loader() {
       setGone(true);
     };
 
+    // the water: creeps toward most of the way while the city loads, then
+    // runs to the end once it is ready. Moves in small steps, like pixels.
+    const CREEP = demo ? 2400 : 900, RUN = 260, MIN = demo ? 2600 : 800;
+    const t0 = performance.now();
+    let ready = 0, from = 0, p = 0, done = false;
+    const set = (v: number) => name.style.setProperty("--p", (Math.round(v * 48) / 48).toFixed(4));
+    const spill = () => {
+      const r = name.getBoundingClientRect();
+      const cell = Math.max(3, Math.round(r.height / 14));
+      // the box ends with one letter-space of air after the last letter
+      const ls = parseFloat(getComputedStyle(name).letterSpacing) || 0;
+      Object.assign(fall.style, { left: `${Math.round(r.right - ls - cell * 2)}px`, top: `${Math.round(r.bottom - cell * 4)}px`, width: `${cell * 2}px` });
+      el.classList.add("is-full");
+      later(() => el.classList.add("is-out"), 240);
+      later(leave, 760);
+    };
+    const tick = (now: number) => {
+      if (done) return;
+      if (!ready) {
+        const k = Math.min(1, (now - t0) / CREEP);
+        p = 0.84 * (1 - Math.pow(1 - k, 2.2));
+      } else {
+        const k = Math.min(1, (now - ready) / RUN);
+        p = from + (1 - from) * k;
+        if (k >= 1) {
+          done = true;
+          set(1);
+          return spill();
+        }
+      }
+      set(p);
+      raf = requestAnimationFrame(tick);
+    };
+
     const finish = () => {
-      if (finished) return;
-      finished = true;
+      if (ready || done) return;
       mo.disconnect();
-      const now = performance.now();
-      // ready before the aqueduct has appeared: nobody saw a loader
-      if (!demo && now < 450) return leave();
-      const hold = Math.max(0, (demo ? 3200 : 1500) - now);
+      if (reduced) {
+        done = true;
+        set(1);
+        el.classList.add("is-out");
+        return later(leave, 400);
+      }
       later(() => {
-        if (reduced) {
-          el.classList.add("is-out");
-          return later(leave, 320);
-        }
-        // run the water on from wherever it has crept to
-        const cover = el.querySelector<SVGRectElement>(".loader__dry");
-        if (cover) {
-          const sx = new DOMMatrixReadOnly(getComputedStyle(cover).transform).a;
-          cover.style.animation = "none";
-          cover.style.transform = `scaleX(${sx})`;
-          void cover.getBoundingClientRect();
-          cover.style.transition = "transform 420ms steps(10)";
-          cover.style.transform = "scaleX(0)";
-        }
-        later(() => el.classList.add("is-full"), 420);
-        later(() => el.classList.add("is-out"), 1350);
-        later(leave, 1850);
-      }, hold);
+        ready = performance.now();
+        from = p;
+      }, Math.max(0, MIN - (performance.now() - t0)));
     };
 
     const mo = new MutationObserver(() => html.dataset.world && finish());
     mo.observe(html, { attributes: true, attributeFilter: ["data-world"] });
+    if (!reduced) raf = requestAnimationFrame(tick);
     if (html.dataset.world) finish();
     later(finish, 6000);
     return () => {
       mo.disconnect();
+      cancelAnimationFrame(raf);
       timers.forEach(clearTimeout);
     };
   }, []);
@@ -79,81 +108,17 @@ export default function Loader() {
   if (gone) return null;
   return (
     <div ref={root} className="loader" role="status" aria-label="Loading">
-      <div className="loader__in">
-        <svg className="loader__aq" viewBox="0 0 108 50" shapeRendering="crispEdges" aria-hidden="true">
-          <defs>
-            <clipPath id="loader-channel">
-              <rect x="6" y="7" width="88" height="2" />
-            </clipPath>
-          </defs>
-          {/* piers and their arches */}
-          {PIERS.map((x) => (
-            <g key={x}>
-              <rect x={x} y="14" width="6" height="32" className="st" />
-              <rect x={x + 5} y="14" width="1" height="32" className="st-m" />
-              <rect x={x} y="24" width="5" height="1" className="st-l" />
-              <rect x={x} y="35" width="5" height="1" className="st-l" />
-              <rect x={x - 1} y="44" width="8" height="2" className="st-m" />
-            </g>
-          ))}
-          {SPANS.map((x) => (
-            <g key={x} className="st">
-              <rect x={x} y="14" width="4" height="1" />
-              <rect x={x + 6} y="14" width="4" height="1" />
-              <rect x={x} y="15" width="3" height="1" />
-              <rect x={x + 7} y="15" width="3" height="1" />
-              <rect x={x} y="16" width="2" height="1" />
-              <rect x={x + 8} y="16" width="2" height="1" />
-              <rect x={x} y="17" width="1" height="2" />
-              <rect x={x + 9} y="17" width="1" height="2" />
-            </g>
-          ))}
-          {/* the deck and the trough on top of it */}
-          <rect x="4" y="10" width="90" height="4" className="st" />
-          <rect x="4" y="10" width="90" height="1" className="st-l" />
-          <rect x="4" y="13" width="90" height="1" className="st-m" />
-          <rect x="4" y="5" width="2" height="5" className="st-m" />
-          <rect x="4" y="6" width="90" height="1" className="st-l" />
-          <rect x="6" y="7" width="88" height="1" className="w-l" />
-          <rect x="6" y="8" width="88" height="1" className="w" />
-          <g clipPath="url(#loader-channel)">
-            <g className="loader__glints">
-              {GLINTS.map((x) => (
-                <g key={x} className="w-g">
-                  <rect x={x} y="7" width="3" height="1" />
-                  <rect x={x + 9} y="8" width="2" height="1" />
-                </g>
-              ))}
-            </g>
-          </g>
-          <rect x="6" y="7" width="88" height="2" className="loader__dry" />
-          <rect x="4" y="9" width="90" height="1" className="st-m" />
-          {/* the spill and its basin */}
-          <g className="loader__fall">
-            <rect x="94" y="7" width="3" height="36" className="w" />
-            <rect x="94" y="7" width="1" height="36" className="w-l" />
-            <g className="loader__streaks w-g">
-              <rect x="96" y="11" width="1" height="3" />
-              <rect x="95" y="20" width="1" height="2" />
-              <rect x="96" y="29" width="1" height="3" />
-              <rect x="95" y="37" width="1" height="2" />
-            </g>
-          </g>
-          <rect x="93" y="42" width="11" height="4" className="st" />
-          <rect x="93" y="42" width="11" height="1" className="st-l" />
-          <rect x="93" y="45" width="11" height="1" className="st-m" />
-          <g className="loader__pool">
-            <rect x="94" y="42" width="9" height="2" className="w" />
-            <rect x="94" y="42" width="9" height="1" className="w-l" />
-            <g className="loader__foam w-g">
-              <rect x="93" y="41" width="1" height="1" />
-              <rect x="98" y="41" width="1" height="1" />
-              <rect x="94" y="42" width="5" height="1" />
-            </g>
-          </g>
-          <rect x="0" y="46" width="108" height="1" className="loader__ground" />
-        </svg>
-        <p className="loader__k">Drawing water</p>
+      <div className="loader__bg" />
+      <div className="loader__fall" aria-hidden="true">
+        <i />
+      </div>
+      {/* the same boxes as the hero, so the name lands in the same place */}
+      <div className="hero loader__hero" aria-hidden="true">
+        <div className="hero__in">
+          <div className="hero__name">
+            <span className="pixelname__text">Aditya Venkatesan</span>
+          </div>
+        </div>
       </div>
     </div>
   );
