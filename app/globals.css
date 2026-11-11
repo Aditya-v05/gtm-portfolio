@@ -3334,3 +3334,18 @@ html:not(.js) .loader, html.no-loader .loader { display: none; }
 .spin__back ::-webkit-scrollbar-thumb:hover, .spin__back::-webkit-scrollbar-thumb:hover { background: linear-gradient(#fff8d8, #fff8d8) 4px 4px / calc(100% - 8px) calc(100% - 8px) no-repeat, #e2c9a2; }
 .spin__back ::-webkit-scrollbar-corner, .spin__back::-webkit-scrollbar-corner { background: #0f1630; }
 .spin__back ::-webkit-scrollbar-button, .spin__back::-webkit-scrollbar-button { display: none; }
+
+/* ---- the page's own scroll bar: the same pixel bar, in the page's colours ---- */
+html { scrollbar-gutter: stable; }
+html::-webkit-scrollbar { width: 14px; height: 14px; }
+html::-webkit-scrollbar-track { background: #efe2ae; box-shadow: inset 2px 0 0 #dccd94; }
+html::-webkit-scrollbar-thumb { background: linear-gradient(#2f4f9e, #2f4f9e) 4px 4px / calc(100% - 8px) calc(100% - 8px) no-repeat, #1b2b5a; border: 2px solid #efe2ae; border-radius: 0; }
+html::-webkit-scrollbar-thumb:hover { background: linear-gradient(#3f61b8, #3f61b8) 4px 4px / calc(100% - 8px) calc(100% - 8px) no-repeat, #1b2b5a; }
+html::-webkit-scrollbar-button { display: none; }
+html::-webkit-scrollbar-corner { background: #efe2ae; }
+html[data-theme="dark"]::-webkit-scrollbar-track { background: #0f1630; box-shadow: inset 2px 0 0 #1b2b5a; }
+html[data-theme="dark"]::-webkit-scrollbar-thumb { background: linear-gradient(#fbf1c4, #fbf1c4) 4px 4px / calc(100% - 8px) calc(100% - 8px) no-repeat, #c9ae8a; border-color: #0f1630; }
+html[data-theme="dark"]::-webkit-scrollbar-thumb:hover { background: linear-gradient(#fff8d8, #fff8d8) 4px 4px / calc(100% - 8px) calc(100% - 8px) no-repeat, #e2c9a2; }
+html[data-theme="dark"]::-webkit-scrollbar-corner { background: #0f1630; }
+/* the close button stands clear of the sheet's scroll bar */
+.sheet .spin__close { right: calc(1rem + 14px); }
