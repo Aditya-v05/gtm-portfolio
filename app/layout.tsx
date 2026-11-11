@@ -81,6 +81,9 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html:
+              // Some browser extensions stamp bis_skin_checked onto every div before React starts, which React
+              // then reports as a mismatch. Take it off again as it appears, until the page has loaded.
+              "(function(){var A='bis_skin_checked',o=new MutationObserver(function(m){for(var i=0;i<m.length;i++){var r=m[i];if(r.type==='attributes'){if(r.target.hasAttribute(A))r.target.removeAttribute(A)}else for(var j=0;j<r.addedNodes.length;j++){var n=r.addedNodes[j];if(n.nodeType===1){if(n.hasAttribute(A))n.removeAttribute(A);var q=n.querySelectorAll('['+A+']');for(var k=0;k<q.length;k++)q[k].removeAttribute(A)}}}});o.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:[A]});addEventListener('load',function(){setTimeout(function(){o.disconnect()},3000)})})();" +
               "document.documentElement.classList.add('js');try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.dataset.theme=t}if(sessionStorage.getItem('loader')&&!/[?&]loader\\b/.test(location.search)){document.documentElement.classList.add('no-loader')}}catch(e){}",
           }}
         />
