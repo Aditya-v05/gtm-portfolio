@@ -16,7 +16,7 @@ import SZ from "./horse-sizes.json";
 const STAGE = { w: 1120, h: 540, ground: 500 };
 const HORSE = { left: 10, w: 410 };
 const HORSE_H = (HORSE.w * SZ.horse[1]) / SZ.horse[0];
-const HATCH = { x: HORSE.left + HORSE.w * 0.56, y: STAGE.ground - HORSE_H * 0.4 };
+const HATCH = { x: HORSE.left + HORSE.w * 0.56, y: STAGE.ground - HORSE_H * 0.41 };
 type Name = keyof typeof SZ;
 // what falls out, in order: [sprite, left, width, how far toward the viewer, resting tilt]
 const SPILL: [Name, number, number, number, number][] = [

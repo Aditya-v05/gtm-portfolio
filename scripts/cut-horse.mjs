@@ -11,7 +11,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 const P = "art-src/aditya-poses.png", F = "art-src/horse-fx.png", T = "art-src/horse-items.png", H = "art-src/trojan-horse.png";
 // [source, name, x, y, w, h, keep: "main" = largest shape only, "all" = everything bigger than a speck]
 const CUTS = [
-  [H, "horse", 130, 60, 1180, 960, "main"],
+  [H, "horse", 0, 0, 1448, 1086, "main"],
   [P, "peek", 40, 170, 450, 330, "main"], [P, "fall", 490, 60, 480, 420, "main"], [P, "look", 1040, 20, 250, 470, "main"],
   [P, "wave", 130, 500, 320, 570, "main"], [P, "read", 570, 500, 290, 570, "main"], [P, "shrug", 1010, 500, 390, 570, "main"],
   [F, "bubble", 160, 100, 600, 340, "main"], [F, "tent", 810, 80, 500, 370, "main"], [F, "cloud", 90, 470, 450, 230, "all"],
@@ -58,12 +58,13 @@ for (const [src, name, x, y, w, h, keep] of CUTS) {
       g.putImageData(d, 0, 0);
       const o = document.createElement("canvas"); o.width = x1 - x0 + 1; o.height = y1 - y0 + 1;
       o.getContext("2d").drawImage(c, -x0, -y0);
-      return { url: o.toDataURL("image/png"), w: o.width, h: o.height };
+      return { url: o.toDataURL("image/png"), w: o.width, h: o.height, x0, y0 };
     },
     "data:image/png;base64," + readFileSync(src).toString("base64"), x, y, w, h, keep
   );
   writeFileSync(`public/horse/${name}.png`, Buffer.from(res.url.split(",")[1], "base64"));
   sizes[name] = [res.w, res.h];
+  if (name === "horse") console.log("horse offset", x + res.x0, y + res.y0);
 }
 writeFileSync("components/horse-sizes.json", JSON.stringify(sizes, null, 1) + "\n");
 console.log(JSON.stringify(sizes));
