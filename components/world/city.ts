@@ -968,6 +968,24 @@ export function buildCity(): City {
         return [cx + lx * co - ly * si, WL - (cy + lx * si + ly * co)];
       };
       const tailBeat = Math.sin(age * 11) * 2.2 * (1 - ss(0.2, 0.4, u));
+      const open = ss(0.18, 0.62, u);                                                      // 0 laid back, 1 flung out
+      const flipper = (side: number, far: boolean) => {
+        // side -1 is the belly edge of a side-on whale, +1 the back edge; the far one only clears the body as it rolls
+        const fa = side * (2.8 - open * 1.23) + Math.sin(age * 5 + side) * 0.1;
+        const base = side < 0 ? -half(0.14) * (0.6 + 0.35 * rs) : half(0.14) * (-0.1 + 1.05 * rs);
+        for (let k = 0; k < 25; k++) for (let t = -1.5; t <= 1.5; t += 0.5) {
+          const wdt = 1.7 * (1 - k / 31);
+          if (Math.abs(t) > wdt) continue;
+          const [px, py] = at(0.14 + (Math.cos(fa) * k - Math.sin(fa) * t) / L, base + Math.sin(fa) * k + Math.cos(fa) * t);
+          put(px, py, Math.abs(t) > wdt - 0.6 || k > 23 ? INK : rs > 0.5 ? BELLY : far ? BACK_L : BACK);
+        }
+      };
+      flipper(1, true);
+      // the small fin on its back, which shows while it is side on and turns away as it rolls
+      if (rs < 0.6) for (let k = 0; k < 6; k++) for (let t = 0; t <= (5 - k) * (1 - rs); t += 0.5) {
+        const [dx, dy] = at(-0.2 - k * 0.012, half(-0.2 - k * 0.012) + t);
+        put(dx, dy, t >= (5 - k) * (1 - rs) - 0.6 ? INK : BACK);
+      }
       // tail flukes: two blades opening out behind the tail stock
       for (let k = 0; k < 13; k++) for (const side of [-1, 1]) for (let t = 0; t < 4; t++) {
         const [fx, fy] = at(-0.5 - k * 0.011, side * (k * 0.95 + t * 0.6) + tailBeat * (k / 13));
@@ -985,17 +1003,20 @@ export function buildCity(): City {
           put(bx, by, c);
         }
       }
-      // mouth line and eye
-      for (let s = 0.2; s < 0.5; s += 0.5 / L) { const [mx, my] = at(s, -half(s) * 0.25 - (s - 0.2) * 4); put(mx, my, INK); }
-      { const [ex, ey] = at(0.2, -1.5); put(ex, ey, FOAM); put(ex + 1, ey, INK); }
-      // the long flipper: laid back along the body as it launches, flung out square to it by the time it lands
-      const fa = -2.8 + ss(0.18, 0.62, u) * 4.3 + Math.sin(age * 5) * 0.12;
-      for (let k = 0; k < 24; k++) for (let t = -1.5; t <= 1.5; t += 0.5) {
-        const wdt = 1.6 * (1 - k / 30);
-        if (Math.abs(t) > wdt) continue;
-        const [px, py] = at(0.14 + (Math.cos(fa) * k - Math.sin(fa) * t) / L, -half(0.14) * (1 - rs * 1.6) + Math.sin(fa) * k + Math.cos(fa) * t);
-        put(px, py, Math.abs(t) > wdt - 0.6 || k > 22 ? INK : rs > 0.5 ? BELLY : BACK);
+      // The mouth: a long shallow curve following the line of the jaw from the snout back to under the eye, with a
+      // small downturn at its corner. Like the eye, it belongs to the whale's side, so both turn away as it rolls.
+      if (rs < 0.55) {
+        for (let s2 = 0.5 - 1.5 / L; s2 > 0.23; s2 -= 0.5 / L) {
+          const corner = Math.max(0, (0.27 - s2) / 0.04);
+          const [mx, my] = at(s2, -half(s2) * 0.36 - corner * 1.6);
+          put(mx, my, INK);
+        }
+        const [ex, ey] = at(0.25, half(0.25) * 0.02 + 0.5); put(ex, ey, FOAM); put(ex - co, ey + si, INK);
       }
+      // The near flipper. Side on, it lies back along the chest; as the whale rolls belly-up it swings out to
+      // stand square to the body on one side, and the far flipper (painted earlier, behind the body) does the
+      // same on the other, so a rolled whale shows both.
+      flipper(-1, false);
     }
     // nothing of the whale shows below the waterline
     for (let i = (WL + 1) * W * 4; i < d.length; i += 4) d[i + 3] = 0;
@@ -1025,7 +1046,7 @@ export function buildCity(): City {
   }
   // ?whale in the address makes it breach over and over, for checking
   const whaleLoop = typeof location !== "undefined" && /[?&]whale\b/.test(location.search);
-  const breach = { on: false, t0: 0, next: whaleLoop ? 1.2 : 20 + Math.random() * 25 };
+  const breach = { on: false, t0: 0, next: whaleLoop ? 1.2 : 45 + Math.random() * 45 };
   const LEAP = 3.1; // seconds from breaking the surface to going under
 
   /* clouds: soft white puffs, drifting. They keep to the band of sky between the name and the aqueduct, so none crosses the words */
@@ -1117,7 +1138,7 @@ export function buildCity(): City {
       if (age > LEAP + 1.6) {
         breach.on = false;
         whale.visible = false;
-        breach.next = t12 + (whaleLoop ? 1.2 : 120 + Math.random() * 150); // a rare sight: every two to four and a half minutes
+        breach.next = t12 + (whaleLoop ? 1.2 : 240 + Math.random() * 240); // a rare sight: every four to eight minutes
       } else {
         paintWhale(age / LEAP, age, LEAP);
         whale.visible = true;
