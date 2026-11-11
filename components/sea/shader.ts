@@ -8,6 +8,7 @@ uniform float KR;      // the kraken: -1 away, else 0..1 through its attack
 uniform float PITCH;   // camera tilt: positive looks up, which lowers the horizon in the frame
 uniform float BX;      // how far right of centre the boat sits, in metres
 uniform float BY;      // how far out the boat sits, in metres
+uniform float SC;      // how many art pixels one pixel of the boat and the kraken covers
 uniform float NIGHT;   // 0 day, 1 night
 const float GL = 1.0;
 float hash(vec2 p) { p = fract(p * vec2(0.1031, 0.1030)); p += dot(p, p.yx + 33.33); return fract((p.x + p.y) * p.x); }
@@ -115,7 +116,7 @@ vec4 boat(vec2 frag, float tWater) {
   float sink = kSink(), held = kHeld();
   float tilt = clamp((H(BOAT + vec2(2.5, 0)) - H(BOAT - vec2(2.5, 0))) * 0.5 * (1.0 - held), -1.0, 1.0) * 0.4 + kHeel();
   tilt = floor(tilt * 5.0 + 0.5) / 5.0;
-  vec2 q = floor(frag) - floor(P.xy); if (q.y < -3.0) return vec4(0.0);          // nothing shows below the waterline
+  vec2 q = floor((floor(frag) - floor(P.xy)) / SC); if (q.y < -3.0) return vec4(0.0);          // nothing shows below the waterline
   q += vec2(-kShake().x, floor(sink) - kShake().y);
   q.x = floor(q.x - tilt * (q.y + 3.0) + 0.5);
   // the mast snaps partway up, and the top hangs over to one side
@@ -161,7 +162,7 @@ float spray(vec2 c, float rx, float ry, float dens) {
 vec4 kraken(vec2 frag, float tWater) {
   if (KR < 0.0) return vec4(0.0);
   vec3 P = proj(vec3(BOAT, H(BOAT))); if (tWater < P.z - 3.0) return vec4(0.0);
-  vec2 O = floor(P.xy) + vec2(0.0, -3.0), fp = floor(frag), c = fp - O;          // O: the boat's waterline
+  vec2 O = vec2(0.0), c = floor((floor(frag) - floor(P.xy)) / SC) + vec2(0.0, 3.0), fp = c;          // O: the boat's waterline
   if (c.y < 0.0 || abs(c.x) > 70.0 || c.y > 78.0) return vec4(0.0);
   float sink = kSink(); vec2 sh = kShake();
   // spray, in front of everything: churn, the slam, the thrashing, the plunge, and the boat coming back

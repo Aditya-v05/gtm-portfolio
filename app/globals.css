@@ -3298,6 +3298,15 @@ html:not(.js) .loader, html.no-loader .loader { display: none; }
 /* ---- the closing scene: a whole page. The ask up in the sky, open sea below it ---- */
 .foot { position: relative; min-height: 100svh; padding: calc(var(--nav-h) + clamp(2.5rem, 10vh, 6.5rem)) 1.5rem 42svh; overflow: clip; text-align: center; --horizon: 58%; }
 .sea { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; display: block; image-rendering: pixelated; pointer-events: none; }
+/* Whatever rises out of the sea goes behind the words and is thinned out up there, so the words always read:
+   everything above the waterline is drawn at well under half strength, coming to full just above the water. */
+.sea, .sea__whale {
+  --cut: var(--horizon);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.38) 0, rgba(0, 0, 0, 0.38) calc(var(--cut) - 46px), #000 calc(var(--cut) - 6px));
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.38) 0, rgba(0, 0, 0, 0.38) calc(var(--cut) - 46px), #000 calc(var(--cut) - 6px));
+}
+/* the whale is its own small canvas, over the sea and under the text */
+.sea__whale { position: absolute; z-index: 1; display: block; image-rendering: pixelated; pointer-events: none; }
 .sea__boat { position: absolute; z-index: 3; width: 72px; height: 96px; padding: 0; border: 0; background: none; cursor: pointer; }
 /* the text is centred as it always was */
 .foot__in { z-index: 2; }
