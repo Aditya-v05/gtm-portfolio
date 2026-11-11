@@ -56,10 +56,10 @@ const term08 = `<span class="tl">[AUTH]</span> phase 1b: scraping login page <sp
 verdict:  <span class="er">ENUMERABLE</span>      method: <span class="tl">api_response_diff</span>
 pages tested: 3 · non-SSO findings: 3 · confidence: high`;
 
-// Warmest Path batch run. Stage counts, the config version and the top lead are from
+// Thread batch run. Stage counts, the config version and the top lead are from
 // the real 4,426-target run; the org is withheld and names are blurred
 // placeholders, never real names under a CSS blur.
-const termGraph = `<span class="dm">$</span> <span class="pr">warmest-path batch</span> --targets accounts.csv --org <span class="dm">&lt;withheld&gt;</span>
+const termGraph = `<span class="dm">$</span> <span class="pr">thread batch</span> --targets accounts.csv --org <span class="dm">&lt;withheld&gt;</span>
 
 <span class="tl">[resolve]</span>  org page · domain · roster indexed with full career histories
 <span class="tl">[targets]</span>  <span class="wt">4,426</span> loaded · emails present, <span class="ok">never read</span>
@@ -155,10 +155,10 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "02",
-    slug: "warmest-path",
+    slug: "thread",
     god: "Artemis",
     epithet: "The huntress who never loses a trail",
-    title: 'Warmest Path',
+    title: 'Thread',
     lede: 'Shared history in, the warm intro out.',
     type: 'Relationship graph',
     status: "shipped",
@@ -173,8 +173,8 @@ export const PROJECTS: Project[] = [
     ),
     body: (
       <>
-            <div className="tag">Warmest Path</div>
-            <h3>Warmest Path, the Intro Finder</h3>
+            <div className="tag">Thread</div>
+            <h3>Thread, the Intro Finder</h3>
             <div className="lede">Shared history in, the warm intro out.</div>
             <p>
               A LinkedIn connection is not a relationship. <b>Shared history is</b>: the same team in the
@@ -192,7 +192,7 @@ export const PROJECTS: Project[] = [
             </div>
             <div className="ev">
               <div className="data data--ledger" data-zoom>
-                <div className="data__bar"><span className="fn">warmest-path · leads.csv</span><span className="rc">85 rows · 6 very strong</span></div>
+                <div className="data__bar"><span className="fn">thread · leads.csv</span><span className="rc">85 rows · 6 very strong</span></div>
                 <table className="dt dt--paths">
                   <thead><tr><th>score</th><th>band</th><th>path</th><th>shared history</th><th>group size</th><th>time together</th></tr></thead>
                   <tbody>
@@ -209,7 +209,7 @@ export const PROJECTS: Project[] = [
             </div>
             <div className="ev">
               <div className="term" data-zoom>
-                <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">warmest-path batch · accounts.csv</span></div>
+                <div className="term__bar"><span className="d r"></span><span className="d y"></span><span className="d g"></span><span className="f">thread batch · accounts.csv</span></div>
                 <div className="term__body" dangerouslySetInnerHTML={{ __html: termGraph }} />
               </div>
               <div className="ev__cap"><b>▸ shape</b> - recreated log; the stage counts are from the real 4,426-target run, the org is withheld</div>

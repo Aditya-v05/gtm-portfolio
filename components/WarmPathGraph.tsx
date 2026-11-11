@@ -1,4 +1,4 @@
-// Warmest Path output drawn as the graph it is: our roster on the left, target
+// Thread output drawn as the graph it is: our roster on the left, target
 // accounts on the right, the unreached as dust, and the few real paths lit.
 //
 // The accounts and the four lit scores are from the real run. The people are
@@ -84,7 +84,7 @@ export default function WarmPathGraph() {
     <div className="wpg cursor-target" data-zoom>
       <div className="term__bar">
         <span className="d r" /><span className="d y" /><span className="d g" />
-        <span className="f">warmest-path · run graph · 4,426 targets</span>
+        <span className="f">thread · run graph · 4,426 targets</span>
       </div>
       <svg className="wpg__svg" viewBox="0 0 960 440" role="img"
         aria-label="A run drawn as a graph: our roster on the left, target accounts on the right, unreached targets as dust, and four lit warm paths, one of them through a bridge inside the target company.">
