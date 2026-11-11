@@ -124,7 +124,7 @@ export default function Sea() {
       }
       if (attackAt < 0 && whaleAt < 0 && clock > nextAttack) {
         spawn();
-        nextAttack = clock + ATTACK + 22 + Math.random() * 28;
+        nextAttack = clock + 20 + Math.random() * 20; // the next one starts 20 to 40 seconds after this one does
       }
       if (whaleAt >= 0 && wctx) paintWhale(wctx, sheet, clock - whaleAt);
       still();
@@ -134,10 +134,10 @@ export default function Sea() {
       last = -1;
       if (visible && !reduced && !pinned && !document.hidden) raf = requestAnimationFrame(tick);
     };
-    // one thing at a time, and it is the whale about two times in three
+    // one thing at a time, the kraken or the whale by a coin toss
     const spawn = () => {
       if (attackAt >= 0 || whaleAt >= 0 || reduced || pinned) return;
-      if (Math.random() < 0.35) attackAt = clock;
+      if (Math.random() < 0.5) attackAt = clock;
       else {
         whaleAt = clock;
         wc.style.transform = Math.random() < 0.5 ? "scaleX(-1)" : "";
@@ -154,7 +154,7 @@ export default function Sea() {
       if (taps >= 5) {
         taps = 0;
         spawn();
-        nextAttack = clock + ATTACK + 22 + Math.random() * 28;
+        nextAttack = clock + 20 + Math.random() * 20; // the next one starts 20 to 40 seconds after this one does
       }
     };
 
