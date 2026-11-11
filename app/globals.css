@@ -3066,3 +3066,82 @@ body { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.
 .tarot__type { margin-top: 0.2rem; }
 
 .card__plate2 { letter-spacing: 0.03em; }
+
+/* ================= about: a corner of his room in a Greek courtyard ================= */
+.band--about { padding-top: 3rem; }
+.about { display: grid; grid-template-columns: minmax(0, 1fr) 520px; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+.about__text p { max-width: 54ch; color: var(--ink-2); margin: 0 0 1.1rem; }
+.about__text .band__title { margin-bottom: 1.6rem; }
+.about__text .about__lead { font-size: 1.3rem; line-height: 1.5; color: var(--ink); }
+
+.shrine {
+  position: relative; height: 640px;
+  background:
+    repeating-linear-gradient(90deg, #f3ead2 0 12px, #cdbd96 12px 16px) 0 0 / 100% 8px no-repeat,
+    linear-gradient(#f3ead2, #f3ead2) 0 8px / 100% 8px no-repeat,
+    linear-gradient(#a8976f, #a8976f) 0 16px / 100% 4px no-repeat,
+    linear-gradient(#b7a67f, #b7a67f) 0 100% / 100% 16px no-repeat,
+    repeating-linear-gradient(0deg, transparent 0 60px, #c4b38c 60px 64px) 0 20px,
+    repeating-linear-gradient(90deg, transparent 0 126px, #c4b38c 126px 130px) 0 20px / 100% 128px,
+    repeating-linear-gradient(90deg, transparent 0 126px, #c4b38c 126px 130px) 65px 84px / 100% 128px,
+    #e2d4b0;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat-x, repeat-x, repeat;
+  clip-path: polygon(
+    8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px,
+    100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%,
+    8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px),
+    0 8px, 4px 8px, 4px 4px, 8px 4px);
+}
+/* the arched niche: a stepped pixel arch, recessed, lit from the upper left */
+.shrine__niche {
+  position: absolute; left: 50%; top: 52px; width: 292px; height: 420px; margin-left: -146px;
+  background: linear-gradient(90deg, #8f7f5c 0 12px, transparent 12px), linear-gradient(#8f7f5c 0 12px, transparent 12px), #b7a67f;
+  clip-path: polygon(0 100%, 0 30%, 4% 30%, 4% 21%, 10% 21%, 10% 13%, 18% 13%, 18% 7%, 30% 7%, 30% 2.5%, 42% 2.5%, 42% 0, 58% 0, 58% 2.5%, 70% 2.5%, 70% 7%, 82% 7%, 82% 13%, 90% 13%, 90% 21%, 96% 21%, 96% 30%, 100% 30%, 100% 100%);
+}
+.bust { position: absolute; left: 50%; bottom: 0; width: 270px; margin-left: -135px; }
+.bust img { display: block; width: 100%; height: auto; }
+/* eyelids: closed for a moment, every few seconds */
+.bust__lid { position: absolute; height: 1.7%; background: #e3d0b4; box-shadow: 0 2px 0 #3d4f8f; opacity: 0; animation: blink-lid 5.6s steps(1) infinite; }
+.bust__lid--l { left: 47.5%; top: 26.1%; width: 8.5%; transform: rotate(4deg); }
+.bust__lid--r { left: 66%; top: 27.6%; width: 8.5%; transform: rotate(5deg); }
+@keyframes blink-lid { 0%, 93%, 100% { opacity: 0; } 94%, 96% { opacity: 1; } 97% { opacity: 0; } 98%, 99% { opacity: 1; } }
+.shrine__plaque {
+  position: absolute; left: 50%; top: 478px; width: 380px; margin: 0 0 0 -190px; display: grid; gap: 0.2rem; text-align: center; padding: 0.8rem 0.8rem 1rem;
+}
+.shrine__plaque:hover { transform: none; filter: none; }
+.shrine__name { font-family: var(--label); font-size: 0.95rem; letter-spacing: 0.14em; }
+.shrine__motto { font-family: var(--display); font-size: 1.45rem; line-height: 1; letter-spacing: 0.04em; text-transform: uppercase; }
+.shrine__ivy { right: 0; left: auto; top: 14px; transform: scaleX(-1); width: 200px; height: 156px; }
+
+/* things from his room */
+.thing { position: absolute; display: block; height: auto; background: none; border: 0; padding: 0; transition: transform 0.14s steps(3); }
+.thing:hover { transform: translateY(-6px); }
+.thing--note { left: 4px; top: 36px; width: 124px; }
+.thing--note:hover { transform: rotate(-4deg); }
+.thing--watcher { left: 8px; top: 232px; width: 104px; }
+.thing--dragon { right: 2px; top: 196px; width: 112px; }
+.thing--phones { right: 8px; top: 378px; width: 108px; }
+.thing--d20 { left: 14px; top: 372px; width: 92px; cursor: pointer; }
+.thing--d20 img { display: block; width: 100%; height: auto; }
+.thing--d20 img.is-rolling { animation: die-roll 0.48s steps(8); }
+.thing--d20:active { transform: translateY(2px); }
+@keyframes die-roll { 0% { transform: rotate(0) translateY(0); } 40% { transform: rotate(200deg) translateY(-26px); } 100% { transform: rotate(360deg) translateY(0); } }
+.thing__roll {
+  position: absolute; left: 50%; top: -30px; transform: translateX(-50%); white-space: nowrap; padding: 0.05rem 0.5rem 0.2rem;
+  font-family: var(--display); font-size: 1.4rem; line-height: 1.1; text-transform: uppercase; color: #fbf1c4; background: #1b2b5a; animation: rowin 0.2s steps(3) both;
+}
+.thing__roll.is-crit { background: #e3b21c; color: #1b2b5a; }
+[data-theme="dark"] .shrine { box-shadow: inset 0 0 0 4000px rgba(10, 14, 36, 0.5); }
+[data-theme="dark"] .shrine__niche { filter: brightness(0.6); }
+[data-theme="dark"] .shrine__niche .bust { filter: brightness(1.55); }
+[data-theme="dark"] .shrine__ivy { filter: brightness(0.6); }
+@media (max-width: 1000px) {
+  .about { grid-template-columns: minmax(0, 1fr); }
+  .shrine { width: min(520px, 100%); margin: 0 auto; }
+}
+@media (max-width: 540px) {
+  .thing--watcher, .thing--dragon { display: none; }
+  .shrine__plaque { width: 92%; margin-left: -46%; }
+}
+@media (prefers-reduced-motion: reduce) { .bust__lid { animation: none; } .thing--d20 img.is-rolling { animation: none; } }
+.shrine { height: 588px; }

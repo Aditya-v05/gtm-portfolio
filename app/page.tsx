@@ -5,6 +5,7 @@ import World from "@/components/world/World";
 import PixelName from "@/components/PixelName";
 import GradientASCII from "@/components/GradientASCII";
 import ClientThreads from "@/components/ClientThreads";
+import About from "@/components/About";
 import Deck from "@/components/deck/Deck";
 import Fountain from "@/components/Fountain";
 import Stream from "@/components/Stream";
@@ -70,7 +71,7 @@ export default function Home() {
         </section>
 
         {/* 02 THE ENGINEER: what he builds */}
-        <section id="about" className="band band--engineer">
+        <section className="band band--engineer">
           <div className="band__in">
             <h2 className="statement">I build machines that find customers.</h2>
             <p className="statement__sub">
@@ -158,6 +159,8 @@ export default function Home() {
             <Deck art={cardArt()} />
           </div>
         </section>
+
+        <About />
 
         {/* 05 THE ENDING: the aqueduct again, from below, water still flowing */}
         <section id="contact" className="scene scene--ending" data-district="ending" aria-labelledby="contact-title">

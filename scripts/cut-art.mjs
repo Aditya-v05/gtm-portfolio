@@ -13,6 +13,12 @@ const CUTS = [
   ["art-src/god-cards.png", "public/cards/apollo.png", 436, 498, 334, 494],
   ["art-src/god-cards.png", "public/cards/artemis.png", 805, 498, 334, 494],
   ["art-src/god-cards.png", "public/cards/back.png", 1176, 282, 316, 452],
+  ["art-src/bust.png", "public/art/bust.png", 30, 20, 1000, 1400],
+  ["art-src/about-objects.png", "public/art/d20.png", 150, 170, 300, 300, [[0, 0]]],
+  ["art-src/about-objects.png", "public/art/dragon.png", 550, 130, 370, 370, [[0, 0]]],
+  ["art-src/about-objects.png", "public/art/note.png", 1040, 150, 400, 370, [[0, 0]]],
+  ["art-src/about-objects.png", "public/art/headphones.png", 230, 550, 470, 350, [[0, 0]]],
+  ["art-src/about-objects.png", "public/art/watcher.png", 830, 550, 380, 350, [[0, 0]]],
   ["art-src/water-statue.png", "public/art/water-statue.png", 140, 180, 730, 945, [[218, 517], [150, 470], [250, 600]]],
 ];
 
