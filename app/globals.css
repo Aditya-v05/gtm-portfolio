@@ -3294,3 +3294,8 @@ html:not(.js) .loader, html.no-loader .loader { display: none; }
   .loader__water b, .loader__wet .pixelname__text { animation: none; }
   .loader.is-out .loader__water { display: block; animation: loader-out 0.32s steps(5) forwards; }
 }
+
+/* ---- the closing scene's sea: a live pixel canvas behind the contact text ---- */
+.scene--ending { position: relative; }
+.sea { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; image-rendering: pixelated; pointer-events: none; }
+.scene--ending > .scene__in, .scene--ending > .quay { z-index: 1; }

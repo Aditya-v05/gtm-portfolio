@@ -13,6 +13,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { SOCIALS } from "@/lib/socials";
 import Loader from "@/components/Loader";
+import Sea from "@/components/sea/Sea";
 
 // which gods already have card art in public/cards
 function cardArt(): string[] {
@@ -172,7 +173,8 @@ export default function Home() {
         </section>
 
         {/* 05 THE ENDING: the aqueduct again, from below, water still flowing */}
-        <section id="contact" className="scene scene--ending" data-district="ending" aria-labelledby="contact-title">
+        <section id="contact" className="scene scene--ending" aria-labelledby="contact-title">
+          <Sea />
           <div className="scene__in">
             <h2 id="contact-title" className="ask">Got an interesting GTM problem?</h2>
             <p className="ask__sub">I&apos;d love to hear about it.</p>
