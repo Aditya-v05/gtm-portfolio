@@ -3067,87 +3067,6 @@ body { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.
 
 .card__plate2 { letter-spacing: 0.03em; }
 
-/* ================= about: the Trojan horse ================= */
-.band--horse { padding: 5rem 1.5rem 1rem; overflow-x: clip; }
-.horse { position: relative; }
-.horse__wrap { --s: 1; position: relative; width: 100%; height: calc(540px * var(--s)); }
-.horse__stage { position: absolute; left: 0; top: 0; width: 1120px; height: 540px; transform-origin: 0 0; transform: scale(var(--s)); }
-/* the ground: a hard pixel line with a few tufts */
-.horse__ground { position: absolute; left: -200px; right: -200px; bottom: 36px; height: 4px; background: #3f5cab;
-  box-shadow: 0 4px 0 #c5d3f0; }
-.horse__ground::after { content: ""; position: absolute; left: 0; right: 0; bottom: 4px; height: 8px;
-  background: linear-gradient(#7f9a52, #7f9a52) 0 4px / 4px 4px, linear-gradient(#7f9a52, #7f9a52) 4px 0 / 4px 8px, linear-gradient(#7f9a52, #7f9a52) 8px 4px / 4px 4px;
-  background-repeat: no-repeat; background-position: 0 4px, 4px 0, 8px 4px;
-  -webkit-mask: repeating-linear-gradient(90deg, #000 0 12px, transparent 12px 170px); mask: repeating-linear-gradient(90deg, #000 0 12px, transparent 12px 170px);
-  background: #7f9a52; clip-path: none; }
-
-.horse__body { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; transform-origin: 50% 100%; -webkit-tap-highlight-color: transparent; }
-.horse__body:disabled { cursor: default; }
-.horse__body > img:first-child { display: block; width: 100%; height: auto; }
-.is-idle .horse__body { animation: horse-twitch 5s steps(1) infinite; }
-.is-idle .horse__body:hover { animation: horse-shake 0.4s steps(4) infinite; }
-.is-shake .horse__body { animation: horse-shake 0.25s steps(4) 4; }
-@keyframes horse-twitch { 0%, 88%, 100% { rotate: 0deg; } 90% { rotate: -1.5deg; } 93% { rotate: 1.5deg; } 96% { rotate: -1deg; } }
-@keyframes horse-shake { 25% { rotate: -2.5deg; translate: -3px 0; } 75% { rotate: 2.5deg; translate: 3px 0; } }
-.horse__body:focus-visible { outline: 4px solid #e3b21c; outline-offset: 6px; }
-/* a cloth thrown over its side, hiding the hatch */
-.horse__cloth {
-  position: absolute; left: 37%; top: 40%; width: 39%; height: 46%; transform-origin: 50% 0;
-  background:
-    repeating-linear-gradient(90deg, #fbf1c4 0 8px, transparent 8px 16px) 8px 12px / calc(100% - 16px) 4px no-repeat,
-    repeating-linear-gradient(90deg, #fbf1c4 0 8px, transparent 8px 16px) 8px calc(100% - 28px) / calc(100% - 16px) 4px no-repeat,
-    linear-gradient(#2f4a94, #2f4a94) 0 0 / 100% 8px no-repeat,
-    #3f5cab;
-  box-shadow: 0 0 0 4px #1b2b5a;
-  clip-path: polygon(-4px -4px, calc(100% + 4px) -4px, calc(100% + 4px) calc(100% - 12px), 87.5% 100%, 75% calc(100% - 12px), 62.5% 100%, 50% calc(100% - 12px), 37.5% 100%, 25% calc(100% - 12px), 12.5% 100%, -4px calc(100% - 12px));
-  transition: translate 0.6s steps(8), rotate 0.6s steps(8), opacity 0.2s steps(2) 0.45s;
-}
-.horse__cloth::after { content: "?"; position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--display); font-size: 4.4rem; color: #fbf1c4; }
-.band--horse:not(.is-idle) .horse__cloth { translate: -60px -190px; rotate: -70deg; opacity: 0; }
-.horse__marks { position: absolute; opacity: 0; pointer-events: none; }
-.horse__marks--a { left: 14%; top: 18%; width: 70%; }
-.horse__marks--b { left: 78%; top: -6%; width: 24%; }
-.is-shake .horse__marks { animation: marks 0.25s steps(2) 4; }
-@keyframes marks { 50% { opacity: 1; } }
-.horse__sign { position: absolute; left: 60px; top: 28px; margin: 0; padding: 0.5rem 0.9rem 0.7rem; font-family: var(--display); font-size: 1.5rem; line-height: 1; text-transform: uppercase; color: #fbf1c4; background: #1b2b5a;
-  clip-path: polygon(4px 0, calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px), 0 4px, 4px 4px); animation: bob 1.2s steps(2) infinite; }
-.horse__sign span { display: block; margin-top: 0.25rem; font-family: var(--label); font-size: 0.7rem; letter-spacing: 0.14em; color: #8aa5e0; }
-
-.spill { position: absolute; height: auto; opacity: 0; pointer-events: none; transform-origin: 50% 50%; }
-.spill.is-out { pointer-events: auto; }
-.is-done .spill { transition: translate 0.12s steps(2); }
-.is-done .spill:hover { translate: 0 -8px; }
-.band--horse.is-done .spill, .band--horse.is-fall .spill, .band--horse.is-look .spill, .band--horse.is-hey .spill { opacity: 1; }
-
-.horse__me { position: absolute; z-index: 20; }
-.horse__me > img:first-child { display: block; width: 100%; height: auto; }
-.horse__me--fall { animation: tumble 0.85s linear both; transform-origin: 50% 50%; }
-@keyframes tumble { 0% { translate: -205px -150px; rotate: -160deg; scale: 0.3; } 45% { translate: -90px -260px; rotate: -40deg; scale: 0.9; } 82% { translate: 0 0; rotate: 20deg; scale: 1; } 90% { translate: 0 -14px; rotate: 16deg; } 100% { translate: 0 0; rotate: 20deg; } }
-.horse__me--look > img:first-child, .horse__me--hey > img:first-child, .horse__me--done > img:first-child { animation: popup 0.2s steps(3) both; transform-origin: 50% 100%; }
-@keyframes popup { from { scale: 1 0.7; } to { scale: 1 1; } }
-.horse__dust { position: absolute; left: -30%; bottom: -8px; width: 150%; opacity: 0; animation: dustup 0.85s steps(6) 0.62s both; }
-@keyframes dustup { 0% { opacity: 0; scale: 0.4; } 30% { opacity: 1; scale: 1; } 100% { opacity: 0; scale: 1.2; translate: 0 -10px; } }
-.horse__bubble { position: absolute; left: 62%; bottom: 96%; width: 190px; max-width: none; animation: rowin 0.2s steps(3) both; }
-
-/* the words: there all along, shown once he has said hello */
-.horse__bio { position: absolute; left: 640px; top: 0; width: min(470px, calc(100% - 640px)); }
-html.js .band--horse:not(.is-done) .horse__bio { opacity: 0; translate: 0 12px; pointer-events: none; }
-.horse__bio { transition: opacity 0.4s steps(4), translate 0.4s steps(4); }
-.horse__hey { font-family: var(--display); font-size: clamp(2.3rem, 3.8vw, 3.2rem); line-height: 0.9; text-transform: uppercase; color: var(--ink); margin: 0 0 1.1rem; }
-.horse__bio p { color: var(--ink-2); margin: 0 0 0.9rem; line-height: 1.6; font-size: 1.04rem; }
-.horse__bio .horse__lead { font-size: 1.22rem; line-height: 1.45; color: var(--ink); }
-.horse__controls { margin: 0.4rem 0 0; min-height: 2rem; text-align: center; }
-.horse__controls button { font-family: var(--display); font-size: 1.15rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--blue); background: none; border: 0; cursor: pointer; padding: 0.2rem 0.4rem; }
-.horse__controls button:hover { color: #c8673a; }
-[data-theme="dark"] .horse__ground { background: #5a74b8; box-shadow: 0 4px 0 #212d58; }
-@media (max-width: 1000px) {
-  .horse__bio { position: static; width: auto; margin-top: 1rem; }
-  html.js .band--horse:not(.is-done) .horse__bio { display: none; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .is-idle .horse__body, .horse__sign, .horse__me--fall, .horse__dust { animation: none; }
-  .horse__cloth, .horse__bio { transition: none; }
-}
 /* nothing may push the page sideways on a phone */
 .band--horse .band__in { overflow-x: clip; }
 @media (max-width: 1000px) { .horse__ground { left: 0; right: 0; } }
@@ -3155,3 +3074,54 @@ html.js .band--horse:not(.is-done) .horse__bio { opacity: 0; translate: 0 12px; 
 .scene { overflow-x: clip; }
 @media (max-width: 480px) { .contact__mail { font-size: 1.35rem; } .ask { letter-spacing: 0.04em; } .quay { font-size: 1.05rem; } }
 .horse__cloth { top: 40.5%; height: 42%; }
+
+/* ================= about: the plaque and Mini-Aditya's terrace ================= */
+.band--about { padding: 5.5rem 1.5rem 2rem; }
+.about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 620px); gap: 2.5rem; align-items: end; }
+/* a stone plaque with stepped corners, standing on the same ground */
+.biostone {
+  position: relative; padding: 2rem 2.2rem 2.2rem; margin-bottom: 52px;
+  background:
+    linear-gradient(#fffbe6, #fffbe6) 0 0 / 100% 4px no-repeat,
+    linear-gradient(#fffbe6, #fffbe6) 0 0 / 4px 100% no-repeat,
+    linear-gradient(#c9bd97, #c9bd97) 100% 0 / 4px 100% no-repeat,
+    linear-gradient(#c9bd97, #c9bd97) 0 100% / 100% 8px no-repeat,
+    repeating-linear-gradient(90deg, #3f5cab 0 8px, transparent 8px 16px) 20px 16px / calc(100% - 40px) 4px no-repeat,
+    #f6eed8;
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px), 0 8px, 4px 8px, 4px 4px, 8px 4px);
+  filter: drop-shadow(0 8px 0 rgba(63, 92, 171, 0.25));
+}
+.biostone__k { font-family: var(--label); font-size: 0.85rem; letter-spacing: 0.16em; color: #3f5cab; margin: 0.9rem 0 0.7rem; }
+.biostone__hey { font-family: var(--display); font-size: clamp(2.3rem, 3.6vw, 3.1rem); line-height: 0.9; text-transform: uppercase; color: #1b2b5a; margin: 0 0 1rem; }
+.biostone p { color: #44507a; margin: 0 0 0.85rem; line-height: 1.6; font-size: 1.04rem; }
+.biostone .biostone__lead { font-size: 1.2rem; line-height: 1.45; color: #1b2b5a; }
+.biostone .biostone__hint { font-family: var(--display); font-size: 1.2rem; letter-spacing: 0.04em; text-transform: uppercase; color: #3f5cab; margin: 1.1rem 0 0; }
+
+
+/* ================= about: the plaque and one small Aditya ================= */
+.about { grid-template-columns: minmax(0, 1fr) auto; gap: clamp(2rem, 6vw, 6rem); align-items: end; }
+.biostone { margin-bottom: 0; max-width: 620px; }
+.figure {
+  --rx: 0deg; --ry: 0deg; --sx: 0px;
+  position: relative; display: block; padding: 0; border: 0; background: none; cursor: pointer; margin: 0 4rem 0 0;
+  perspective: 900px; -webkit-tap-highlight-color: transparent;
+}
+.figure img {
+  display: block; height: clamp(300px, 34vw, 430px); width: auto;
+  transform: rotateY(var(--ry)) rotateX(var(--rx)); transform-origin: 50% 100%; transition: transform 0.25s steps(5);
+  /* a hard pixel edge behind him: it lifts him off the page */
+  filter: drop-shadow(4px 4px 0 #1b2b5a) drop-shadow(calc(8px + var(--sx)) 10px 0 rgba(63, 92, 171, 0.28));
+}
+.figure:hover img { transform: rotateY(var(--ry)) rotateX(var(--rx)) translateY(-8px); }
+.figure:active img { transform: rotateY(var(--ry)) rotateX(var(--rx)) translateY(2px); }
+.figure img.is-swapped { animation: popin 0.3s steps(5) both; }
+@keyframes popin { from { scale: 0.86 1.08; opacity: 0; } 60% { scale: 1.04 0.97; opacity: 1; } to { scale: 1 1; } }
+/* his shadow on the ground, in stepped pixels */
+.figure__ground { position: absolute; left: 50%; bottom: -10px; width: 70%; height: 16px; translate: calc(-50% + var(--sx)) 0; background: rgba(63, 92, 171, 0.3);
+  clip-path: polygon(12px 0, calc(100% - 12px) 0, calc(100% - 12px) 4px, 100% 4px, 100% 12px, calc(100% - 12px) 12px, calc(100% - 12px) 16px, 12px 16px, 12px 12px, 0 12px, 0 4px, 12px 4px); transition: translate 0.25s steps(5), width 0.15s steps(3); }
+.figure:hover .figure__ground { width: 60%; }
+.figure:focus-visible { outline: 4px solid #e3b21c; outline-offset: 8px; }
+[data-theme="dark"] .biostone { filter: brightness(0.9) drop-shadow(0 8px 0 rgba(0, 0, 0, 0.3)); }
+[data-theme="dark"] .figure img { filter: drop-shadow(4px 4px 0 #0a0f24) drop-shadow(calc(8px + var(--sx)) 10px 0 rgba(0, 0, 0, 0.35)); }
+@media (max-width: 900px) { .about { grid-template-columns: minmax(0, 1fr); justify-items: center; } .figure { margin: 0 0 1rem; order: -1; } .figure img { height: 260px; } }
+@media (prefers-reduced-motion: reduce) { .figure img { transition: none; } .figure img.is-swapped { animation: none; } }
