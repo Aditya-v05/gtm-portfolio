@@ -12,6 +12,7 @@ import Stream from "@/components/Stream";
 import fs from "node:fs";
 import path from "node:path";
 import { SOCIALS } from "@/lib/socials";
+import Loader from "@/components/Loader";
 
 // which gods already have card art in public/cards
 function cardArt(): string[] {
@@ -39,6 +40,7 @@ const CLIENTS = ["Brex", "Rho", "Peec AI", "Warp", "Hyperbound", "Qashio"];
 export default function Home() {
   return (
     <>
+      <Loader />
       <World />
       <Stream />
       <NavHeightVar />

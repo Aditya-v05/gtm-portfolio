@@ -81,7 +81,7 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "document.documentElement.classList.add('js');try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.dataset.theme=t}}catch(e){}",
+              "document.documentElement.classList.add('js');try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.dataset.theme=t}if(sessionStorage.getItem('loader')&&!/[?&]loader\\b/.test(location.search)){document.documentElement.classList.add('no-loader')}}catch(e){}",
           }}
         />
       </head>

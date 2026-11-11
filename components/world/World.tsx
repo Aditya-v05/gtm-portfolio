@@ -50,6 +50,7 @@ export default function World() {
         world = createWorld(canvas, { reduced, night: document.documentElement.dataset.theme === "dark", windows });
         document.documentElement.dataset.world = "ready";
       } catch {
+        document.documentElement.dataset.world = "off";
         setFailed(true);
       }
     };
