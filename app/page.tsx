@@ -5,6 +5,7 @@ import World from "@/components/world/World";
 import PixelName from "@/components/PixelName";
 import GradientASCII from "@/components/GradientASCII";
 import ClientThreads from "@/components/ClientThreads";
+import TrojanHorse from "@/components/TrojanHorse";
 import Deck from "@/components/deck/Deck";
 import Fountain from "@/components/Fountain";
 import Stream from "@/components/Stream";
@@ -69,8 +70,10 @@ export default function Home() {
           </div>
         </section>
 
+        <TrojanHorse />
+
         {/* 02 THE ENGINEER: what he builds */}
-        <section id="about" className="band band--engineer">
+        <section className="band band--engineer">
           <div className="band__in">
             <h2 className="statement">I build machines that find customers.</h2>
             <p className="statement__sub">
