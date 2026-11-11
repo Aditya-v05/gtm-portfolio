@@ -3131,3 +3131,7 @@ body { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.
   .thing { opacity: 1; }
 }
 .study__tablet { font-size: 0.82rem; padding: 8px 0 0 6px; gap: 5px; }
+@media (max-width: 860px) {
+  /* on phones the statue follows the words; it must never sit on top of them */
+  .fountain { position: relative; right: auto; top: auto; display: block; width: 200px; margin: 2rem 0 0 auto; }
+}
