@@ -3149,3 +3149,78 @@ body { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.
 .about__tag:hover, .about__status:hover { transform: none; filter: none; }
 [data-theme="dark"] .study__canvas { filter: brightness(0.74) saturate(0.9); }
 @media (max-width: 1000px) { .study-wrap { margin: 1rem 0 0; } .about__text { padding-top: 0; } }
+
+/* ================= the field journal and the pixel-matched study ================= */
+.band--about { padding-top: 5rem; }
+.about { grid-template-columns: minmax(0, 30rem) minmax(0, 1fr); align-items: start; }
+.journal {
+  position: relative; z-index: 2; margin-top: 1.5rem; padding: 2.2rem 2.2rem 2.4rem 2.4rem; rotate: -1deg;
+  background:
+    linear-gradient(#e6d39a, #e6d39a) 0 100% / 100% 4px no-repeat,
+    linear-gradient(#e6d39a, #e6d39a) 100% 0 / 4px 100% no-repeat,
+    repeating-linear-gradient(0deg, transparent 0 31px, rgba(47, 79, 158, 0.07) 31px 32px),
+    #f8ecc0;
+  filter: drop-shadow(8px 10px 0 rgba(27, 43, 90, 0.14));
+  /* a torn, stepped edge and one folded corner */
+  clip-path: polygon(0 4px, 4px 4px, 4px 0, 38% 0, 38% 4px, 62% 4px, 62% 0, calc(100% - 36px) 0, 100% 36px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), 70% calc(100% - 4px), 70% 100%, 24% 100%, 24% calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px));
+}
+.journal::after { content: ""; position: absolute; right: 0; top: 0; width: 36px; height: 36px; background: linear-gradient(225deg, transparent 50%, #dcc88a 50%); }
+.journal__seal { position: absolute; right: 54px; bottom: 26px; width: 40px; height: 40px; background: #c8673a; box-shadow: inset -4px -4px 0 #9a4a2c, inset 4px 4px 0 #e08a55;
+  clip-path: polygon(12px 0, 28px 0, 28px 4px, 36px 4px, 36px 12px, 40px 12px, 40px 28px, 36px 28px, 36px 36px, 28px 36px, 28px 40px, 12px 40px, 12px 36px, 4px 36px, 4px 28px, 0 28px, 0 12px, 4px 12px, 4px 4px, 12px 4px); }
+.journal__no { font-family: var(--label); font-size: 0.78rem; letter-spacing: 0.16em; color: #9a4a2c; margin: 0 0 0.9rem; }
+.journal .about__hey { font-size: clamp(2.3rem, 3.8vw, 3.2rem); margin-bottom: 1.1rem; color: #1b2b5a; }
+.journal p { color: #44507a; margin: 0 0 0.9rem; line-height: 1.6; font-size: 1.04rem; }
+.journal .about__lead { font-size: 1.2rem; line-height: 1.45; color: #1b2b5a; }
+.journal__status { font-family: var(--display); font-size: 1.3rem !important; text-transform: uppercase; letter-spacing: 0.04em; color: #2f4a94 !important; margin: 1.2rem 0 0 !important; max-width: 70%; }
+.journal__margin { position: absolute; right: -8px; top: 46%; rotate: 7deg; font-family: var(--display); font-size: 1.15rem !important; text-transform: lowercase; color: #c8673a !important; margin: 0 !important; background: #f8ecc0; padding: 0 6px; }
+
+.study-wrap { max-width: 900px; height: calc(750px * var(--s)); margin: -1.5rem -6rem 0 -11rem; }
+.study { width: 900px; height: 750px; --px: 0px; --py: 0px; translate: var(--px) var(--py); transition: translate 0.2s steps(3); }
+.study__canvas { width: 900px; height: 750px; }
+.thing img { width: 100%; height: 100%; image-rendering: pixelated; }
+/* every object casts a hard pixel shadow on what it stands on */
+.thing:not(.thing--note)::before { content: ""; position: absolute; left: 18%; right: 6%; bottom: -3px; height: 6px; background: rgba(63, 92, 171, 0.3); z-index: -1; translate: 6px 0; }
+.thing--d20::before { left: 10%; right: 0; }
+/* a small label on hover says what a thing does */
+.thing::after { content: attr(data-label); position: absolute; left: 50%; top: -20px; translate: -50% 0; padding: 0 6px 2px; font-family: var(--display); font-size: 0.9rem; line-height: 1.2; text-transform: uppercase; color: #fbf1c4; background: #1b2b5a; opacity: 0; pointer-events: none; transition: opacity 0.1s steps(2); white-space: nowrap; }
+.thing:hover::after, .thing:focus-visible::after { opacity: 1; }
+.thing.is-busy::after, .thing.is-held::after, .thing:has(.thing__say)::after { opacity: 0; }
+.thing__say { bottom: calc(100% + 10px); font-size: 1rem; max-width: 190px; }
+.thing--bust .thing__say { bottom: calc(100% + 10px); }
+.thing__face { position: absolute; left: 50%; top: 50%; translate: -50% -58%; min-width: 26px; padding: 0 3px 2px; font-family: var(--display); font-size: 1.2rem; line-height: 1.05; text-align: center; color: #1b2b5a; background: #fffbe6; box-shadow: 0 0 0 3px #3f5cab; animation: rowin 0.16s steps(3) both; pointer-events: none; }
+.thing__face.is-crit { background: #e3b21c; }
+.thing__face.is-fail { background: #c8673a; color: #fffbe6; }
+.thing--dragon img.is-roaring { animation: roar 0.5s steps(5); transform-origin: 50% 90%; }
+@keyframes roar { 20% { rotate: -7deg; } 50% { rotate: 6deg; translate: 0 -6px; } 80% { rotate: -2deg; } }
+.thing__puff { position: absolute; left: 58%; top: 0; pointer-events: none; }
+.thing__puff i { position: absolute; width: 9px; height: 9px; background: #a9b0d6; animation: puff 0.8s steps(6) both; }
+.thing__puff i:nth-child(2) { left: 9px; top: -6px; background: #c9cbe0; animation-delay: 0.1s; }
+.thing__puff i:nth-child(3) { left: 15px; top: 3px; width: 6px; height: 6px; background: #fffbe6; animation-delay: 0.2s; }
+@keyframes puff { from { opacity: 1; translate: 0 0; } to { opacity: 0; translate: 18px -34px; } }
+/* the note, drawn at the room's pixel size */
+.thing__paper { display: grid; place-items: center; width: 78px; height: 72px; padding: 6px; font-family: var(--display); font-size: 1.15rem; line-height: 0.95; text-transform: uppercase; text-align: center; color: #2f4a94; background: linear-gradient(225deg, #e9d27c 12px, transparent 12px), #f7e7a6; box-shadow: 0 0 0 3px #3f5cab; rotate: -5deg; }
+.thing--note::before { content: ""; position: absolute; left: 50%; top: -6px; width: 9px; height: 9px; margin-left: -4px; background: #6f8ed4; box-shadow: 0 0 0 3px #3f5cab; z-index: 2; }
+.thing--note.is-held::before { opacity: 0; }
+.thing--note.is-flipped .thing__paper { font-size: 0.74rem; line-height: 1; background: #fffbe6; }
+.thing__eye { left: 43%; top: 26%; width: 14%; height: 20%; background: #fffbe6; }
+/* water running in along the trough, and dust in the light */
+.study__water { position: absolute; width: 0; height: 0; pointer-events: none; }
+.study__water i { position: absolute; width: 9px; height: 3px; background: #fffbe6; animation: trough 3.2s steps(24) infinite; }
+.study__water i:nth-child(2) { animation-delay: -0.8s; width: 6px; }
+.study__water i:nth-child(3) { animation-delay: -1.6s; }
+.study__water i:nth-child(4) { animation-delay: -2.4s; width: 6px; }
+@keyframes trough { from { translate: 0 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } to { translate: var(--wx) var(--wy); opacity: 0; } }
+.study__dust { position: absolute; left: 330px; top: 120px; width: 260px; height: 260px; pointer-events: none; }
+.study__dust i { position: absolute; width: 3px; height: 3px; background: #fffbe6; opacity: 0; animation: dust 9s steps(30) infinite; }
+.study__dust i:nth-child(1) { left: 10%; top: 60%; } .study__dust i:nth-child(2) { left: 40%; top: 30%; animation-delay: -2s; }
+.study__dust i:nth-child(3) { left: 62%; top: 70%; animation-delay: -4s; } .study__dust i:nth-child(4) { left: 80%; top: 20%; animation-delay: -6s; } .study__dust i:nth-child(5) { left: 26%; top: 84%; animation-delay: -7.5s; }
+@keyframes dust { 0% { opacity: 0; translate: 0 0; } 20% { opacity: 0.9; } 80% { opacity: 0.7; } 100% { opacity: 0; translate: 26px -70px; } }
+.about__tag, .about__status, .about__hint { display: none; }
+[data-theme="dark"] .thing img { filter: brightness(0.82); }
+@media (max-width: 1000px) { .about { grid-template-columns: minmax(0, 1fr); } .study-wrap { margin: 1.5rem 0 0; } .journal { rotate: 0deg; } .journal__margin { display: none; } }
+@media (prefers-reduced-motion: reduce) { .study__water i, .study__dust i, .thing--dragon img.is-roaring, .thing__puff i { animation: none; } .study__dust, .thing__puff { display: none; } .study { translate: 0 0; } }
+@media (min-width: 1280px) {
+  /* full size: the room is wider than its column, so its ledge runs under the journal */
+  .study-wrap { width: 900px; max-width: none; margin: -2rem 0 0 -230px; justify-self: start; }
+}
+@media (min-width: 1280px) { .study-wrap { margin-left: -110px; } }

@@ -13,7 +13,7 @@ from bpy_extras.object_utils import world_to_camera_view
 
 random.seed(7)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-W, H = 250, 236          # render size in pixels
+W, H = 300, 250          # render size in pixels
 PPU = math.sqrt(2)       # pixels per world unit: a 16-unit tile is 16px wide, 8px tall
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -68,6 +68,7 @@ def ball(x, y, z, r, colour, sx=1, sy=1, sz=1):
 
 IVORY, LITE, MID, STONE = "#f6eed8", "#fffbe6", "#e9dfc8", "#ded6c4"
 PERI, BLUE, NAVY, DEEP, CLAY, LEAF = "#a9b0d6", "#6f8ed4", "#3f5cab", "#1b2b5a", "#c8673a", "#6b9a4a"
+POT = "#d8b49a"  # weathered terracotta, for the amphora and the plant pot
 R = 96  # the room is 96 x 96 units; the back corner is the origin
 
 # ---- floor: individual stone tiles on a bed, a few missing, a few sunk ----
@@ -134,26 +135,35 @@ cyl(60, 88, 5.2, 5.2, 11, IVORY, seg=10, rot=(math.pi / 2, 0, 0.5), name="drum")
 # a whole column standing at the far end of the left wall
 cyl(90, 6, 0, 6.5, 3, LITE, seg=12); cyl(90, 6, 3, 5, 78, IVORY, seg=10, r2=4.4); box(83, -1, 81, 14, 14, 3.5, LITE)
 # books: a crooked stack, and one left open
-bx, by = 14, 62
+bx, by = 24, 40
 for k, (c, w, d, h, r) in enumerate([(NAVY, 15, 11, 3.6, 0.1), (CLAY, 13, 10, 3, -0.25), (PERI, 15, 11, 3.6, 0.3), (LITE, 12, 9, 2.6, -0.1)]):
     z = sum(v[3] for v in [(0,0,0,3.6),(0,0,0,3),(0,0,0,3.6),(0,0,0,2.6)][:k])
     box(bx - w / 2 + 7, by - d / 2 + 5, z, w, d, h, c, rz=r, name="book")
 box(40, 72, 0.6, 7, 10, 1.2, BLUE, rz=0.5); box(47, 72, 0.6, 7, 10, 1.2, BLUE, rz=0.5)
 # an amphora in the corner, and a potted plant
-cyl(10, 10, 0, 3, 2, CLAY, seg=10); ball(10, 10, 9, 6.5, CLAY, sz=1.25); cyl(10, 10, 16, 2.6, 5, CLAY, seg=10, r2=3.6)
-cyl(22, 88, 0, 4, 6, CLAY, seg=10, r2=5)
+cyl(10, 10, 0, 3, 2, POT, seg=10); ball(10, 10, 9, 6.5, POT, sz=1.25); cyl(10, 10, 16, 2.6, 5, POT, seg=10, r2=3.6)
+cyl(30, 90, 0, 4, 6, POT, seg=10, r2=5)
 for (dx, dy, dz, r) in [(0, 0, 10, 5), (3, 2, 13, 3.6), (-3, -1, 13, 3.4), (1, -3, 15, 3)]:
-    ball(22 + dx, 88 + dy, dz, r, LEAF)
+    ball(30 + dx, 90 + dy, dz, r, LEAF)
 # ivy spilling over the corner of the walls
 for k in range(26):
     onx = random.random() < 0.5
     a, z = random.uniform(2, 34), random.uniform(52, 84)
     ball(a if onx else 0.8, 0.8 if onx else a, z, random.uniform(1.2, 2.2), random.choice([LEAF, "#4f7a3a", "#8fb35a"]))
+# water from the city: a stone trough comes in past the end of the right
+# wall and empties into a small basin
+box(8, 70, 0, 8, 62, 5, IVORY, name="trough")
+box(9.5, 71, 5, 5, 62, 0.4, "#8aa5e0", name="trough-water")
+box(6, 56, 0, 12, 14, 6.5, LITE, name="basin")
+box(8, 58, 6.5, 8, 10, 0.4, "#8aa5e0", name="basin-water")
+# a low ledge that runs out of the room toward the words
+box(96, 30, -5, 46, 22, 5, STONE, name="ledge")
+box(98, 32, 0, 13, 9, 3, NAVY, rz=0.3, name="ledge-book")
 # a small stool to sit on
 cyl(52, 34, 0, 5, 9, IVORY, seg=10); cyl(52, 34, 9, 6, 2, LITE, seg=10)
 
 # ---- camera: orthographic, 2:1 isometric, looking at the middle of the room ----
-target = Vector((R / 2 + 4, R / 2 + 4, 26))
+target = Vector((R / 2 + 18, R / 2 + 12, 24))
 cam_data = bpy.data.cameras.new("cam")
 cam_data.type = "ORTHO"
 cam_data.ortho_scale = max(W, H) / PPU
@@ -223,10 +233,10 @@ def anchor(x, y, z):
     v = world_to_camera_view(scene, cam, Vector((x, y, z)))
     return [round(v.x * W, 1), round((1 - v.y) * H, 1)]
 A = {
-    "bust": anchor(40, 12, 22.5), "watcher": anchor(3.5, 20, 48.2), "dragon": anchor(21, 67, 12.8), "phones": anchor(84, 82, 31),
+    "bust": anchor(40, 12, 22.5), "watcher": anchor(3.5, 20, 48.2), "dragon": anchor(31, 45, 12.8), "phones": anchor(84, 82, 31),
     "tablet": anchor(86, 0, 64), "rug": [anchor(30, 44, 0.8), anchor(60, 44, 0.8), anchor(60, 78, 0.8), anchor(30, 78, 0.8)],
     "die": [45, 60], "note": anchor(60, 0, 50), "size": [W, H],
-    "origin": anchor(0, 0, 0), "ux": [anchor(1, 0, 0)[0] - anchor(0, 0, 0)[0], anchor(1, 0, 0)[1] - anchor(0, 0, 0)[1]],
+    "water": [anchor(12, 130, 5.6), anchor(12, 72, 5.6)], "origin": anchor(0, 0, 0), "ux": [anchor(1, 0, 0)[0] - anchor(0, 0, 0)[0], anchor(1, 0, 0)[1] - anchor(0, 0, 0)[1]],
     "uy": [anchor(0, 1, 0)[0] - anchor(0, 0, 0)[0], anchor(0, 1, 0)[1] - anchor(0, 0, 0)[1]],
 }
 json.dump(A, open(os.path.join(ROOT, "components", "study-anchors.json"), "w"), indent=1)
