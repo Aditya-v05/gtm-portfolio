@@ -9,7 +9,7 @@ import { paintWhale, whaleSheet, WHALE_TOTAL, type WhaleSheet } from "./whale";
 // is on screen and steps at twelve frames a second like the rest of the pixel world. A few seconds after it comes
 // into view something happens, and again every minute or two: either the kraken takes the boat, or a great whale
 // breaches, rising behind the contact text and falling back. Never both at once. Five quick clicks on the sea or
-// the boat call the kraken. With
+// the boat call one or the other at once. With
 // reduced motion it is a single still frame; without WebGL the section keeps its plain background.
 
 const FPS = 12;
@@ -122,14 +122,9 @@ export default function Sea() {
         whaleAt = -1;
         wctx?.clearRect(0, 0, wc.width, wc.height);
       }
-      // one thing at a time: when the moment comes it is the kraken or the whale, by a coin toss
       if (attackAt < 0 && whaleAt < 0 && clock > nextAttack) {
-        if (Math.random() < 0.5) attackAt = clock;
-        else {
-          whaleAt = clock;
-          wc.style.transform = Math.random() < 0.5 ? "scaleX(-1)" : "";
-        }
-        nextAttack = clock + ATTACK + 50 + Math.random() * 60;
+        spawn();
+        nextAttack = clock + ATTACK + 22 + Math.random() * 28;
       }
       if (whaleAt >= 0 && wctx) paintWhale(wctx, sheet, clock - whaleAt);
       still();
@@ -139,8 +134,14 @@ export default function Sea() {
       last = -1;
       if (visible && !reduced && !pinned && !document.hidden) raf = requestAnimationFrame(tick);
     };
-    const wake = () => {
-      if (attackAt < 0 && whaleAt < 0 && !reduced && !pinned) attackAt = clock;
+    // one thing at a time, and it is the whale about two times in three
+    const spawn = () => {
+      if (attackAt >= 0 || whaleAt >= 0 || reduced || pinned) return;
+      if (Math.random() < 0.35) attackAt = clock;
+      else {
+        whaleAt = clock;
+        wc.style.transform = Math.random() < 0.5 ? "scaleX(-1)" : "";
+      }
     };
     // five clicks on the water or the boat, each within a couple of seconds of the last, bring it up
     const tap = (e: MouseEvent) => {
@@ -152,7 +153,8 @@ export default function Sea() {
       lastTap = now;
       if (taps >= 5) {
         taps = 0;
-        wake();
+        spawn();
+        nextAttack = clock + ATTACK + 22 + Math.random() * 28;
       }
     };
 

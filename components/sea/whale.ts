@@ -51,16 +51,23 @@ export function paintWhale(ctx: CanvasRenderingContext2D, sheet: WhaleSheet, age
       return [cx + lx * co - ly * si, WL - (cy + lx * si + ly * co)];
     };
     const tailBeat = Math.sin(age * 11) * 2.2 * K * (1 - ss(0.2, 0.4, u));
-    const open = ss(0.18, 0.62, u); // flippers: 0 laid back, 1 flung out
+    // The flippers are long, soft paddles, not planks. They trail back as the whale drives upward, are flung out
+    // past square and swing back, and drag behind as it falls; along their length they bend, most at the tip.
+    const fling = u > 0.5 ? 0.3 * Math.sin((u - 0.5) * 15) * Math.exp(-(u - 0.5) * 7) : 0;
+    const open = ss(0.18, 0.5, u) + fling; // 0 laid back, 1 flung out
     const flipper = (side: number, far: boolean) => {
       // side -1 is the belly edge of a side-on whale, +1 the back edge; the far one only clears the body as it rolls
-      const fa = side * (2.8 - open * 1.23) + Math.sin(age * 5 + side) * 0.1, n = 25 * K;
-      const base = side < 0 ? -half(0.14) * (0.6 + 0.35 * rs) : half(0.14) * (-0.1 + 1.05 * rs);
-      for (let k = 0; k < n; k += 0.5) for (let t = -1.5 * K; t <= 1.5 * K; t += 0.5) {
-        const wdt = 1.7 * K * (1 - k / (n * 1.24));
-        if (Math.abs(t) > wdt) continue;
-        const [px, py] = at(0.14 + (Math.cos(fa) * k - Math.sin(fa) * t) / L, base + Math.sin(fa) * k + Math.cos(fa) * t);
-        put(px, py, Math.abs(t) > wdt - edge || k > n - 2 ? INK : rs > 0.5 ? BELLY : far ? BACK_L : BACK);
+      const fa = side * (2.8 - open * 1.23), n = 26 * K;
+      const curl = side * (0.95 * (1 - ss(0.12, 0.42, u)) - 0.85 * ss(0.58, 0.86, u)) + 0.22 * Math.sin(age * 6.5 + side * 1.3);
+      let lx = 0.14 * L, ly = side < 0 ? -half(0.14) * (0.6 + 0.35 * rs) : half(0.14) * (-0.1 + 1.05 * rs);
+      for (let k = 0; k < n; k += 0.5) {
+        const f = k / n, ang = fa + curl * f ** 1.3;
+        lx += 0.5 * Math.cos(ang); ly += 0.5 * Math.sin(ang);
+        const wdt = K * (0.9 + 1.5 * Math.sin(Math.PI * Math.min(1, f ** 0.7))); // narrow at the root, broad in the middle, rounded at the tip
+        for (let t = -wdt; t <= wdt; t += 0.5) {
+          const [px, py] = at((lx - Math.sin(ang) * t) / L, ly + Math.cos(ang) * t);
+          put(px, py, Math.abs(t) > wdt - edge || k > n - 1.5 ? INK : rs > 0.5 ? BELLY : far ? BACK_L : BACK);
+        }
       }
     };
     flipper(1, true);
@@ -71,7 +78,8 @@ export function paintWhale(ctx: CanvasRenderingContext2D, sheet: WhaleSheet, age
     }
     // tail flukes: two blades opening out behind the tail stock
     for (let k = 0; k < 13 * K; k += 0.5) for (const side of [-1, 1]) for (let t = 0; t < 4 * K; t += 0.5) {
-      const [fx, fy] = at(-0.5 - (k * 0.7) / L, side * (k * 0.95 + t * 0.6) + tailBeat * (k / (13 * K)));
+      const droop = (k / (13 * K)) ** 2 * K * (3 * (1 - ss(0.1, 0.4, u)) - 3.5 * ss(0.6, 0.86, u));   // the blade tips trail, too
+      const [fx, fy] = at(-0.5 - (k * 0.7) / L, side * (k * 0.95 + t * 0.6) + tailBeat * (k / (13 * K)) + droop);
       put(fx, fy, k > 11 * K || t < edge ? INK : BACK);
     }
     // the body, drawn as slices across the spine
