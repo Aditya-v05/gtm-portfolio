@@ -914,13 +914,70 @@ export function buildCity(): City {
   hangs.count = hangN;
   root.add(houses, roofs, winLit, winDark, cypress, shrubs, ivy, hangs);
 
-  /* clouds: soft white puffs, drifting */
+  /* the whale: now and then it breaches out in the bay, hangs for a moment, and goes back in with a splash */
+  const whale = new THREE.Group();
+  const whaleFlex = { bow: { value: 0 }, tail: { value: 0 } };
+  {
+    // a spindle for the body, nose toward +x: turned from a profile, then laid on its side
+    const profile = [[0, -10], [0.45, -9.2], [0.7, -7.5], [1.2, -5], [2.1, -1.5], [2.9, 2.5], [3.1, 5.5], [2.8, 8], [1.7, 9.5], [0, 10]].map(([rad, y]) => new THREE.Vector2(rad, y));
+    const spindle = () => new THREE.LatheGeometry(profile, 10).rotateZ(-Math.PI / 2);
+    const part = (g: THREE.BufferGeometry) => g.toNonIndexed();
+    const dark = mergeGeometries([
+      part(spindle().scale(1, 0.92, 1)),
+      part(new THREE.BoxGeometry(4.4, 0.4, 3.0).rotateY(0.55).translate(-11.2, 0, 1.9)), // tail flukes
+      part(new THREE.BoxGeometry(4.4, 0.4, 3.0).rotateY(-0.55).translate(-11.2, 0, -1.9)),
+      part(new THREE.BoxGeometry(4.8, 0.35, 1.5).rotateY(-1.05).rotateX(0.95).translate(2.6, -2.6, 3.2)), // flippers, swept back and hanging down
+      part(new THREE.BoxGeometry(4.8, 0.35, 1.5).rotateY(1.05).rotateX(-0.95).translate(2.6, -2.6, -3.2)),
+      part(new THREE.BoxGeometry(1.6, 1.0, 0.35).translate(-3.5, 2.6, 0)), // the small fin on its back
+    ]);
+    // the body is not a stiff log: it bows along its length as it leaps, and the tail beats
+    const flex = (m: THREE.MeshLambertMaterial) => {
+      m.onBeforeCompile = (shader) => {
+        shader.uniforms.uBow = whaleFlex.bow;
+        shader.uniforms.uTail = whaleFlex.tail;
+        shader.vertexShader = "uniform float uBow, uTail;\n" + shader.vertexShader.replace(
+          "#include <begin_vertex>",
+          `#include <begin_vertex>
+           transformed.y += uBow * 0.02 * position.x * position.x;
+           float tl = min(position.x + 3.0, 0.0);
+           transformed.y += uTail * 0.05 * tl * tl;`
+        );
+      };
+      return m;
+    };
+    whale.add(new THREE.Mesh(dark, flex(lambert("#2f4a94"))));
+    // a pale belly: the same spindle, a little smaller and lower, so it only shows from underneath
+    whale.add(new THREE.Mesh(part(spindle().scale(0.95, 0.8, 0.9).translate(0.3, -0.8, 0)), flex(lambert("#dce4f5"))));
+    whale.scale.setScalar(1.9);
+    whale.rotation.order = "YZX";
+    whale.visible = false;
+    root.add(whale);
+  }
+  const SPRAY = 140;
+  const spray = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: C("#fff9dc") }), SPRAY);
+  spray.frustumCulled = false;
+  const drops = Array.from({ length: SPRAY }, () => ({ born: -99, life: 1, x: 0, z: 0, vx: 0, vy: 0, vz: 0, s: 1 }));
+  let dropAt = 0;
+  // throw n drops up from a point on the water: most low and wide, a few high
+  const burst = (now: number, x: number, z: number, n: number, power: number) => {
+    for (let i = 0; i < n; i++) {
+      const d = drops[dropAt++ % SPRAY], a = Math.random() * Math.PI * 2, out = (0.5 + Math.random() * 2.2) * power, up = Math.random();
+      Object.assign(d, { born: now, life: 0.8 + Math.random() * 0.9, x, z, vx: Math.cos(a) * out * 3, vz: Math.sin(a) * out * 3, vy: (4 + up * up * 15) * power, s: 1.0 + Math.random() * 1.3 });
+    }
+  };
+  // ?whale in the address makes it breach over and over, for checking
+  const whaleLoop = typeof location !== "undefined" && /[?&]whale\b/.test(location.search);
+  const breach = { on: false, t0: 0, next: whaleLoop ? 1.2 : 7 + Math.random() * 6, x: 0, z: 0, a: 0, out: false, back: false };
+  const LEAP = 3.6, REACH = 24; // seconds in the air, and how far it travels
+  root.add(spray);
+
+  /* clouds: soft white puffs, drifting. They keep to the band of sky between the name and the aqueduct, so none crosses the words */
   const cloudGeo = mergeGeometries([0, 1, 2, 3, 4].map((i) =>
     new THREE.IcosahedronGeometry(1, 1).scale(6 + (i % 3) * 2, 3.4 + (i % 2) * 1.6, 4).translate(i * 6 - 12, (i % 2) * 1.8 + (i === 2 ? 2.4 : 0), (i % 3) - 1).toNonIndexed()
   ));
   const clouds = new THREE.InstancedMesh(cloudGeo, lambert("#fff9dc"), 16);
   clouds.frustumCulled = false;
-  const cloudSeed = Array.from({ length: 16 }, () => ({ x: r() * 1500 - 300, y: 86 + r() * 46, z: -260 - r() * 220, s: 0.9 + r() * 1.2 }));
+  const cloudSeed = Array.from({ length: 16 }, () => ({ x: r() * 1500 - 300, y: 56 + r() * 20, z: -260 - r() * 220, s: 0.9 + r() * 1.2 }));
   root.add(clouds);
 
   /* birds: a few small dark Vs crossing now and then */
@@ -987,6 +1044,38 @@ export function buildCity(): City {
       b.position.y = Math.round(Math.sin(tq * 1.2 + b.userData.ph) * 2) * 0.18;
       b.rotation.z = Math.sin(tq * 0.9 + b.userData.ph) * 0.04;
     }
+    // the whale: an arc out of the water and back, nose first, stepping with the sea
+    if (!breach.on && t12 > breach.next) {
+      // somewhere in the open bay in front of the town, heading across the view one way or the other
+      Object.assign(breach, { on: true, t0: t12, x: 15 + Math.random() * 55, z: 30 + Math.random() * 34, a: (Math.random() < 0.5 ? 0 : Math.PI) + (Math.random() - 0.5) * 0.7, out: false, back: false });
+    }
+    if (breach.on) {
+      const u = (t12 - breach.t0) / LEAP, dx = Math.cos(breach.a), dz = -Math.sin(breach.a);
+      const at = (k: number) => [breach.x + dx * (k - 0.5) * REACH, breach.z + dz * (k - 0.5) * REACH] as const;
+      if (u >= 1) {
+        breach.on = false;
+        whale.visible = false;
+        breach.next = t12 + (whaleLoop ? 1.5 : 28 + Math.random() * 34);
+      } else {
+        const [wx, wz] = at(u);
+        whale.visible = true;
+        // It comes out steep, rolls over in the air, and falls back on its side rather than diving in neatly.
+        whale.position.set(wx, 1 + 112 * u * (1 - u) - 12, wz);
+        const roll = 2.4 * u * u * (3 - 2 * u), nose = Math.atan2(112 * (1 - 2 * u), REACH) * (u < 0.5 ? 0.9 : 0.55);
+        whale.rotation.set(roll, breach.a, nose);
+        whaleFlex.bow.value = 0.55 * Math.cos(u * Math.PI) - 0.7 * Math.sin(u * Math.PI);   // bowed back as it launches, arched over at the top
+        whaleFlex.tail.value = Math.sin(t12 * 11) * 0.9;
+        if (!breach.out && u > 0.1) { breach.out = true; burst(t12, ...at(0.14), 40, 1.2); }
+        if (!breach.back && u > 0.84) { breach.back = true; burst(t12, ...at(0.88), SPRAY - 40, 1.9); }
+      }
+    }
+    drops.forEach((d, i) => {
+      const age = t12 - d.born;
+      if (age < 0 || age > d.life) m4.compose(v3.set(0, -50, 0), q.identity(), sc.setScalar(0));
+      else m4.compose(v3.set(d.x + d.vx * age, Math.max(0.6, 1 + d.vy * age - 16 * age * age), d.z + d.vz * age), q.identity(), sc.setScalar(d.s * (1 - age / d.life * 0.6)));
+      spray.setMatrixAt(i, m4);
+    });
+    spray.instanceMatrix.needsUpdate = true;
     // clouds drift east, wrapping around the viewer
     cloudSeed.forEach((c, i) => {
       const span = 1500;
