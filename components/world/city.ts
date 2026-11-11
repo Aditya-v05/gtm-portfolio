@@ -920,7 +920,7 @@ export function buildCity(): City {
   ));
   const clouds = new THREE.InstancedMesh(cloudGeo, lambert("#fff9dc"), 16);
   clouds.frustumCulled = false;
-  const cloudSeed = Array.from({ length: 16 }, () => ({ x: r() * 1500 - 300, y: 48 + r() * 40, z: -260 - r() * 220, s: 0.9 + r() * 1.2 }));
+  const cloudSeed = Array.from({ length: 16 }, () => ({ x: r() * 1500 - 300, y: 86 + r() * 46, z: -260 - r() * 220, s: 0.9 + r() * 1.2 }));
   root.add(clouds);
 
   /* birds: a few small dark Vs crossing now and then */
