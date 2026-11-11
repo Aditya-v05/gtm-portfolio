@@ -44,7 +44,7 @@ export default function Home() {
 
       <main id="top" className="page">
         {/* 01 THE WORLD: the name, and the city below it. Nothing else. */}
-        <section className="hero" data-district="hero" data-fade="0,0,140,0" aria-label="Aditya Venkatesan">
+        <section className="hero" data-district="hero" data-fade="0,0,44,0" aria-label="Aditya Venkatesan">
           <div className="hero__sky" aria-hidden="true">
             <GradientASCII
               colors={["#dce4f5", "#c5d3f0", "#9fb5e6", "#7a96d8"]}

@@ -84,19 +84,21 @@ const SEA_WAVES = /* glsl */ `
   // the waves big enough to move the surface
   float Hbig(vec2 p) {
     float b = bend(p), e = sets(p);
-    float h = 0.92 * e * (2.0 * train(p, D0, 62.0, b, 1.8) - 1.0);
-    h += 0.5 * e * (2.0 * train(p, srot(D0, 0.16), 39.0, b * 0.8 + 1.7, 1.6) - 1.0);
-    h += 0.27 * (2.0 * train(p, srot(D0, -0.21), 25.0, b * 0.6 + 4.1, 1.4) - 1.0);
+    float h = 1.7 * e * (2.0 * train(p, D0, 62.0, b, 1.8) - 1.0);
+    h += 0.95 * e * (2.0 * train(p, srot(D0, 0.16), 39.0, b * 0.8 + 1.7, 1.6) - 1.0);
+    h += 0.5 * (2.0 * train(p, srot(D0, -0.21), 25.0, b * 0.6 + 4.1, 1.4) - 1.0);
     float big = 0.12 + 1.5 * pow(svn(p / 230.0 + vec2(-0.012, 0.007) * uTime + 21.3), 1.6);
     float mid = 0.2 + 1.3 * svn(p / 140.0 + vec2(0.009, -0.014) * uTime + 4.9);
-    h += 1.0 * big * (2.0 * svn(p / 66.0 + vec2(-0.045, 0.012) * uTime + 3.7) - 1.0);
-    h += 0.55 * mid * (2.0 * svn(p / 37.0 + vec2(-0.075, -0.02) * uTime + 11.1) - 1.0);
-    return clamp(h, -2.5, 3.0);
+    h += 2.6 * big * (2.0 * svn(p / 66.0 + vec2(-0.045, 0.012) * uTime + 3.7) - 1.0);
+    h += 1.3 * mid * (2.0 * svn(p / 37.0 + vec2(-0.075, -0.02) * uTime + 11.1) - 1.0);
+    // The sea bed is only three below the surface here, so open water rides a little above the shoreline level
+    // and troughs are held short of the bed; crests are free to stand well up.
+    return clamp(h, -3.6, 5.2) + 1.1;
   }
   // and with the chop on top, for shading
   float Hall(vec2 p) {
-    return Hbig(p) + 0.18 * (2.0 * train(p, srot(D0, 0.30), 15.5, 2.9, 1.0) - 1.0)
-      + 0.1 * (2.0 * train(p, srot(D0, -0.11), 9.3, 0.4, 1.0) - 1.0) + 0.05 * (2.0 * train(p, srot(D0, 0.42), 5.6, 5.2, 1.0) - 1.0);
+    return Hbig(p) + 0.32 * (2.0 * train(p, srot(D0, 0.30), 15.5, 2.9, 1.0) - 1.0)
+      + 0.18 * (2.0 * train(p, srot(D0, -0.11), 9.3, 0.4, 1.0) - 1.0) + 0.09 * (2.0 * train(p, srot(D0, 0.42), 5.6, 5.2, 1.0) - 1.0);
   }`;
 const SEA_DAY = ["#3f5cab", "#5574c2", "#6f8ed4", "#8aa5e0", "#c5d3f0", "#fff9dc"];
 const SEA_NIGHT = ["#162044", "#212d58", "#2a3868", "#34457a", "#4b62a2", "#e9e4cf"];
@@ -150,7 +152,7 @@ const seaMat = () =>
         vec3 n = normalize(vec3((Hall(p - vec2(e, 0)) - Hall(p + vec2(e, 0))) * amp, (Hall(p - vec2(0, e)) - Hall(p + vec2(0, e))) * amp, 2.0 * e));
         vec3 L = normalize(vec3(-0.42, 0.62, 0.50));
         float away = smoothstep(60.0, 760.0, dist);
-        float tone = 2.6 + (dot(n, L) - L.z) * mix(9.5, 5.0, away) + away * (uNight > 0.5 ? -1.6 : 1.1);
+        float tone = 2.6 + (dot(n, L) - L.z) * mix(5.4, 3.0, away) + away * (uNight > 0.5 ? -1.6 : 1.1);
         float fo = (dist < 420.0 && dist > 30.0 && amp > 0.6) ? foam(p) : 0.0;
         if (fo > 1.5) tone = 5.0; else if (fo > 0.5) tone = max(tone, 4.0);
         // glitter where a facet throws the sun at the eye
@@ -167,7 +169,7 @@ const seaMat = () =>
 
 // the grid of fine water round the hero: open sea moves fully, the shore and the grid's own edge stay level
 const SEA_GRID = { x0: -430, x1: 560, z0: -470, z1: 175, step: 3 };
-function seaGrid(calm: { x: number; z: number; r: number }[]): THREE.BufferGeometry {
+function seaGrid(calm: { x: number; z: number; r: number; low: number }[]): THREE.BufferGeometry {
   const { x0, x1, z0, z1, step } = SEA_GRID;
   const nx = Math.round((x1 - x0) / step) + 1, nz = Math.round((z1 - z0) / step) + 1;
   const pos = new Float32Array(nx * nz * 3), amp = new Float32Array(nx * nz), idx = new Uint32Array((nx - 1) * (nz - 1) * 6);
@@ -178,7 +180,7 @@ function seaGrid(calm: { x: number; z: number; r: number }[]): THREE.BufferGeome
       pos[k * 3] = x; pos[k * 3 + 1] = 0; pos[k * 3 + 2] = z;
       const edge = Math.min(x - x0, x1 - x, z - z0, z1 - z);
       let a = ss(0, 70, edge) * ss(-1.2, -2.9, ground(x, z)); // the sea floor is at -3; anything shallower is near land
-      for (const c of calm) a *= 0.3 + 0.7 * ss(c.r * 0.4, c.r, Math.hypot(x - c.x, z - c.z));
+      for (const c of calm) a *= c.low + (1 - c.low) * ss(c.r * 0.4, c.r, Math.hypot(x - c.x, z - c.z));
       amp[k] = a;
     }
   for (let j = 0, k = 0; j < nz - 1; j++)
@@ -407,6 +409,7 @@ export function buildCity(): City {
   const e = new THREE.Euler();
   const waters: THREE.ShaderMaterial[] = [];
   let foamMesh: THREE.InstancedMesh | null = null;
+  let fallWater: THREE.ShaderMaterial | null = null;
 
   /* sky, sea and a pale island on the horizon */
   const sky = new THREE.Mesh(new THREE.SphereGeometry(2400, 32, 16), skyMat());
@@ -515,10 +518,14 @@ export function buildCity(): City {
     let fallLen = 0;
     for (let k = 1; k < pts.length; k++) fallLen += pts[k].distanceTo(pts[k - 1]);
     const fall = new THREE.Mesh(ribbon(pts, 3.6, true), fallMat(fallLen));
-    waters.push(fall.material as THREE.ShaderMaterial);
+    fallWater = fall.material as THREE.ShaderMaterial;
+    waters.push(fallWater);
     root.add(fall);
     // the fine water round the hero, calmer where the fall lands so the foam sits on it
-    const fine = new THREE.Mesh(seaGrid([{ x: pts[pts.length - 1].x, z: pts[pts.length - 1].z, r: 16 }]), sea.material);
+    const fine = new THREE.Mesh(seaGrid([
+      { x: pts[pts.length - 1].x, z: pts[pts.length - 1].z, r: 18, low: 0.2 },
+      { x: -70, z: 118, r: 58, low: 0.3 }, // and right under the hero camera, so no crest can rise in front of the lens
+    ]), sea.material);
     fine.frustumCulled = false;
     root.add(fine);
     // foam where it lands
@@ -959,8 +966,10 @@ export function buildCity(): City {
 
   function update(t: number, tq: number, camX: number) {
     swayTime.value = tq;
-    (sea.material as THREE.ShaderMaterial).uniforms.uTime.value = t;
-    for (const m of waters) m.uniforms.uTime.value = t;
+    // the sea and the waterfall step twelve times a second, the same as the sea in the closing scene
+    const t12 = Math.floor(t * 12) / 12;
+    (sea.material as THREE.ShaderMaterial).uniforms.uTime.value = t12;
+    for (const m of waters) m.uniforms.uTime.value = m === fallWater ? t12 : t;
     // foam at the foot of the waterfall bobs in pixel steps
     if (foamMesh) {
       const { at, foamSeed } = foamMesh.userData as { at: THREE.Vector3; foamSeed: { dx: number; dz: number; s: number; ph: number }[] };
