@@ -3296,7 +3296,7 @@ html:not(.js) .loader, html.no-loader .loader { display: none; }
 }
 
 /* ---- the closing scene: a whole page. The ask up in the sky, the name in the sea, the waves in front ---- */
-.foot { position: relative; min-height: 100svh; padding: calc(var(--nav-h) + clamp(2.5rem, 10vh, 6.5rem)) 1.5rem 42svh; overflow: clip; text-align: center; --horizon: 58%; }
+.foot { position: relative; min-height: 100svh; padding: calc(var(--nav-h) + clamp(2.5rem, 10vh, 6.5rem)) 1.5rem 42svh; overflow: clip; text-align: center; --horizon: 58%; --rise: 0.24; /* how far a letter lifts, as a share of its height */ }
 .sea { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; display: block; image-rendering: pixelated; pointer-events: none; }
 .sea__boat { position: absolute; z-index: 3; width: 72px; height: 96px; padding: 0; border: 0; background: none; cursor: pointer; }
 /* the name stands in the sea like something far off and enormous, sunk past its middle. The letter under the
@@ -3306,7 +3306,7 @@ html:not(.js) .loader, html.no-loader .loader { display: none; }
   font-family: var(--display); font-size: min(27vw, 50svh); line-height: 0.8; letter-spacing: 0.02em; text-transform: uppercase; text-align: center; white-space: nowrap;
   color: #dce4f5; text-shadow: 6px 6px 0 #c5d3f0; user-select: none; pointer-events: none;
 }
-.foot__name span { display: inline-block; transform: translateY(calc(var(--lift, 0) * -34%)); transition: transform 0.32s steps(6); }
+.foot__name span { display: inline-block; transform: translateY(calc(var(--lift, 0) * var(--rise) * -100%)); transition: transform 0.32s steps(6); }
 [data-theme="dark"] .foot__name { color: #1b2c63; text-shadow: 6px 6px 0 #121d47; }
 @media (prefers-reduced-motion: reduce) { .foot__name span { transition: none; } }
 /* the text is centred as it always was; only its links take the pointer, so the name behind can still be reached */
