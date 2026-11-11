@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Nunito, Newsreader, JetBrains_Mono, EB_Garamond } from "next/font/google";
+import { Nunito, Newsreader, JetBrains_Mono, Alegreya } from "next/font/google";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import ClickBurst from "@/components/ClickBurst";
@@ -15,8 +15,8 @@ const label = localFont({ src: "./fonts/Spartacus.ttf", variable: "--font-label-
 // serif, only for the dotted closing question
 const serif = Newsreader({ subsets: ["latin"], variable: "--font-serif-src" });
 
-// a classical book face, for the About plaque
-const pixel = EB_Garamond({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-book-src" });
+// a sturdy calligraphic face, like pen on papyrus, for the About scroll
+const pixel = Alegreya({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-book-src" });
 
 const text = Nunito({
   subsets: ["latin"],
