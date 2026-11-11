@@ -7,7 +7,8 @@ import { seaHorizon } from "@/lib/horizon";
 // The closing scene's sea: a WebGL canvas across the whole section, clear above the horizon so the page and the
 // big name show through, drawn at one art pixel per four screen pixels and scaled up hard. It only runs while it
 // is on screen and steps at twelve frames a second like the rest of the pixel world. A few seconds after it comes
-// into view the kraken takes the boat, and again every minute or two; clicking the boat calls it at once. With
+// into view the kraken takes the boat, and again every minute or two; five quick clicks on the sea or the boat
+// call it at once. With
 // reduced motion it is a single still frame; without WebGL the section keeps its plain background.
 
 const FPS = 12;
@@ -55,6 +56,7 @@ export default function Sea() {
     const start = q.has("sea") ? Number(q.get("sea")) : Math.random() * 5000;
     const pinned = q.has("sea");
 
+    let waterline = 0, taps = 0, lastTap = 0;
     const size = () => {
       const px = canvas.clientWidth < 700 ? 2.5 : 4; // screen pixels per art pixel; finer on narrow screens, so everything still fits
       const w = Math.max(40, Math.round(canvas.clientWidth / px)), h = Math.max(40, Math.round(canvas.clientHeight / px));
@@ -67,6 +69,7 @@ export default function Sea() {
       // tilt the camera so the horizon lands where the layout wants it
       const horizon = seaHorizon(section), pitch = (horizon / section.offsetHeight - 0.5) / CAM.f;
       section.style.setProperty("--horizon", `${horizon}px`);
+      waterline = horizon;
       gl.uniform1f(uP, pitch);
       // the boat: right of centre on a wide screen, left of centre on a narrow one to leave room for what comes up beside it
       const half = ((OUT - CAM.y) * (w / h)) / 2 / CAM.f, bx = w / h < 1 ? -half * 0.45 : Math.min(34, half * 0.34);
@@ -109,6 +112,19 @@ export default function Sea() {
     const wake = () => {
       if (attackAt < 0 && !reduced && !pinned) attackAt = clock;
     };
+    // five clicks on the water or the boat, each within a couple of seconds of the last, bring it up
+    const tap = (e: MouseEvent) => {
+      const t = e.target as Element;
+      if (t.closest("a")) return;
+      if (t !== btn && e.clientY - section.getBoundingClientRect().top < waterline) return;
+      const now = performance.now();
+      taps = now - lastTap > 2500 ? 1 : taps + 1;
+      lastTap = now;
+      if (taps >= 5) {
+        taps = 0;
+        wake();
+      }
+    };
 
     size();
     still();
@@ -125,21 +141,21 @@ export default function Sea() {
     const onTheme = () => still();
     window.addEventListener("themechange", onTheme);
     document.addEventListener("visibilitychange", run);
-    btn.addEventListener("click", wake);
+    section.addEventListener("click", tap);
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
       io.disconnect();
       window.removeEventListener("themechange", onTheme);
       document.removeEventListener("visibilitychange", run);
-      btn.removeEventListener("click", wake);
+      section.removeEventListener("click", tap);
     };
   }, []);
 
   return (
     <>
       <canvas ref={ref} className="sea" aria-hidden="true" />
-      <button ref={boatBtn} className="sea__boat" aria-label="Wake the kraken" tabIndex={-1} />
+      <button ref={boatBtn} className="sea__boat" aria-label="The boat. Click it five times." tabIndex={-1} />
     </>
   );
 }
