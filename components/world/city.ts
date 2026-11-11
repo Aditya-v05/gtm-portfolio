@@ -942,14 +942,21 @@ export function buildCity(): City {
       if (x < 0 || y < 0 || x >= W || y >= H) return;
       const i = (y * W + x) * 4; d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; d[i + 3] = 255;
     };
-    const x0 = 48, span = W - 96, peak = 46, sunk = 14;
+    // A real breach is not a dolphin's arc. The whale drives up out of the water at a steep angle until most of
+    // its body is clear, its tail still in the sea; it twists about its own length, throwing its flippers out;
+    // then it topples and comes down flat on its back or side. (After Whitehead's breach studies and NOAA's notes.)
+    const ss = (e0: number, e1: number, v: number) => { const t = Math.min(1, Math.max(0, (v - e0) / (e1 - e0))); return t * t * (3 - 2 * t); };
+    const x0 = 62, drift = 46;
+    const waterX = (v: number) => x0 + drift * v;                                          // where its body meets the surface
     if (u < 1) {
-      // where it is, which way its nose points, how it bows, and how far it has rolled onto its back
-      const cx = x0 + span * u, cy = 4 * peak * u * (1 - u) - sunk;                       // cy is height above the water
-      const th = Math.atan2(4 * peak * (1 - 2 * u), span) * (u < 0.5 ? 1.2 : 0.85);
+      const out = 0.82 * ss(0, 0.3, u);                                                    // how much of its length is clear of the water
+      const th = (1.12 + 0.1 * ss(0.25, 0.45, u)) * (1 - ss(0.5, 0.84, u)) + 0.1 * (1 - ss(0.84, 1, u));   // steep, then toppling to flat
       const co = Math.cos(th), si = Math.sin(th);
-      const bow = 0.5 * Math.cos(u * Math.PI) - 0.75 * Math.sin(u * Math.PI);
-      const roll = Math.min(1, Math.max(0, (u - 0.28) / 0.34)), rs = roll * roll * (3 - 2 * roll);
+      const sw = 0.5 - out;                                                                // the point along the body that sits at the waterline
+      const sink = 20 * ss(0.84, 1, u) ** 2;
+      const cx = waterX(u) - sw * L * co, cy = -sw * L * si - sink;                        // cy is height above the water
+      const bow = -0.15 * ss(0, 0.2, u) + 0.75 * ss(0.3, 0.6, u) - 0.4 * ss(0.78, 0.9, u); // it arches backward as it hangs and falls
+      const rs = ss(0.2, 0.58, u);                                                         // rolled onto its back
       const half = (s: number) => {                                                        // half its thickness along the body, tail (-0.5) to nose (0.5)
         const k = [[-0.5, 1.2], [-0.4, 2.2], [-0.2, 5.2], [0.05, 8.6], [0.28, 9.4], [0.42, 7.6], [0.5, 3.4]];
         for (let i = 1; i < k.length; i++) if (s <= k[i][0]) { const f = (s - k[i - 1][0]) / (k[i][0] - k[i - 1][0]); return k[i - 1][1] + (k[i][1] - k[i - 1][1]) * f; }
@@ -960,7 +967,7 @@ export function buildCity(): City {
         const lx = s * L, ly = n + bow * 13 * (4 * s * s - 0.35);
         return [cx + lx * co - ly * si, WL - (cy + lx * si + ly * co)];
       };
-      const tailBeat = Math.sin(age * 11) * 2.2;
+      const tailBeat = Math.sin(age * 11) * 2.2 * (1 - ss(0.2, 0.4, u));
       // tail flukes: two blades opening out behind the tail stock
       for (let k = 0; k < 13; k++) for (const side of [-1, 1]) for (let t = 0; t < 4; t++) {
         const [fx, fy] = at(-0.5 - k * 0.011, side * (k * 0.95 + t * 0.6) + tailBeat * (k / 13));
@@ -981,8 +988,8 @@ export function buildCity(): City {
       // mouth line and eye
       for (let s = 0.2; s < 0.5; s += 0.5 / L) { const [mx, my] = at(s, -half(s) * 0.25 - (s - 0.2) * 4); put(mx, my, INK); }
       { const [ex, ey] = at(0.2, -1.5); put(ex, ey, FOAM); put(ex + 1, ey, INK); }
-      // the long flipper, swinging out from under the chest and up as it rolls
-      const fa = -2.25 + rs * 2.9 + Math.sin(age * 5) * 0.2;
+      // the long flipper: laid back along the body as it launches, flung out square to it by the time it lands
+      const fa = -2.8 + ss(0.18, 0.62, u) * 4.3 + Math.sin(age * 5) * 0.12;
       for (let k = 0; k < 24; k++) for (let t = -1.5; t <= 1.5; t += 0.5) {
         const wdt = 1.6 * (1 - k / 30);
         if (Math.abs(t) > wdt) continue;
@@ -1010,15 +1017,16 @@ export function buildCity(): City {
         if (rnd(seed + 1700 + i) > t / 1.5) { put(fx, fy, i % 4 ? FOAM : MIST); put(fx + 1, fy, i % 4 ? FOAM : MIST); }
       }
     };
-    fan(age - 0.09 * leap, x0 + span * 0.09, 70, 0.9, 3);
-    fan(age - 0.9 * leap, x0 + span * 0.92, 170, 1.45, 77);
+    fan(age - 0.03 * leap, waterX(0.03), 80, 0.95, 3);                 // bursting out
+    fan(age - 0.84 * leap, waterX(0.84) + L * 0.18, 150, 1.5, 77);      // the whole body coming down flat
+    fan(age - 0.86 * leap, waterX(0.84) + L * 0.5, 110, 1.25, 191);
     whaleCtx.putImageData(img, 0, 0);
     whaleTex.needsUpdate = true;
   }
   // ?whale in the address makes it breach over and over, for checking
   const whaleLoop = typeof location !== "undefined" && /[?&]whale\b/.test(location.search);
-  const breach = { on: false, t0: 0, next: whaleLoop ? 1.2 : 7 + Math.random() * 6 };
-  const LEAP = 3.3; // seconds in the air
+  const breach = { on: false, t0: 0, next: whaleLoop ? 1.2 : 20 + Math.random() * 25 };
+  const LEAP = 3.1; // seconds from breaking the surface to going under
 
   /* clouds: soft white puffs, drifting. They keep to the band of sky between the name and the aqueduct, so none crosses the words */
   const cloudGeo = mergeGeometries([0, 1, 2, 3, 4].map((i) =>
@@ -1109,7 +1117,7 @@ export function buildCity(): City {
       if (age > LEAP + 1.6) {
         breach.on = false;
         whale.visible = false;
-        breach.next = t12 + (whaleLoop ? 1.2 : 28 + Math.random() * 34);
+        breach.next = t12 + (whaleLoop ? 1.2 : 120 + Math.random() * 150); // a rare sight: every two to four and a half minutes
       } else {
         paintWhale(age / LEAP, age, LEAP);
         whale.visible = true;
