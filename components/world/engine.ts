@@ -281,6 +281,7 @@ export function createWorld(
         camera.position.y += Math.sin(t * 0.05 + 1 + n) * 0.3;
       }
       camera.lookAt(st.look);
+      if (w.district === "hero") city.heroAspect(camera.aspect);
       lightFor(st.look.x);
       city.update(t, tq, camera.position.x);
       renderer.setViewport(x0, y0, cw, ch);

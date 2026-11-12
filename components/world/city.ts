@@ -20,6 +20,8 @@ export type City = {
   /** the opening: water runs down the hero channel, spills, rings the sea, and the light catches it */
   intro: () => void;
   setSky: (haze: THREE.Color, sunDir: THREE.Vector3) => void;
+  /** the hero window's width over its height: the lighthouse stands where that window can see it */
+  heroAspect: (aspect: number) => void;
 };
 
 /* ------------------------------------------------------------------ */
@@ -116,6 +118,8 @@ const seaMat = () =>
       uRip: { value: new THREE.Vector3(0, 0, -1) }, // a ring spreading from (x, y) in sea space; z is its age in seconds, -1 for none
       uGleam: { value: new THREE.Vector2(0, 0) }, // a band of light at world x, and its strength
       uHole: { value: new THREE.Vector4(0, 0, 0, 0) }, // x0, z0, x1, z1 the flat sea leaves open for the fine grid
+      uBeam: { value: new THREE.Vector4(0, 0, 1, 0) }, // the lighthouse: where it stands (x, z) and where its lamp points (x, z)
+      uBeamOn: { value: 0 },
       uRamp: { value: SEA_DAY.map(C) },
     },
     vertexShader: /* glsl */ `
@@ -130,7 +134,7 @@ const seaMat = () =>
         gl_Position = projectionMatrix * viewMatrix * w;
       }`,
     fragmentShader: /* glsl */ `
-      uniform float uNight; uniform vec3 uHaze; uniform vec4 uHole; uniform vec3 uRip; uniform vec2 uGleam;
+      uniform float uNight; uniform vec3 uHaze; uniform vec4 uHole; uniform vec3 uRip; uniform vec2 uGleam; uniform vec4 uBeam; uniform float uBeamOn;
       varying vec3 vWorld; varying float vAmp;
       ${SEA_WAVES}
       float foam(vec2 p) {
@@ -164,12 +168,22 @@ const seaMat = () =>
           float rr = length(p - uRip.xy), r1 = uRip.z * 13.0;
           tone += (step(abs(rr - r1), 1.1) + step(abs(rr - r1 * 0.55), 0.8)) * 2.4 * max(0.0, 1.0 - uRip.z / 2.6);
         }
+        float beamLit = 0.0;
+        if (uBeamOn > 0.0) {
+          // the lamp's two beams lie across the water as they turn, brightest near the tower
+          vec2 dv = vWorld.xz - uBeam.xy; float dd = length(dv);
+          float c = abs(dot(dv / max(dd, 1.0), uBeam.zw));
+          float lit = smoothstep(0.972, 0.9965, c) * (1.0 - smoothstep(30.0, 340.0, dd)) * smoothstep(5.0, 16.0, dd) * uBeamOn;
+          // it lifts the water a tone or two, never to white; the glitter below catches it too
+          if (tone < 4.0) tone = min(tone + lit * 1.5, 4.0);
+          beamLit = lit;
+        }
         float fo = (dist < 420.0 && dist > 30.0 && amp > 0.6) ? foam(p) : 0.0;
         if (fo > 1.5) tone = 5.0; else if (fo > 0.5) tone = max(tone, 4.0);
         // glitter where a facet throws the sun at the eye
         vec3 v = cameraPosition - vWorld; vec3 rd = -normalize(vec3(v.x, -v.z, v.y));
         float sp = pow(max(dot(reflect(rd, n), normalize(vec3(0.30, 1.0, 0.26))), 0.0), 140.0);
-        if (amp > 0.3 && sp * (0.6 + 0.8 * shash(floor(p * vec2(0.5, 1.4)) + floor(uTime * 5.0))) > 0.66 - 0.5 * uGleam.y * (1.0 - smoothstep(0.0, 70.0, abs(vWorld.x - uGleam.x)))) tone = 5.0;
+        if (amp > 0.3 && sp * (0.6 + 0.8 * shash(floor(p * vec2(0.5, 1.4)) + floor(uTime * 5.0))) > 0.66 - 0.3 * beamLit - 0.5 * uGleam.y * (1.0 - smoothstep(0.0, 70.0, abs(vWorld.x - uGleam.x)))) tone = 5.0;
         tone = clamp(tone, 0.0, 5.0);
         float a = floor(tone), fr = tone - a;
         vec3 col = pal(min(5.0, a + (fr > 0.5 + (bayer(gl_FragCoord.xy) - 0.5) * 0.28 ? 1.0 : 0.0)));
@@ -260,6 +274,42 @@ const waterMat = (base: string, light: string, speed = 1, freq = 0.8) =>
         float streak = step(0.6, hash(vec2(floor(s + lane * 0.37), lane))) * step(fract(s + lane * 0.37), 0.6);
         vec3 col = mix(uBase, uLight, streak);
         gl_FragColor = vec4(col, 1.0);
+      }`,
+  });
+
+// a lighthouse beam: a cone of light drawn as loose dots, thick at the lamp and thinning with distance, soft at
+// its edges. It keeps whatever alpha is behind it, so the outline pass in engine.ts never draws round the dots.
+const beamMat = (on: { value: number }) =>
+  new THREE.ShaderMaterial({
+    transparent: true,
+    depthWrite: false,
+    fog: false,
+    blending: THREE.CustomBlending,
+    blendSrc: THREE.OneFactor,
+    blendDst: THREE.ZeroFactor,
+    blendSrcAlpha: THREE.ZeroFactor,
+    blendDstAlpha: THREE.OneFactor,
+    uniforms: { uOn: on, uCol: { value: C("#ffd37a") } },
+    vertexShader: /* glsl */ `
+      varying float vU; varying vec3 vN, vV;
+      void main() {
+        vU = uv.y;
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        vN = normalMatrix * normal; vV = -mv.xyz;
+        gl_Position = projectionMatrix * mv;
+      }`,
+    fragmentShader: /* glsl */ `
+      uniform float uOn; uniform vec3 uCol;
+      varying float vU; varying vec3 vN, vV;
+      float bayer(vec2 p) { vec2 q = mod(floor(p), 4.0); float i = q.x + q.y * 4.0; float v = 5.0;
+        if (i < 0.5) v = 0.0; else if (i < 1.5) v = 8.0; else if (i < 2.5) v = 2.0; else if (i < 3.5) v = 10.0; else if (i < 4.5) v = 12.0; else if (i < 5.5) v = 4.0; else if (i < 6.5) v = 14.0; else if (i < 7.5) v = 6.0;
+        else if (i < 8.5) v = 3.0; else if (i < 9.5) v = 11.0; else if (i < 10.5) v = 1.0; else if (i < 11.5) v = 9.0; else if (i < 12.5) v = 15.0; else if (i < 13.5) v = 7.0; else if (i < 14.5) v = 13.0;
+        return (v + 0.5) / 16.0; }
+      void main() {
+        // it thins out before it reaches the viewer, so a beam passing overhead never lies across the page's words
+        float k = uOn * pow(1.0 - vU, 1.7) * 0.66 * pow(abs(dot(normalize(vN), normalize(vV))), 0.8) * smoothstep(85.0, 180.0, length(vV));
+        if (bayer(gl_FragCoord.xy) >= k) discard;
+        gl_FragColor = vec4(uCol, 1.0);
       }`,
   });
 
@@ -933,6 +983,91 @@ export function buildCity(): City {
   hangs.count = hangN;
   root.add(houses, roofs, winLit, winDark, cypress, shrubs, ivy, hangs);
 
+  /* the hero lighthouse: on its own rock out to the right. Its lens turns all day; after dark the lamp is lit,
+     two beams sweep the sky and lie across the water, and it
+     flashes each time a beam swings past the viewer. */
+  const lh = new THREE.Group();
+  const LAMP_Y = 35.4, LAMP_TURN = 9; // seconds for one full turn, so a flash every four and a half
+  const lampMat = new THREE.MeshBasicMaterial({ color: C("#8aa5e0") });
+  const beamOn = { value: 0 };
+  const turn = new THREE.Group();
+  let lampLit = false, lampAng = 0;
+  {
+    const white = lambert(MARBLE), blue = lambert("#3f5cab");
+    const put = (g: THREE.BufferGeometry, mat: THREE.Material, y: number) => {
+      const m = new THREE.Mesh(g, mat);
+      m.position.y = y;
+      lh.add(m);
+      return m;
+    };
+    put(new THREE.IcosahedronGeometry(1, 1).scale(14, 7.2, 10.5), lambert("#d6bea2"), 0); // the rock, standing clear of the swell
+    put(new THREE.IcosahedronGeometry(1, 0).scale(6, 4.6, 5), lambert("#d6bea2"), 0.6).position.set(-11, 0.6, 5);
+    put(new THREE.CylinderGeometry(6.2, 7.4, 2.4, 8), white, 7.6); // plinth
+    const R = (y: number) => 4.2 - ((y - 8.8) / 24) * 1.6; // the tower tapers
+    put(new THREE.CylinderGeometry(R(32.8), R(8.8), 24, 10), white, 20.8);
+    for (const y of [15.2, 25.2]) put(new THREE.CylinderGeometry(R(y + 1.7) + 0.12, R(y - 1.7) + 0.12, 3.4, 10), blue, y);
+    // a door and two small windows on the side that faces the hero; the windows light with the town's
+    const face = Math.atan2(73, -131);
+    for (const [y, w, h, mat] of [[10.6, 1.5, 2.8, blue], [20.4, 0.9, 1.5, winLitMat], [29.6, 0.9, 1.5, winLitMat]] as const) {
+      const b = put(new THREE.BoxGeometry(0.5, h, w), mat, y);
+      b.position.set(Math.cos(face) * (R(y) - 0.05), y, Math.sin(face) * (R(y) - 0.05));
+      b.rotation.y = -face;
+    }
+    put(new THREE.CylinderGeometry(4.1, 3.5, 0.8, 10), white, 33.2); // the gallery
+    put(new THREE.CylinderGeometry(4.1, 4.1, 0.9, 10, 1, true), blue, 34.0).material = new THREE.MeshLambertMaterial({ color: C("#3f5cab"), flatShading: true, side: THREE.DoubleSide });
+    put(new THREE.CylinderGeometry(2.0, 2.0, 3.6, 8), lampMat, LAMP_Y); // the lantern room
+    put(new THREE.ConeGeometry(3.0, 3.2, 8), blue, 38.8);
+    put(new THREE.BoxGeometry(0.4, 1.8, 0.4), blue, 41.2);
+    // the lens: two beams back to back
+    turn.position.y = LAMP_Y;
+    const LEN = 300;
+    const cone = new THREE.CylinderGeometry(11, 1.3, LEN, 14, 1, true).rotateZ(-Math.PI / 2).translate(2 + LEN / 2, 0, 0);
+    const bm = beamMat(beamOn);
+    for (const side of [0, 1]) {
+      const b = new THREE.Mesh(cone, bm);
+      b.rotation.y = side * Math.PI;
+      b.frustumCulled = false;
+      b.renderOrder = 5;
+      turn.add(b);
+    }
+    lh.add(turn);
+    root.add(lh);
+  }
+  // the flash: a four-pointed star that opens toward whoever a beam is pointing at
+  const flare = new THREE.Mesh(
+    new THREE.ShapeGeometry(new THREE.Shape([[0, 1], [0.16, 0.16], [1, 0], [0.16, -0.16], [0, -1], [-0.16, -0.16], [-1, 0], [-0.16, 0.16]].map(([x, y]) => new THREE.Vector2(x, y)))),
+    new THREE.MeshBasicMaterial({
+      color: C("#fff9dc"), fog: false, transparent: true, depthWrite: false, side: THREE.DoubleSide,
+      blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.ZeroFactor, blendSrcAlpha: THREE.ZeroFactor, blendDstAlpha: THREE.OneFactor,
+    })
+  );
+  flare.frustumCulled = false;
+  flare.renderOrder = 6;
+  const lampAt = new THREE.Vector3(), toEye = new THREE.Vector3();
+  flare.onBeforeRender = (_r, _s, cam) => {
+    lampAt.set(lh.position.x, LAMP_Y * lh.scale.y, lh.position.z);
+    toEye.copy(cam.position).sub(lampAt);
+    const along = Math.abs(toEye.x * Math.cos(lampAng) - toEye.z * Math.sin(lampAng)) / Math.hypot(toEye.x, toEye.z);
+    const f = Math.max(0, (along - 0.972) / 0.028);
+    flare.position.copy(lampAt).addScaledVector(toEye.normalize(), 5);
+    flare.quaternion.copy(cam.quaternion);
+    flare.scale.setScalar((Math.round(f * f * 4) / 4) * (lampLit ? 8 : 3) * lh.scale.y); // in steps; by day it is only a glint off the glass
+    flare.updateMatrixWorld();
+  };
+  root.add(flare);
+  let lhAspect = 0;
+  function heroAspect(a: number) {
+    if (Math.abs(a - lhAspect) < 0.02) return;
+    lhAspect = a;
+    // out to the right of where the hero camera looks, but never past the edge of a narrow window
+    // (on a phone that puts it close beside the temple, so there it is a little smaller and hugs the edge)
+    const narrow = a < 1;
+    const ang = Math.min((26 * Math.PI) / 180, Math.atan(Math.tan((22 * Math.PI) / 180) * a) * (narrow ? 0.84 : 0.74)), D = 150;
+    lh.scale.setScalar(narrow ? 0.82 : 1);
+    lh.position.set(-70 + D * (Math.cos(ang) * 0.57 + Math.sin(ang) * 0.822), 0, 118 + D * (Math.cos(ang) * -0.822 + Math.sin(ang) * 0.57));
+  }
+  heroAspect(1.6);
+
   /* clouds: soft white puffs, drifting. They keep to the band of sky between the name and the aqueduct, so none crosses the words */
   const cloudGeo = mergeGeometries([0, 1, 2, 3, 4].map((i) =>
     new THREE.IcosahedronGeometry(1, 1).scale(6 + (i % 3) * 2, 3.4 + (i % 2) * 1.6, 4).translate(i * 6 - 12, (i % 2) * 1.8 + (i === 2 ? 2.4 : 0), (i % 3) - 1).toNonIndexed()
@@ -984,6 +1119,12 @@ export function buildCity(): City {
   const stageLights = (n: boolean) => {
     winLitMat.color.set(n ? "#ffd37a" : winDay);
     winDarkMat.color.set(n ? "#162044" : winDay);
+    // the lighthouse lamp is lit with the town's
+    lampLit = n;
+    lampMat.color.set(n ? "#ffd37a" : "#8aa5e0");
+    (flare.material as THREE.MeshBasicMaterial).color.set(n ? "#ffd37a" : "#fff9dc");
+    beamOn.value = n ? 1 : 0;
+    seaU.uBeamOn.value = n ? 1 : 0;
   };
   let pending: { at: number; run: () => void }[] = [];
   const stars = { from: 0, to: 0, t0: 0, dur: 1 };
@@ -1057,6 +1198,10 @@ export function buildCity(): City {
     const t12 = Math.floor(t * 12) / 12;
     (sea.material as THREE.ShaderMaterial).uniforms.uTime.value = t12;
     for (const m of waters) m.uniforms.uTime.value = m === fallWater ? t12 : t;
+    // the lighthouse lens turns at the same cadence
+    lampAng = t12 * ((Math.PI * 2) / LAMP_TURN) + 0.9;
+    turn.rotation.y = lampAng;
+    seaU.uBeam.value.set(lh.position.x, lh.position.z, Math.cos(lampAng), -Math.sin(lampAng));
     // foam at the foot of the waterfall bobs in pixel steps
     if (foamMesh) {
       const { at, foamSeed } = foamMesh.userData as { at: THREE.Vector3; foamSeed: { dx: number; dz: number; s: number; ph: number }[] };
@@ -1097,6 +1242,6 @@ export function buildCity(): City {
     birds.instanceMatrix.needsUpdate = true;
   }
 
-  return { root, update, setNight, setSky, intro };
+  return { root, update, setNight, setSky, intro, heroAspect };
 }
 
