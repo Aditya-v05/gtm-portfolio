@@ -173,9 +173,9 @@ const seaMat = () =>
           // the lamp's two beams lie across the water as they turn, brightest near the tower
           vec2 dv = vWorld.xz - uBeam.xy; float dd = length(dv);
           float c = abs(dot(dv / max(dd, 1.0), uBeam.zw));
-          float lit = smoothstep(0.972, 0.9965, c) * (1.0 - smoothstep(30.0, 340.0, dd)) * smoothstep(5.0, 16.0, dd) * uBeamOn;
+          float lit = smoothstep(0.972, 0.9965, c) * (1.0 - smoothstep(15.0, 110.0, dd)) * smoothstep(5.0, 16.0, dd) * uBeamOn;
           // it lifts the water a tone or two, never to white; the glitter below catches it too
-          if (tone < 4.0) tone = min(tone + lit * 1.5, 4.0);
+          if (tone < 4.0) tone = min(tone + lit * 1.1, 4.0);
           beamLit = lit;
         }
         float fo = (dist < 420.0 && dist > 30.0 && amp > 0.6) ? foam(p) : 0.0;
@@ -307,7 +307,7 @@ const beamMat = (on: { value: number }) =>
         return (v + 0.5) / 16.0; }
       void main() {
         // it thins out before it reaches the viewer, so a beam passing overhead never lies across the page's words
-        float k = uOn * pow(1.0 - vU, 1.7) * 0.66 * pow(abs(dot(normalize(vN), normalize(vV))), 0.8) * smoothstep(85.0, 180.0, length(vV));
+        float k = uOn * pow(1.0 - vU, 1.5) * 0.4 * pow(abs(dot(normalize(vN), normalize(vV))), 0.8) * smoothstep(85.0, 180.0, length(vV));
         if (bayer(gl_FragCoord.xy) >= k) discard;
         gl_FragColor = vec4(uCol, 1.0);
       }`,
@@ -1020,8 +1020,8 @@ export function buildCity(): City {
     put(new THREE.BoxGeometry(0.4, 1.8, 0.4), blue, 41.2);
     // the lens: two beams back to back
     turn.position.y = LAMP_Y;
-    const LEN = 300;
-    const cone = new THREE.CylinderGeometry(11, 1.3, LEN, 14, 1, true).rotateZ(-Math.PI / 2).translate(2 + LEN / 2, 0, 0);
+    const LEN = 62;
+    const cone = new THREE.CylinderGeometry(4, 1.3, LEN, 14, 1, true).rotateZ(-Math.PI / 2).translate(2 + LEN / 2, 0, 0);
     const bm = beamMat(beamOn);
     for (const side of [0, 1]) {
       const b = new THREE.Mesh(cone, bm);
