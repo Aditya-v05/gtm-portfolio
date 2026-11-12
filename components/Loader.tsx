@@ -66,6 +66,7 @@ export default function Loader() {
         sessionStorage.setItem("loader", "1");
       } catch {}
       setGone(true);
+      window.dispatchEvent(new Event("loader:done"));
     };
 
     const finish = () => {

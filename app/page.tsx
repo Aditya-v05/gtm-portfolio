@@ -13,6 +13,7 @@ import fs from "node:fs";
 import path from "node:path";
 import Loader from "@/components/Loader";
 import Footer from "@/components/Footer";
+import Touches from "@/components/Touches";
 
 // which gods already have card art in public/cards
 function cardArt(): string[] {
@@ -39,6 +40,7 @@ export default function Home() {
       <World />
       <Stream />
       <NavHeightVar />
+      <Touches />
       <EvidenceZoom />
       <SiteNav variant="home" />
 

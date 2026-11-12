@@ -18,6 +18,8 @@ export type WorldWindow = {
 
 export type WorldHandle = {
   setNight: (night: boolean) => void;
+  /** play the opening water sequence in the hero */
+  intro: () => void;
   resize: () => void;
   /** redraw now (used when scrolling with reduced motion) */
   poke: () => void;
@@ -202,9 +204,9 @@ export function createWorld(
   }
 
   let night = opts.night;
-  function setNight(n: boolean) {
+  function setNight(n: boolean, instant = false) {
     night = n;
-    city.setNight(n);
+    city.setNight(n, instant || opts.reduced);
     const pal = n ? NIGHT_PALETTE : DAY_PALETTE;
     post.uniforms.uPal.value = padPalette(pal);
     post.uniforms.uCount.value = pal.length;
@@ -308,11 +310,14 @@ export function createWorld(
   }
 
   resize();
-  setNight(night);
+  setNight(night, true);
   raf = requestAnimationFrame(frame);
 
   return {
-    setNight,
+    setNight: (n: boolean) => setNight(n),
+    intro: () => {
+      if (!opts.reduced) city.intro();
+    },
     resize,
     poke: () => {
       dirty = true;

@@ -15,7 +15,10 @@ export type City = {
   root: THREE.Group;
   /** t: smooth seconds. tq: seconds quantised to the pixel cadence. */
   update: (t: number, tq: number, camX: number) => void;
-  setNight: (night: boolean) => void;
+  /** instant: no staging, for the first paint */
+  setNight: (night: boolean, instant?: boolean) => void;
+  /** the opening: water runs down the hero channel, spills, rings the sea, and the light catches it */
+  intro: () => void;
   setSky: (haze: THREE.Color, sunDir: THREE.Vector3) => void;
 };
 
@@ -34,6 +37,7 @@ const skyMat = () =>
       uSky: { value: C("#fbf1c4") },
       uHaze: { value: C("#eef1fa") },
       uNight: { value: 0 },
+      uStars: { value: 0 },
     },
     vertexShader: /* glsl */ `
       varying vec3 vDir;
@@ -44,7 +48,7 @@ const skyMat = () =>
       }`,
     fragmentShader: /* glsl */ `
       uniform vec3 uSky, uHaze;
-      uniform float uNight;
+      uniform float uNight, uStars;
       varying vec3 vDir;
       float hash(vec2 p){ return fract(sin(dot(p, vec2(41.3, 289.1))) * 45758.5453); }
       void main() {
@@ -57,7 +61,7 @@ const skyMat = () =>
         vec3 hq = fract(vec3(floor(gl_FragCoord.xy).xyx) * 0.1031);
         hq += dot(hq, hq.yzx + 33.33);
         float st = fract((hq.x + hq.y) * hq.z);
-        col += (step(0.9972, st) * 0.45 + step(0.9993, st) * 0.4) * smoothstep(0.05, 0.25, h) * uNight;
+        col += (step(0.9972, st) * 0.45 + step(0.9993, st) * 0.4) * smoothstep(0.05, 0.25, h) * uStars;
         // alpha 0.6 marks open sky for the outline pass in engine.ts
         gl_FragColor = vec4(col, 0.6);
       }`,
@@ -109,6 +113,8 @@ const seaMat = () =>
       uTime: { value: 0 },
       uHaze: { value: C("#eef1fa") },
       uNight: { value: 0 },
+      uRip: { value: new THREE.Vector3(0, 0, -1) }, // a ring spreading from (x, y) in sea space; z is its age in seconds, -1 for none
+      uGleam: { value: new THREE.Vector2(0, 0) }, // a band of light at world x, and its strength
       uHole: { value: new THREE.Vector4(0, 0, 0, 0) }, // x0, z0, x1, z1 the flat sea leaves open for the fine grid
       uRamp: { value: SEA_DAY.map(C) },
     },
@@ -124,7 +130,7 @@ const seaMat = () =>
         gl_Position = projectionMatrix * viewMatrix * w;
       }`,
     fragmentShader: /* glsl */ `
-      uniform float uNight; uniform vec3 uHaze; uniform vec4 uHole;
+      uniform float uNight; uniform vec3 uHaze; uniform vec4 uHole; uniform vec3 uRip; uniform vec2 uGleam;
       varying vec3 vWorld; varying float vAmp;
       ${SEA_WAVES}
       float foam(vec2 p) {
@@ -153,12 +159,17 @@ const seaMat = () =>
         vec3 L = normalize(vec3(-0.42, 0.62, 0.50));
         float away = smoothstep(60.0, 760.0, dist);
         float tone = 2.6 + (dot(n, L) - L.z) * mix(5.4, 3.0, away) + away * (uNight > 0.5 ? -1.6 : 1.1);
+        if (uRip.z >= 0.0) {
+          // two rings running out from where the spill lands, fading as they go
+          float rr = length(p - uRip.xy), r1 = uRip.z * 13.0;
+          tone += (step(abs(rr - r1), 1.1) + step(abs(rr - r1 * 0.55), 0.8)) * 2.4 * max(0.0, 1.0 - uRip.z / 2.6);
+        }
         float fo = (dist < 420.0 && dist > 30.0 && amp > 0.6) ? foam(p) : 0.0;
         if (fo > 1.5) tone = 5.0; else if (fo > 0.5) tone = max(tone, 4.0);
         // glitter where a facet throws the sun at the eye
         vec3 v = cameraPosition - vWorld; vec3 rd = -normalize(vec3(v.x, -v.z, v.y));
         float sp = pow(max(dot(reflect(rd, n), normalize(vec3(0.30, 1.0, 0.26))), 0.0), 140.0);
-        if (amp > 0.3 && sp * (0.6 + 0.8 * shash(floor(p * vec2(0.5, 1.4)) + floor(uTime * 5.0))) > 0.66) tone = 5.0;
+        if (amp > 0.3 && sp * (0.6 + 0.8 * shash(floor(p * vec2(0.5, 1.4)) + floor(uTime * 5.0))) > 0.66 - 0.5 * uGleam.y * (1.0 - smoothstep(0.0, 70.0, abs(vWorld.x - uGleam.x)))) tone = 5.0;
         tone = clamp(tone, 0.0, 5.0);
         float a = floor(tone), fr = tone - a;
         vec3 col = pal(min(5.0, a + (fr > 0.5 + (bayer(gl_FragCoord.xy) - 0.5) * 0.28 ? 1.0 : 0.0)));
@@ -200,16 +211,17 @@ function seaGrid(calm: { x: number; z: number; r: number; low: number }[]): THRE
 const fallMat = (len: number) =>
   new THREE.ShaderMaterial({
     side: THREE.DoubleSide,
-    uniforms: { uTime: { value: 0 }, uBase: { value: C("#8aa5e0") }, uLight: { value: C("#eef1fa") }, uFoam: { value: C("#fff9dc") }, uLen: { value: len } },
+    uniforms: { uTime: { value: 0 }, uBase: { value: C("#8aa5e0") }, uLight: { value: C("#eef1fa") }, uFoam: { value: C("#fff9dc") }, uLen: { value: len }, uFront: { value: 1e9 } },
     vertexShader: /* glsl */ `
       varying vec2 vUv;
       void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
     fragmentShader: /* glsl */ `
-      uniform float uTime, uLen; uniform vec3 uBase, uLight, uFoam;
+      uniform float uTime, uLen, uFront; uniform vec3 uBase, uLight, uFoam;
       varying vec2 vUv;
       float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
       void main() {
         float lane = floor(vUv.y * 7.0), d = vUv.x;
+        if (d > uFront) discard;
         vec3 deep = uBase * 0.82, col = (lane < 0.5 || lane > 5.5) ? deep : uBase;
         float s = d * 0.28 - uTime * (1.6 + hash(vec2(lane, 1.0)) * 0.9), cell = floor(s), f = fract(s);
         float h = hash(vec2(cell, lane + 7.0));
@@ -231,16 +243,18 @@ const waterMat = (base: string, light: string, speed = 1, freq = 0.8) =>
       uLight: { value: C(light) },
       uSpeed: { value: speed },
       uFreq: { value: freq },
+      uFront: { value: 1e9 }, // nothing is drawn past this distance along the ribbon
     },
     vertexShader: /* glsl */ `
       varying vec2 vUv;
       void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
     fragmentShader: /* glsl */ `
-      uniform float uTime, uSpeed, uFreq;
+      uniform float uTime, uSpeed, uFreq, uFront;
       uniform vec3 uBase, uLight;
       varying vec2 vUv;
       float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
       void main() {
+        if (vUv.x > uFront) discard;
         float s = vUv.x * uFreq - uTime * 2.0 * uSpeed;
         float lane = floor(vUv.y * 4.0);
         float streak = step(0.6, hash(vec2(floor(s + lane * 0.37), lane))) * step(fract(s + lane * 0.37), 0.6);
@@ -410,6 +424,7 @@ export function buildCity(): City {
   const waters: THREE.ShaderMaterial[] = [];
   let foamMesh: THREE.InstancedMesh | null = null;
   let fallWater: THREE.ShaderMaterial | null = null;
+  let heroWater: THREE.ShaderMaterial | null = null, heroLen = 1;
 
   /* sky, sea and a pale island on the horizon */
   const sky = new THREE.Mesh(new THREE.SphereGeometry(2400, 32, 16), skyMat());
@@ -499,6 +514,10 @@ export function buildCity(): City {
     const wp = walk(aq.pts, 2).map((p) => new THREE.Vector3(p.x, aq.top + 1.0, p.z));
     const wm = waterMat("#8aa5e0", "#eef1fa");
     waters.push(wm);
+    if (ai === 0) {
+      heroWater = wm;
+      heroLen = wp.reduce((d, v, i) => (i ? d + v.distanceTo(wp[i - 1]) : 0), 0);
+    }
     root.add(new THREE.Mesh(ribbon(wp, 2.3), wm));
   });
   root.add(new THREE.Mesh(mergeGeometries(archGeos), stoneMat));
@@ -943,21 +962,57 @@ export function buildCity(): City {
   /* theme and sky hooks */
   const stoneDay = C(STONE), stoneNight = C("#6c7298");
   const marbleDay = C(MARBLE), marbleNight = C("#8f93b8");
-  function setNight(n: boolean) {
-    (sky.material as THREE.ShaderMaterial).uniforms.uNight.value = n ? 1 : 0;
-    const su = (sky.material as THREE.ShaderMaterial).uniforms;
-    su.uSky.value.set(n ? "#0f1630" : "#fbf1c4");
-    (sea.material as THREE.ShaderMaterial).uniforms.uNight.value = n ? 1 : 0;
-    (sea.material as THREE.ShaderMaterial).uniforms.uRamp.value = (n ? SEA_NIGHT : SEA_DAY).map(C);
-    winLitMat.color.set(n ? "#ffd37a" : winDay);
-    winDarkMat.color.set(n ? "#162044" : winDay);
+  // Day and night do not flip all at once. Going to night: the sky darkens, then the water takes the dark, then
+  // the windows light, then the stars come out a few at a time. Going to day: the sky and stars first, then the
+  // lamps go out, then the water brightens.
+  const skyU = (sky.material as THREE.ShaderMaterial).uniforms, seaU = (sea.material as THREE.ShaderMaterial).uniforms;
+  const stageSky = (n: boolean) => {
+    skyU.uNight.value = n ? 1 : 0;
+    skyU.uSky.value.set(n ? "#0f1630" : "#fbf1c4");
     stoneMat.color.copy(n ? stoneNight : stoneDay);
     marble.color.copy(n ? marbleNight : marbleDay);
     islandMat.color.set(n ? "#1a2448" : "#c5d3f0");
+  };
+  const stageSea = (n: boolean) => {
+    seaU.uNight.value = n ? 1 : 0;
+    seaU.uRamp.value = (n ? SEA_NIGHT : SEA_DAY).map(C);
     for (const m of waters) {
       m.uniforms.uBase.value.set(n ? "#34457a" : "#8aa5e0");
       m.uniforms.uLight.value.set(n ? "#5a74b8" : "#eef1fa");
     }
+  };
+  const stageLights = (n: boolean) => {
+    winLitMat.color.set(n ? "#ffd37a" : winDay);
+    winDarkMat.color.set(n ? "#162044" : winDay);
+  };
+  let pending: { at: number; run: () => void }[] = [];
+  const stars = { from: 0, to: 0, t0: 0, dur: 1 };
+  function setNight(n: boolean, instant = false) {
+    const now = performance.now();
+    pending = [];
+    stageSky(n);
+    if (instant) {
+      stageSea(n);
+      stageLights(n);
+      Object.assign(stars, { from: n ? 1 : 0, to: n ? 1 : 0, t0: now, dur: 1 });
+    } else if (n) {
+      winLitMat.color.set("#162044"); // unlit until the lamps come on
+      winDarkMat.color.set("#162044");
+      pending.push({ at: now + 700, run: () => stageSea(true) }, { at: now + 1150, run: () => stageLights(true) });
+      Object.assign(stars, { from: 0, to: 1, t0: now + 1500, dur: 1300 });
+    } else {
+      Object.assign(stars, { from: 0, to: 0, t0: now, dur: 1 });
+      pending.push({ at: now + 450, run: () => stageLights(false) }, { at: now + 850, run: () => stageSea(false) });
+    }
+  }
+  // the opening sequence
+  let introAt = -1;
+  function intro() {
+    if (!heroWater || !fallWater) return;
+    introAt = performance.now();
+    heroWater.uniforms.uFront.value = 0;
+    fallWater.uniforms.uFront.value = 0;
+    if (foamMesh) foamMesh.visible = false;
   }
   function setSky(haze: THREE.Color, _sunDir: THREE.Vector3) {
     (sky.material as THREE.ShaderMaterial).uniforms.uHaze.value.copy(haze);
@@ -966,6 +1021,38 @@ export function buildCity(): City {
 
   function update(t: number, tq: number, camX: number) {
     swayTime.value = tq;
+    const nowMs = performance.now();
+    if (pending.length) {
+      pending.filter((s) => nowMs >= s.at).forEach((s) => s.run());
+      pending = pending.filter((s) => nowMs < s.at);
+    }
+    // stars come out in six steps
+    skyU.uStars.value = stars.from + (stars.to - stars.from) * (Math.floor(Math.min(1, Math.max(0, (nowMs - stars.t0) / stars.dur)) * 6) / 6);
+    if (introAt >= 0 && heroWater && fallWater) {
+      const e = (nowMs - introAt) / 1000, lin = (a: number, b: number) => Math.min(1, Math.max(0, (e - a) / (b - a)));
+      const fallLen = fallWater.uniforms.uLen.value as number;
+      // 1. water runs along the channel on top of the arches
+      heroWater.uniforms.uFront.value = heroLen * lin(0.3, 2.5);
+      // 2. where the channel breaks, it spills, and the sheet comes down to the sea
+      const spill = 0.3 + 2.2 * WATERFALL_AT.t, land = spill + 0.75;
+      fallWater.uniforms.uFront.value = fallLen * lin(spill, land);
+      if (foamMesh) {
+        foamMesh.visible = e >= land;
+        // 3. rings run out from where it lands
+        const at = (foamMesh.userData as { at: THREE.Vector3 }).at;
+        seaU.uRip.value.set(at.x, -at.z, e >= land && e < land + 2.6 ? e - land : -1);
+      }
+      // 4. a band of light crosses the water, and then it is just the sea
+      const g = lin(land + 0.9, land + 3.0);
+      seaU.uGleam.value.set(-260 + 700 * g, g > 0 && g < 1 ? Math.sin(g * Math.PI) : 0);
+      if (e > land + 3.1) {
+        introAt = -1;
+        heroWater.uniforms.uFront.value = 1e9;
+        fallWater.uniforms.uFront.value = 1e9;
+        seaU.uRip.value.z = -1;
+        seaU.uGleam.value.set(0, 0);
+      }
+    }
     // the sea and the waterfall step twelve times a second, the same as the sea in the closing scene
     const t12 = Math.floor(t * 12) / 12;
     (sea.material as THREE.ShaderMaterial).uniforms.uTime.value = t12;
@@ -1010,6 +1097,6 @@ export function buildCity(): City {
     birds.instanceMatrix.needsUpdate = true;
   }
 
-  return { root, update, setNight, setSky };
+  return { root, update, setNight, setSky, intro };
 }
 

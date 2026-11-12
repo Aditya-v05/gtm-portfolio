@@ -49,6 +49,10 @@ export default function World() {
         collect();
         world = createWorld(canvas, { reduced, night: document.documentElement.dataset.theme === "dark", windows });
         document.documentElement.dataset.world = "ready";
+        // the opening plays once the loading screen has gone, or at once when there is none
+        const begin = () => world?.intro();
+        if (document.querySelector(".loader")) window.addEventListener("loader:done", begin, { once: true });
+        else begin();
       } catch {
         document.documentElement.dataset.world = "off";
         setFailed(true);

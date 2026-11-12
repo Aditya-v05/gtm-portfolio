@@ -30,7 +30,7 @@ export default function ClientThreads() {
                 <div className="slav" style={{ background: "#E01E5A" }}>H</div>
                 <div>
                   <div className="slhead"><span className="slname">Hayk G.</span><span className="sltime">1:36 AM</span></div>
-                  <div className="sltext">Amazing</div>
+                  <div className="sltext"><span className="slkey">Amazing</span></div>
                   <span className="slreact">🙌 1</span>
                 </div>
               </div>
@@ -62,7 +62,7 @@ export default function ClientThreads() {
                 <div className="slav" style={{ background: "#ECB22E" }}>I</div>
                 <div>
                   <div className="slhead"><span className="slname">Isaac H.</span><span className="sltime">5:45 PM</span></div>
-                  <div className="sltext">Yes let&apos;s do that thank you</div>
+                  <div className="sltext"><span className="slkey">Yes let&apos;s do that</span> thank you</div>
                   <span className="slreact">❤️ 1</span>
                 </div>
               </div>
@@ -90,7 +90,7 @@ export default function ClientThreads() {
                 <div className="slav" style={{ background: "#36C5F0" }}>D</div>
                 <div>
                   <div className="slhead"><span className="slname">Daniel D.</span><span className="sltime">3:53 PM</span></div>
-                  <div className="sltext">Nice! I&apos;d prioritise B2B over consumer. SaaS is always easiest to close!</div>
+                  <div className="sltext">Nice! I&apos;d prioritise B2B over consumer. SaaS is always <span className="slkey">easiest to close!</span></div>
                 </div>
               </div>
             </div>
