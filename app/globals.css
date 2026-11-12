@@ -3349,3 +3349,5 @@ html[data-theme="dark"]::-webkit-scrollbar-thumb:hover { background: linear-grad
 html[data-theme="dark"]::-webkit-scrollbar-corner { background: #0f1630; }
 /* the close button stands clear of the sheet's scroll bar */
 .sheet .spin__close { right: calc(1rem + 14px); }
+/* the day and night icons: 12 cells drawn at two screen pixels each, so every cell lands on whole pixels */
+.notch .daybtn svg { width: 24px; height: 24px; }
