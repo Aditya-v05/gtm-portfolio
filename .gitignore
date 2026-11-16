@@ -27,3 +27,6 @@ next-env.d.ts
 # local scratch work, not part of the site
 .scratch
 Screen Recording*
+
+# downloaded font and asset archives: kept locally, not published
+*.zip
