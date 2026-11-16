@@ -203,9 +203,9 @@ export function createWorld(
   }
 
   let night = opts.night;
-  function setNight(n: boolean, instant = false) {
+  function setNight(n: boolean) {
     night = n;
-    city.setNight(n, instant || opts.reduced);
+    city.setNight(n);
     const pal = n ? NIGHT_PALETTE : DAY_PALETTE;
     post.uniforms.uPal.value = padPalette(pal);
     post.uniforms.uCount.value = pal.length;
@@ -325,7 +325,7 @@ export function createWorld(
   }
 
   resize();
-  setNight(night, true);
+  setNight(night);
   raf = requestAnimationFrame(frame);
 
   return {

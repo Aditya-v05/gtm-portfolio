@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { PROJECTS, type Project } from "./projects";
+import PLATES from "./plates.json";
 
 // The work as twelve pixel tarot cards, one Olympian per system. The four
 // flagships are dealt face up; the other eight wait in a deck that deals
@@ -23,11 +24,14 @@ function CardFace({ p, art }: { p: Project; n?: number; art: Set<string> }) {
   // the name plate is redrawn over the artwork's own, carrying the project's
   // name; the type shrinks to fit longer names
   const size = Math.min(12.5, 112 / p.title.length);
+  // where this card's own plate is, measured from the artwork by scripts/trim-cards.mjs
+  const at = art.has(slug) ? (PLATES as Record<string, { left: number; top: number; width: number; height: number }>)[slug] : undefined;
+  const box = at ? { left: `${at.left}%`, top: `${at.top}%`, width: `${at.width}%`, height: `${at.height}%`, right: "auto" } : {};
   return (
     <span className="card__blank">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img className="card__img" src={art.has(slug) ? `/cards/${slug}.png` : "/cards/back.png"} alt="" />
-      <span className="card__plate2" style={{ fontSize: `${size}cqw` }}>
+      <span className="card__plate2" style={{ fontSize: `${size}cqw`, ...box }}>
         {p.title}
       </span>
     </span>

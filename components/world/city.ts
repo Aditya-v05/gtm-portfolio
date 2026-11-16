@@ -15,8 +15,7 @@ export type City = {
   root: THREE.Group;
   /** t: smooth seconds. tq: seconds quantised to the pixel cadence. */
   update: (t: number, tq: number, camX: number) => void;
-  /** instant: no staging, for the first paint */
-  setNight: (night: boolean, instant?: boolean) => void;
+  setNight: (night: boolean) => void;
   /** the opening: water runs down the hero channel, spills, rings the sea, and the light catches it */
   intro: () => void;
   setSky: (haze: THREE.Color, sunDir: THREE.Vector3) => void;
@@ -1097,9 +1096,6 @@ export function buildCity(): City {
   /* theme and sky hooks */
   const stoneDay = C(STONE), stoneNight = C("#6c7298");
   const marbleDay = C(MARBLE), marbleNight = C("#8f93b8");
-  // Day and night do not flip all at once. Going to night: the sky darkens, then the water takes the dark, then
-  // the windows light, then the stars come out a few at a time. Going to day: the sky and stars first, then the
-  // lamps go out, then the water brightens.
   const skyU = (sky.material as THREE.ShaderMaterial).uniforms, seaU = (sea.material as THREE.ShaderMaterial).uniforms;
   const stageSky = (n: boolean) => {
     skyU.uNight.value = n ? 1 : 0;
@@ -1126,25 +1122,12 @@ export function buildCity(): City {
     beamOn.value = n ? 1 : 0;
     seaU.uBeamOn.value = n ? 1 : 0;
   };
-  let pending: { at: number; run: () => void }[] = [];
-  const stars = { from: 0, to: 0, t0: 0, dur: 1 };
-  function setNight(n: boolean, instant = false) {
-    const now = performance.now();
-    pending = [];
+  // Day and night change in one go: sky, stone, water, lamps and stars together, in step with the rest of the page.
+  function setNight(n: boolean) {
     stageSky(n);
-    if (instant) {
-      stageSea(n);
-      stageLights(n);
-      Object.assign(stars, { from: n ? 1 : 0, to: n ? 1 : 0, t0: now, dur: 1 });
-    } else if (n) {
-      winLitMat.color.set("#162044"); // unlit until the lamps come on
-      winDarkMat.color.set("#162044");
-      pending.push({ at: now + 700, run: () => stageSea(true) }, { at: now + 1150, run: () => stageLights(true) });
-      Object.assign(stars, { from: 0, to: 1, t0: now + 1500, dur: 1300 });
-    } else {
-      Object.assign(stars, { from: 0, to: 0, t0: now, dur: 1 });
-      pending.push({ at: now + 450, run: () => stageLights(false) }, { at: now + 850, run: () => stageSea(false) });
-    }
+    stageSea(n);
+    stageLights(n);
+    skyU.uStars.value = n ? 1 : 0;
   }
   // the opening sequence
   let introAt = -1;
@@ -1163,12 +1146,6 @@ export function buildCity(): City {
   function update(t: number, tq: number, camX: number) {
     swayTime.value = tq;
     const nowMs = performance.now();
-    if (pending.length) {
-      pending.filter((s) => nowMs >= s.at).forEach((s) => s.run());
-      pending = pending.filter((s) => nowMs < s.at);
-    }
-    // stars come out in six steps
-    skyU.uStars.value = stars.from + (stars.to - stars.from) * (Math.floor(Math.min(1, Math.max(0, (nowMs - stars.t0) / stars.dur)) * 6) / 6);
     if (introAt >= 0 && heroWater && fallWater) {
       const e = (nowMs - introAt) / 1000, lin = (a: number, b: number) => Math.min(1, Math.max(0, (e - a) / (b - a)));
       const fallLen = fallWater.uniforms.uLen.value as number;

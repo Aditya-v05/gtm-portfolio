@@ -1,0 +1,38 @@
+{
+  "apollo": {
+    "left": 13.97,
+    "top": 85.68,
+    "width": 72.7,
+    "height": 11.11
+  },
+  "artemis": {
+    "left": 13.08,
+    "top": 85.68,
+    "width": 73.52,
+    "height": 11.11
+  },
+  "athena": {
+    "left": 15.09,
+    "top": 85.44,
+    "width": 72.64,
+    "height": 11.56
+  },
+  "hera": {
+    "left": 14.56,
+    "top": 84.26,
+    "width": 71.52,
+    "height": 12.27
+  },
+  "poseidon": {
+    "left": 14.2,
+    "top": 84.3,
+    "width": 72.22,
+    "height": 12.24
+  },
+  "zeus": {
+    "left": 14.83,
+    "top": 84.3,
+    "width": 71.92,
+    "height": 12.24
+  }
+}
