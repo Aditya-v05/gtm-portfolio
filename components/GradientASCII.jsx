@@ -758,6 +758,11 @@ const GradientASCII = ({
         }
         ready = true;
       }
+      // a slow drift of glyphs does not need the screen's full refresh rate
+      if (last && now - last < 40) {
+        raf = requestAnimationFrame(frame);
+        return;
+      }
       const s = settingsRef.current;
       const dt = last ? clamp((now - last) / 1000, 0.001, 0.05) : 1 / 60;
       last = now;

@@ -3377,3 +3377,6 @@ html[data-theme="dark"]::-webkit-scrollbar-corner { background: #0f1630; }
 .tarot .card::before { content: ""; position: absolute; inset: 0; z-index: -1; background: url(/cards/back.png) center / 100% 100% no-repeat; transition: transform 0.12s steps(3); }
 .tarot .card:hover, .tarot .card:focus-visible { transform: translate(-3px, -6px); filter: drop-shadow(3px 8px 0 rgba(42, 28, 20, 0.3)); }
 .tarot .card:hover::before, .tarot .card:focus-visible::before { transform: translate(7px, 5px); }
+
+/* anything that loops is paused while it is off screen (Touches.tsx sets data-rest) */
+[data-rest], [data-rest]::before, [data-rest]::after, [data-rest] *, [data-rest] *::before, [data-rest] *::after { animation-play-state: paused !important; }

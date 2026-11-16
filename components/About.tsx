@@ -18,17 +18,21 @@ export default function About() {
       const r = el.getBoundingClientRect();
       tx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (innerWidth * 0.45)));
       ty = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (innerHeight * 0.6)));
+      if (!raf && r.bottom > 0 && r.top < innerHeight) raf = requestAnimationFrame(tick);
     };
+    // the loop sleeps once the figure has settled, and a pointer move wakes it
     const tick = () => {
+      if (Math.abs(tx - x) < 0.0005 && Math.abs(ty - y) < 0.0005) {
+        raf = 0;
+        return;
+      }
       raf = requestAnimationFrame(tick);
-      if (Math.abs(tx - x) < 0.0005 && Math.abs(ty - y) < 0.0005) return;
       x += (tx - x) * 0.09;
       y += (ty - y) * 0.09;
       el.style.setProperty("--nx", x.toFixed(4));
       el.style.setProperty("--ny", y.toFixed(4));
     };
     window.addEventListener("pointermove", move, { passive: true });
-    raf = requestAnimationFrame(tick);
     return () => {
       window.removeEventListener("pointermove", move);
       cancelAnimationFrame(raf);

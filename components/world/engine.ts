@@ -185,21 +185,20 @@ export function createWorld(
   const postCam = new THREE.Camera();
 
   // one pixel per `cellCss` CSS pixels
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
   let cellCss = window.innerWidth < 720 ? 1.6 : 2;
   let lw = 1, lh = 1, vw = 1, vh = 1;
   let dirty = true;
   function resize() {
     vw = canvas.clientWidth || window.innerWidth;
     vh = canvas.clientHeight || window.innerHeight;
-    const W = Math.round(vw * dpr), H = Math.round(vh * dpr);
-    renderer.setSize(W, H, false);
-    const cell = cellCss * dpr;
-    lw = Math.ceil(W / cell);
-    lh = Math.ceil(H / cell);
+    // The canvas itself is only as big as the pixel art (one canvas pixel per art pixel); CSS scales it up with
+    // hard edges. Colouring a full-size canvas pixel by pixel cost sixteen times as much for the same picture.
+    lw = Math.ceil(vw / cellCss);
+    lh = Math.ceil(vh / cellCss);
+    renderer.setSize(lw, lh, false);
     rt.setSize(lw, lh);
     post.uniforms.uLow.value.set(lw, lh);
-    post.uniforms.uCell.value = cell;
+    post.uniforms.uCell.value = 1;
     dirty = true;
   }
 
@@ -242,10 +241,13 @@ export function createWorld(
   let raf = 0;
   const t0 = performance.now();
   let frames = 0, acc = 0;
-  let lastScroll = -1;
+  let lastScroll = -1, lastDraw = 0, blank = false;
   function frame(now: number) {
     raf = requestAnimationFrame(frame);
     if (document.hidden) return;
+    // thirty frames a second is plenty for a world that steps at twelve, whatever the screen's refresh rate;
+    // while the page is being scrolled it follows every frame, so the windows stay glued to the page
+    if (now - lastDraw < 30 && window.scrollY === lastScroll && !dirty) return;
     if (opts.reduced) {
       // still frames only: redraw when the page moves
       if (window.scrollY !== lastScroll) dirty = true;
@@ -256,6 +258,18 @@ export function createWorld(
     const tq = Math.floor(t * 10) / 10;
 
     const wins = opts.windows().filter((w) => w.rect.top < vh && w.rect.top + w.rect.height > 0).slice(0, MAX_WINDOWS);
+    // no window on screen: wipe the canvas once and then do nothing at all
+    if (!wins.length) {
+      if (!blank) {
+        renderer.setRenderTarget(null);
+        renderer.setScissorTest(false);
+        renderer.clear();
+        blank = true;
+      }
+      return;
+    }
+    blank = false;
+    lastDraw = now;
     renderer.setRenderTarget(rt);
     renderer.setScissorTest(false);
     renderer.clear();
@@ -292,7 +306,7 @@ export function createWorld(
     post.uniforms.uWinCount.value = n;
     renderer.setScissorTest(false);
     renderer.setRenderTarget(null);
-    renderer.setViewport(0, 0, Math.round(vw * dpr), Math.round(vh * dpr));
+    renderer.setViewport(0, 0, lw, lh);
     renderer.clear();
     if (n) renderer.render(postScene, postCam);
     dirty = false;

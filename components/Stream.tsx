@@ -144,7 +144,7 @@ export default function Stream() {
       build();
     };
 
-    let raf = 0, last = performance.now();
+    let raf = 0, last = performance.now(), drawn = "", wet = false, shift = -1;
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame);
       if (document.hidden || !pieces.length) return;
@@ -158,18 +158,24 @@ export default function Stream() {
         if (top <= reach) target = p.kind === "fall" ? p.start + Math.min(1, (reach - p.y0) / Math.max(1, p.y1 - p.y0)) * p.len : p.start + p.len;
       }
       front = reduced ? Math.max(front, target) : Math.max(front, Math.min(target, front + dt * 1300));
-      agora?.classList.toggle("is-wet", front >= wallStart && wallStart > 0);
+      const nowWet = front >= wallStart && wallStart > 0;
+      if (nowWet !== wet) agora?.classList.toggle("is-wet", (wet = nowWet));
       // slow loops: channels step every 260ms, falls every 90ms, pools every 700ms
       const tRun = reduced ? 0 : Math.floor(now / 260);
       const tFall = reduced ? 0 : Math.floor(now / 90);
       const tPool = reduced ? 0 : Math.floor(now / 700);
 
       const night = document.documentElement.dataset.theme === "dark";
+      // The picture only changes when the page moves, the water advances, one of the slow loops steps or the
+      // theme flips. Otherwise there is nothing to repaint, and most frames end here.
+      const key = `${sy}|${front}|${tRun}|${tFall}|${tPool}|${night}|${W}|${H}|${pieces.length}`;
+      if (key === drawn) return;
+      drawn = key;
       // four water tones, three stone tones
       const HI = night ? "#b9c8f2" : "#f2f6ff", MID = night ? "#6f86c8" : "#a9c4f2", BASE = night ? "#4660a8" : "#6f8ed4", SHADE = night ? "#2f4384" : "#4a63b0";
       const S1 = night ? "#6c7298" : "#f6ead9", S2 = night ? "#4c5378" : "#dcc7a8", S3 = night ? "#343a5c" : "#b89f7c", DRY = night ? "#2a3052" : "#cbb592";
       const off = sy % CELL, top = (sy - off) / CELL;
-      canvas.style.transform = `translateY(${-off}px)`;
+      if (off !== shift) canvas.style.transform = `translateY(${-(shift = off)}px)`;
       ctx.clearRect(0, 0, W, H);
       const p = (x: number, y: number, w: number, h: number, col: string) => {
         ctx.fillStyle = col;
