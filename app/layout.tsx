@@ -45,14 +45,14 @@ export const metadata: Metadata = {
     title: "Aditya Venkatesan - GTM Engineer",
     description:
       "ex-Founding GTM Engineer @ Relling (YC S25). I build GTM systems that run themselves.",
-    images: [{ url: "/og.png", width: 1200, height: 630 }],
+    images: [{ url: "/og-aqueduct.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Aditya Venkatesan - GTM Engineer",
     description:
       "ex-Founding GTM Engineer @ Relling (YC S25). I build GTM systems that run themselves.",
-    images: ["/og.png"],
+    images: ["/og-aqueduct.png"],
   },
 };
 
