@@ -107,7 +107,6 @@ html:not([data-world="ready"]) [data-district] {
   height: 100%;
   display: block;
   opacity: 0;
-  transition: opacity 1.2s ease;
   image-rendering: pixelated;
 }
 html[data-world="ready"] .world__canvas {
@@ -3380,3 +3379,21 @@ html[data-theme="dark"]::-webkit-scrollbar-corner { background: #0f1630; }
 
 /* anything that loops is paused while it is off screen (Touches.tsx sets data-rest) */
 [data-rest], [data-rest]::before, [data-rest]::after, [data-rest] *, [data-rest] *::before, [data-rest] *::after { animation-play-state: paused !important; }
+
+/* later loads in the same visit: no water, only a sheet of sky with the name on it over the hero until the city is ready.
+   It is part of the top of the page, so it scrolls away with it, and it sits under the nav. */
+html.quick-loader .loader { position: absolute; inset: 0 0 auto 0; height: 100svh; z-index: 40; }
+html.quick-loader .loader__water, html.quick-loader .loader__wet { display: none; }
+html.quick-loader .loader.is-out .loader__hero { animation: loader-out 0.01s 0.4s forwards; }
+/* while that sheet waits, a line of water runs along where the horizon will be, so the page is never just standing there.
+   It only shows if the wait is longer than a quarter of a second. */
+html.quick-loader .loader__bg::after {
+  content: ""; position: absolute; left: 0; right: 0; top: 65%; height: 8px; opacity: 0;
+  background:
+    repeating-linear-gradient(90deg, #9fb5e6 0 12px, transparent 12px 20px, #9fb5e6 20px 28px, transparent 28px 96px) 0 0 / 96px 4px repeat-x,
+    repeating-linear-gradient(90deg, transparent 0 40px, var(--water) 40px 64px, transparent 64px 72px, var(--water) 72px 80px, transparent 80px 144px) 0 4px / 144px 4px repeat-x;
+  animation: loader-line-in 0.01s 0.25s forwards, loader-line 1.6s steps(24) infinite;
+}
+@keyframes loader-line-in { to { opacity: 1; } }
+@keyframes loader-line { to { background-position: 96px 0, -144px 4px; } }
+@media (prefers-reduced-motion: reduce) { html.quick-loader .loader__bg::after { animation: loader-line-in 0.01s 0.25s forwards; } }

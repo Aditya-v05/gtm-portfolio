@@ -93,15 +93,23 @@ export default function Stream() {
       wallStart = cost;
       cost += Math.max(0, xin - g(ar.left)) * CELL * 0.35;
       agora?.style.setProperty("--inlet", `${xin * CELL - ar.left + 12}px`);
-      // 3. out of the wall's left end, into the basin at the head of the stair
-      const xL = g(Math.max(40, (vw - 1120) / 2 - 70));
-      run(g(ar.left) + 2, xL + 7, y1 + 2);
-      basin(xL, y1);
+      // 3. out of the wall's left end, into the basin at the head of the stair.
+      // The stair lives in the margin beside the content and has to fit there, or it ends up hidden behind
+      // it. With room (28 cells) it is a zigzag of pools; in a narrower margin it is one straight fall
+      // hugging the edge.
+      const mL = g(ar.left); // cells of open margin left of the wall
+      const inner = (work.querySelector<HTMLElement>(".band__in") ?? work).getBoundingClientRect();
+      const mR = W - g(inner.right); // and right of the cards
+      const zigL = mL >= 28, zigR = mR >= 28;
+      const wish = g(Math.max(40, (vw - 1120) / 2 - 70));
+      const xL = zigL ? Math.max(9, Math.min(wish, mL - 18)) : Math.max(4, mL - 6);
+      run(g(ar.left) + 2, xL + (zigL ? 7 : 3), y1 + 2);
+      basin(xL, y1, zigL ? 17 : 9);
       // 4. a stair of pools down the left, beside the client wall
       const step = 46; // cells between pools
       let x = xL, y = y1, side: 1 | -1 = 1, n = 0;
-      const stair = (yEnd: number) => {
-        while (y + step * 1.6 < yEnd) {
+      const stair = (yEnd: number, zig: boolean) => {
+        while (zig && y + step * 1.6 < yEnd) {
           // spill over the lip on one side, fall to the next pool
           const fx = x + side * 5;
           fall(fx, y + 3, y + step);
@@ -113,24 +121,24 @@ export default function Stream() {
         }
       };
       const yW = g(wr.top + sy + 24);
-      stair(yW);
+      stair(yW, zigL);
       // 5. at the head of the work the water changes sides: a last drop into a
       //    basin, then a channel right across the page
-      fall(x + side * 5, y + 3, yW);
-      x += side * 5;
-      basin(x + 1, yW);
-      const xR = W - xL - 2;
-      run(x + 8, xR - 6, yW + 2);
-      basin(xR, yW);
+      x += zigL ? side * 5 : 0;
+      fall(x, y + 3, yW);
+      basin(x + 1, yW, zigL ? 17 : 13);
+      const xR = zigR ? Math.max(W - mR + 9, Math.min(W - wish - 2, W - 18)) : Math.min(W - 7, W - mR + 7);
+      run(x + (zigL ? 8 : 6), xR - (zigR ? 6 : 5), yW + 2);
+      basin(xR, yW, zigR ? 17 : 13);
       x = xR;
       y = yW;
-      side = W - xR > 20 ? 1 : -1; // step outward, away from the cards, when there is room
+      side = 1; // the right stair steps outward first, away from the cards
       // 6. a second stair down the right, beside the cards
-      stair(g(wr.bottom + sy - 70));
+      stair(g(wr.bottom + sy - 70), zigR);
       // 7. the last pool spills over and falls into the sea of the closing scene
       // it lands just below the horizon, where the sea in front hides the foot of the fall
       // the chute ends in a spout at the top of the closing scene; from there the water falls free through the sky
-      fall(x + side * 5, y + 3, g(er.top + sy + seaHorizon(end) + 26), true, true, g(er.top + sy) + 10);
+      fall(x + (zigR ? side * 5 : 0), y + 3, g(er.top + sy + seaHorizon(end) + 26), true, true, g(er.top + sy) + 10);
       total = cost;
     };
 

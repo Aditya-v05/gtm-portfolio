@@ -12,8 +12,14 @@ import { useEffect, useRef, useState } from "react";
 //
 // It is in the server markup and animated in CSS, so it runs before any
 // script does. The falling streaks move by transform only, so they stay
-// smooth while the city is being built. It plays once per visit; add ?loader
-// to the address to watch it again, held a little longer.
+// smooth while the city is being built. The water plays once per visit; add
+// ?loader to the address to watch it again, held a little longer.
+//
+// On later loads in the same visit (a reload, coming back from a post) there
+// is no water, but the hero is still not shown half-built: a plain sheet of
+// sky with the name on it covers the hero until the city is ready, then
+// dissolves in a few hard steps. That sheet belongs to the top of the page,
+// not the screen, so a reload further down the page never sees it.
 
 // each column lets go at its own time and falls at its own pace; seeded, so
 // the server and the browser agree
@@ -43,7 +49,8 @@ export default function Loader() {
     const el = root.current;
     if (!el) return;
     const html = document.documentElement;
-    if (html.classList.contains("no-loader") || window.scrollY > 40) return setGone(true);
+    const quick = html.classList.contains("quick-loader");
+    if (html.classList.contains("no-loader") || (!quick && window.scrollY > 40)) return setGone(true);
     const demo = /[?&]loader\b/.test(location.search);
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const timers: ReturnType<typeof setTimeout>[] = [];
@@ -74,6 +81,10 @@ export default function Loader() {
       finished = true;
       mo.disconnect();
       later(() => {
+        if (quick) {
+          el.classList.add("is-out");
+          return later(leave, 420);
+        }
         if (reduced) {
           el.classList.add("is-out");
           return later(leave, 400);
@@ -81,7 +92,7 @@ export default function Loader() {
         el.classList.add("is-drain"); // the columns let go, all gone by about 1.1s
         later(() => el.classList.add("is-out"), 1250); // the name stands in water for a beat, then the page
         later(leave, 1700);
-      }, Math.max(0, (demo ? 2400 : 650) - performance.now()));
+      }, quick ? 0 : Math.max(0, (demo ? 2400 : 650) - performance.now()));
     };
 
     const mo = new MutationObserver(() => html.dataset.world && finish());
