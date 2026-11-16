@@ -35,7 +35,7 @@ const siteUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
   : "http://localhost:3000";
 
 const description =
-  "ex-Founding GTM Engineer @ Relling (YC S25). I build GTM systems for physical AI - robotics, manufacturing and automation - where the data layer does not exist until you build it.";
+  "ex-Founding GTM Engineer @ Relling (YC S25). I build GTM systems that run themselves.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
