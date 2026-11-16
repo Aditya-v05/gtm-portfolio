@@ -14,8 +14,10 @@ const CHROME = { light: "#fbf1c4", dark: "#121826" } as const;
 function apply(t: Theme) {
   document.documentElement.dataset.theme = t;
   document.querySelector('meta[name="theme-color"]')?.setAttribute("content", CHROME[t]);
+  // Every visit starts in day. Night lasts for this tab only, so it survives a reload or a trip to a post,
+  // but is never remembered for next time.
   try {
-    localStorage.setItem("theme", t);
+    sessionStorage.setItem("theme", t);
   } catch {}
   window.dispatchEvent(new Event("themechange"));
 }
